@@ -1,0 +1,59 @@
+$main-bg: #fbf5ef; //主背景顏色
+$header-bg: #f8cb9f; //header&footer背景
+$content-bg: #f4ece4; //大色塊背景
+$text-main: #512f10; //主text顏色
+$text-dark: rgb(21, 21, 21); //次text顏色
+$text-mark: #6d6868; //標註text色
+$light-gray: #a1a1a1; //淺灰text色
+$hover: #d7965b; //主hover色
+$price: #ca526f; //強調色
+$star: #ffd362; //star色
+
+@import "@/styles/_buttons.scss";
+
+// Customize font-size
+$web-font: 4.375rem, 3.5rem, 2.5rem, 1.875rem, 1.56rem, 1.25rem, 1rem;
+$mobile-font: 3rem, 2.625rem, 2.125rem, 1.5rem, 1.25rem, 1rem, 0.875rem;
+$web-size: ();
+$m-size: ();
+@for $i from 1 through length($web-font) {
+  $size: nth($web-font, $i);
+  $web-size: map-merge(
+    $web-size,
+    (
+      size-#{$i}:
+        (
+          font-size: $size,
+        )
+    )
+  );
+}
+
+@for $i from 1 through length($mobile-font) {
+  $size: nth($mobile-font, $i);
+  $m-size: map-merge(
+    $m-size,
+    (
+      m-size-#{$i}:
+        (
+          font-size: $size,
+        )
+    )
+  );
+}
+
+@each $name, $value in $web-size {
+  $font-size: map-get($value, font-size);
+  // size-1~7
+  .#{$name} {
+    font-size: $font-size;
+  }
+}
+
+@each $name, $value in $m-size {
+  $font-size: map-get($value, font-size);
+  // m-size-1~7
+  .#{$name} {
+    font-size: $font-size;
+  }
+}
