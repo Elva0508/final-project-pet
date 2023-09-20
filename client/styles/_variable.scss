@@ -8,7 +8,7 @@ $light-gray: #d9d9d9; //淺灰text色
 $hover: #d7965b; //主hover色
 $price: #ca526f; //強調色
 $star: #ffd362; //star色
-
+$cos-white: #fffdfb; //取代白色
 @import "@/styles/_buttons.scss";
 
 // Customize font-size
@@ -71,7 +71,6 @@ $m-size: ();
   border: 1px solid rgba(0, 0, 0, 0.1);
   text-indent: 5px;
   &:focus {
-    // background-color: #ca526f;
     border: 1px solid rgba(0, 0, 0, 0.1);
     outline: none; /* 去掉預設input聚焦時的黑框線 */
     box-shadow: 0 1px 4px rgb(0, 0, 0, 0.25);

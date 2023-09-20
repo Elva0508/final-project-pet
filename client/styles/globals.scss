@@ -46,7 +46,15 @@ body {
     "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   background-color: $main-bg;
 }
-
+a {
+  text-decoration: none;
+  color: $text-main;
+  border-bottom: 4px solid transparent;
+  &:hover {
+    border-bottom: 4px solid $hover;
+  }
+}
 // components scss styles
 @import "@/styles/components-style/_cat-mission.scss";
 @import "@/styles/components-style/_helper-detail.scss";
+@import "@/styles/components-style/_footer.scss";

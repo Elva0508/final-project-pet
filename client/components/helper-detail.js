@@ -1,7 +1,7 @@
 import React from "react";
 import { FiSend } from "react-icons/fi";
 import { BiMessageRounded } from "react-icons/bi";
-
+import Footer from "@/components/footer";
 const HelperDetail = () => {
   return (
     <>
@@ -66,8 +66,66 @@ const HelperDetail = () => {
             </div>
           </div>
         </section>
-        <section className=""></section>
+        <section className="">
+          <div className="evaluation-bar d-flex">
+            <div className="evaluation-bar-left d-flex flex-column justify-content-center alihn-items-center">
+              <p className="size-3 text-center">5</p>
+              <div className="ranking mb-2 mx-auto">
+                <img src="/star.svg" alt="星星" />
+                <img src="/star.svg" alt="星星" />
+                <img src="/star.svg" alt="星星" />
+                <img src="/star.svg" alt="星星" />
+                <img src="/star.svg" alt="星星" />
+              </div>
+            </div>
+            <div className="evaluation-bar-divider"></div>
+            <div className="evaluation-bar-right">
+              <div className="bar-group">
+                <p className="number">5</p>
+                <div className="percentage"></div>
+              </div>
+              <div className="bar-group">
+                <p className="number">4</p>
+                <div className="percentage"></div>
+              </div>
+              <div className="bar-group">
+                <p className="number">3</p>
+                <div className="percentage"></div>
+              </div>
+              <div className="bar-group">
+                <p className="number">2</p>
+                <div className="percentage"></div>
+              </div>
+              <div className="bar-group">
+                <p className="number">1</p>
+                <div className="percentage"></div>
+              </div>
+            </div>
+          </div>
+          <div className="review-card">
+            <div className="review-card-head d-flex justify-content-center align-items-center">
+              <div className="review-card-avatar"></div>
+              <div className="review-card-info d-flex flex-column justify-content-between ps-2">
+                <div className="d-flex justify-content-between">
+                  <div className="username size-6">張三</div>
+                  <div className="date size-6">2023年8月15日</div>
+                </div>
+                <div className="ranking mb-2">
+                  <img src="/star.svg" alt="星星" />
+                  <img src="/star.svg" alt="星星" />
+                  <img src="/star.svg" alt="星星" />
+                  <img src="/star.svg" alt="星星" />
+                  <img src="/star.svg" alt="星星" />
+                </div>
+              </div>
+            </div>
+            <div className="review-card-body mt-2">
+              唬爛產生器唬JOJP爛產生器唬爛產生器唬爛產生器唬。。爛產生器唬爛產生器唬爛產生器唬爛產生器唬爛產生器唬爛產生器唬爛產151生器唬爛產生器唬爛產生器唬，爛產生器唬爛產生器唬爛產生器唬爛產生器唬爛產生器唬爛產生器唬JK爛產生器唬
+            </div>
+          </div>
+        </section>
       </div>
+      <Footer />
       <section className="get-price d-flex justify-content-around align-items-center">
         <p className="get-price-number size-4">
           NT$<span>500</span>/次

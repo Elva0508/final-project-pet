@@ -1,5 +1,6 @@
 %helper-button-style {
   font-size: 1.6rem;
+  // font-weight: bold;
   width: 180px;
   height: 55px;
   svg {
@@ -62,6 +63,70 @@
       margin-left: $block-width + 5px;
       color: $text-dark;
       font-weight: 500;
+      text-align: justify;
+    }
+  }
+  .evaluation-bar {
+    $block-width: calc((100% - 5px) / 2);
+    width: calc(100% - 200px);
+    height: 200px;
+    margin: auto;
+    &-left {
+      width: $block-width;
+      .ranking img {
+        width: 40px;
+        height: 40px;
+      }
+    }
+    &-divider {
+      width: 3px;
+      height: 100%;
+      background-color: $text-dark;
+    }
+    &-right {
+      width: $block-width;
+      display: flex;
+      flex-direction: column;
+      // justify-content: center;
+      align-items: center;
+      .bar-group {
+        display: flex;
+        // justify-content: center;
+        align-items: center;
+        // margin-left: 4rem;
+      }
+      .percentage {
+        width: 200px;
+        height: 5px;
+        background-color: $hover;
+      }
+    }
+  }
+  .review-card {
+    $avatar-width: 70px;
+    background-color: $light-gray;
+    padding: 15px 25px;
+    margin: 20px;
+    width: 350px;
+    border-radius: 2px;
+    &-avatar {
+      width: $avatar-width;
+      height: $avatar-width;
+      background-color: $price;
+      border-radius: 50%;
+    }
+    &-info {
+      width: calc(100% - $avatar-width);
+      height: $avatar-width;
+      img {
+        width: 20px;
+      }
+      .username,
+      .date {
+        color: $text-mark;
+      }
+    }
+    &-body {
       text-align: justify;
     }
   }
