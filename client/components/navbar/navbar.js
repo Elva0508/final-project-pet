@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
 
 //icon
@@ -7,19 +7,71 @@ import User from '@/assets/user.svg'
 import catLogo from '@/assets/catLogo.svg'
 
 export default function Navbar() {
+  const [isBurgerActive, setIsBurgerActive] = useState(false);
+  const [isHeaderOnScroll, setIsHeaderOnScroll] = useState(false);
+
+  useEffect(()=>{
+    const burgerMenu = document.getElementById("burger")
+    const navbarMenu = document.getElementById("menu");
+
+    const handleBurgerClick = ()=>{
+      setIsBurgerActive((preState)=> !preState)
+    }
+    if( burgerMenu && navbarMenu ){
+      burgerMenu.addEventListener("click", handleBurgerClick )
+    }
+
+    const menuLinks =document.querySelectorAll(".menu-link")
+
+    const handleMenuLinkClick = () => {
+      setIsBurgerActive(false);
+    };
+    menuLinks.forEach((link) => {
+      link.addEventListener("click", handleMenuLinkClick);
+    });
+
+      // Change Header Background on Scrolling
+      const handleScroll = () => {
+        if (window.scrollY >= 85) {
+          setIsHeaderOnScroll(true);
+        } else {
+          setIsHeaderOnScroll(false);
+        }
+      };
+  
+      window.addEventListener("scroll", handleScroll);
+
+     // Clean up event listeners on component unmount
+     return () => {
+      if (burgerMenu && navbarMenu) {
+        burgerMenu.removeEventListener("click", handleBurgerClick);
+      }
+
+      menuLinks.forEach((link) => {
+        link.removeEventListener("click", handleMenuLinkClick);
+      });
+
+      window.removeEventListener("scroll", handleScroll);
+    };
+
+
+  },[])
+
   return (
     <>
     <header className="header" id="header">
-  <nav className="navbar container">
+  <nav className="u-navbar container">
     <a href="#" className="brand">
        <Image src={catLogo} alt="logo" />
     </a>
-    <div className="burger" id="burger">
+
+    <div className={`burger ${isBurgerActive ? 'is-active' : ''}`} id="burger">
       <span className="burger-line" />
       <span className="burger-line" />
       <span className="burger-line" />
     </div>
-    <div className="menu" id="menu">
+  
+    <div className={`menu ${isBurgerActive ? 'is-active' : ''}`} id="menu">
       <ul className="menu-inner">
         <li className="menu-item size-6">
           <a href="#" className="menu-link">
@@ -49,61 +101,22 @@ export default function Navbar() {
       </ul>
     </div>
     
-    <div>
-    <a href="#" className="menu-block">
-    <Image src={User} alt="user" />
-    </a>
-    <a href="#" className="menu-block">
-    <Image src={shoppingCart} alt="shoppingCart" />
+    <div className='d-flex'>
+ 
+    <a href="#" className="btn btn-circle menu-block">
+    <Image className='user' src={User} alt="user" />
     </a>
 
+
+    <a href="#" className="btn btn-circle menu-block">
+    <Image className='shoppingCart' src={shoppingCart} alt="shoppingCart" />
+    </a>
     </div>
+
 
   </nav>
 </header>
 
-{/* <nav class="navbar navbar-expand-lg bg-nav-header ">
-<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-<div >
-<a class="navbar-brand" href="#">
-    <Image src={catLogo} alt="logo" />
-   </a>
-  
-</div>
-
-  <div class="container-fluid">
-    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-      <div class="navbar-nav">
-        <a class="nav-link size-6 active" aria-current="page" href="#"> 品牌介紹</a>
-        <a class="nav-link size-6 " href="#">全部商品</a>
-        <a class="nav-link size-6" href="#"> 小貓上工</a>
-        <a class="nav-link size-6" href="#"> 小貓兩三知</a>
-        <a class="nav-link size-6" href="#">  常見問題</a>
-      
-      </div>
-    </div>
-    <div>
-    <a href="#" className="menu-block">
-    <Image src={User} alt="user" />
-    </a>
-    <a href="#" className="menu-block">
-    <Image src={shoppingCart} alt="shoppingCart" />
-    </a>
-    </div>
-  </div>
-</nav>
-<div>
-<div class='container'>
-    <a href="#" className="menu-block">
-    <Image src={User} alt="user" />
-    </a>
-    <a href="#" className="menu-block">
-    <Image src={shoppingCart} alt="shoppingCart" />
-    </a>
-    </div>
-</div> */}
 
 
     </>
