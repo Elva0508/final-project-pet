@@ -1,0 +1,160 @@
+%helper-button-style {
+  font-size: 1.6rem;
+  // font-weight: bold;
+  width: 180px;
+  height: 55px;
+  svg {
+    font-size: 28px;
+    margin-right: 0.2rem;
+    // height: 40px;
+  }
+}
+.helper-detail {
+  max-width: 1400px;
+  margin: auto;
+  header,
+  section {
+    width: calc(100% - 80px);
+    background-color: $content-bg;
+    margin: 1rem auto;
+    padding: 1rem 0 1.5rem 0;
+  }
+  .avatar {
+    background-color: $light-gray;
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    margin-right: 2rem;
+  }
+  .profile {
+    width: 70%;
+    text-align: justify;
+    img {
+      width: 28px;
+      height: 28px;
+      margin-right: 0.1rem;
+    }
+    .intro {
+      color: $text-mark;
+      font-weight: 500;
+    }
+    .btn-message {
+      @extend %helper-button-style;
+    }
+  }
+  .item {
+    $block-width: 12px;
+    width: calc(100% - 100px);
+    margin: 4rem auto;
+    &-title {
+      display: flex;
+      align-items: center;
+      margin-bottom: 0.5rem;
+      &::before {
+        content: "";
+        display: inline-block;
+        background-color: $hover;
+        width: $block-width;
+        height: 46px;
+        margin-right: 0.3rem;
+      }
+    }
+    &-content {
+      margin-left: $block-width + 5px;
+      color: $text-dark;
+      font-weight: 500;
+      text-align: justify;
+    }
+  }
+  .evaluation-bar {
+    $block-width: calc((100% - 5px) / 2);
+    width: calc(100% - 150px);
+    height: 200px;
+    margin: 2rem auto;
+    &-left {
+      width: $block-width;
+      .ranking img {
+        width: 40px;
+        height: 40px;
+      }
+    }
+    &-divider {
+      width: 3px;
+      height: 100%;
+      background-color: $text-dark;
+    }
+    &-right {
+      width: $block-width;
+      display: flex;
+      flex-direction: column;
+      // justify-content: center;
+      align-items: center;
+      .bar-group {
+        display: flex;
+        // justify-content: center;
+        align-items: center;
+        // margin-left: 4rem;
+      }
+      .percentage {
+        width: 260px;
+        height: 10px;
+        display: flex;
+        margin-left: 0.8rem;
+        --width: 5%; //評論總數的百分比
+        .have {
+          width: var(--width);
+          background-color: $hover;
+          border-radius: 0 2px 2px 0;
+        }
+        .no-have {
+          width: calc(100% - var(--width));
+          background-color: $light-gray;
+          border-radius: 0 2px 2px 0;
+        }
+      }
+    }
+  }
+  .review-card {
+    $avatar-width: 70px;
+    background-color: $light-gray;
+    padding: 15px 25px;
+    margin: 20px;
+    width: 350px;
+    border-radius: 2px;
+    &-avatar {
+      width: $avatar-width;
+      height: $avatar-width;
+      background-color: $price;
+      border-radius: 50%;
+    }
+    &-info {
+      width: calc(100% - $avatar-width);
+      height: $avatar-width;
+      img {
+        width: 20px;
+      }
+      .username,
+      .date {
+        color: $text-mark;
+      }
+    }
+    &-body {
+      text-align: justify;
+    }
+  }
+}
+.get-price {
+  //   width: 100vw;
+  height: 80px;
+  background-color: $main-bg;
+  position: sticky;
+  bottom: 0;
+  overflow-x: hidden;
+  box-shadow: 1px 0px 5px rgba(0, 0, 0, 0.25);
+  &-number {
+    color: $price;
+  }
+  &-btn {
+    @extend %helper-button-style;
+  }
+}
