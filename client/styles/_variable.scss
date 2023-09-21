@@ -52,7 +52,6 @@ $m-size: ();
     color: $text-dark;
     margin: 0;
     @if $name != size-7 {
-      font-weight: bold;
       color: $text-main;
     }
   }
