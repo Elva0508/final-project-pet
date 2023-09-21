@@ -6,7 +6,7 @@ import Filter from "@/components/job/filter";
 const Test = () => {
   return (
     <>
-      <Filter items={["測試1", "測試2"]} />
+      <HelperDetail />
     </>
   );
 };

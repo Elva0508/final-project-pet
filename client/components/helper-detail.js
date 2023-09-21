@@ -1,8 +1,13 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FiSend } from "react-icons/fi";
 import { BiMessageRounded } from "react-icons/bi";
 import Footer from "@/components/footer";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Scrollbar } from "swiper/modules";
 
+// Import Swiper styles
+import "swiper/css";
+import "swiper/css/scrollbar";
 const ReviewCard = () => {
   return (
     <div className="review-card">
@@ -26,6 +31,89 @@ const ReviewCard = () => {
         唬爛產生器唬JOJP爛產生器唬爛產生器唬爛產生器唬。。爛產生器唬爛產生器唬爛產生器唬爛產生器唬爛產生器唬爛產生器唬爛產151生器唬爛產生器唬爛產生器唬，爛產生器唬爛產生器唬爛產生器唬爛產生器唬爛產生器唬爛產生器唬JK爛產生器唬
       </div>
     </div>
+  );
+};
+
+const Swiper1 = () => {
+  const [slidesPerView, setSlidesPerView] = useState(3.5);
+  const [device, setDevice] = useState("PC");
+  useEffect(() => {
+    window.addEventListener("resize", handleRWD);
+    handleRWD();
+    return () => {
+      window.removeEventListener("resize", () => {
+        console.log("卸載組件");
+      });
+    };
+  }, []);
+  console.log(device);
+  function handleRWD() {
+    const width = window.innerWidth;
+    if (width > 1326) {
+      setSlidesPerView(3.5);
+    } else if (width <= 1326 && width >= 1160) {
+      setSlidesPerView(3);
+    } else if (width <= 1160 && width >= 1000) {
+      setSlidesPerView(2.5);
+    } else if (width <= 1000 && width >= 800) {
+      setSlidesPerView(2);
+    } else if (width <= 800 && width >= 625) {
+      setSlidesPerView(1.5);
+    } else if (width <= 625 && width >= 0) {
+      setSlidesPerView(1);
+    }
+    width <= 375
+      ? setDevice("mobile")
+      : width > 375 && width <= 768
+      ? setDevice("tablet")
+      : setDevice("PC");
+  }
+  return (
+    <Swiper
+      modules={[Scrollbar]}
+      spaceBetween={10}
+      slidesPerView={slidesPerView}
+      scrollbar={{
+        draggable: true,
+        dragSize: "150px",
+      }}
+      onSlideChange={() => console.log("slide change")}
+      onSwiper={(swiper) => console.log(swiper)}
+    >
+      <SwiperSlide>
+        <ReviewCard />
+      </SwiperSlide>
+      <SwiperSlide>
+        <ReviewCard />
+      </SwiperSlide>
+      <SwiperSlide>
+        <ReviewCard />
+      </SwiperSlide>
+      <SwiperSlide>
+        <ReviewCard />
+      </SwiperSlide>
+      <SwiperSlide>
+        <ReviewCard />
+      </SwiperSlide>
+      <SwiperSlide>
+        <ReviewCard />
+      </SwiperSlide>
+      <SwiperSlide>
+        <ReviewCard />
+      </SwiperSlide>
+      <SwiperSlide>
+        <ReviewCard />
+      </SwiperSlide>{" "}
+      <SwiperSlide>
+        <ReviewCard />
+      </SwiperSlide>{" "}
+      <SwiperSlide>
+        <ReviewCard />
+      </SwiperSlide>{" "}
+      <SwiperSlide>
+        <ReviewCard />
+      </SwiperSlide>
+    </Swiper>
   );
 };
 
@@ -55,11 +143,11 @@ const HelperDetail = () => {
         </header>
         <section className="description">
           <div className="item">
-            <div className="item-title size-4">相片/影片</div>
+            <div className="item-title size-4">相片/影片：</div>
             <div className="photo"></div>
           </div>
           <div className="item">
-            <div className="item-title size-4">小幫手介紹</div>
+            <div className="item-title size-4">小幫手介紹：</div>
             <p className="item-content size-6">
               孩子們主要活動區域在二樓，害羞的孩子來不用擔心沒地方躲藏，但若是喜愛探險/活動量的主子們，更適合來我家，我家樓中樓，一、二樓相當夠寶貝當成馬拉松賽跑。
               <br />
@@ -71,30 +159,26 @@ const HelperDetail = () => {
             </p>
           </div>
           <div className="item">
-            <div className="item-title size-4">
-              可服務時間：
-              <span className="size-4">日、一、二、三、四、五、六</span>
-            </div>
-            <p></p>
+            <div className="item-title size-4 ">可服務時間：</div>
+            <span className="size-4 item-content">
+              日、一、二、三、四、五、六
+            </span>
           </div>
           <div className="item">
-            <div className="item-title size-4">
-              可服務地區：<span className="size-4">台北市、新北市</span>
-            </div>
+            <div className="item-title size-4">可服務地區：</div>
+            <span className="size-4 item-content">台北市、新北市</span>
           </div>
           <div className="item">
-            <div className="item-title size-4">
-              連絡電話：<span className="size-4">0912-345-678</span>
-            </div>
+            <div className="item-title size-4">連絡電話：</div>
+            <span className="size-4 item-content">0912-345-678</span>
           </div>
           <div className="item">
-            <div className="item-title size-4">
-              電子信箱：<span className="size-4">example01@test.com</span>
-            </div>
+            <div className="item-title size-4">電子信箱</div>
+            <span className="size-4 item-content">example01@test.com</span>
           </div>
         </section>
         <section className="">
-          <div className="evaluation-bar d-flex">
+          <div className="evaluation-bar test">
             <div className="evaluation-bar-left d-flex flex-column justify-content-center">
               <p className="size-3 text-center">5</p>
               <div className="ranking mb-2 mx-auto">
@@ -145,8 +229,7 @@ const HelperDetail = () => {
             </div>
           </div>
           <div className="review-card-group d-flex">
-            <ReviewCard />
-            <ReviewCard />
+            <Swiper1 />
           </div>
         </section>
       </div>
