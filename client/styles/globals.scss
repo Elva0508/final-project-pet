@@ -54,7 +54,12 @@ a {
     border-bottom: 4px solid $hover;
   }
 }
+ul {
+  list-style: none;
+  padding: 0;
+}
 // components scss styles
 @import "@/styles/components-style/_cat-mission.scss";
 @import "@/styles/components-style/_helper-detail.scss";
+@import "@/styles/components-style/job.scss";
 @import "@/styles/components-style/_footer.scss";
