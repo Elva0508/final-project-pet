@@ -1,7 +1,20 @@
 @import "@/styles/_variable.scss";
-.latest-mission{
-    background-color: $content-bg;
-    color: $text-main;
-    display: inline-block;
-    padding: 26px;
+
+.add-mission-btn{
+    height: 50px;
+    border-radius: 20px;
+    color: $main-bg;
+}
+.all-mission{
+    gap: 40px;
+    .latest-mission{
+        background-color: $content-bg;
+        color: $text-main;
+        display: inline-block;
+        padding: 26px;
+    }
+    .mission-list{
+        // width: 888px;
+        width: 100%;
+    }
 }
