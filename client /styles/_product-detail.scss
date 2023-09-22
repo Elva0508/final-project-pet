@@ -1,0 +1,68 @@
+@import "@/styles/_variable.scss";
+
+.container{
+background-color: $main-bg;
+}
+
+.product-pic{
+    width: 60%;
+    .main-pic {
+        width: 100%;
+        img {
+          width: 80%; /* 你想要的寬度百分比 */
+          height: auto; /* 自動調整高度以保持圖片比例 */
+        }
+    }
+    .other-pic {
+        width: 100%;
+        img {
+          width: 20%; /* 你想要的寬度百分比 */
+          height: auto; /* 自動調整高度以保持圖片比例 */
+          padding: 10px;
+        }
+    }
+}
+
+.name,
+.brand-star,
+.price-wrapper {
+  margin-top: 25px;
+}
+
+.add-to-cart{
+    button {
+        width: 450px;
+        margin-top: 25px;
+    }
+}
+.add-to-favorites{
+    button {
+        width: 450px;
+        margin-top: 25px;
+    }
+}
+
+//section-product-detail-tabs
+ .product-detail-tabs {
+    border-bottom: 2px solid $light-gray; 
+    .nav-item{
+      
+        .nav-link {
+            color: $text-main;
+        }
+    }
+    
+  }
+
+
+
+
+
+
+
+
+
+
+
+  
+

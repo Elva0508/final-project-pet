@@ -1,19 +1,20 @@
 // 檔案位置: styles/global.scss
-// bootstrap變數覆蓋用 (Variable overrides)
-$border-radius: 2px;
-$border-color: rgba(0, 0, 0, 0.1);
-$box-shadow: 0 1px 4px rgb(0, 0, 0, 0.25);
-$form-select-focus-border-color: $border-color;
-$focus-ring-color: transparent;
-$form-select-focus-box-shadow: $box-shadow;
+// 變數覆蓋用 (Variable overrides)
+// 全站配色 colors
+// $primary: #d7965b;
+// $secondary: rgba(44, 226, 31, 0.5);
+// $success: #7eb4e6;
+// $danger: #ff4136;
+
+// 按鈕圓角邊 button radius
+// $border-radius: 2px;
+// $border-radius-sm: 2px;
+// $border-radius-lg: 2px;
 
 // ↑↑↑  變數覆蓋(Variable overrides) 要寫在這行"上面"  ↑↑↑
 // 導入所有 bootstrap 樣式
 @import "~bootstrap/scss/bootstrap";
 // ↓↓↓  其它客製樣式要寫在這行的"下面" ↓↓↓
-
-// 客製化變數樣式
-@import "@/styles/_variable.scss";
 
 // google Noto Sans TC 中文字體
 @import "https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400&display=swap";
@@ -44,26 +45,7 @@ body {
     // Emoji fonts
     "Apple Color Emoji",
     "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-  background-color: $main-bg;
 }
-a {
-  text-decoration: none;
-  color: $text-main;
-  border-bottom: 4px solid transparent;
-  &:hover {
-    border-bottom: 4px solid $hover;
-  }
-}
-ul {
-  list-style: none;
-  padding: 0;
-}
+
 // components scss styles
-@import "@/styles/components-style/_cat-mission.scss";
-@import "@/styles/components-style/_helper-detail.scss";
-@import "@/styles/components-style/job.scss";
-@import "@/styles/components-style/_footer.scss";
-@import "@/styles/components-style/_role-selection.scss";
-@import "@/styles/components-style/_latest-mission.scss";
-@import "@/styles/_find-mission.scss";
-@import "@/styles/components-style/_product-card.scss";
+@import "@/styles/_product-detail.scss";
