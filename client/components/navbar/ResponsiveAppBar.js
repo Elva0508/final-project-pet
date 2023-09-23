@@ -13,6 +13,7 @@ import MenuItem from "@mui/material/MenuItem";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { ThemeProvider, createTheme, styled } from "@mui/material/styles";
 import Badge from "@mui/material/Badge";
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import Image from "next/image";
 
 //logo-icon
@@ -185,13 +186,7 @@ function ResponsiveAppBar() {
                   />
                 </IconButton>
                 <IconButton onClick={undefined} sx={{ p: 0 }}>
-                  {/* <Image src={ShoppingCart} alt="shoppingCart" /> */}
-                  <IconButton aria-label="cart">
-                    <StyledBadge badgeContent={4} color="secondary">
-                      {/* <ShoppingCartIcon color="tertiary" style={{ fontSize: 30 }} /> */}
-                      <Image src={ShoppingCart} alt="shoppingCart" />
-                    </StyledBadge>
-                  </IconButton>
+                  <Image src={ShoppingCart} alt="shoppingCart" />
                 </IconButton>
               </Tooltip>
               <Menu
