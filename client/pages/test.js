@@ -7,7 +7,7 @@ export default function Test() {
     // <Navbar/>
     <>
     <ResponsiveAppBar/>
-    <LoginForm/>
+    {/* <LoginForm/> */}
     </>
   )
 }
