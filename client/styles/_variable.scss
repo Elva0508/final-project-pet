@@ -16,55 +16,77 @@ $cos-white: #fffdfb; //取代白色
 // 手機版：m-size-1 ~ m-size-7 下面七種字體大小的className
 $web-font: 4.375rem, 3.5rem, 2.5rem, 1.875rem, 1.56rem, 1.25rem, 1rem;
 $mobile-font: 3rem, 2.625rem, 2.125rem, 1.5rem, 1.25rem, 1rem, 0.875rem;
-$web-size: ();
-$m-size: ();
-@for $i from 1 through length($web-font) {
-  $size: nth($web-font, $i);
-  $web-size: map-merge(
-    $web-size,
-    (
-      size-#{$i}:
-        (
-          font-size: $size,
-        )
-    )
-  );
-}
 
-@for $i from 1 through length($mobile-font) {
-  $size: nth($mobile-font, $i);
-  $m-size: map-merge(
-    $m-size,
-    (
-      m-size-#{$i}:
-        (
-          font-size: $size,
-        )
-    )
-  );
-}
+//  { 前一版font-size
+//   // $web-size: ();
+//   // $m-size: ();
+//   // @for $i from 1 through length($web-font) {
+//   //   $size: nth($web-font, $i);
+//   //   $web-size: map-merge(
+//   //     $web-size,
+//   //     (
+//   //       size-#{$i}:
+//   //         (
+//   //           font-size: $size,
+//   //         )
+//   //     )
+//   //   );
+//   // }
 
-@each $name, $value in $web-size {
-  $font-size: map-get($value, font-size);
-  // size-1~7
-  .#{$name} {
-    font-size: $font-size;
-    color: $text-dark;
-    margin: 0;
-    @if $name != size-7 {
-      color: $text-main;
+//   // @for $i from 1 through length($mobile-font) {
+//   //   $size: nth($mobile-font, $i);
+//   //   $m-size: map-merge(
+//   //     $m-size,
+//   //     (
+//   //       m-size-#{$i}:
+//   //         (
+//   //           font-size: $size,
+//   //         )
+//   //     )
+//   //   );
+//   // }
+
+//   // @each $name, $value in $web-size {
+//   //   $font-size: map-get($value, font-size);
+//   //   // size-1~7
+//   //   .#{$name} {
+//   //     font-size: $font-size;
+//   //     color: $text-dark;
+//   //     margin: 0;
+//   //     @if $name != size-7 {
+//   //       color: $text-main;
+//   //     }
+//   //   }
+//   // }
+
+//   // @each $name, $value in $m-size {
+//   //   $font-size: map-get($value, font-size);
+//   //   // m-size-1~7
+//   //   .#{$name} {
+//   //     font-size: $font-size;
+//   //   }
+//   // }
+
+//   // .size-1 {
+//   //   font-size: 4vw;
+//   //   font-size: max(3rem, min(4vw, 4.375rem));
+//   // }
+// }
+
+@for $i from 1 through 7 {
+  .size-#{$i} {
+    font-size: 4vw;
+    font-size: max(nth($mobile-font, $i), min(4vw, nth($web-font, $i)));
+  }
+}
+@media screen and (max-width: 768px) {
+  @for $i from 1 through 7 {
+    .m-size-#{$i} {
+      font-size: 3vw;
+      font-size: max(nth($mobile-font, $i), min(3vw, nth($web-font, $i)));
     }
   }
 }
-
-@each $name, $value in $m-size {
-  $font-size: map-get($value, font-size);
-  // m-size-1~7
-  .#{$name} {
-    font-size: $font-size;
-  }
-}
-
 .form-input {
   height: 2.5rem;
   border: 1px solid rgba(0, 0, 0, 0.1);
