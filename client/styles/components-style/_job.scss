@@ -1,7 +1,8 @@
 .job-search {
   width: 40%;
   max-width: 350px;
-  margin: 0.5rem;
+  height: 35px;
+  // margin: 0.5rem;
   display: flex;
   justify-content: space-between;
   input {
@@ -29,20 +30,20 @@
       color: $hover;
     }
   }
-}
-.ripple {
-  animation: ripple 0.4s ease-out;
-  pointer-events: none;
-}
-@keyframes ripple {
-  to {
-    transform: scale(1.1);
-    box-shadow: 0 0px 10px lighten($hover, 13%);
+  .ripple {
+    animation: ripple 0.4s ease-out;
+    pointer-events: none;
+  }
+  @keyframes ripple {
+    to {
+      transform: scale(1.1);
+      box-shadow: 0 0px 10px lighten($hover, 13%);
+    }
   }
 }
 
-.drop-down {
-  margin: 2rem;
+.drop-down-filter {
+  // margin: 2rem;
   $drop-down-width: 130px;
   width: $drop-down-width;
   &-btn {

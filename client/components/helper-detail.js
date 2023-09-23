@@ -1,13 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { FiSend } from "react-icons/fi";
 import { BiMessageRounded } from "react-icons/bi";
 import Footer from "@/components/footer";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Scrollbar } from "swiper/modules";
+import { Scrollbar, Navigation } from "swiper/modules";
+// import function to register Swiper custom elements
+import { register } from "swiper/element/bundle";
+// register Swiper custom elements
+register();
 
 // Import Swiper styles
 import "swiper/css";
 import "swiper/css/scrollbar";
+import "swiper/css/navigation";
 const ReviewCard = () => {
   return (
     <div className="review-card">
@@ -33,9 +38,119 @@ const ReviewCard = () => {
     </div>
   );
 };
+const ImageSwiper = () => {
+  const swiperRef = useRef(null);
+  useEffect(() => {
+    const swiperContainer = swiperRef.current;
+    const params = {
+      navigation: true,
+      injectStyles: [
+        `
+          .swiper-button-next,
+          .swiper-button-prev {
+            background-color: #FFFDFB;
+            width:50px;
+            height:50px;
+            border-radius: 50%;
+            color: #F8CB9F;
+            box-shadow: 0 0 9px rgba(0, 0, 0, 0.5);
+            background-position: center;
+            background-size: 25px;
+            background-repeat: no-repeat;
+          }
 
-const Swiper1 = () => {
-  const [slidesPerView, setSlidesPerView] = useState(3.5);
+          .swiper-button-prev {
+            background-image: url("/caret-left.svg");
+
+          }
+          .swiper-button-next {
+            background-image: url("/caret-right.svg");    
+          }
+          .swiper-button-next svg,
+          .swiper-button-prev svg {
+            color: transparent;
+          }
+         
+      `,
+      ],
+    };
+
+    Object.assign(swiperContainer, params);
+    swiperContainer.initialize();
+  }, []);
+
+  return (
+    <>
+      <swiper-container
+        ref={swiperRef}
+        navigation="true"
+        space-between="20"
+        slides-per-view="auto"
+        next-el=".custom-next-button"
+        prev-el=".custom-prev-button"
+        init="false"
+      >
+        <swiper-slide>
+          <img
+            src={`https://picsum.photos/id/${Math.floor(
+              Math.random() * 200
+            )}/300/300`}
+          />
+        </swiper-slide>
+        <swiper-slide>
+          <img
+            src={`https://picsum.photos/id/${Math.floor(
+              Math.random() * 200
+            )}/300/300`}
+          />
+        </swiper-slide>
+        <swiper-slide>
+          <img
+            src={`https://picsum.photos/id/${Math.floor(
+              Math.random() * 200
+            )}/300/300`}
+          />
+        </swiper-slide>
+        <swiper-slide>
+          <img
+            src={`https://picsum.photos/id/${Math.floor(
+              Math.random() * 200
+            )}/300/300`}
+          />
+        </swiper-slide>
+        <swiper-slide>
+          <img
+            src={`https://picsum.photos/id/${Math.floor(
+              Math.random() * 200
+            )}/300/300`}
+          />
+        </swiper-slide>
+        <swiper-slide>
+          <img
+            src={`https://picsum.photos/id/${Math.floor(
+              Math.random() * 200
+            )}/300/300`}
+          />
+        </swiper-slide>
+        <swiper-slide>
+          <img
+            src={`https://picsum.photos/id/${Math.floor(
+              Math.random() * 200
+            )}/300/300`}
+          />
+        </swiper-slide>
+        <swiper-slide>
+          <img
+            src={`https://picsum.photos/id/${Math.floor(
+              Math.random() * 200
+            )}/300/300`}
+          />
+        </swiper-slide>
+      </swiper-container>
+    </>
+  );
+};
+const ReviewSwiper = () => {
   const [device, setDevice] = useState("PC");
   useEffect(() => {
     window.addEventListener("resize", handleRWD);
@@ -46,22 +161,8 @@ const Swiper1 = () => {
       });
     };
   }, []);
-  console.log(device);
   function handleRWD() {
     const width = window.innerWidth;
-    if (width > 1326) {
-      setSlidesPerView(3.5);
-    } else if (width <= 1326 && width >= 1160) {
-      setSlidesPerView(3);
-    } else if (width <= 1160 && width >= 1000) {
-      setSlidesPerView(2.5);
-    } else if (width <= 1000 && width >= 800) {
-      setSlidesPerView(2);
-    } else if (width <= 800 && width >= 625) {
-      setSlidesPerView(1.5);
-    } else if (width <= 625 && width >= 0) {
-      setSlidesPerView(1);
-    }
     width <= 375
       ? setDevice("mobile")
       : width > 375 && width <= 768
@@ -71,14 +172,12 @@ const Swiper1 = () => {
   return (
     <Swiper
       modules={[Scrollbar]}
-      spaceBetween={10}
-      slidesPerView={slidesPerView}
+      spaceBetween={20}
+      slidesPerView="auto"
       scrollbar={{
         draggable: true,
         dragSize: "150px",
       }}
-      onSlideChange={() => console.log("slide change")}
-      onSwiper={(swiper) => console.log(swiper)}
     >
       <SwiperSlide>
         <ReviewCard />
@@ -121,16 +220,18 @@ const HelperDetail = () => {
   return (
     <>
       <div className="helper-detail">
-        <header className="d-flex justify-content-center align-items-center">
+        <header className="d-flex flex-md-row flex-column justify-content-center align-items-center">
           <div className="avatar">
             <img src="" />
           </div>
-          <div className="profile">
-            <div className="size-2">雅晴</div>
-            <p className="intro size-6">
+          <div className="profile row justify-content-center justify-content-md-start">
+            <div className="size-2 m-size-3 username col-4 col-md-12 text-end text-sm-start">
+              雅晴
+            </div>
+            <p className="intro size-6 col-12">
               此區是自我介紹：我從小時候家裡一直都有養狗《貴賓、米克斯⋯⋯》，直到14年前自己領養一隻8歲的米格魯兒子開始了不歸路，陸續再領養第二隻米格魯女兒、2隻貓咪，2020年那年5月經歷大女兒突然驟逝、11月兒子罹癌之後離世、陸續經歷大咪有泌尿道問題、小咪氣喘發作，讓我看見更多毛孩生病的路程，所以有了想照顧需要被照顧的毛孩，希望也期許自己能有更多能力、並更努力學習如何去照顧被需要的孩子！
             </p>
-            <div className="review size-6 d-flex my-2">
+            <div className="review size-6 d-flex my-2 align-items-center col-4 col-md-12 ">
               <span className="">5.0</span>
               <img src="/star.svg"></img>
               <span>(10)</span>
@@ -144,7 +245,9 @@ const HelperDetail = () => {
         <section className="description">
           <div className="item">
             <div className="item-title size-4">相片/影片：</div>
-            <div className="photo"></div>
+            <div className="item-image item-content">
+              <ImageSwiper />
+            </div>
           </div>
           <div className="item">
             <div className="item-title size-4">小幫手介紹：</div>
@@ -229,16 +332,16 @@ const HelperDetail = () => {
             </div>
           </div>
           <div className="review-card-group d-flex">
-            <Swiper1 />
+            <ReviewSwiper />
           </div>
         </section>
       </div>
       <Footer />
       <section className="get-price d-flex justify-content-around align-items-center">
-        <p className="get-price-number size-4">
+        <p className="get-price-number size-4 m-0">
           NT$<span>500</span>/次
         </p>
-        <button className="get-price-btn btn-second d-flex align-items-center justify-content-center">
+        <button className="get-price-btn btn-second d-flex  align-items-center justify-content-center">
           <FiSend className="get-price-icon" />
           查看報價
         </button>

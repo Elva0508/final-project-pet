@@ -1,8 +1,9 @@
 import React, { useState, useRef, useEffect } from "react";
 import { BiSolidDownArrow, BiSolidUpArrow } from "react-icons/bi";
 
-const Filter = ({ items, title }) => {
-  const menuRef = useRef(null);
+const Filter = ({ items, title, src }) => {
+  const dropDownRef = useRef(null);
+  const [isOpen, setIsOpen] = useState(false);
   useEffect(() => {
     // 加入整個網頁的點擊監聽事件
     document.addEventListener("click", handleClickOutside);
@@ -13,52 +14,37 @@ const Filter = ({ items, title }) => {
     };
   }, []);
   const handleClickOutside = (e) => {
-    const dropDown = document.querySelector(".drop-down");
+    const dropDown = dropDownRef.current;
     if (!dropDown.contains(e.target)) {
-      // 如果點擊事件的位置沒有在dropdown內，則執行toggle函數
-      Toggle("outside");
+      // 如果點擊事件的位置沒有在dropdown內，則執行setIsOpen
+      setIsOpen(false);
     }
   };
-  const handleTogle = (e) => {
-    console.log(e.currentTarget);
-    Toggle("inside");
+  const handleToggle = (e) => {
+    // 點擊時切換下拉選單狀態
+    setIsOpen(!isOpen);
   };
-
-  function Toggle(status) {
-    const btn = document.querySelector(".drop-down-btn");
-    const menu = document.querySelector(".drop-down-menu");
-    const down = document.querySelector(".icon-down");
-    const up = document.querySelector(".icon-up");
-    if (status === "outside") {
-      // 為什麼這裡是相反的? 到時候要檢查一下
-      down.classList.add("d-none");
-      up.classList.remove("d-none");
-      menu.classList.remove("d-none");
-      btn.classList.add("drop-down-active");
-      btn
-        .querySelector(".drop-down-btn-icon")
-        .classList.add("drop-down-active");
-    }
-    down.classList.toggle("d-none");
-    up.classList.toggle("d-none");
-    menu.classList.toggle("d-none");
-    btn.classList.toggle("drop-down-active");
-    btn
-      .querySelector(".drop-down-btn-icon")
-      .classList.toggle("drop-down-active");
-  }
 
   return (
-    <div className="drop-down">
-      <button className="drop-down-btn" onClick={handleTogle}>
-        <div className="drop-down-btn-icon">
-          <img src="/job-calendar.svg" />
+    <div className="drop-down-filter" ref={dropDownRef}>
+      <button
+        className={`drop-down-filter-btn ${isOpen ? "drop-down-active" : ""}`}
+        onClick={handleToggle}
+      >
+        <div
+          className={`drop-down-filter-btn-icon ${
+            isOpen ? "drop-down-active" : ""
+          }`}
+        >
+          <img src={src} />
         </div>
         {title || "選項"}
-        <BiSolidDownArrow className="icon icon-down" />
-        <BiSolidUpArrow className="icon icon-up d-none" />
+        <BiSolidDownArrow
+          className={`icon icon-down ${!isOpen ? "" : "d-none"}`}
+        />
+        <BiSolidUpArrow className={`icon icon-up ${isOpen ? "" : "d-none"}`} />
       </button>
-      <ul className="drop-down-menu d-none" ref={menuRef}>
+      <ul className={`drop-down-filter-menu ${isOpen ? "" : "d-none"}`}>
         {items ? (
           items.map((item) => <li>{item}</li>)
         ) : (
@@ -69,7 +55,6 @@ const Filter = ({ items, title }) => {
           </>
         )}
       </ul>
-      {/* <div>下拉選單</div> */}
     </div>
   );
 };
@@ -79,6 +64,7 @@ export default Filter;
 // 下拉式選單可傳入變數(props)：
 // title => 選單名稱
 // items = ['選項一','選項二',...]; => 選單列表
+// src={"/job-calendar.svg"} =>選單icon
 
 //使用範例：
-//<Filter items={["測試1", "測試2"]} title='篩選名稱'/>
+//<Filter items={["測試1", "測試2"]} title='篩選名稱' src={'/job-calendar.svg'}/>

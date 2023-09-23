@@ -1,0 +1,79 @@
+.mission-helper-list {
+  padding: 0 40px;
+  .filters {
+    display: flex;
+    width: 90vw;
+    max-width: 1000px;
+    margin: 2rem auto;
+    justify-content: space-around;
+  }
+  .famous-helper {
+    width: 35%;
+    background-color: $content-bg;
+    padding: 15px;
+    &-title {
+      font-weight: bold;
+      margin-bottom: 2rem;
+    }
+    &-card {
+      $img-size: 120px;
+      margin-bottom: 3rem;
+      &-img {
+        width: $img-size;
+        height: $img-size;
+        border-radius: 50%;
+      }
+      .helper-content {
+        width: calc(100% - $img-size);
+        .title {
+          font-weight: bold;
+        }
+        &-info p {
+          margin: 0;
+        }
+        &-info img {
+          cursor: pointer;
+        }
+        .price {
+          span {
+            color: $price;
+            font-weight: 600;
+          }
+          button {
+            padding: 3px 10px;
+          }
+        }
+      }
+    }
+  }
+  .single-card {
+    // width: 250px;
+    // height: 400px;
+    background-color: $cos-white;
+    padding: 1rem;
+    &-img {
+      $img-size: 160px;
+      width: $img-size;
+      height: $img-size;
+      border-radius: 50%;
+    }
+    &-title {
+      font-weight: bold;
+      margin: 0.5rem 0;
+    }
+
+    &-info p {
+      margin: 0.2rem 0;
+    }
+    .price {
+      margin-top: 1rem;
+      span {
+        color: $price;
+        font-weight: 600;
+      }
+      button {
+        padding: 3px 10px;
+      }
+    }
+  }
+}
