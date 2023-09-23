@@ -15,6 +15,7 @@ import { ThemeProvider, createTheme, styled } from "@mui/material/styles";
 import Badge from "@mui/material/Badge";
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import Image from "next/image";
+import Link from "next/link";
 
 //logo-icon
 import catLogo from "@/assets/catLogo.svg";
@@ -67,8 +68,17 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
   },
 }));
 
-const pages = ["品牌介紹", "全部商品", "小貓上工", "小貓兩三知", "常見問題"];
-const settings = ["註冊", "登入"];
+const pages = [
+  {path: "/testLink/brand", name: "品牌介紹",id:1},
+  {path: "/testLink/allproducts", name: "全部商品",id:2},
+  {path: "/testLink/catjob", name: "小貓上工", id:3},
+  {path: "/testLink/catknowledge", name: "小貓兩三知", id:4},
+  {path: "/testLink/qa", name: "常見問題",id:5},
+];
+const settings = [
+  {path: "/register", name: "註冊",id:1},
+  {path: "/login", name: "登入",id:2},
+  ];
 
 function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -125,7 +135,9 @@ function ResponsiveAppBar() {
                   display: { xs: "block", md: "none" },
                 }}
               >
-                {pages.map((page) => (
+              
+                {pages.map((v) => (
+                  <Link href={v.path}  key={v.id}>   
                   <MenuItem
                     sx={{
                       width: "330px",
@@ -134,12 +146,14 @@ function ResponsiveAppBar() {
                       fontWeight: "700",
                       my: 2,
                     }}
-                    key={page}
+                   
                     onClick={handleCloseNavMenu}
                   >
-                    <Typography textAlign="center">{page}</Typography>
+                    <Typography textAlign="center">{v.name}</Typography>
                   </MenuItem>
+                  </Link>
                 ))}
+            
               </Menu>
               <Button>
               
@@ -158,9 +172,10 @@ function ResponsiveAppBar() {
             </Box>
             {/* nav-item */}
             <Box sx={{ width: '100%',display: { xs: "none", md: "flex" } }}>
-              {pages.map((page) => (
+              {pages.map((v) => (
+                <Link href={v.path}  key={v.id}>
                 <Button
-                  key={page}
+                 
                   onClick={handleCloseNavMenu}
                   sx={{
                     my: 3.5,
@@ -171,8 +186,9 @@ function ResponsiveAppBar() {
                     fontWeight: "700",
                   }}
                 >
-                  {page}
+                  {v.name}
                 </Button>
+                </Link>
               ))}
             </Box>
             {/* 會員＆購物車icon */}
@@ -205,10 +221,12 @@ function ResponsiveAppBar() {
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
               >
-                {settings.map((setting) => (
-                  <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                    <Typography textAlign="center">{setting}</Typography>
+                {settings.map((v) => (
+                  <Link href={v.path} key={v.id}>
+                  <MenuItem  onClick={handleCloseUserMenu}>
+                    <Typography textAlign="center">{v.name}</Typography>
                   </MenuItem>
+                  </Link>
                 ))}
               </Menu>
             </Box>
