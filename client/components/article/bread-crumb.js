@@ -3,7 +3,7 @@ import React from "react";
 export default function BreadCrumb() {
   return (
     <>
-      <nav className="breadcrumb" aria-label="breadcrumb">
+      <nav  className="breadcrumb" aria-label="breadcrumb">
         <ol class="breadcrumb">
           <li class="breadcrumb-item">
             <a href="/">首頁</a>

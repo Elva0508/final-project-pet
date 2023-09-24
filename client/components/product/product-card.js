@@ -1,7 +1,6 @@
 import { Fragment, useState } from "react";
 import { CiHeart } from "react-icons/Ci";
 import { BiSolidHeart,BiSolidCart} from "react-icons/bi";
-import "bootstrap/dist/css/bootstrap.css";
 export default function ProductCard() {
   const [isFavorite, setIsFavorite] = useState(false); // 初始狀態為未收藏
 
