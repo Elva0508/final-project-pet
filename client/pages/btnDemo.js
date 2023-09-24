@@ -32,10 +32,14 @@ export default function Button() {
       <span>font family套用測試</span>
       <p>這段是中文字測試</p>
       <p>English Test</p>
-      <p className="size-5">字體大小測試</p>
-      <p className="m-size-5">字體大小測試</p>
-      <p className="size-3">字體大小測試</p>
-      <p className="m-size-1">字體大小測試</p>
+
+      <p class="size-1">字體大小測試</p>
+      <p class="size-2">字體大小測試</p>
+      <p class="size-3">字體大小測試</p>
+      <p class="size-4">字體大小測試</p>
+      <p class="size-5">字體大小測試</p>
+      <p class="size-6">字體大小測試</p>
+      <p class="size-7">字體大小測試</p>
     </>
   );
 }
