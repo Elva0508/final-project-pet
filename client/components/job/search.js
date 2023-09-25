@@ -17,7 +17,6 @@ const Search = ({ placeholder, color }) => {
       <button onClick={handleRipple} ref={rippleBtnRef}>
         <BiSearchAlt className="job-search-icon" />
       </button>
-      <div className="ripple"></div>
     </div>
   );
 };

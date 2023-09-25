@@ -1,5 +1,7 @@
 .mission-helper-list {
-  padding: 0 40px;
+  max-width: 1440px;
+  padding: 0 20px;
+  margin: auto;
   .filters {
     display: flex;
     width: 90%;
@@ -9,6 +11,7 @@
   }
   .famous-helper {
     width: 40%;
+    min-width: 355px;
     background-color: $content-bg;
     padding: 15px;
     &-title {
@@ -29,7 +32,10 @@
           font-weight: bold;
         }
         &-info p {
-          margin: 0;
+          margin: 0 0 0.5rem 0;
+        }
+        &-info span {
+          color: $price;
         }
         &-info img {
           cursor: pointer;
@@ -48,10 +54,11 @@
   }
   .helper-list {
     width: calc(100% - 40% - 20px);
-    justify-content: center;
+    justify-content: flex-end;
   }
   .single-card {
     margin: 0 10px 20px 0;
+    min-width: 230px;
     background-color: $cos-white;
     padding: 1rem;
     &-img {
@@ -78,5 +85,40 @@
         padding: 3px 10px;
       }
     }
+  }
+}
+.mobile-filter {
+  margin: 1.2rem 0;
+  // height: 100px;
+  .swiper-wrapper {
+    display: flex;
+    justify-content: space-between;
+    & > * {
+      margin-right: 30px;
+    }
+    & .swiper-slide:last-child {
+      margin-right: 10px;
+    }
+  }
+  .swiper-slide {
+    width: 130px;
+  }
+}
+
+.famous-carousel {
+  div:first-child,
+  div:last-child {
+    display: flex;
+    align-items: center;
+    svg {
+      color: $text-main;
+      font-size: 30px;
+    }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .job-search {
+    width: 100%;
   }
 }

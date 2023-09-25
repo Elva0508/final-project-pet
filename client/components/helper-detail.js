@@ -169,6 +169,8 @@ const ReviewSwiper = () => {
       ? setDevice("tablet")
       : setDevice("PC");
   }
+
+  const arr = Array.from({ length: 20 });
   return (
     <Swiper
       modules={[Scrollbar]}
@@ -179,39 +181,11 @@ const ReviewSwiper = () => {
         dragSize: "150px",
       }}
     >
-      <SwiperSlide>
-        <ReviewCard />
-      </SwiperSlide>
-      <SwiperSlide>
-        <ReviewCard />
-      </SwiperSlide>
-      <SwiperSlide>
-        <ReviewCard />
-      </SwiperSlide>
-      <SwiperSlide>
-        <ReviewCard />
-      </SwiperSlide>
-      <SwiperSlide>
-        <ReviewCard />
-      </SwiperSlide>
-      <SwiperSlide>
-        <ReviewCard />
-      </SwiperSlide>
-      <SwiperSlide>
-        <ReviewCard />
-      </SwiperSlide>
-      <SwiperSlide>
-        <ReviewCard />
-      </SwiperSlide>{" "}
-      <SwiperSlide>
-        <ReviewCard />
-      </SwiperSlide>{" "}
-      <SwiperSlide>
-        <ReviewCard />
-      </SwiperSlide>{" "}
-      <SwiperSlide>
-        <ReviewCard />
-      </SwiperSlide>
+      {arr.map((item) => (
+        <SwiperSlide>
+          <ReviewCard />
+        </SwiperSlide>
+      ))}
     </Swiper>
   );
 };
@@ -281,7 +255,7 @@ const HelperDetail = () => {
           </div>
         </section>
         <section className="">
-          <div className="evaluation-bar test">
+          <div className="evaluation-bar">
             <div className="evaluation-bar-left d-flex flex-column justify-content-center">
               <p className="size-3 text-center">5</p>
               <div className="ranking mb-2 mx-auto">

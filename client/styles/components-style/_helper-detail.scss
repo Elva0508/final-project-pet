@@ -117,67 +117,69 @@ $detail-block-width: 12px; //標題左側直槓槓
       }
     }
   }
-  .evaluation-bar {
-    $block-width: calc(100% - 3px);
-    width: calc(100% - 80px);
+}
+
+.evaluation-bar {
+  $block-width: calc(100% - 3px);
+  width: calc(100% - 80px);
+  display: flex;
+  height: auto;
+  margin: 2rem auto;
+  &-left {
+    width: calc($block-width * 0.5);
+
+    .ranking img {
+      width: 40px;
+      height: 40px;
+    }
+  }
+  &-divider {
+    width: 3px;
+    height: 250px;
+    background-color: $text-mark;
+  }
+  &-right {
+    width: calc($block-width * 0.5);
+
     display: flex;
-    height: auto;
-    margin: 2rem auto;
-    &-left {
-      width: calc($block-width * 0.5);
-
-      .ranking img {
-        width: 40px;
-        height: 40px;
-      }
-    }
-    &-divider {
-      width: 3px;
-      height: 250px;
-      background-color: $text-mark;
-    }
-    &-right {
-      width: calc($block-width * 0.5);
-
+    flex-direction: column;
+    // justify-content: center;
+    align-items: center;
+    .bar-group {
       display: flex;
-      flex-direction: column;
       // justify-content: center;
       align-items: center;
-      .bar-group {
-        display: flex;
-        // justify-content: center;
-        align-items: center;
-        // margin-left: 4rem;
-      }
-      .percentage {
-        width: 260px;
-        height: 10px;
-        display: flex;
-        margin-left: 0.8rem;
-        --width: 5%; //評論總數的百分比
-        .have {
-          width: var(--width);
-          background-color: $hover;
-          border-radius: 0 2px 2px 0;
-        }
-        .no-have {
-          width: calc(100% - var(--width));
-          background-color: $light-gray;
-          border-radius: 0 2px 2px 0;
-        }
-      }
+      // margin-left: 4rem;
     }
-    @media screen and (max-width: 900px) and (min-width: 768px) {
-      .evaluation-bar-left {
-        width: calc($block-width * 0.4);
+    .percentage {
+      width: 260px;
+      height: 10px;
+      display: flex;
+      margin-left: 0.8rem;
+      --width: 5%; //評論總數的百分比
+      .have {
+        width: var(--width);
+        background-color: $hover;
+        border-radius: 0 2px 2px 0;
       }
-
-      .evaluation-bar-right {
-        width: calc($block-width * 0.6);
+      .no-have {
+        width: calc(100% - var(--width));
+        background-color: $light-gray;
+        border-radius: 0 2px 2px 0;
       }
     }
   }
+  @media screen and (max-width: 900px) and (min-width: 768px) {
+    .evaluation-bar-left {
+      width: calc($block-width * 0.4);
+    }
+
+    .evaluation-bar-right {
+      width: calc($block-width * 0.6);
+    }
+  }
 }
+
 .get-price {
   height: 80px;
   background-color: $main-bg;
@@ -194,21 +196,19 @@ $detail-block-width: 12px; //標題左側直槓槓
   }
 }
 @media screen and (max-width: 768px) {
-  .helper-detail {
-    .evaluation-bar {
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-    }
-    .evaluation-bar-left {
-      width: 100%;
-    }
-    .evaluation-bar-right {
-      width: 100%;
-    }
-    .evaluation-bar-divider {
-      display: none;
-    }
+  .evaluation-bar {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .evaluation-bar-left {
+    width: 100%;
+  }
+  .evaluation-bar-right {
+    width: 100%;
+  }
+  .evaluation-bar-divider {
+    display: none;
   }
 }
 @media screen and (max-width: 576px) {
@@ -284,13 +284,13 @@ $detail-block-width: 12px; //標題左側直槓槓
         width: 300px;
       }
     }
-    .evaluation-bar {
-      width: calc(100% - 10px);
-      &-left {
-        .ranking img {
-          width: 32px;
-          height: 32px;
-        }
+  }
+  .evaluation-bar {
+    width: calc(100% - 10px);
+    &-left {
+      .ranking img {
+        width: 32px;
+        height: 32px;
       }
     }
   }

@@ -77,7 +77,7 @@
     background-color: $cos-white;
     width: $drop-down-width;
     box-shadow: 0 0 5px white;
-    position: absolute;
+    position: relative;
     z-index: 100;
 
     li {
@@ -90,6 +90,10 @@
         cursor: pointer;
       }
     }
+  }
+  .nemu-d-none {
+    display: none;
+    height: auto;
   }
 }
 .drop-down-active {

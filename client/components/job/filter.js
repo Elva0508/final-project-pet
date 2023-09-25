@@ -21,10 +21,13 @@ const Filter = ({ items, title, src }) => {
     }
   };
   const handleToggle = (e) => {
+    console.log("有按到btn");
     // 點擊時切換下拉選單狀態
     setIsOpen(!isOpen);
   };
-
+  const handleOption = () => {
+    console.log("有按到");
+  };
   return (
     <div className="drop-down-filter" ref={dropDownRef}>
       <button
@@ -44,7 +47,10 @@ const Filter = ({ items, title, src }) => {
         />
         <BiSolidUpArrow className={`icon icon-up ${isOpen ? "" : "d-none"}`} />
       </button>
-      <ul className={`drop-down-filter-menu ${isOpen ? "" : "d-none"}`}>
+      <ul
+        className={`drop-down-filter-menu ${isOpen ? "" : "d-none"}`}
+        onClick={handleOption}
+      >
         {items ? (
           items.map((item) => <li>{item}</li>)
         ) : (

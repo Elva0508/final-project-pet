@@ -3,7 +3,73 @@ import Filter from "./filter";
 import LatestMission from "./latest-mission";
 import RoleSelection from "./role-selection";
 import Search from "./search";
+import { Swiper, SwiperSlide } from "swiper/react";
+import useRWD from "@/hooks/useRWD";
+import { register } from "swiper/element/bundle";
+import { Carousel } from "@trendyol-js/react-carousel";
+import { AiOutlineLeftCircle, AiOutlineRightCircle } from "react-icons/ai";
+register();
+// Import Swiper styles
+import "swiper/css";
+import "swiper/css/navigation";
 
+const MobileFilter = () => {
+  return (
+    <Swiper slidesPerView="auto" className="mobile-filter">
+      <SwiperSlide>
+        <Filter
+          items={["測試1", "測試2"]}
+          title="服務類型"
+          src={"/job-icon/plus-service.svg"}
+        />
+      </SwiperSlide>
+      <SwiperSlide>
+        <Filter
+          items={["測試1", "測試2"]}
+          title="服務費用"
+          src={"/job-icon/Heart-price.svg"}
+        />
+      </SwiperSlide>
+      <SwiperSlide>
+        <Filter
+          items={["測試1", "測試2"]}
+          title="服務地區"
+          src={"/job-icon/Discovery-date.svg"}
+        />
+      </SwiperSlide>
+      <SwiperSlide>
+        <Filter
+          items={["測試1", "測試2"]}
+          title="服務次數"
+          src={"/job-icon/Discovery-date.svg"}
+        />
+      </SwiperSlide>
+    </Swiper>
+  );
+};
+const MobileFamousHelper = () => {
+  return (
+    <Carousel
+      show={1}
+      slide={1}
+      transition={0.5}
+      leftArrow={<AiOutlineLeftCircle />}
+      rightArrow={<AiOutlineRightCircle />}
+      className="famous-carousel"
+    >
+      <img
+        src={`https://picsum.photos/id/${Math.floor(
+          Math.random() * 200
+        )}/300/300`}
+      />
+      <img
+        src={`https://picsum.photos/id/${Math.floor(
+          Math.random() * 200
+        )}/300/300`}
+      />
+    </Carousel>
+  );
+};
 const FamousHelperCard = () => {
   const [isFavorite, setIsFavorite] = useState(false); // 初始狀態為未收藏
 
@@ -27,9 +93,11 @@ const FamousHelperCard = () => {
             <div>
               <p>台中市大甲區</p>
               <p>
-                服務項目：<span>安親寄宿</span>
+                服務項目：<span>安親寄宿、到府美容</span>
               </p>
-              <p>服務時間：周一至周日</p>
+              <p>
+                服務時間：<span>周一至周日</span>
+              </p>
             </div>
             <img
               src={isFavorite ? "/heart-clicked.svg" : "/heart.svg"}
@@ -48,7 +116,6 @@ const FamousHelperCard = () => {
     </>
   );
 };
-
 const SingleHelperCard = () => {
   const [isFavorite, setIsFavorite] = useState(false); // 初始狀態為未收藏
   const toggleFavorite = () => {
@@ -94,35 +161,18 @@ const SingleHelperCard = () => {
   );
 };
 const MissionHelperList = () => {
+  const status = useRWD();
   const arr = Array.from({ length: 12 });
   return (
-    <div className="mission-helper-list container">
-      <div className="search d-flex justify-content-between align-items-center">
+    <div className="mission-helper-list">
+      <div className="search d-flex flex-md-row flex-column justify-content-between align-items-center">
         <RoleSelection />
         <Search />
       </div>
       <div className="filters">
-        <Filter
-          items={["測試1", "測試2"]}
-          title="服務類型"
-          src={"/job-icon/plus-service.svg"}
-        />
-        <Filter
-          items={["測試1", "測試2"]}
-          title="服務費用"
-          src={"/job-icon/Heart-price.svg"}
-        />
-        <Filter
-          items={["測試1", "測試2"]}
-          title="服務地區"
-          src={"/job-icon/Discovery-date.svg"}
-        />
-        <Filter
-          items={["測試1", "測試2"]}
-          title="服務次數"
-          src={"/job-icon/Discovery-date.svg"}
-        />
+        <MobileFilter />
       </div>
+      <MobileFamousHelper />
       <div className="d-flex justify-content-between">
         <section className="famous-helper justify-content-between">
           <p className="famous-helper-title size-5">最熱門小幫手</p>
