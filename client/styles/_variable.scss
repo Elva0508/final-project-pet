@@ -119,3 +119,18 @@ $mobile-font: 3rem, 2.625rem, 2.125rem, 1.5rem, 1.25rem, 1rem, 0.875rem;
     height: 2rem;
   }
 }
+
+// 麵包屑樣式
+%breadcrumb-wrapper-extend {
+  margin: 10px 0 20px 0;
+  .breadcrumb {
+    margin: 0;
+    color: $text-main;
+    & > * {
+      color: $text-main;
+    }
+    .active {
+      color: $text-mark;
+    }
+  }
+}

@@ -2,6 +2,19 @@
   max-width: 1440px;
   padding: 0 20px;
   margin: auto;
+  .breadcrumb-wrapper {
+    margin: 10px 0 20px 0;
+    .breadcrumb {
+      margin: 0;
+      color: $text-main;
+      & > * {
+        color: $text-main;
+      }
+      .active {
+        color: $text-mark;
+      }
+    }
+  }
   .filters {
     display: flex;
     width: 90%;
@@ -57,19 +70,23 @@
     // }
   }
   .helper-list {
-    width: calc(100% - 40% - 20px);
-    justify-content: flex-end;
+    width: calc(100% - 40% - 10px);
+    justify-content: space-between;
   }
   .single-card {
-    margin: 0 10px 20px 0;
-    min-width: 230px;
+    width: calc((100% - 18px) / 3);
+    margin-bottom: 20px;
+    min-width: 220px;
     background-color: $cos-white;
-    padding: 1rem;
+    padding: 0.6rem;
     &-img {
       $img-size: 160px;
       width: $img-size;
       height: $img-size;
       border-radius: 50%;
+    }
+    &-content {
+      width: 100%;
     }
     &-title {
       font-weight: bold;
@@ -78,6 +95,7 @@
 
     &-info p {
       margin: 0.2rem 0;
+      white-space: nowrap;
     }
     .price {
       margin-top: 1rem;
@@ -121,12 +139,41 @@
     width: 130px;
   }
 }
+@media screen and (max-width: 1200px) {
+  .mission-helper-list {
+    .helper-list {
+      .single-card {
+        width: calc((100% - 10px) / 2);
+      }
+    }
+  }
+}
+@media screen and (max-width: 900px) {
+  .mission-helper-list {
+    .famous-helper {
+      //   padding: 1rem;
+      width: 50%;
+    }
+    .helper-list {
+      justify-content: center;
+      .single-card {
+        width: calc((100% - 30px));
+        max-width: 350px;
+      }
+    }
+  }
+}
 
 @media screen and (max-width: 768px) {
   .mission-helper-list {
     padding: 0 5px;
+
     .job-search {
       width: 100%;
+      margin-top: 19px;
+    }
+    .filters {
+      margin: 0rem auto;
     }
     .famous-helper {
       width: 100%;
@@ -150,6 +197,56 @@
         svg {
           font-size: 22px;
         }
+      }
+    }
+    .helper-list {
+      width: 100%;
+      justify-content: space-around;
+      margin: 10px auto;
+      .single-card {
+        width: calc((100% - 10px) / 3);
+        margin: 0 0 10px 0;
+        min-width: 175px;
+        padding: 0.5rem;
+        &-img {
+          $img-size: 120px;
+          width: $img-size;
+          height: $img-size;
+        }
+        // .price {
+        //   button {
+        //     font-size: 16px;
+        //     width: 50px;
+        //     height: 30px;
+        //     padding: 3px 10px;
+        //   }
+        // }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 576px) {
+  .mission-helper-list {
+    .helper-list {
+      .single-card {
+        width: calc((100% - 10px) / 2);
+
+        min-width: 175px;
+        // padding: 0.5rem;
+        // &-img {
+        //   $img-size: 120px;
+        //   width: $img-size;
+        //   height: $img-size;
+        // }
+        // .price {
+        //   button {
+        //     font-size: 16px;
+        //     width: 50px;
+        //     height: 30px;
+        //     padding: 3px 10px;
+        //   }
+        // }
       }
     }
   }

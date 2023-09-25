@@ -6,6 +6,7 @@ $box-shadow: 0 1px 4px rgb(0, 0, 0, 0.25);
 $form-select-focus-border-color: $border-color;
 $focus-ring-color: transparent;
 $form-select-focus-box-shadow: $box-shadow;
+$breadcrumb-divider: quote(">");
 
 // ↑↑↑  變數覆蓋(Variable overrides) 要寫在這行"上面"  ↑↑↑
 // 導入所有 bootstrap 樣式
@@ -58,14 +59,26 @@ ul {
   list-style: none;
   padding: 0;
 }
-// components scss styles
+
+// ↓↓↓ components scss styles放下面
+
+// 主要樣式(header、footer、首頁等等...)
+@import "@/styles/components-style/_footer.scss";
+
+// 小貓上工
 @import "@/styles/components-style/_create-mission.scss";
 @import "@/styles/components-style/_helper-detail.scss";
 @import "@/styles/components-style/job.scss";
-@import "@/styles/components-style/_footer.scss";
-@import "@/styles/components-style/_member-helper.scss";
-@import "@/styles/components-style/_role-selection.scss";
 @import "@/styles/components-style/_latest-mission.scss";
+@import "@/styles/components-style/_role-selection.scss";
 @import "@/styles/_find-mission.scss";
-@import "@/styles/components-style/_product-card.scss";
 @import "@/styles/components-style/_mission_helper_list.scss";
+
+//小貓商城、購物流程
+@import "@/styles/components-style/_product-card.scss";
+
+//會員頁面
+@import "@/styles/components-style/_member-helper.scss";
+@import "@/styles/components-style/_member-order-detail.scss";
+@import "@/styles/components-style/_member-order.scss";
+@import "@/styles/components-style/_sales-record.scss";

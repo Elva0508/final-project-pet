@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Link from "next/link";
 import Filter from "./filter";
 import LatestMission from "./latest-mission";
 import RoleSelection from "./role-selection";
@@ -143,9 +144,9 @@ const SingleHelperCard = () => {
   };
   return (
     <>
-      <div className="single-card d-flex flex-column align-items-center">
+      <div className="single-card d-flex flex-column align-items-center col-4">
         <img className="single-card-img" src="/kitten.jpg" alt="任務" />
-        <div className="helper-content">
+        <div className="single-card-content">
           <div className="single-card-title size-6">Pet House</div>
           <div className="ranking d-flex align-items-center mb-1">
             <img src="/star.svg" alt="星星" />
@@ -156,11 +157,11 @@ const SingleHelperCard = () => {
           </div>
           <div className="single-card-info d-flex justify-content-between">
             <div>
-              <p>台中市大甲區</p>
-              <p>
+              <p className="m-size-7">台中市大甲區</p>
+              <p className="m-size-7">
                 服務項目：<span>安親寄宿</span>
               </p>
-              <p>服務時間：周一至周日</p>
+              <p className="m-size-7">服務時間：周一至周日</p>
             </div>
             <img
               src={isFavorite ? "/heart-clicked.svg" : "/heart.svg"}
@@ -185,6 +186,20 @@ const MissionHelperList = () => {
   const arr = Array.from({ length: 12 });
   return (
     <div className="mission-helper-list">
+      <nav className="breadcrumb-wrapper" aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item">
+            <Link href="#">首頁</Link>
+          </li>
+          <li class="breadcrumb-item active" aria-current="page">
+            小貓上工-小幫手總覽
+          </li>
+          {/* <li class="breadcrumb-item active" aria-current="page">
+            Library
+          </li> */}
+        </ol>
+      </nav>
+
       <div className="search d-flex flex-md-row flex-column justify-content-between align-items-center">
         <RoleSelection />
         <Search />
@@ -200,12 +215,15 @@ const MissionHelperList = () => {
             <FamousHelperCard />
             <FamousHelperCard />
             <FamousHelperCard />
+            <FamousHelperCard />
+            <FamousHelperCard />
+            <FamousHelperCard />
           </div>
           <div className="famous-helper-mobile d-flex d-md-none">
             <MobileFamousHelper />
           </div>
         </section>
-        <section className="helper-list d-flex flex-wrap">
+        <section className="helper-list d-flex row flex-wrap">
           {arr.map((item) => (
             <SingleHelperCard />
           ))}

@@ -1,0 +1,30 @@
+.sales-record-detail {
+  background: $content-bg;
+  @media screen and (max-width: 576px) {
+    background: $main-bg;
+  }
+  .date {
+    background: $main-bg;
+    @media screen and (max-width: 576px) {
+      background: #fff;
+    }
+  }
+  .textcolor {
+    color: $text-mark;
+  }
+  .textareasize {
+    height: 160px;
+  }
+  tbody {
+    td:nth-child(1) {
+      width: 30%;
+    }
+    td:nth-child(2) {
+      width: 70%;
+    }
+    img {
+      width: 150px;
+      height: 150px;
+    }
+  }
+}
