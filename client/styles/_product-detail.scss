@@ -9,7 +9,6 @@ background-color: $main-bg;
 .product-pic {
   max-width: 648px; /* 容器的最大寬度為600px */
   width: 100%;     /* 容器的寬度為其父元素的100% */
-  padding: 0 30px 0 0;
 }
 
 .main-pic {
@@ -107,13 +106,6 @@ background-color: $main-bg;
 
 .product-description{
   border-bottom: 1px solid $light-gray; 
-  .image{
-    margin: 10px;
-    img{
-      width: 700px;
-      margin-top: 20px;
-    }
-  }
 }
 
 //customer-message
@@ -158,6 +150,19 @@ background-color: $main-bg;
   }
 }
 
+//carousel slide
+.product-card:hover {
+    box-shadow: 3px 3px 3px 3px rgba(85, 50, 7, 0.1);
+    border-bottom: none;
+}
+
+.carousel-control-prev {
+    left: -10%; /* 向左移動的距離，調整此值以移動按鈕 */
+}
+
+.carousel-control-next {
+    right: -10%; /* 向右移動的距離，調整此值以移動按鈕 */
+}
 
   
 

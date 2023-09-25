@@ -13,7 +13,7 @@ export default function ProductList() {
                     <Search />
                 </section>
                 <section className='sidebar-product d-flex '>
-                    <div className='sidebar col-md-3 me-5'>
+                    <div className='sidebar col-md-3  ms-3 me-1'>
                         <div className="accordion" id="accordionPanelsStayOpenExample">
                             <div className="accordion-item">
                                 <h2 className="accordion-header" id="panelsStayOpen-headingCategory">
@@ -58,7 +58,7 @@ export default function ProductList() {
                                 </div>
                             </div>
                         </div>
-                        <div className='filter mt-3'>
+                        <div className='filter mt-3 '>
                             <div className="card filter-card">
                                 <div className="card-header">
                                     快速篩選
@@ -95,38 +95,41 @@ export default function ProductList() {
                             </div>
                         </div>
                     </div>
-                    <div className='product col-md-8   '>
-                        <div className="row justify-content-between mb-4">
-                            <div className="col-md-4">
-                                <ProductCard />
+                    <div className='product col-md-8 mb-2 mx-5 '>
+                        <div className="row g-5 ">
+                            <div className="col-lg-4 col-md-4 col-sm-12">
+                                <a href='http://localhost:3000/product-detail'>
+                                    <ProductCard />
+                                </a>
                             </div>
-                            <div className="col-md-4">
-                                <ProductCard />
+                            <div className="col-lg-4 col-md-4 col-sm-12">
+                                <a href='http://localhost:3000/product-detail'>
+                                    <ProductCard />
+                                </a>
                             </div>
-                            <div className="col-md-4">
-                                <ProductCard />
+                            <div className="col-lg-4 col-md-4 col-sm-12">
+                                <a href='http://localhost:3000/product-detail'>
+                                    <ProductCard />
+                                </a>
                             </div>
-                            <div className="col-md-4 mt-3">
-                                <ProductCard />
+                            <div className="col-lg-4 col-md-4 col-sm-12">
+                                <a href='http://localhost:3000/product-detail'>
+                                    <ProductCard />
+                                </a>
                             </div>
-                            <div className="col-md-4 mt-3">
-                                <ProductCard />
+                            <div className="col-lg-4 col-md-4 col-sm-12">
+                                <a href='http://localhost:3000/product-detail'>
+                                    <ProductCard />
+                                </a>
                             </div>
-                            <div className="col-md-4 mt-3">
-                                <ProductCard />
-                            </div>
-                            <div className="col-md-4 mt-3">
-                                <ProductCard />
-                            </div>
-                            <div className="col-md-4 mt-3">
-                                <ProductCard />
-                            </div>
-                            <div className="col-md-4 mt-3">
-                                <ProductCard />
+                            <div className="col-lg-4 col-md-4 col-sm-12">
+                                <a href='http://localhost:3000/product-detail'>
+                                    <ProductCard />
+                                </a>
                             </div>
                         </div>
-
                     </div>
+
                 </section>
 
             </div>
