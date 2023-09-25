@@ -54,6 +54,10 @@ a {
     border-bottom: 4px solid $hover;
   }
 }
+
+//navbar scss style
+@import "@/styles/_navbar.scss";
+
 ul {
   list-style: none;
   padding: 0;
