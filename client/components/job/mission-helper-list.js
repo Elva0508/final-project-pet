@@ -94,6 +94,7 @@ const SingleHelperCard = () => {
   );
 };
 const MissionHelperList = () => {
+  const arr = Array.from({ length: 12 });
   return (
     <div className="mission-helper-list container">
       <div className="search d-flex justify-content-between align-items-center">
@@ -122,15 +123,17 @@ const MissionHelperList = () => {
           src={"/job-icon/Discovery-date.svg"}
         />
       </div>
-      <div className="d-flex">
+      <div className="d-flex justify-content-between">
         <section className="famous-helper justify-content-between">
           <p className="famous-helper-title size-5">最熱門小幫手</p>
           <FamousHelperCard />
           <FamousHelperCard />
           <FamousHelperCard />
         </section>
-        <section className="helper-list">
-          <SingleHelperCard />
+        <section className="helper-list d-flex flex-wrap">
+          {arr.map((item) => (
+            <SingleHelperCard />
+          ))}
         </section>
       </div>
     </div>

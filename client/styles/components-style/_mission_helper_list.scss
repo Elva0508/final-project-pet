@@ -2,13 +2,13 @@
   padding: 0 40px;
   .filters {
     display: flex;
-    width: 90vw;
+    width: 90%;
     max-width: 1000px;
     margin: 2rem auto;
     justify-content: space-around;
   }
   .famous-helper {
-    width: 35%;
+    width: 40%;
     background-color: $content-bg;
     padding: 15px;
     &-title {
@@ -46,9 +46,12 @@
       }
     }
   }
+  .helper-list {
+    width: calc(100% - 40% - 20px);
+    justify-content: center;
+  }
   .single-card {
-    // width: 250px;
-    // height: 400px;
+    margin: 0 10px 20px 0;
     background-color: $cos-white;
     padding: 1rem;
     &-img {
