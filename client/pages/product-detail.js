@@ -7,7 +7,16 @@ import { FaChevronRight, FaChevronLeft } from 'react-icons/fa';
 import EvaluationBar from '@/components/evaluation-bar';
 
 export default function ProductDetail() {
+
+    //商品介紹和推薦跳頁
     const [activeSection, setActiveSection] = useState('product-description')
+
+    // 點擊事件處理函數，更新主圖片的 URL
+    const handleImageClick = (newImageUrl) => {
+        setMainPic(newImageUrl);
+    };
+    const [mainPic, setMainPic] = useState('/product/product-test.jpg');
+
     return (
         <>
             <div className='ProductDetail'></div>
@@ -16,14 +25,15 @@ export default function ProductDetail() {
                 <section className="product-itembox row justify-content-center" >
                     <div className="product-pic col-lg-6">
                         <figure className="main-pic  ">
-                            <img src="/product/product-test.jpg" alt="..."></img>
+                            <img src= {mainPic} alt="..."></img>
                         </figure>
                         <div className="other-pic mt-2 ">
                             <div className='row g-2 d-flex justify-content-between '>
-                                <img src="/product/product-test.jpg" alt="..."></img>
-                                <img src="/product/product-test2.jpg" alt="..."></img>
-                                <img src="/product/product-test3.jpg" alt="..."></img>
-                                <img src="/product/product-test4.jpg" alt="..."></img>
+                                <img src="/product/product-test.jpg" alt="..." onClick={() => handleImageClick('/product/product-test.jpg')}
+                                ></img>
+                                <img src="/product/product-test2.jpg" alt="..." onClick={() => handleImageClick('/product/product-test2.jpg')}></img>
+                                <img src="/product/product-test3.jpg" alt="..." onClick={() => handleImageClick('/product/product-test3.jpg')}></img>
+                                <img src="/product/product-test4.jpg" alt="..." onClick={() => handleImageClick('/product/product-test4.jpg')}></img>
                             </div>
                         </div>
                     </div>
