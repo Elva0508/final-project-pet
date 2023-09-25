@@ -9,7 +9,7 @@ export default function ProductCard() {
   };
   return (
     <>
-      <div className="product-card">
+      <div className="home-product-card">
         <div className="card">
           <img
             src="https://cdn-front.mao-select.com.tw//upload_files/fonlego-rwd/prodpic/D_M3PD150101-e-0.jpg"

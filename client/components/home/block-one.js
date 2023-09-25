@@ -3,7 +3,6 @@ import React from "react";
 export default function BlockOne() {
   return (
     <>
-      <h1>BlockOne</h1>
       <div className="block-one object-fit-fill">
         <video
           controls
