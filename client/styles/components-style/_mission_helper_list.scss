@@ -21,6 +21,7 @@
     &-card {
       $img-size: 120px;
       margin-bottom: 3rem;
+      min-width: 325px;
       &-img {
         width: $img-size;
         height: $img-size;
@@ -51,6 +52,9 @@
         }
       }
     }
+    // &-mobile {
+    //   display: none;
+    // }
   }
   .helper-list {
     width: calc(100% - 40% - 20px);
@@ -86,6 +90,19 @@
       }
     }
   }
+  .famous-carousel {
+    background-color: $content-bg;
+    & > :first-child,
+    & > :last-child {
+      display: flex;
+      align-items: center;
+      svg {
+        color: $text-main;
+        font-size: 30px;
+        cursor: pointer;
+      }
+    }
+  }
 }
 .mobile-filter {
   margin: 1.2rem 0;
@@ -105,20 +122,35 @@
   }
 }
 
-.famous-carousel {
-  div:first-child,
-  div:last-child {
-    display: flex;
-    align-items: center;
-    svg {
-      color: $text-main;
-      font-size: 30px;
-    }
-  }
-}
-
 @media screen and (max-width: 768px) {
-  .job-search {
-    width: 100%;
+  .mission-helper-list {
+    padding: 0 5px;
+    .job-search {
+      width: 100%;
+    }
+    .famous-helper {
+      width: 100%;
+      margin: auto;
+      padding: 15px 0;
+      &-title {
+        margin-left: 15px;
+      }
+      &-card {
+        padding: 0 10px;
+        $img-size: 100px;
+        &-img {
+          width: $img-size;
+          height: $img-size;
+        }
+      }
+    }
+    .famous-carousel {
+      & > :first-child,
+      & > :last-child {
+        svg {
+          font-size: 22px;
+        }
+      }
+    }
   }
 }

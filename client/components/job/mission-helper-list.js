@@ -47,29 +47,6 @@ const MobileFilter = () => {
     </Swiper>
   );
 };
-const MobileFamousHelper = () => {
-  return (
-    <Carousel
-      show={1}
-      slide={1}
-      transition={0.5}
-      leftArrow={<AiOutlineLeftCircle />}
-      rightArrow={<AiOutlineRightCircle />}
-      className="famous-carousel"
-    >
-      <img
-        src={`https://picsum.photos/id/${Math.floor(
-          Math.random() * 200
-        )}/300/300`}
-      />
-      <img
-        src={`https://picsum.photos/id/${Math.floor(
-          Math.random() * 200
-        )}/300/300`}
-      />
-    </Carousel>
-  );
-};
 const FamousHelperCard = () => {
   const [isFavorite, setIsFavorite] = useState(false); // 初始狀態為未收藏
 
@@ -91,11 +68,11 @@ const FamousHelperCard = () => {
           </div>
           <div className="helper-content-info d-flex justify-content-between">
             <div>
-              <p>台中市大甲區</p>
-              <p>
+              <p className="m-size-7">台中市大甲區</p>
+              <p className="m-size-7">
                 服務項目：<span>安親寄宿、到府美容</span>
               </p>
-              <p>
+              <p className="m-size-7">
                 服務時間：<span>周一至周日</span>
               </p>
             </div>
@@ -116,6 +93,49 @@ const FamousHelperCard = () => {
     </>
   );
 };
+const MobileFamousHelper = () => {
+  return (
+    <>
+      <Carousel
+        show={1.5}
+        slide={1}
+        transition={0.5}
+        leftArrow={<AiOutlineLeftCircle />}
+        rightArrow={<AiOutlineRightCircle />}
+        className="famous-carousel"
+        children={[
+          <FamousHelperCard />,
+          <FamousHelperCard />,
+          <FamousHelperCard />,
+          <FamousHelperCard />,
+        ]}
+        // responsive={true}
+      >
+        {/* <FamousHelperCard />
+        <FamousHelperCard />
+        <FamousHelperCard />
+        <FamousHelperCard />
+        <FamousHelperCard /> */}
+        {/* <div color="#f27a1a"></div>
+        <div color="#d53f8c">
+          <FamousHelperCard />
+        </div>
+        <div color="#16be48">
+          <FamousHelperCard />
+        </div>
+        <div color="#3f51b5">
+          <FamousHelperCard />
+        </div>
+        <img
+          src={`https://picsum.photos/id/${Math.floor(
+            Math.random() * 200
+          )}/300/300`}
+        /> */}
+      </Carousel>
+    </>
+  );
+};
+
 const SingleHelperCard = () => {
   const [isFavorite, setIsFavorite] = useState(false); // 初始狀態為未收藏
   const toggleFavorite = () => {
@@ -172,13 +192,18 @@ const MissionHelperList = () => {
       <div className="filters">
         <MobileFilter />
       </div>
-      <MobileFamousHelper />
-      <div className="d-flex justify-content-between">
+
+      <div className="d-flex flex-md-row flex-column justify-content-between">
         <section className="famous-helper justify-content-between">
           <p className="famous-helper-title size-5">最熱門小幫手</p>
-          <FamousHelperCard />
-          <FamousHelperCard />
-          <FamousHelperCard />
+          <div className="famous-helper-pc d-md-block d-none">
+            <FamousHelperCard />
+            <FamousHelperCard />
+            <FamousHelperCard />
+          </div>
+          <div className="famous-helper-mobile d-flex d-md-none">
+            <MobileFamousHelper />
+          </div>
         </section>
         <section className="helper-list d-flex flex-wrap">
           {arr.map((item) => (
@@ -191,3 +216,4 @@ const MissionHelperList = () => {
 };
 
 export default MissionHelperList;
+// 375 10px編劇 + 44px按鈕 + 321卡片(內編劇20px)
