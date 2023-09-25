@@ -6,7 +6,6 @@ import ArticleListCard from "@/components/article/article-list-card";
 export default function ArticleList() {
   return (
     <>
-      <h1>ArticleList</h1>
       <nav>navbar</nav>
       <div className="container">
         <div className="mt-5">

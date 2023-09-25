@@ -6,7 +6,6 @@ import ArticleCard from "@/components/article/article-card";
 export default function Article() {
   return (
     <>
-      <h1>Article</h1>
       <nav>navbar</nav>
       <div className="container">
         <div className="mt-4">
