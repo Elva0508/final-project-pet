@@ -9,12 +9,16 @@ import HelperInfo from "@/components/member-helper";
 import Navbar from '@/components/navbar/navbar'
 import ResponsiveAppBar from '@/components/navbar/ResponsiveAppBar'
 import LoginForm from '@/components/user/loginForm'
+import UserForm from '@/components/user/userForm';
 const Test = () => {
   return (
     <>
-      <HelperInfo />
+    
       <ResponsiveAppBar/>
-    <LoginForm/>
+    {/* <LoginForm/> */}
+      {/* <HelperInfo /> */}
+      <UserForm/>
+
     </>
   );
 };
