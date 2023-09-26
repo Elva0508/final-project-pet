@@ -33,8 +33,27 @@ export default function ProductList() {
             <div className='product-list'>
                 <div className='container'>
                     <p>我是麵包蟹</p>
+                    <div className="search-sort d-flex flex-md-row flex-column justify-content-between align-items-center ms-3 me-3">
+                        <Search />
+                        <div className='sort ' >
+                            <div className='sort-btn d-flex   justify-content-center text-align-center'>
+                                <button className={`size-7 m-1 p-1 ${isUpIconVisible ? 'active' : ''}`} onClick={toggleUpIcon}>
+                                    上架時間 {isUpIconVisible ? <FaCaretUp /> : <FaCaretDown />}
+                                </button>
+                                <button className={`size-7 m-1 p-1 ${isPriceIconVisible ? 'active' : ''}`} onClick={togglePriceIcon}>
+                                    價格 {isPriceIconVisible ? <FaCaretUp /> : <FaCaretDown />}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    {/* <div className='search-sort  d-flex  justify-content-center align-items-center '>
+                                <div className='search '>
+                                    <Search />
+                                </div>
+                                
+                            </div> */}
                     <section className='sidebar-product d-flex '>
-                        <div className='sidebar col-md-3  ms-3 me-1 mt-5'>
+                        <div className='sidebar col-md-3 ms-3 me-1 d-none d-sm-block '>
                             <div className="accordion" id="accordionPanelsStayOpenExample">
                                 <div className="accordion-item">
                                     <h2 className="accordion-header" id="panelsStayOpen-headingCategory">
@@ -90,14 +109,14 @@ export default function ProductList() {
                                                 <label for="inputprice" className="form-label">價錢篩選</label>
                                                 <div className="row col-md">
                                                     <div className="col-md-5">
-                                                        <input type="number" className="form-control" id="price" placeholder="">
+                                                        <input type="number" className="form-control" id="price" placeholder="$最低價">
                                                         </input>
                                                     </div>
                                                     <div class="col-md dash">
                                                         ~
                                                     </div>
                                                     <div className="col-md-5">
-                                                        <input type="number" className="form-control" id="price" placeholder="">
+                                                        <input type="number" className="form-control" id="price" placeholder="$最高價">
                                                         </input>
                                                     </div>
                                                 </div>
@@ -112,26 +131,10 @@ export default function ProductList() {
                                             </button>
                                         </form>
                                     </div>
-
                                 </div>
                             </div>
                         </div>
                         <div className='product col-md-8 mb-2 mx-5 '>
-                            <div className='search-sort  d-flex  justify-content-center align-items-center '>
-                                <div className='search '>
-                                    <Search />
-                                </div>
-                                <div className='sort ' >
-                                    <div className='sort-btn d-flex   justify-content-center text-align-center'>
-                                        <button className={`size-7 m-1 p-1 ${isUpIconVisible ? 'active' : ''}`} onClick={toggleUpIcon}>
-                                            上架時間 {isUpIconVisible ? <FaCaretUp /> : <FaCaretDown />}
-                                        </button>
-                                        <button className={`size-7 m-1 p-1 ${isPriceIconVisible ? 'active' : ''}`} onClick={togglePriceIcon}>
-                                            價格 {isPriceIconVisible ? <FaCaretUp /> : <FaCaretDown />}
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
                             <div className="row g-5 ">
                                 <div className="col-lg-4 col-md-4 col-sm-12">
                                     <a href='http://localhost:3000/product-detail'>

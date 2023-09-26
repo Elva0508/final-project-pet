@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Footer from '@/components/footer';
-import Counter from '@/components/quantity-counter';
+import Counter from '@/components/product/quantity-counter';
 import { AiFillStar } from 'react-icons/ai';
 import ProductCard from '@/components/product/product-card';
 import { FaChevronRight, FaChevronLeft } from 'react-icons/fa';
@@ -31,7 +31,7 @@ export default function ProductDetail() {
                                 <img src={mainPic} alt="..."></img>
                             </figure>
                             <div className="other-pic mt-2 ">
-                                <div className='row g-2 d-flex justify-content-between '>
+                                <div className='row g-2 d-flex justify-content-around '>
                                     <img src="/product/product-test.jpg" alt="..." onClick={() => handleImageClick('/product/product-test.jpg')}
                                     ></img>
                                     <img src="/product/product-test2.jpg" alt="..." onClick={() => handleImageClick('/product/product-test2.jpg')}></img>
@@ -91,7 +91,7 @@ export default function ProductDetail() {
                                 <a
                                     className={`nav-link size-6 ${activeSection === 'product-description' ? 'active' : ''}`}
                                     aria-current="page"
-                                    href="#product-description"
+                                    // href="#product-description"
                                     onClick={() => setActiveSection('product-description')}
                                 >
                                     商品介紹
@@ -101,7 +101,7 @@ export default function ProductDetail() {
                                 <a
                                     className={`nav-link size-6 ${activeSection === 'customer-message' ? 'active' : ''}`}
                                     aria-current="page"
-                                    href="#customer-message"
+                                    // href="#customer-message"
                                     onClick={() => setActiveSection('customer-message')}
                                 >
                                     顧客評價

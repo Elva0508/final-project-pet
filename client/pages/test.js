@@ -13,6 +13,9 @@ import RequestRecord from "@/components/member/request-record";
 import RequestRecordDetail from "@/components/member/request-record-detail";
 import ResponsiveAppBar from "@/components/navbar/ResponsiveAppBar";
 import LoginForm from "@/components/user/loginForm";
+import ProductListOffcanvas from "@/components/product/product-list-offcanvas";
+
+
 const Test = () => {
   return (
     <>
@@ -20,6 +23,8 @@ const Test = () => {
       <SalesRecordDetail />
       <RequestRecord />
       <RequestRecordDetail />
+      <MissionHelperList />
+      <ProductListOffcanvas/>
     </>
   );
 };

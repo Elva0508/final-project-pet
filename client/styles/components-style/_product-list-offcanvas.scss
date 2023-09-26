@@ -1,16 +1,8 @@
 @import "@/styles/_variable.scss";
 
 
-.product-list{
-.container{
-    //background-color: aqua;
-}
-
 .accordion{
     border: none;
-}
-.sidebar-product{
-    margin-top: 20px;
    .sidebar {
     .accordion-button{
         background-color: $content-bg;
@@ -29,7 +21,7 @@
         margin-top: 5px;
     }
    }
-}
+
 
 .filter{
     border: 1px solid $content-bg;
@@ -46,45 +38,3 @@
         text-align: center ; 
     }
 }
-
-.sort-btn{
-    // border: 3px solid;
-    border-radius: 20px;
-    background-color: $cos-white;
-    width: 200px;
-    width: 100%;
-    
-    button{
-        border: none;
-        background-color: $cos-white;
-        font-size: 1rem;
-        color: $text-mark;
-    }
-     button:hover{
-        border: none;
-        background-color: $cos-white;
-        font-size: 1rem ;
-        font-weight:bold;
-        color: $text-main;
-    }
-    button.active {
-    color: $text-main; /* 在按钮被点击时改变文字颜色 */
-    font-weight:bold;
-}
-    }
-
-    
-
-
-
-    
-
-
-
-
-
-
-
-
-
-
