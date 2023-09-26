@@ -2,7 +2,8 @@ import React from "react";
 import BreadCrumb from "@/components/article/bread-crumb";
 import ArticleCatogory from "@/components/article/article-catogory";
 import ArticleListCard from "@/components/article/article-list-card";
-import Navbar from "@/components/navbar/navbar";
+import Navbar from "@/components/navbar/ResponsiveAppBar";
+import Footer from "@/components/footer";
 
 export default function ArticleList() {
   return (
@@ -10,12 +11,12 @@ export default function ArticleList() {
       <nav>
         <Navbar />
       </nav>
-      <div className="container mt-5 pt-3">
-        <div className="mt-5 pt-3">
+      <div className="container mt-5">
+        <div>
           <BreadCrumb />
         </div>
 
-        <div className="d-flex justify-content-center mb-5 ">
+        <div className="d-flex justify-content-center mb-5 mt-5">
           <ArticleCatogory />
         </div>
 
@@ -69,7 +70,9 @@ export default function ArticleList() {
 
         <div>分頁</div>
       </div>
-      <footer>footer</footer>
+      <footer>
+        <Footer />
+      </footer>
     </>
   );
 }

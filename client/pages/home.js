@@ -1,10 +1,11 @@
 import React from "react";
-import Navbar from "@/components/navbar/navbar";
+import Navbar from "@/components/navbar/ResponsiveAppBar";
 import BlockOne from "@/components/home/block-one";
 import BlockTwo from "@/components/home/block-two";
 import BlockThree from "@/components/home/block-three";
 import BlockFive from "@/components/home/block-five";
 import BlockSix from "@/components/home/block-six";
+import Footer from "@/components/footer";
 
 export default function Home() {
   return (
@@ -13,12 +14,10 @@ export default function Home() {
         <nav>
           <Navbar />
         </nav>
+        <div className="block-one mb-5">
+          <BlockOne />
+        </div>
         <div className="container mb-5">
-          <div className="size-1">影片區</div>
-          <div className="block-one mb-5">
-            <BlockOne />
-          </div>
-
           <div className="block-two mb-5">
             <div className="size-1 home-tilte d-flex justify-content-center mb-5">
               新品推薦
@@ -67,6 +66,9 @@ export default function Home() {
             </div>
           </div>
         </div>
+        <footer>
+          <Footer />
+        </footer>
       </div>
     </>
   );
