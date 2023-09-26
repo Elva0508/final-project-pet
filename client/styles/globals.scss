@@ -6,6 +6,8 @@ $box-shadow: 0 1px 4px rgb(0, 0, 0, 0.25);
 $form-select-focus-border-color: $border-color;
 $focus-ring-color: transparent;
 $form-select-focus-box-shadow: $box-shadow;
+$carousel-indicator-active-bg: #d7965b;
+$carousel-indicator-height: 5px;
 
 // ↑↑↑  變數覆蓋(Variable overrides) 要寫在這行"上面"  ↑↑↑
 // 導入所有 bootstrap 樣式

@@ -1,17 +1,182 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import Footer from '@/components/footer'
 import { IoPaperPlaneOutline } from "react-icons/io5";
 import { PiWechatLogoThin } from "react-icons/pi";
 import { FaRegHeart, FaHeart } from "react-icons/fa";
 
+
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Scrollbar, Navigation } from "swiper/modules";
+// import function to register Swiper custom elements
+import { register } from "swiper/element/bundle";
+// register Swiper custom elements
+register();
+
+// Import Swiper styles
+import "swiper/css";
+import "swiper/css/scrollbar";
+import "swiper/css/navigation";
+
+const ImageSwiper = () => {
+    const swiperRef = useRef(null);
+
+    useEffect(() => {
+        const swiperContainer = swiperRef.current;
+        const params = {
+            navigation: true,
+            injectStyles: [
+                `
+            .swiper-button-next,
+            .swiper-button-prev {
+              background-color: #FFFDFB;
+              width:50px;
+              height:50px;
+              border-radius: 50%;
+              color: #F8CB9F;
+              box-shadow: 0 0 9px rgba(0, 0, 0, 0.5);
+              background-position: center;
+              background-size: 25px;
+              background-repeat: no-repeat;
+            }
+  
+            .swiper-button-prev {
+              background-image: url("/caret-left.svg");
+  
+            }
+            .swiper-button-next {
+              background-image: url("/caret-right.svg");    
+            }
+            .swiper-button-next svg,
+            .swiper-button-prev svg {
+              color: transparent;
+            }
+           
+        `,
+            ],
+        };
+
+        Object.assign(swiperContainer, params);
+        swiperContainer.initialize();
+    }, []);
+
+    return (
+        <>
+            <swiper-container
+                ref={swiperRef}
+                navigation="true"
+                space-between="20"
+                slides-per-view="auto"
+                next-el=".custom-next-button"
+                prev-el=".custom-prev-button"
+                init="false"
+            >
+                <swiper-slide>
+                    <img
+                        src='https://picsum.photos/id/40/300/300'
+                    />
+                </swiper-slide>
+                <swiper-slide>
+                    <img
+                        src='https://images.pexels.com/photos/982300/pexels-photo-982300.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2'
+                    />
+                </swiper-slide>
+                <swiper-slide>
+                    <img
+                        src='https://images.pexels.com/photos/384555/pexels-photo-384555.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2'
+                    />
+                </swiper-slide>
+                <swiper-slide>
+                    <img
+                        src='https://images.pexels.com/photos/7149465/pexels-photo-7149465.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2'
+                    />
+                </swiper-slide>
+                <swiper-slide>
+                    <img
+                        src='https://images.pexels.com/photos/8985189/pexels-photo-8985189.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2'
+                    />
+                </swiper-slide>
+                <swiper-slide>
+                    <img
+                        src='https://images.pexels.com/photos/14721098/pexels-photo-14721098.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2'
+                    />
+                </swiper-slide>
+                <swiper-slide>
+                    <img
+                        src='https://images.pexels.com/photos/2194261/pexels-photo-2194261.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2'
+                    />
+                </swiper-slide>
+                <swiper-slide>
+                    <img
+                        src='https://images.pexels.com/photos/979247/pexels-photo-979247.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2'
+                    />
+                </swiper-slide>
+            </swiper-container>
+        </>
+    );
+};
+
+
+
+
+
 export default function MissionDetail() {
     const [isFavorite, setIsFavorite] = useState(false); // 初始狀態為未收藏
+    const [inputValue, setInputValue] = useState('');
 
     const toggleFavorite = () => {
         setIsFavorite(!isFavorite); // 切換收藏狀態
     };
+    const handleInputChange = (event) => {
+        setInputValue(event.target.value);
+    };
+
+
+
+
     return (
         <>
+            {/* Modal */}
+            <div class="modal fade apply-modal" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title size-4" id="exampleModalLabel">立即應徵</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div className='modal-body'>
+                            <div class="profile d-flex justify-content-center align-items-center">
+                                <div className="avatar">
+                                    <img src="/kitten.jpg" />
+                                </div>
+                                <div className="justify-content-center">
+                                    <div className="size-4">
+                                        雅晴
+                                    </div>
+                                    <p className="size-6 mt-1">
+                                        25歲
+                                    </p>
+                                    <p className='size-6 mt-1'>新北市三重區</p>
+                                </div>
+                            </div>
+                            <div className='recommend mt-4'>
+                                <div className='size-5 mb-2'>自我推薦</div>
+                                <textarea className='recommend-content'></textarea>
+
+                                <div className='auto-send d-flex my-4'>
+                                    <input type="checkbox" className='checkbox' />
+                                    <div className='size-6 ms-2'>自動發送小幫手履歷<span className='size-7' >（需開啟小幫手資料）</span></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer justify-content-center py-4">
+                            <button type="button" class="btn btn-outline-confirm" data-bs-dismiss="modal">取消</button>
+                            <button type="button" class="btn btn-second">確認送出</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div className='container mission-detail'>
                 <div>麵包屑放這裡</div>
                 <header className='mt-3 p-4'>
@@ -20,24 +185,28 @@ export default function MissionDetail() {
                     <p className='size-6 mt-3'>刊登日期：2023/08/19</p>
                     <p className='size-6 mt-2'>最後更新：2023/08/20</p>
                 </header>
-                <section className='description'>
-                    <div className="item">
+                <section className='description my-4 py-1 '>
+                    <div className="item d-flex flex-column flex-sm-row ">
                         <div className="item-title size-5">
                             預算金額：
-                            <span className="size-6">NT$ 1,200 / 天</span>
+                            {/* <span className="size-6">NT$ 1,200 / 天</span> */}
                         </div>
+                        <p className="size-6 d-flex align-items-center ms-4 ms-sm-0">NT$ 1,200 / 天</p>
+
                     </div>
-                    <div className="item">
+                    <div className="item d-flex flex-column flex-sm-row">
                         <div className="item-title size-5">
-                            任務日期：<span className="size-6">2023/9/20~2023/9/25</span>
+                            任務日期：
                         </div>
+                        <p className="size-6 d-flex align-items-center ms-4 ms-sm-0">2023/9/20~2023/9/25</p>
                     </div>
-                    <div className="item">
+                    <div className="item d-flex flex-column flex-sm-row">
                         <div className="item-title size-5">
-                            任務地點：<span className="size-6">新北市三重區</span>
+                            任務地點：
                         </div>
-                        <div><iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d28912.322574287376!2d121.48607389999998!3d25.066622449999997!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3442a8de05921eb3%3A0xe818cd4640a88cc6!2zMjQx5paw5YyX5biC5LiJ6YeN5Y2A!5e0!3m2!1szh-TW!2stw!4v1695367764015!5m2!1szh-TW!2stw" referrerpolicy="no-referrer-when-downgrade"></iframe></div>
+                        <p className="size-6 d-flex align-items-center ms-4 ms-sm-0">新北市三重區</p>
                     </div>
+                    <div><iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d28912.322574287376!2d121.48607389999998!3d25.066622449999997!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3442a8de05921eb3%3A0xe818cd4640a88cc6!2zMjQx5paw5YyX5biC5LiJ6YeN5Y2A!5e0!3m2!1szh-TW!2stw!4v1695367764015!5m2!1szh-TW!2stw" referrerpolicy="no-referrer-when-downgrade"></iframe></div>
                     <div className="item">
                         <div className="item-title size-5">詳細說明</div>
                         <ul className="item-content size-6">
@@ -54,11 +223,16 @@ export default function MissionDetail() {
                             <li>家中有監視器不介意再應徵</li>
                             <li>希望你家中也有寵物，絕對不能使用任何帶有強迫或暴力的動作對貓咪，喜歡貓咪佳</li>
                         </ul>
-
+                    </div>
+                    <div className="item">
+                        <div className="item-title size-5">相片/影片：</div>
+                        <div className="item-image item-content">
+                            <ImageSwiper />
+                        </div>
                     </div>
                 </section>
             </div>
-            
+
             <Footer />
             <section className="ask-and-apply d-flex justify-content-center align-items-center position-relative">
                 <div className='position-absolute fav' onClick={toggleFavorite}>
@@ -72,7 +246,7 @@ export default function MissionDetail() {
                     <PiWechatLogoThin />
                     線上詢問
                 </button>
-                <button className="ask-and-apply-btn btn-second d-flex align-items-center justify-content-center">
+                <button className="ask-and-apply-btn btn-second d-flex align-items-center justify-content-center" data-bs-toggle="modal" data-bs-target="#exampleModal">
                     <IoPaperPlaneOutline />
                     立即應徵
                 </button>

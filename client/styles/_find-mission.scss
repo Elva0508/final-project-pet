@@ -1,9 +1,14 @@
 @import "@/styles/_variable.scss";
 
-.add-mission-btn{
+.add-mission-btn-pc, .add-mission-btn-mobile{
     height: 50px;
     border-radius: 20px;
     color: $main-bg;
+}
+.add-mission-btn-mobile{
+    position: fixed;
+    bottom: 15px;
+    right: 15px;
 }
 .all-mission{
     gap: 40px;
@@ -18,3 +23,10 @@
         width: 100%;
     }
 }
+@media screen and (max-width: 575px) {
+    .all-mission{
+        .latest-mission{
+            padding: 20px;
+        }
+    }
+  }
