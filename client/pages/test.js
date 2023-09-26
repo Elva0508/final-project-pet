@@ -17,9 +17,7 @@ const Test = () => {
   return (
     <>
       <SalesRecord />
-
       <SalesRecordDetail />
-
       <RequestRecord />
       <RequestRecordDetail />
     </>

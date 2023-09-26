@@ -1,7 +1,7 @@
 .helper-info {
   min-height: 913px;
-  width: 60%;
-  margin: 2rem auto; //到時候要去掉
+  width: 75%;
+  margin: 8px 0;
   background-color: $content-bg;
   $form-height: 80px;
   padding: 10px 40px;
@@ -102,7 +102,7 @@
 @media screen and (max-width: 768px) {
   .helper-info {
     width: 100%;
-    min-height: 0px;
+    min-height: 670px;
     background-color: transparent;
     padding: 0 5px;
     .title {
