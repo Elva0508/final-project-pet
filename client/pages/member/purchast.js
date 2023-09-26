@@ -4,6 +4,8 @@ import ListD from '@/components/member/list-d'
 import ListUserM from '@/components/member/list-user-m'
 import { BiSolidShoppingBag } from 'react-icons/bi'
 
+
+
 export default function Purchast() {
   return (
     <>
@@ -39,12 +41,6 @@ export default function Purchast() {
 
           </div>
     </div>
-
-          
-
-
-
-
     </>
   )
 }

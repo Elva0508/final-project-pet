@@ -6,6 +6,7 @@ import { RiFileList3Fill } from 'react-icons/ri'
 import { useState,useEffect } from 'react'
 import axios from "axios"
 
+
 export default function Order() {
 
   // const [order, setOrder] = useState([])
@@ -106,11 +107,6 @@ export default function Order() {
 
           </div>
     </div>
-
-          
-
-
-
 
     </>
   )

@@ -40,6 +40,19 @@ app.get("/member/order",(req,res)=>{
   
 })
 
+app.put("/products/cart/:id",(req,res)=>{
+    const addId=req.params.id
+    
+    connection.execute(
+        `INSERT INTO cart(user_id, product_id, quantity) VALUES (1,?,1);`,
+        [addId]
+        ,(error,result)=>{
+            res.json({result})
+        }    
+    )
+})
+
+
 app.get("/member/wishlist",(req,res)=>{
     connection.execute(
         `SELECT pc.*, p.product_name AS product_name, p.product_type AS type,p.specialoffer AS price, i.images_one AS image 
@@ -54,6 +67,20 @@ app.get("/member/wishlist",(req,res)=>{
     )
 })
 
+app.delete("/member/wishlist/:id",(req,res)=>{
+    const deleteId=req.params.id
+    connection.execute(
+        `DELETE FROM product_collections WHERE product_collections.collection_id=?`,
+        [deleteId]
+        ,(error, result) => {
+            if (error) {
+              console.error("Error:", error);
+              res.status(500).json({ error: "An error occurred" });
+            } else {
+              res.json({ result });
+            }})
+  
+})
 
 app.listen(3005,()=>{
     console.log("server is running");

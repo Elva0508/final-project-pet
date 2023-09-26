@@ -4,6 +4,8 @@ import ListD from '@/components/member/list-d'
 import ListUserM from '@/components/member/list-user-m'
 import { RiFileList3Fill } from 'react-icons/ri'
 
+
+
 export default function Orderdetail() {
     const [comment ,setComment]=useState(false)
 
@@ -127,11 +129,6 @@ export default function Orderdetail() {
 
           </div>
     </div>
-
-          
-
-
-
 
     </>
   )

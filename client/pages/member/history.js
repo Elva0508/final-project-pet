@@ -4,6 +4,7 @@ import ListD from '@/components/member/list-d'
 import ListUserM from '@/components/member/list-user-m'
 import { HiClipboardList } from 'react-icons/hi'
 
+
 export default function History() {
   return (
     <>
@@ -62,12 +63,6 @@ export default function History() {
 
           </div>
     </div>
-
-          
-
-
-
-
     </>
   )
 }

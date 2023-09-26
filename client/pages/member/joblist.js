@@ -96,10 +96,6 @@ export default function Joblist() {
           </div>
     </div>
 
-          
-
-
-
 
     </>
   )
