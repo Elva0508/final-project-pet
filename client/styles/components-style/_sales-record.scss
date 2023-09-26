@@ -1,3 +1,50 @@
+.sales-and-request {
+  background: $content-bg;
+  // color: $text-main;
+  width: 70%;
+  p {
+    margin: 0;
+  }
+  .icon {
+    font-size: 28px;
+  }
+  .tab-nav {
+    button {
+      background-color: transparent;
+      width: 80px;
+      border: none;
+      border-bottom: 4px solid transparent;
+      padding-top: 4px;
+      &:hover,
+      &:focus {
+        border-bottom: 4px solid $hover;
+      }
+    }
+  }
+  .info-title {
+    padding: 0.5rem 0;
+    background-color: $main-bg;
+    border-top: 2px solid darken($light-gray, 10%);
+    border-bottom: 2px solid lighten($light-gray, 2%);
+    box-shadow: 0px 0px 5px lighten($light-gray, 5%);
+    & > * {
+      margin: 0.2rem;
+      width: 25%;
+      text-align: center;
+    }
+  }
+  .info-content {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid $light-gray;
+    color: $text-main;
+    font-size: 1rem;
+    & > * {
+      width: 25%;
+      text-align: center;
+    }
+  }
+}
+
 .sales-record-detail {
   background: $content-bg;
 
@@ -50,6 +97,7 @@
     font-size: 18px;
   }
 }
+
 @media screen and (max-width: 768px) {
   .sales-record-detail {
     .pet-img {

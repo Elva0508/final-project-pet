@@ -8,13 +8,18 @@ import MissionHelperList from "@/components/job/mission-helper-list";
 import Order from "@/components/member/order";
 import Orderdetail from "@/components/member/order-detail";
 import SalesRecordDetail from "@/components/member/sales-record-detail";
+import SalesRecord from "@/components/member/sales-record";
+import RequestRecord from "@/components/member/request-record";
+import RequestRecordDetail from "@/components/member/request-record-detail";
 const Test = () => {
   return (
     <>
-      {/* <MissionHelperList /> */}
-      <Order />
-      {/* <Orderdetail /> */}
+      <SalesRecord />
+
       <SalesRecordDetail />
+
+      <RequestRecord />
+      <RequestRecordDetail />
     </>
   );
 };
