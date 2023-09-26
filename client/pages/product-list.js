@@ -1,8 +1,8 @@
-import {React,useState} from 'react';
+import { React, useState } from 'react';
 import Footer from '@/components/footer';
 import Search from '@/components/job/search';
 import ProductCard from '@/components/product/product-card';
-import { FaCaretUp,FaCaretDown } from 'react-icons/fa';
+import { FaCaretUp, FaCaretDown } from 'react-icons/fa';
 
 
 export default function ProductList() {
@@ -30,149 +30,149 @@ export default function ProductList() {
 
     return (
         <>
-            <div className='container'>
-                <p>我是麵包蟹</p>
-                <section className='sidebar-product d-flex '>
-                    <div className='sidebar col-md-3  ms-3 me-1 mt-5'>
-                        <div className="accordion" id="accordionPanelsStayOpenExample">
-                            <div className="accordion-item">
-                                <h2 className="accordion-header" id="panelsStayOpen-headingCategory">
-                                    <button
-                                        className="accordion-button "
-                                        type="button"
-                                        data-bs-toggle="collapse"
-                                        data-bs-target="#panelsStayOpen-collapseCategory"
-                                        aria-expanded="true"
-                                        aria-controls="panelsStayOpen-collapseCategory"
-                                    >
-                                        大類1
-                                    </button>
-                                </h2>
-                                <div id="panelsStayOpen-collapseCategory" class="accordion-collapse collapse show">
-                                    <div className="accordion-body row">
-                                        <button className="button-subcategory" type="button" >
-                                            小類
-                                        </button>
-                                        <button className="button-subcategory" type="button row">
-                                            小類
-                                        </button>
-                                    </div>
-                                </div>
+            <div className='product-list'>
+                <div className='container'>
+                    <p>我是麵包蟹</p>
+                    <section className='sidebar-product d-flex '>
+                        <div className='sidebar col-md-3  ms-3 me-1 mt-5'>
+                            <div className="accordion" id="accordionPanelsStayOpenExample">
                                 <div className="accordion-item">
-                                    {/* 要記得改id/data-bs-target/aria-controls/aria-labelledby數字 */}
-                                    <h2 className="accordion-header" id="panelsStayOpen-headingTwo">
-                                        <button className="accordion-button collapsed " type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="false" aria-controls="panelsStayOpen-collapseTwo">
-                                            大類2
+                                    <h2 className="accordion-header" id="panelsStayOpen-headingCategory">
+                                        <button
+                                            className="accordion-button "
+                                            type="button"
+                                            data-bs-toggle="collapse"
+                                            data-bs-target="#panelsStayOpen-collapseCategory"
+                                            aria-expanded="true"
+                                            aria-controls="panelsStayOpen-collapseCategory"
+                                        >
+                                            大類1
                                         </button>
                                     </h2>
-                                    <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingTwo">
+                                    <div id="panelsStayOpen-collapseCategory" class="accordion-collapse collapse show">
                                         <div className="accordion-body row">
-                                            <button className="button-subcategory no-border-btn" type="button" >
+                                            <button className="button-subcategory" type="button" >
                                                 小類
                                             </button>
-                                            <button className="button-subcategory" type="button">
+                                            <button className="button-subcategory" type="button row">
                                                 小類
                                             </button>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className='filter mt-3 '>
-                            <div className="card filter-card">
-                                <div className="card-header">
-                                    快速篩選
-                                </div>
-                                <div className="card-body">
-                                    <form>
-                                        <div className="col-12">
-                                            <label for="inputprice" className="form-label">價錢篩選</label>
-                                            <div className="row col-md">
-                                                <div className="col-md-5">
-                                                    <input type="number" className="form-control" id="price" placeholder="">
-                                                    </input>
-                                                </div>
-                                                <div class="col-md dash">
-                                                    ~
-                                                </div>
-                                                <div className="col-md-5">
-                                                    <input type="number" className="form-control" id="price" placeholder="">
-                                                    </input>
-                                                </div>
+                                    <div className="accordion-item">
+                                        {/* 要記得改id/data-bs-target/aria-controls/aria-labelledby數字 */}
+                                        <h2 className="accordion-header" id="panelsStayOpen-headingTwo">
+                                            <button className="accordion-button collapsed " type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="false" aria-controls="panelsStayOpen-collapseTwo">
+                                                大類2
+                                            </button>
+                                        </h2>
+                                        <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingTwo">
+                                            <div className="accordion-body row">
+                                                <button className="button-subcategory no-border-btn" type="button" >
+                                                    小類
+                                                </button>
+                                                <button className="button-subcategory" type="button">
+                                                    小類
+                                                </button>
                                             </div>
                                         </div>
-                                        <div className="col-12 mt-2">
-                                            <label for="brand" className="form-label">品牌</label>
-                                            <input type="text" className="form-control" id="brand" placeholder="請輸入品牌關鍵字">
-                                            </input>
-                                        </div>
-                                        <button type="submit" className="btn btn-brown col-12 mt-3">
-                                            一鍵篩選
+                                    </div>
+                                </div>
+                            </div>
+                            <div className='filter mt-3 '>
+                                <div className="card filter-card">
+                                    <div className="card-header">
+                                        快速篩選
+                                    </div>
+                                    <div className="card-body">
+                                        <form>
+                                            <div className="col-12">
+                                                <label for="inputprice" className="form-label">價錢篩選</label>
+                                                <div className="row col-md">
+                                                    <div className="col-md-5">
+                                                        <input type="number" className="form-control" id="price" placeholder="">
+                                                        </input>
+                                                    </div>
+                                                    <div class="col-md dash">
+                                                        ~
+                                                    </div>
+                                                    <div className="col-md-5">
+                                                        <input type="number" className="form-control" id="price" placeholder="">
+                                                        </input>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="col-12 mt-2">
+                                                <label for="brand" className="form-label">品牌</label>
+                                                <input type="text" className="form-control" id="brand" placeholder="請輸入品牌關鍵字">
+                                                </input>
+                                            </div>
+                                            <button type="submit" className="btn btn-brown col-12 mt-3">
+                                                一鍵篩選
+                                            </button>
+                                        </form>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div className='product col-md-8 mb-2 mx-5 '>
+                            <div className='search-sort  d-flex  justify-content-center align-items-center '>
+                                <div className='search '>
+                                    <Search />
+                                </div>
+                                <div className='sort ' >
+                                    <div className='sort-btn d-flex   justify-content-center text-align-center'>
+                                        <button className={`size-7 m-1 p-1 ${isUpIconVisible ? 'active' : ''}`} onClick={toggleUpIcon}>
+                                            上架時間 {isUpIconVisible ? <FaCaretUp /> : <FaCaretDown />}
                                         </button>
-                                    </form>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-                    <div className='product col-md-8 mb-2 mx-5 '>
-                        <div className='search-sort  d-flex  justify-content-center align-items-center '>
-                            <div className='search '>
-                                <Search />
-                            </div>
-                            <div className='sort ' >
-                                <div className='sort-btn d-flex   justify-content-center text-align-center'>
-                                    <button className={`size-7 m-1 p-1 ${isUpIconVisible ? 'active' : ''}`} onClick={toggleUpIcon}>
-                                        上架時間 {isUpIconVisible ? <FaCaretUp /> : <FaCaretDown />}
-                                    </button>
-                                    <button className={`size-7 m-1 p-1 ${isPriceIconVisible ? 'active' : ''}`} onClick={togglePriceIcon}>
-                                        價格 {isPriceIconVisible ? <FaCaretUp /> : <FaCaretDown />}
-                                    </button>
+                                        <button className={`size-7 m-1 p-1 ${isPriceIconVisible ? 'active' : ''}`} onClick={togglePriceIcon}>
+                                            價格 {isPriceIconVisible ? <FaCaretUp /> : <FaCaretDown />}
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
+                            <div className="row g-5 ">
+                                <div className="col-lg-4 col-md-4 col-sm-12">
+                                    <a href='http://localhost:3000/product-detail'>
+                                        <ProductCard />
+                                    </a>
+                                </div>
+                                <div className="col-lg-4 col-md-4 col-sm-12">
+                                    <a href='http://localhost:3000/product-detail'>
+                                        <ProductCard />
+                                    </a>
+                                </div>
+                                <div className="col-lg-4 col-md-4 col-sm-12">
+                                    <a href='http://localhost:3000/product-detail'>
+                                        <ProductCard />
+                                    </a>
+                                </div>
+                                <div className="col-lg-4 col-md-4 col-sm-12">
+                                    <a href='http://localhost:3000/product-detail'>
+                                        <ProductCard />
+                                    </a>
+                                </div>
+                                <div className="col-lg-4 col-md-4 col-sm-12">
+                                    <a href='http://localhost:3000/product-detail'>
+                                        <ProductCard />
+                                    </a>
+                                </div>
+                                <div className="col-lg-4 col-md-4 col-sm-12">
+                                    <a href='http://localhost:3000/product-detail'>
+                                        <ProductCard />
+                                    </a>
+                                </div>
+                            </div>
                         </div>
-                        <div className="row g-5 ">
-                            <div className="col-lg-4 col-md-4 col-sm-12">
-                                <a href='http://localhost:3000/product-detail'>
-                                    <ProductCard />
-                                </a>
-                            </div>
-                            <div className="col-lg-4 col-md-4 col-sm-12">
-                                <a href='http://localhost:3000/product-detail'>
-                                    <ProductCard />
-                                </a>
-                            </div>
-                            <div className="col-lg-4 col-md-4 col-sm-12">
-                                <a href='http://localhost:3000/product-detail'>
-                                    <ProductCard />
-                                </a>
-                            </div>
-                            <div className="col-lg-4 col-md-4 col-sm-12">
-                                <a href='http://localhost:3000/product-detail'>
-                                    <ProductCard />
-                                </a>
-                            </div>
-                            <div className="col-lg-4 col-md-4 col-sm-12">
-                                <a href='http://localhost:3000/product-detail'>
-                                    <ProductCard />
-                                </a>
-                            </div>
-                            <div className="col-lg-4 col-md-4 col-sm-12">
-                                <a href='http://localhost:3000/product-detail'>
-                                    <ProductCard />
-                                </a>
-                            </div>
-                        </div>
-                    </div>
 
-                </section>
+                    </section>
 
+                </div>
+                <footer>
+                    <Footer />
+                </footer>
             </div>
-            <footer>
-                <Footer />
-            </footer>
-
-
         </>
     )
 }

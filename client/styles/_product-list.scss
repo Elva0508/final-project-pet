@@ -1,5 +1,9 @@
 @import "@/styles/_variable.scss";
 
+
+.product-list{
+
+
 .container{
     //background-color: aqua;
 }
@@ -67,6 +71,8 @@
     color: $text-main; /* 在按钮被点击时改变文字颜色 */
     font-weight:bold;
 }
+    }
+
     }
 
 
