@@ -143,6 +143,12 @@
       .recommend-content {
         width: 100%;
         height: 160px;
+        // 更改textarea樣式
+        &:focus{
+          outline: none;
+          border:1.8px solid $hover;
+          border-radius: 3px;
+        }
       }
 
       .auto-send {
