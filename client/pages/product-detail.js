@@ -243,9 +243,6 @@ export default function ProductDetail() {
 
                     </section>
                 </div>
-                <footer>
-                    <Footer />
-                </footer>
             </div>
         </>
     );

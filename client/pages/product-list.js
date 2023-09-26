@@ -169,9 +169,6 @@ export default function ProductList() {
                     </section>
 
                 </div>
-                <footer>
-                    <Footer />
-                </footer>
             </div>
         </>
     )
