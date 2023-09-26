@@ -6,6 +6,9 @@ import ProductCard from '@/components/product/product-card';
 import { FaChevronRight, FaChevronLeft } from 'react-icons/fa';
 import EvaluationBar from '@/components/evaluation-bar';
 
+
+
+
 export default function ProductDetail() {
 
     //商品介紹和推薦跳頁
@@ -19,7 +22,7 @@ export default function ProductDetail() {
 
     return (
         <>
-            <div className='ProductDetail'></div>
+           
             <div className="container ">
                 <p>我是麵包蟹</p>
                 <section className="product-itembox row justify-content-center" >
