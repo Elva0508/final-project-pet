@@ -2,16 +2,21 @@
 
 
 .product-list{
-.container{
-    //background-color: aqua;
-}
+    .product-offcanvas-m{
+        z-index: 99;
+        position: fixed;
+        right: 0;
 
+    }
 .accordion{
     border: none;
 }
 .sidebar-product{
     margin-top: 20px;
    .sidebar {
+    .accordion-item{
+         border: none;
+    }
     .accordion-button{
         background-color: $content-bg;
         color: $text-main;
@@ -32,7 +37,10 @@
 }
 
 .filter{
-    border: 1px solid $content-bg;
+    border: none;
+    .card{
+        border: none;
+    }
     .card-header{
          background-color: $content-bg;
         color: $text-main;
@@ -72,6 +80,12 @@
     font-weight:bold;
 }
     }
+
+@media screen and (max-width: 575px){
+    .job-search{
+        width: 90%;
+    }
+}
 
     
 

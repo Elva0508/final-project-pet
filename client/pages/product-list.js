@@ -3,6 +3,7 @@ import Footer from '@/components/footer';
 import Search from '@/components/job/search';
 import ProductCard from '@/components/product/product-card';
 import { FaCaretUp, FaCaretDown } from 'react-icons/fa';
+import ProductListOffcanvas from '@/components/product/product-list-offcanvas';
 
 
 export default function ProductList() {
@@ -52,6 +53,9 @@ export default function ProductList() {
                                 </div>
                                 
                             </div> */}
+                    <div className="product-offcanvas-m d-block d-lg-none ">
+                        <ProductListOffcanvas />
+                    </div>
                     <section className='sidebar-product d-flex '>
                         <div className='sidebar col-md-3 ms-3 me-1 d-none d-sm-block '>
                             <div className="accordion" id="accordionPanelsStayOpenExample">
@@ -101,12 +105,12 @@ export default function ProductList() {
                             <div className='filter mt-3 '>
                                 <div className="card filter-card">
                                     <div className="card-header">
-                                        快速篩選
+                                        其他選項
                                     </div>
                                     <div className="card-body">
                                         <form>
                                             <div className="col-12">
-                                                <label for="inputprice" className="form-label">價錢篩選</label>
+                                                <label for="inputprice" className="form-label">價格區間</label>
                                                 <div className="row col-md">
                                                     <div className="col-md-5">
                                                         <input type="number" className="form-control" id="price" placeholder="$最低價">
@@ -127,7 +131,7 @@ export default function ProductList() {
                                                 </input>
                                             </div>
                                             <button type="submit" className="btn btn-brown col-12 mt-3">
-                                                一鍵篩選
+                                                確定
                                             </button>
                                         </form>
                                     </div>
@@ -135,7 +139,7 @@ export default function ProductList() {
                             </div>
                         </div>
                         <div className='product col-md-8 mb-2 mx-5 '>
-                            <div className="row g-5 ">
+                            <div className="row  ">
                                 <div className="col-lg-4 col-md-4 col-sm-12">
                                     <a href='http://localhost:3000/product-detail'>
                                         <ProductCard />
