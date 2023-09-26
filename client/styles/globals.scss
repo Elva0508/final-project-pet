@@ -55,8 +55,7 @@ a {
   }
 }
 
-//navbar scss style
-@import "@/styles/_navbar.scss";
+
 
 ul {
   list-style: none;
@@ -80,3 +79,14 @@ ul {
 @import "@/styles/components-style/home/_home-product-card.scss";
 @import "@/styles/components-style/home/_block-three.scss";
 @import "@/styles/components-style/home/_block-six.scss";
+@import "@/styles/components-style/_member-order.scss";
+@import "@/styles/components-style/_member-order-detail.scss";
+@import "@/styles/components-style/_member-purchast.scss";
+@import "@/styles/components-style/_member-wishlist.scss";
+@import "@/styles/components-style/_member-joblist.scss";
+@import "@/styles/components-style/_member-history.scss";
+@import "@/styles/components-style/_list-d.scss";
+@import "@/styles/components-style/_list-m.scss";
+@import "@/styles/components-style/_list-user-m.scss";
+@import "@/styles/components-style/_ResponsiveAppBar.scss";
+

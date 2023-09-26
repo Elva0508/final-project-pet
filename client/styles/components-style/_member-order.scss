@@ -1,0 +1,29 @@
+@import "@/styles/variable";
+.order{
+    background: $content-bg;
+    color:$text-main;
+    @media screen and (max-width: 576px) {
+        background: $main-bg;
+    }
+    .date{
+        background: $main-bg;
+        @media screen and (max-width: 576px) {
+            background: #fff;
+        }
+    }
+    .nav-link{
+        color:$text-main;
+
+    }
+    .price{
+        font-weight: 600;
+    }
+    img{
+        width: 150px;
+        height: 150px;
+        
+    }
+
+
+
+}
