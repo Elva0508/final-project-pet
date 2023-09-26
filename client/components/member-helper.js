@@ -1,58 +1,51 @@
 import React, { useState } from "react";
-import { Select } from "antd";
 import { BiUpload } from "react-icons/bi";
 import { Switch } from "antd";
-
-const SwitchTs = () => {
+const SwitchInput = ({ label }) => {
   const [status, setStatus] = useState(false);
   const handleSwitch = (e) => {
     setStatus(e);
   };
   return (
+    <div className={`switch-info ${status && "mb-5"}`}>
+      <label className="size-6 ">{label}：</label>
+      <div className="switch-info-price col-auto">
+        <Switch onChange={handleSwitch} />
+        <input
+          type="number"
+          name=""
+          id=""
+          placeholder="服務價格"
+          className={`form-input ${!status && "d-none"}`}
+        />
+      </div>
+    </div>
+  );
+};
+
+const Close = ({ open, setOpen }) => {
+  const handleOpen = () => {
+    if (!open) {
+      setOpen(true);
+    }
+  };
+  return (
     <>
-      <div className="d-flex">
-        <label className="size-6">到府照顧：</label>
-        <div className="">
-          <Switch onChange={handleSwitch} />
-          <br />
-          <input
-            type="text"
-            name=""
-            id=""
-            placeholder="請輸入您的服務費用"
-            className="my-2"
-          />
-        </div>
-      </div>
-      <div>
-        <label className="size-6">安親寄宿：</label>
-        <Switch />
-      </div>
-      <div>
-        <label className="size-6">到府美容：</label>
-        <Switch />
-      </div>
+      <button className="open-helper btn-brown" onClick={handleOpen}>
+        開啟小幫手功能
+      </button>
     </>
   );
 };
-const HelperInfo = () => {
-  const options = [
-    { label: "到府照顧", value: 1 },
-    { label: "安親寄宿", value: 2 },
-    { label: "到府美容", value: 3 },
-  ];
 
-  const handleChange = (value) => {
-    console.log(`selected ${value}`);
+const Open = ({ open, setOpen }) => {
+  const handleOpen = () => {
+    if (open) {
+      setOpen(false);
+    }
   };
   return (
-    <div className="helper-info ">
-      <div className="title">
-        <p className="size-5">
-          <img src="/member-icon/helper-info.svg" />
-          我的資料
-        </p>
-      </div>
+    <>
       <form className="">
         <div className="form-item">
           <label className="size-6">姓名：</label>
@@ -60,12 +53,13 @@ const HelperInfo = () => {
         </div>
         <div className="form-item">
           <label className="size-6">個人簡述：</label>
-          <input
+          <textarea
             className="form-input"
             type="text"
             placeholder="請簡單輸入自我介紹"
           />
         </div>
+
         <div className="form-item">
           <label className="size-6">Email：</label>
           <input className="form-input" type="text" placeholder="請輸入Email" />
@@ -93,7 +87,7 @@ const HelperInfo = () => {
         </div>
         <div className="form-item">
           <label className="size-6">服務介紹：</label>
-          <input
+          <textarea
             className="form-input"
             type="text"
             placeholder="請輸入服務介紹"
@@ -111,7 +105,9 @@ const HelperInfo = () => {
         <div className="form-item">
           <label className="size-6 service-type">可服務類型：</label>
           <div className="service-switch">
-            <SwitchTs />
+            <SwitchInput label="到府照顧" />
+            <SwitchInput label="安親寄宿" />
+            <SwitchInput label="到府美容" />
           </div>
         </div>
         <div className="form-item">
@@ -144,7 +140,36 @@ const HelperInfo = () => {
           </div>
         </div>
       </form>
-    </div>
+      <div className="d-flex mb-2">
+        <div className="btn-groups d-flex justify-content-start ">
+          <button className="btn-outline-confirm ">取消</button>
+          <button className="btn-confirm ">送出</button>
+        </div>
+        <button className="close-helper btn-brown ms-auto" onClick={handleOpen}>
+          關閉小幫手功能
+        </button>
+      </div>
+    </>
+  );
+};
+const HelperInfo = () => {
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <div className="helper-info ">
+        <div className="title">
+          <p className=" size-4">
+            <img src="/member-icon/helper-info.svg" />
+            小幫手資料
+          </p>
+        </div>
+        {open ? (
+          <Open open={open} setOpen={setOpen} />
+        ) : (
+          <Close open={open} setOpen={setOpen} />
+        )}
+      </div>
+    </>
   );
 };
 

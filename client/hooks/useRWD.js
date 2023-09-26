@@ -16,8 +16,8 @@ const useRWD = () => {
     width <= 375
       ? setDevice("mobile")
       : width > 375 && width <= 768
-        ? setDevice("tablet")
-        : setDevice("PC");
+      ? setDevice("tablet")
+      : setDevice("PC");
   }
   return device;
 };
