@@ -19,18 +19,54 @@ export default function ArticleList() {
           <ArticleCatogory />
         </div>
 
-        <div className="mb-5">
-          <ArticleListCard />
+        <div class="row row-cols-1 row-cols-md-3 g-4 mb-5">
+          <div class="col">
+            <ArticleListCard />
+          </div>
+          <div class="col">
+            <ArticleListCard />
+          </div>
+          <div class="col">
+            <ArticleListCard />
+          </div>
         </div>
-        <div className="mb-5">
-          <ArticleListCard />
+
+        <div class="row row-cols-1 row-cols-md-3 g-4 mb-5">
+          <div class="col">
+            <ArticleListCard />
+          </div>
+          <div class="col">
+            <ArticleListCard />
+          </div>
+          <div class="col">
+            <ArticleListCard />
+          </div>
         </div>
-        <div className="mb-5">
-          <ArticleListCard />
+
+        <div class="row row-cols-1 row-cols-md-3 g-4 mb-5">
+          <div class="col">
+            <ArticleListCard />
+          </div>
+          <div class="col">
+            <ArticleListCard />
+          </div>
+          <div class="col">
+            <ArticleListCard />
+          </div>
         </div>
-        <div className="mb-5">
-          <ArticleListCard />
+
+        <div class="row row-cols-1 row-cols-md-3 g-4 mb-5">
+          <div class="col">
+            <ArticleListCard />
+          </div>
+          <div class="col">
+            <ArticleListCard />
+          </div>
+          <div class="col">
+            <ArticleListCard />
+          </div>
         </div>
+
         <div>分頁</div>
       </div>
       <footer>footer</footer>

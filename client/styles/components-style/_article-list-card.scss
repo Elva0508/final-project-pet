@@ -1,4 +1,7 @@
 .article-list-card {
+  .card{
+    border: none;
+  }
   .card-title {
     font-size: 1.25rem;
     font-weight: bold;
@@ -7,5 +10,8 @@
   .card-text{
     color: $text-mark;
     font-size: 1rem;
+  }
+  .card-body{
+    background-color: $content-bg;
   }
 }

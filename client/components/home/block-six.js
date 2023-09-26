@@ -1,5 +1,7 @@
 import React from "react";
 import ArticleListCard from "../article/article-list-card";
+import { FaChevronLeft } from "react-icons/fa";
+import { FaChevronRight } from "react-icons/fa";
 
 export default function BlockSix() {
   return (
@@ -23,7 +25,7 @@ export default function BlockSix() {
             data-bs-target="#carouselExample"
             data-bs-slide="prev"
           >
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <FaChevronLeft size={70} style={{ color: "#512f10" }} />
             <span class="visually-hidden">Previous</span>
           </button>
           <button
@@ -32,7 +34,7 @@ export default function BlockSix() {
             data-bs-target="#carouselExample"
             data-bs-slide="next"
           >
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <FaChevronRight size={70} style={{ color: "#512f10" }} />
             <span class="visually-hidden">Next</span>
           </button>
         </div>
