@@ -23,8 +23,8 @@ export default function MissionList() {
             <Filter />
             {/* <Filter /> */}
           </div>
-          <button className='add-mission-btn-pc btn-confirm size-6 d-none d-sm-block'><img src='/add-mission.svg' className='me-2' />新增任務</button>
-          <button className='add-mission-btn-mobile btn-confirm size-6 d-bolck d-sm-none'><img src='/add-mission.svg' className='' /></button>
+          <button className='add-mission-btn-pc  size-6 d-none d-sm-block'><img src='/add-mission.svg' className='me-2' />新增任務</button>
+          <button className='add-mission-btn-mobile size-6 d-bolck d-sm-none'><img src='/add-mission.svg' className='' /></button>
         </div>
         <section className='d-flex all-mission flex-column flex-md-row'>
           <div className='latest-mission d-none d-md-flex flex-column'>
