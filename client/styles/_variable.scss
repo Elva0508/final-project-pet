@@ -9,13 +9,14 @@ $hover: #d7965b; //主hover色
 $price: #ca526f; //強調色
 $star: #ffd362; //star色
 $cos-white: #fffdfb; //取代白色
-@import "@/styles/_buttons.scss";
 
 // Customize font-size
 // 網頁版：size-1 ~ size-7 下面七種字體大小的className
 // 手機版：m-size-1 ~ m-size-7 下面七種字體大小的className
 $web-font: 4.375rem, 3.5rem, 2.5rem, 1.875rem, 1.56rem, 1.25rem, 1rem;
 $mobile-font: 3rem, 2.625rem, 2.125rem, 1.5rem, 1.25rem, 1rem, 0.875rem;
+
+@import "@/styles/_buttons.scss";
 
 //  { 前一版font-size
 //   // $web-size: ();
@@ -77,6 +78,11 @@ $mobile-font: 3rem, 2.625rem, 2.125rem, 1.5rem, 1.25rem, 1rem, 0.875rem;
   .size-#{$i} {
     font-size: 4vw;
     font-size: max(nth($mobile-font, $i), min(4vw, nth($web-font, $i)));
+    color: $text-dark;
+    margin: 0;
+    @if $i != 7 {
+      color: $text-main;
+    }
   }
 }
 @media screen and (max-width: 768px) {
@@ -84,21 +90,48 @@ $mobile-font: 3rem, 2.625rem, 2.125rem, 1.5rem, 1.25rem, 1rem, 0.875rem;
     .m-size-#{$i} {
       font-size: 3vw;
       font-size: max(nth($mobile-font, $i), min(3vw, nth($web-font, $i)));
+      color: $text-dark;
+      margin: 0;
+      @if $i != 7 {
+        color: $text-main;
+      }
     }
   }
 }
+
 .form-input {
   height: 2.5rem;
   border: 1px solid rgba(0, 0, 0, 0.1);
   text-indent: 5px;
+  border-radius: 2px;
   &:focus {
     border: 1px solid rgba(0, 0, 0, 0.1);
     outline: none; /* 去掉預設input聚焦時的黑框線 */
     box-shadow: 0 1px 4px rgb(0, 0, 0, 0.25);
   }
 }
-
 .m-form-input {
   @extend .form-input;
   height: 2rem;
+}
+
+@media screen and (max-width: 768px) {
+  .m-form-input {
+    height: 2rem;
+  }
+}
+
+// 麵包屑樣式
+%breadcrumb-wrapper-extend {
+  margin: 10px 0 20px 0;
+  .breadcrumb {
+    margin: 0;
+    color: $text-main;
+    & > * {
+      color: $text-main;
+    }
+    .active {
+      color: $text-mark;
+    }
+  }
 }

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Link from "next/link";
 import { BiUpload } from "react-icons/bi";
 import { Switch } from "antd";
 const SwitchInput = ({ label }) => {
@@ -8,7 +9,7 @@ const SwitchInput = ({ label }) => {
   };
   return (
     <div className={`switch-info ${status && "mb-5"}`}>
-      <label className="size-6 ">{label}：</label>
+      <label className="size-6 m-size-7 ">{label}：</label>
       <div className="switch-info-price col-auto">
         <Switch onChange={handleSwitch} />
         <input
@@ -16,7 +17,7 @@ const SwitchInput = ({ label }) => {
           name=""
           id=""
           placeholder="服務價格"
-          className={`form-input ${!status && "d-none"}`}
+          className={`form-input m-form-input ${!status && "d-none"}`}
         />
       </div>
     </div>
@@ -48,32 +49,40 @@ const Open = ({ open, setOpen }) => {
     <>
       <form className="">
         <div className="form-item">
-          <label className="size-6">姓名：</label>
-          <input className="form-input" type="text" placeholder="請輸入名稱" />
+          <label className="size-6 m-size-7">姓名：</label>
+          <input
+            className="form-input m-form-input"
+            type="text"
+            placeholder="請輸入名稱"
+          />
         </div>
         <div className="form-item">
-          <label className="size-6">個人簡述：</label>
+          <label className="size-6 m-size-7">個人簡述：</label>
           <textarea
-            className="form-input"
+            className="form-input m-form-input"
             type="text"
             placeholder="請簡單輸入自我介紹"
           />
         </div>
 
         <div className="form-item">
-          <label className="size-6">Email：</label>
-          <input className="form-input" type="text" placeholder="請輸入Email" />
+          <label className="size-6 m-size-7">Email：</label>
+          <input
+            className="form-input m-form-input"
+            type="text"
+            placeholder="請輸入Email"
+          />
         </div>
         <div className="form-item">
-          <label className="size-6">聯絡電話：</label>
+          <label className="size-6 m-size-7">聯絡電話：</label>
           <input
-            className="form-input"
+            className="form-input m-form-input"
             type="text"
             placeholder="請輸入聯絡電話"
           />
         </div>
         <div className="form-item">
-          <label className="size-6">上傳相片/影片：</label>
+          <label className="size-6 m-size-7">上傳相片/影片：</label>
           <div className="upload">
             <button className="" type="button">
               <input className="d-none" type="file" id="upload-input" />
@@ -86,24 +95,24 @@ const Open = ({ open, setOpen }) => {
           </div>
         </div>
         <div className="form-item">
-          <label className="size-6">服務介紹：</label>
+          <label className="size-6 m-size-7">服務介紹：</label>
           <textarea
-            className="form-input"
+            className="form-input m-form-input"
             type="text"
             placeholder="請輸入服務介紹"
           />
         </div>
         <div className="form-item">
-          <label className="size-6">可服務時間：</label>
+          <label className="size-6 m-size-7">可服務時間：</label>
           <input
-            className="form-input"
+            className="form-input m-form-input"
             type="text"
             placeholder="請輸入可服務時間"
             value="日、一、二、三、四、五、六"
           />
         </div>
         <div className="form-item">
-          <label className="size-6 service-type">可服務類型：</label>
+          <label className="size-6 m-size-7 service-type">可服務類型：</label>
           <div className="service-switch">
             <SwitchInput label="到府照顧" />
             <SwitchInput label="安親寄宿" />
@@ -111,7 +120,7 @@ const Open = ({ open, setOpen }) => {
           </div>
         </div>
         <div className="form-item">
-          <label className="size-6">可服務地區：</label>
+          <label className="size-6 m-size-7">可服務地區：</label>
           <div>
             <select className="form-select">
               <option value="基隆市">基隆市</option>
@@ -158,9 +167,14 @@ const HelperInfo = () => {
     <>
       <div className="helper-info ">
         <div className="title">
-          <p className=" size-4">
+          <p className="size-4 m-size-5">
             <img src="/member-icon/helper-info.svg" />
             小幫手資料
+            {open && (
+              <Link href="" className="to-detail size-7 m-size-7">
+                點我查看細節頁
+              </Link>
+            )}
           </p>
         </div>
         {open ? (

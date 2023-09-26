@@ -1,0 +1,142 @@
+// @import "@/styles/_variable.scss";
+%mission-button-style {
+  font-size: 1.6rem;
+  // font-weight: bold;
+  width: 180px;
+  height: 55px;
+  box-shadow: 1px 5px 7px rgba(0, 0, 0, 0.25);
+}
+
+.mission-detail {
+  header {
+    background-color: $content-bg;
+    h2 {
+      font-weight: bold;
+    }
+  }
+  .description {
+    background-color: $content-bg;
+    // padding: 1rem 0;
+  }
+  .item {
+    $block-width: 12px;
+    width: calc(100% - 100px);
+    margin: 2rem auto;
+    &-title {
+      display: flex;
+      align-items: center;
+      // margin-bottom: 0.5rem;
+      &::before {
+        //標題前的裝飾塊
+        content: "";
+        display: inline-block; //與標題文字水平排列
+        background-color: $hover;
+        width: $block-width;
+        height: 46px;
+        margin-right: 0.5rem;
+      }
+    }
+    &-content {
+      margin-left: $block-width + 5px;
+      font-weight: 500;
+      text-align: justify;
+      list-style: disc;
+      padding-left: 1.5rem;
+      // list-style-position: inside;
+      li {
+        // text-indent: -1.8rem; /* 添加負縮排來對齊第一排的文字 */
+        // padding-left: 1.8rem; /* 補償負縮排的效果 */
+        list-style-position: outside;
+        margin-bottom: 1rem;
+      }
+    }
+    &-image {
+      margin-top: 1rem;
+      img {
+        width: 300px;
+        height: 300px;
+        object-fit: cover;
+      }
+      swiper-slide {
+        width: 300px; //swiper-slide要跟圖片等寬 否則預設太寬 會導致只出現第一張照片
+      }
+    }
+  }
+  iframe {
+    width: 100%;
+    height: 300px;
+    border: 0;
+    padding: 0 12%;
+  }
+}
+.ask-and-apply {
+  //   width: 100vw;
+  height: 120px;
+  background-color: $main-bg;
+  position: sticky;
+  bottom: 0;
+  overflow-x: hidden;
+  box-shadow: 1px 0px 5px rgba(0, 0, 0, 0.25);
+  gap: 5%;
+  &-btn {
+    @extend %mission-button-style;
+  }
+  @media screen and (max-width: 576px) {
+    &-btn {
+      font-size: 1rem; 
+      width: 30%; 
+      height: 45px;
+    }
+  }
+  .fav {
+    left: 5%;
+    color: $text-main;
+  }
+  .heart-icon {
+    color: $hover;
+    cursor: pointer;
+  }
+}
+.apply-modal {
+  .modal-header {
+    background: $header-bg;
+    // .modal-title{
+    //     font-weight: bold;
+    // }
+  }
+  .modal-body {
+    .profile {
+      gap: 2rem;
+      .avatar {
+        img {
+          width: 170px;
+          height: 170px;
+          object-fit: cover;
+          border-radius: 50%;
+        }
+      }
+    }
+    .recommend {
+      width: 80%;
+      margin: 0 auto;
+      .recommend-content {
+        width: 100%;
+        height: 160px;
+      }
+      .auto-send {
+        .checkbox {
+          width: 20px;
+        }
+        span {
+          color: $text-mark;
+        }
+      }
+    }
+  }
+  .modal-footer {
+    gap: 2rem;
+    button {
+      width: 25%;
+    }
+  }
+}
