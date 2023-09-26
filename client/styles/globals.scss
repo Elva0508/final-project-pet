@@ -55,6 +55,9 @@ a {
     border-bottom: 4px solid $hover;
   }
 }
+
+
+
 ul {
   list-style: none;
   padding: 0;
@@ -76,6 +79,27 @@ ul {
 
 //小貓商城、購物流程
 @import "@/styles/components-style/_product-card.scss";
+@import "@/styles/components-style/_bread-crumb.scss";
+@import "@/styles/components-style/_article-list-card.scss";
+@import "@/styles/components-style/_article-catogory.scss";
+@import "@/styles/components-style/_article-card.scss";
+@import "@/styles/_article.scss";
+@import "@/styles/components-style/home/_home-product-card.scss";
+@import "@/styles/components-style/home/_block-three.scss";
+@import "@/styles/components-style/home/_block-six.scss";
+@import "@/styles/components-style/_member-order.scss";
+@import "@/styles/components-style/_member-order-detail.scss";
+@import "@/styles/components-style/_member-purchast.scss";
+@import "@/styles/components-style/_member-wishlist.scss";
+@import "@/styles/components-style/_member-joblist.scss";
+@import "@/styles/components-style/_member-history.scss";
+@import "@/styles/components-style/_list-d.scss";
+@import "@/styles/components-style/_list-m.scss";
+@import "@/styles/components-style/_list-user-m.scss";
+@import "@/styles/components-style/_ResponsiveAppBar.scss";
+@import "@/styles/product/_product_cart.scss";
+@import "@/styles/product/_product_cart._checkout.scss";
+@import "@/styles/components-style/_pagination.scss"
 
 //會員頁面
 @import "@/styles/components-style/_member-helper.scss";
