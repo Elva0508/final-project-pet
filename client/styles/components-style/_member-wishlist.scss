@@ -1,0 +1,24 @@
+@import "@/styles/variable";
+.purchast{
+    background: $content-bg;
+    @media screen and (max-width: 576px) {
+        background: $main-bg;
+    }
+    color:$text-main;
+    img{
+        width: 150px;
+        height: 150px;
+        @media screen and (max-width: 576px) {
+            /* 当屏幕宽度小于等于1024px时应用的样式 */
+            width: 100px;
+            height: 100px;
+        }
+    }
+    .price{
+       color: $price;
+    }
+
+    .type{
+        color:$text-mark;
+    }
+}
