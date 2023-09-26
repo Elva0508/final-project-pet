@@ -8,7 +8,7 @@ import { BsLine } from "react-icons/bs";
 export default function Login() {
   return (
     <>
-      <ResponsiveAppBar />
+      {/* <ResponsiveAppBar /> */}
       <div className="container my-5 ">
         <div className="login-box d-flex align-items-center flex-column justify-content-center mx-auto ">
           <div className="login-header d-flex ">
