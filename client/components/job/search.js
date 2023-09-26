@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useRef } from "react";
 import { BiSearchAlt } from "react-icons/bi";
 
 const Search = ({ placeholder, color }) => {
+  const rippleBtnRef = useRef(null);
   const handleRipple = () => {
-    const btn = document.querySelector("button");
+    const btn = rippleBtnRef.current;
     btn.classList.add("ripple");
     setTimeout(() => {
       btn.classList.remove("ripple");
@@ -13,10 +14,9 @@ const Search = ({ placeholder, color }) => {
   return (
     <div className="job-search">
       <input type="text" placeholder={placeholder || ""} />
-      <button onClick={handleRipple}>
+      <button onClick={handleRipple} ref={rippleBtnRef}>
         <BiSearchAlt className="job-search-icon" />
       </button>
-      <div className="ripple"></div>
     </div>
   );
 };
