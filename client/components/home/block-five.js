@@ -5,10 +5,10 @@ export default function BlockFive() {
   return (
     <>
       <div className="block-three mb-5">
-        <div class="container text-center">
-          <div class="row">
-            <div class="col-5 col-md-5 d-flex align-items-end">
-              <div class="row">
+        <div className="container text-center">
+          <div className="row">
+            <div className="col-5 col-md-5 d-flex align-items-end">
+              <div className="row">
                 <div className="col-4"></div>
                 <div class="col-8 ">
                   <img
@@ -19,7 +19,7 @@ export default function BlockFive() {
                 </div>
               </div>
             </div>
-            <div class="col-md-7">
+            <div className="col-md-7">
               <div className="mt-5 ms-5">
                 <div className="d-flex justify-content-start title">
                   小貓上工囉！ 貓咪互助平台
