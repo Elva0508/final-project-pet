@@ -1,0 +1,52 @@
+.login-box{
+    max-width: 37.5rem;
+    background: #f4ece4;
+    padding: 3rem 0;
+}
+.login-header{
+    position: relative;
+}
+.email-login,
+.email-signup{
+    position: relative;
+    width: 100%;
+    height: auto;
+    margin: 1.25rem;
+}
+.u-form-group {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    & label{
+        text-align: left;
+        width: 70%;
+        font-weight: bold;
+    }
+    & input {
+        width: 70%;
+    }
+    & button{
+        width: 70%;
+    }
+  }
+  .google-icon{
+    svg{
+        width: 50px;
+        height: 50px;
+    }
+  }
+  .line-icon{
+    svg{
+        width: 45px;
+        height: 45px;
+    }
+  }
+ 
+.hr-divider {
+    border: none; 
+    border-top: 1px solid $text-main;
+    width: 70%; 
+    margin: 20px 0;
+  }

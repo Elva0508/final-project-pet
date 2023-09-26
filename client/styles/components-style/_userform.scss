@@ -1,0 +1,64 @@
+.user-profile {
+  // min-height: 913px;
+  width: 60%;
+  margin: 2rem auto; //到時候要去掉
+  background-color: $content-bg;
+  $form-height: 80px;
+  padding: 10px 40px;
+  position: relative;
+  .title {
+    margin-bottom: 40px;
+    & > p {
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      img {
+        margin-right: 0.8rem;
+        height: 28px;
+      }
+    }
+  }
+  }
+  .user-form{
+    &-item{
+      margin-bottom: 1rem;
+      display: flex;
+      > label{
+        width: 15%;
+        float: left;
+        padding-right: 10px;
+      }
+      > div{
+        width: 85%;
+        float: right;
+      }
+    }
+
+  }
+
+  @media  (max-width: 768px) {
+    .user-profile {
+      // min-height: 913px;
+      width: 100%;
+      background-color: $main-bg;
+      padding: 0px 5px;
+     
+      }
+      .user-form{
+        &-item{
+          > label{
+            width: 25%;
+            float: left;
+            padding-right: 10px;
+          }
+          > div{
+            width: 75%;
+            float: right;
+            >.form-input{
+              width: 100%;
+            }
+          }
+        }
+    
+      }
+  }
