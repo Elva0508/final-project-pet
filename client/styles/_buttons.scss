@@ -10,7 +10,7 @@
 }
 
 .btn-outline-confirm {
-  @include btn-config($hover, transparent, $hover, $main-bg, $hover);
+  @include btn-config(darken($hover, 10%), $main-bg, $hover, $main-bg, $hover);
 }
 
 .btn-second {

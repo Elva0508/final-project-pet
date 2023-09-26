@@ -13,9 +13,9 @@ const useRWD = () => {
 
   function handleRWD() {
     const width = window.innerWidth;
-    width <= 375
+    width <= 576
       ? setDevice("mobile")
-      : width > 375 && width <= 768
+      : width > 576 && width <= 992
       ? setDevice("tablet")
       : setDevice("PC");
   }

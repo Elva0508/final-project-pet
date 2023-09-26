@@ -1,5 +1,4 @@
 import React from "react";
-import ProductCard from "@/components/home/home-product-card";
 
 export default function BlockThree() {
   return (
