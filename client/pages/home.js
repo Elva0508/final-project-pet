@@ -1,19 +1,14 @@
 import React from "react";
-import Navbar from "@/components/navbar/ResponsiveAppBar";
 import BlockOne from "@/components/home/block-one";
 import BlockTwo from "@/components/home/block-two";
 import BlockThree from "@/components/home/block-three";
 import BlockFive from "@/components/home/block-five";
 import BlockSix from "@/components/home/block-six";
-import Footer from "@/components/footer";
 
 export default function Home() {
   return (
     <>
       <div className="home">
-        <nav>
-          <Navbar />
-        </nav>
         <div className="block-one mb-5">
           <BlockOne />
         </div>
@@ -65,9 +60,6 @@ export default function Home() {
             </div>
           </div>
         </div>
-        <footer>
-          <Footer />
-        </footer>
       </div>
     </>
   );

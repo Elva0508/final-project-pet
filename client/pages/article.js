@@ -2,15 +2,10 @@ import React from "react";
 import BreadCrumbArticle from "@/components/article/bread-crumb-article";
 import ArticleCatogory from "@/components/article/article-catogory";
 import ArticleCard from "@/components/article/article-card";
-import Navbar from "@/components/navbar/ResponsiveAppBar";
-import Footer from "@/components/footer";
 
 export default function Article() {
   return (
     <>
-      <nav>
-        <Navbar />
-      </nav>
       <div className="container mt-5">
         <div>
           <BreadCrumbArticle className="mt-5" />
@@ -38,9 +33,6 @@ export default function Article() {
           </span>
         </div>
       </div>
-      <footer>
-        <Footer />
-      </footer>
     </>
   );
 }
