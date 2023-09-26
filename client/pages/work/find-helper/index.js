@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import Link from "next/link";
-import Filter from "./filter";
-import LatestMission from "./latest-mission";
-import RoleSelection from "./role-selection";
-import Search from "./search";
+import Filter from "../../../components/job/filter";
+import LatestMission from "../../../components/job/latest-mission";
+import RoleSelection from "../../../components/job/role-selection";
+import Search from "../../../components/job/search";
 import { Swiper, SwiperSlide } from "swiper/react";
 import useRWD from "@/hooks/useRWD";
 import { register } from "swiper/element/bundle";

@@ -1,6 +1,6 @@
 import React from "react";
 import { MdHomeRepairService } from "react-icons/md";
-import { RecordDetailTemplete } from "./Record-template";
+import { RecordDetailTemplete } from "./record-template";
 const Tag = () => {
   return <div>{}</div>;
 };

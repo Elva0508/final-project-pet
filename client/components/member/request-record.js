@@ -1,7 +1,7 @@
 import React from "react";
 import SalesRecord from "./sales-record";
 import { BsCalendarDateFill } from "react-icons/bs";
-import { RecordTemplete } from "./Record-template";
+import { RecordTemplete } from "./record-template";
 
 const RequestRecord = () => {
   return (

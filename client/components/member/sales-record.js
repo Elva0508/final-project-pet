@@ -1,6 +1,6 @@
 import React from "react";
 import { MdHomeRepairService } from "react-icons/md";
-import { RecordTemplete } from "./Record-template";
+import { RecordTemplete } from "./record-template";
 const SalesRecord = () => {
   return (
     <div className="sales-and-request p-3">

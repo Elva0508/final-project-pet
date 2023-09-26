@@ -1,5 +1,5 @@
 import React from "react";
-import { RecordDetailTemplete } from "./Record-template";
+import { RecordDetailTemplete } from "./record-template";
 import { BsCalendarDateFill } from "react-icons/bs";
 
 const RequestRecordDetail = () => {
