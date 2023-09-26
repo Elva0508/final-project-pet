@@ -1,0 +1,22 @@
+@import "@/styles/variable";
+.history{
+    background: $content-bg;
+    color:$text-main;
+    @media screen and (max-width: 576px) {
+        background: $main-bg;
+    }
+    .title{
+        font-weight: 600;
+    }
+    .content{
+        color:black;
+    }
+
+    .follow{
+        color:$price;
+    }
+
+
+
+
+}
