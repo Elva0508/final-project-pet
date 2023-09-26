@@ -2,13 +2,16 @@ import React from "react";
 import BreadCrumb from "@/components/article/bread-crumb";
 import ArticleCatogory from "@/components/article/article-catogory";
 import ArticleListCard from "@/components/article/article-list-card";
+import Navbar from "@/components/navbar/navbar";
 
 export default function ArticleList() {
   return (
     <>
-      <nav>navbar</nav>
-      <div className="container">
-        <div className="mt-5">
+      <nav>
+        <Navbar />
+      </nav>
+      <div className="container mt-5 pt-3">
+        <div className="mt-5 pt-3">
           <BreadCrumb />
         </div>
 
