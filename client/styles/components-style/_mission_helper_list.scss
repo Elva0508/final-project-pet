@@ -93,10 +93,16 @@
       margin: 0.5rem 0;
     }
 
-    &-info p {
-      margin: 0.2rem 0;
-      white-space: nowrap;
+    &-info {
+      p {
+        margin: 0.2rem 0;
+      }
+      .service-items span,
+      .service-time span {
+        color: $price;
+      }
     }
+
     .price {
       margin-top: 1rem;
       span {
