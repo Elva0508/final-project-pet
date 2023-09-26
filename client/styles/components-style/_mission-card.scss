@@ -1,11 +1,12 @@
 // @import "@/styles/_variable.scss";
 
 .mission-list-card{
-    width: 260px;
+    $card-width-pc:260px;
+    width: $card-width-pc;
     .mission-img{
         img{
-            width: 260px;
-            height: 260px;
+            width: $card-width-pc;
+            height: $card-width-pc;
             object-fit: cover;
         }
     }
@@ -16,12 +17,32 @@
         }
         .price{
             span{
-                color: #D30000;
+                color: $price;
                 font-weight: 600;
             }
             button{
                 padding: 3px 10px;
                 color: $main-bg;
+            }
+        }
+    }
+}
+
+.mission-list-card-mobile{
+    $card-width-mobile:163.5px;  
+    .mission-list-card{
+        width: $card-width-mobile;
+        .mission-img{
+            img{
+                width: $card-width-mobile;
+                height: $card-width-mobile;
+            }
+        }
+        .mission-content{
+            .price{
+                button{
+                    padding: 2px 8px;
+                }
             }
         }
     }

@@ -177,7 +177,7 @@ export default function MissionDetail() {
                 </div>
             </div>
 
-            <div className='container mission-detail'>
+            <div className='container mission-detail my-3'>
                 <div>麵包屑放這裡</div>
                 <header className='mt-3 p-4'>
                     <p>案件編號：2685xy</p>
@@ -233,7 +233,6 @@ export default function MissionDetail() {
                 </section>
             </div>
 
-            <Footer />
             <section className="ask-and-apply d-flex justify-content-center align-items-center position-relative">
                 <div className='position-absolute fav' onClick={toggleFavorite}>
                     {isFavorite ? (
