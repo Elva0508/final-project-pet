@@ -6,6 +6,9 @@ $box-shadow: 0 1px 4px rgb(0, 0, 0, 0.25);
 $form-select-focus-border-color: $border-color;
 $focus-ring-color: transparent;
 $form-select-focus-box-shadow: $box-shadow;
+$carousel-indicator-active-bg: #d7965b;
+$carousel-indicator-height: 5px;
+$breadcrumb-divider: quote(">");
 
 // ↑↑↑  變數覆蓋(Variable overrides) 要寫在這行"上面"  ↑↑↑
 // 導入所有 bootstrap 樣式
@@ -55,44 +58,56 @@ a {
   }
 }
 
-
-
 ul {
   list-style: none;
   padding: 0;
 }
-// components scss styles
-@import "@/styles/components-style/_cat-mission.scss";
+
+// ↓↓↓ components scss styles放下面
+
+// 主要樣式組件(header、footer、商品卡片等等...)
+@import "@/styles/components-style/_footer.scss";
+@import "@/styles/components-style/_pagination.scss";
+@import "@/styles/components-style/_bread-crumb.scss";
+@import "@/styles/components-style/_ResponsiveAppBar.scss";
+@import "@/styles/components-style/home/_home-product-card.scss";
+
+// 小貓上工
+@import "@/styles/components-style/_create-mission.scss";
 @import "@/styles/components-style/_helper-detail.scss";
 @import "@/styles/components-style/job.scss";
-@import "@/styles/components-style/_footer.scss";
-@import "@/styles/components-style/_member-helper.scss";
-@import "@/styles/components-style/_role-selection.scss";
 @import "@/styles/components-style/_latest-mission.scss";
+@import "@/styles/components-style/_role-selection.scss";
+@import "@/styles/components-style/_mission-card.scss";
 @import "@/styles/_find-mission.scss";
+@import "@/styles/_mission-detail.scss";
+@import "@/styles/components-style/_mission_helper_list.scss";
+
+//小貓商城、購物流程
 @import "@/styles/components-style/_product-card.scss";
 @import "@/styles/_product-detail.scss";
 @import "@/styles/components-style/_quantity-counter.scss";
 @import "@/styles/_product-list.scss";
-@import "@/styles/components-style/_bread-crumb.scss";
-@import "@/styles/components-style/_article-list-card.scss";
-@import "@/styles/components-style/_article-catogory.scss";
-@import "@/styles/components-style/_article-card.scss";
-@import "@/styles/_article.scss";
-@import "@/styles/components-style/home/_home-product-card.scss";
-@import "@/styles/components-style/home/_block-three.scss";
-@import "@/styles/components-style/home/_block-six.scss";
-@import "@/styles/components-style/_member-order.scss";
+@import "@/styles/product/_product_cart.scss";
+@import "@/styles/product/_product_cart._checkout.scss";
+
+//會員頁面
+@import "@/styles/components-style/_list-d.scss";
+@import "@/styles/components-style/_list-m.scss";
+@import "@/styles/components-style/_list-user-m.scss";
+@import "@/styles/components-style/_member-helper.scss";
 @import "@/styles/components-style/_member-order-detail.scss";
+@import "@/styles/components-style/_member-order.scss";
+@import "@/styles/components-style/_sales-record.scss";
 @import "@/styles/components-style/_member-purchast.scss";
 @import "@/styles/components-style/_member-wishlist.scss";
 @import "@/styles/components-style/_member-joblist.scss";
 @import "@/styles/components-style/_member-history.scss";
-@import "@/styles/components-style/_list-d.scss";
-@import "@/styles/components-style/_list-m.scss";
-@import "@/styles/components-style/_list-user-m.scss";
-@import "@/styles/components-style/_ResponsiveAppBar.scss";
-@import "@/styles/product/_product_cart.scss";
-@import "@/styles/product/_product_cart._checkout.scss";
-@import "@/styles/components-style/_pagination.scss"
 
+// 文章、首頁
+@import "@/styles/components-style/_article-list-card.scss";
+@import "@/styles/components-style/_article-catogory.scss";
+@import "@/styles/components-style/_article-card.scss";
+@import "@/styles/_article.scss";
+@import "@/styles/components-style/home/_block-three.scss";
+@import "@/styles/components-style/home/_block-six.scss";

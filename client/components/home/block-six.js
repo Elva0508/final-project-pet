@@ -10,7 +10,7 @@ export default function BlockSix() {
         <div id="carouselExample" class="carousel slide">
           <div class="carousel-inner">
             <div class="carousel-item active">
-              <div class="row row-cols-1 row-cols-md-3 g-4 p-5">
+              <div class="row row-cols-1 row-cols-md-3 g-4 px-5">
                 <div class="col">
                   <ArticleListCard />
                 </div>
@@ -23,7 +23,7 @@ export default function BlockSix() {
               </div>
             </div>
             <div class="carousel-item">
-              <div class="row row-cols-1 row-cols-md-3 g-4 p-5">
+              <div class="row row-cols-1 row-cols-md-3 g-4 px-5">
                 <div class="col">
                   <ArticleListCard />
                 </div>
@@ -36,7 +36,7 @@ export default function BlockSix() {
               </div>
             </div>
             <div class="carousel-item">
-              <div class="row row-cols-1 row-cols-md-3 g-4 p-5">
+              <div class="row row-cols-1 row-cols-md-3 g-4 px-5">
                 <div class="col">
                   <ArticleListCard />
                 </div>
