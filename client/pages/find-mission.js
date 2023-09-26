@@ -5,6 +5,8 @@ import LatestMission, { MobileLatestMission } from '@/components/job/latest-miss
 import Search from '@/components/job/search'
 import Filter from '@/components/job/filter'
 import MissionCard, { MobileMissionCard } from '@/components/job/mission-card'
+import { FaCaretUp, FaCaretDown } from 'react-icons/fa';
+import Pagination from '@/components/pagination';
 import { Swiper, SwiperSlide } from "swiper/react";
 // Import Swiper styles
 import "swiper/css";
@@ -23,14 +25,14 @@ const MobileFilter = () => {
       <SwiperSlide>
         <Filter
           items={["測試1", "測試2"]}
-          title="服務費用"
+          title="薪資"
           src={"/job-icon/Heart-price.svg"}
         />
       </SwiperSlide>
       <SwiperSlide>
         <Filter
           items={["測試1", "測試2"]}
-          title="服務地區"
+          title="地區"
           src={"/job-icon/Discovery-date.svg"}
         />
       </SwiperSlide>
@@ -52,7 +54,46 @@ const MobileFilter = () => {
   );
 };
 
+const Sort = () => {
+  const [isUpIconVisible, setIsUpIconVisible] = useState(false);
+  const [isPriceIconVisible, setIsPriceIconVisible] = useState(false);
+
+  const toggleUpIcon = () => {
+    setIsUpIconVisible(!isUpIconVisible);
+
+    // 如果薪資按鈕已經是 $text-main，則切換薪資按鈕回 $text-mark
+    if (isPriceIconVisible) {
+      setIsPriceIconVisible(false);
+    }
+  };
+
+  const togglePriceIcon = () => {
+    setIsPriceIconVisible(!isPriceIconVisible);
+
+    // 如果刊登時間按鈕已經是 $text-main，則切換刊登時間按鈕回 $text-mark
+    if (isUpIconVisible) {
+      setIsUpIconVisible(false);
+    }
+  };
+
+  return (
+    <>
+      <div className='sort ' >
+        <div className='sort-btn d-flex   justify-content-center text-align-center'>
+          <button className={`size-7 m-1 p-1 ${isUpIconVisible ? 'active' : ''}`} onClick={toggleUpIcon}>
+            刊登時間 {isUpIconVisible ? <FaCaretUp /> : <FaCaretDown />}
+          </button>
+          <button className={`size-7 m-1 p-1 ${isPriceIconVisible ? 'active' : ''}`} onClick={togglePriceIcon}>
+            薪資 {isPriceIconVisible ? <FaCaretUp /> : <FaCaretDown />}
+          </button>
+        </div>
+      </div>
+    </>
+  )
+}
+
 export default function MissionList() {
+
   return (
     <>
       <div className='container pb-5 my-3 find-mission'>
@@ -61,24 +102,32 @@ export default function MissionList() {
           <RoleSelection />
           <Search />
         </div>
-        <div className='d-flex justify-content-between align-items-center my-md-3'>
+        <div className='d-flex justify-content-between align-items-center my-md-3 position-relative'>
           <div className='filters '>
             <MobileFilter />
           </div>
-          <button className='add-mission-btn-pc   d-none d-lg-block'><img src='/add-mission.svg' className='me-2' />新增任務</button>
+          <button className='add-mission-btn-pc  d-none d-lg-block position-absolute'><img src='/add-mission.svg' className='me-2' />新增任務</button>
           <button className='add-mission-btn-mobile size-6 d-bolck d-lg-none'><img src='/add-mission.svg' className='' /></button>
         </div>
-        <section className='d-flex all-mission flex-column flex-md-row'>
-          <div className='latest-mission d-none d-md-flex flex-column'>
+        
+        <div className='d-flex my-2'>
+          <Sort />
+        </div>
+
+        <section className='d-flex all-mission flex-column flex-lg-row'>
+          {/* 最新任務桌機 */}
+          <div className='latest-mission d-none d-lg-flex flex-column'>
             <h3 className='size-4  '>最新任務</h3>
             <LatestMission />
             <LatestMission />
           </div>
-          <div className='latest-mission d-md-none'>
+          {/* 最新任務手機 */}
+          <div className='latest-mission d-lg-none mb-3 mt-1'>
             <h3 className='size-4'>最新任務</h3>
             <MobileLatestMission />
           </div>
-          <div className='mission-list d-none d-md-flex flex-column justify-content-center'>
+          {/* 任務列表桌機 */}
+          <div className='mission-list d-none d-lg-flex flex-column justify-content-center'>
             {/* 不能使用d-flex d-md-block block會導致MissionCard垂直排列 */}
             <div className='row d-flex justify-content-between mb-3'>
               <div className='col-4'>
@@ -92,19 +141,19 @@ export default function MissionList() {
               </div>
             </div>
             <div className='row  d-flex justify-content-between mb-3'>
-              <div className='col-6 col-md-4'>
+              <div className='col-4'>
                 <MissionCard />
               </div>
-              <div className='col-6 col-md-4'>
+              <div className='col-4'>
                 <MissionCard />
               </div>
-              <div className='col-6 col-md-4'>
+              <div className='col-4'>
                 <MissionCard />
               </div>
             </div>
-
           </div>
-          <div className="mission-list d-flex d-md-none  flex-column">
+          {/* 任務列表手機 */}
+          <div className="mission-list d-flex d-lg-none  flex-column">
             <div className='row  d-flex justify-content-between mb-3'>
               <div className='col-6'>
                 <MobileMissionCard />
@@ -123,7 +172,7 @@ export default function MissionList() {
             </div>
           </div>
         </section>
-
+        <Pagination />
       </div>
 
     </>

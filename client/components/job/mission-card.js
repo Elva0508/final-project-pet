@@ -21,7 +21,7 @@ export default function MissionCard() {
                         <img src={isFavorite ? "/heart-clicked.svg" : "/heart.svg"} alt={isFavorite ? "已收藏" : "未收藏"} onClick={toggleFavorite} />
                     </div>
                     <div className='d-flex justify-content-between align-items-end price'>
-                        <div className='size-7' >單次<span className='size-6'> NT$140</span></div>
+                        <div  >單次<span className='size-6'> NT$140</span></div>
                         <button className='btn-confirm size-6'>應徵</button>
                     </div>
                 </div>
