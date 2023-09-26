@@ -55,8 +55,6 @@ a {
   }
 }
 
-//navbar scss style
-@import "@/styles/_navbar.scss";
 
 ul {
   list-style: none;
@@ -74,3 +72,5 @@ ul {
 @import "@/styles/components-style/_product-card.scss";
 @import "@/styles/components-style/_login.scss";
 @import "@/styles/components-style/_userform.scss";
+@import "/styles/components-style/_ResponsiveAppBar.scss";
+@import "/styles/components-style/_resetPassword.scss";
