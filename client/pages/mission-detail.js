@@ -163,7 +163,7 @@ export default function MissionDetail() {
                                 <div className='size-5 mb-2'>自我推薦</div>
                                 <textarea className='recommend-content'></textarea>
 
-                                <div className='auto-send d-flex my-4'>
+                                <div className='auto-send d-flex my-4 align-items-center'>
                                     <input type="checkbox" className='checkbox' />
                                     <div className='size-6 ms-2'>自動發送小幫手履歷<span className='size-7' >（需開啟小幫手資料）</span></div>
                                 </div>
