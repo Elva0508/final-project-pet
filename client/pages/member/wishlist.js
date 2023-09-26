@@ -38,11 +38,16 @@ export default function Wishlist() {
             <ListD />            
               <div className=' col-12 col-sm-8 purchast p-3'>
                 <div>
-                    <h5 className='size-5'><FaList/>追蹤清單</h5>
+                    
                     
                     {wishlist.map((v,i)=>{
                       return(
                         <>
+                        <div className='d-flex justify-content-between'>
+                          <h5 className='size-5'><FaList/>追蹤清單</h5>
+                          <p>已追蹤{wishlist.length}樣商品</p>
+                        </div>
+
                         <div className='col-12 d-flex border-bottom py-2'>
                           <div className='col-3 col-sm-3'key={v.collection_id}>
                           <img src={v.image}></img>   
