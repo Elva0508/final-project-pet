@@ -6,7 +6,7 @@ import Search from "@/components/job/search";
 import Filter from "@/components/job/filter";
 import HelperInfo from "@/components/member-helper";
 
-import Navbar from '@/components/navbar/navbar'
+
 import ResponsiveAppBar from '@/components/navbar/ResponsiveAppBar'
 import LoginForm from '@/components/user/loginForm'
 const Test = () => {

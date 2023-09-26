@@ -1,0 +1,23 @@
+@import "@/styles/variable";
+
+
+.list-m{
+    
+    a{
+    color:$text-main;     
+    }
+    h6{
+    color:$text-main;
+    font-weight: 600;
+    background: $main-bg;
+    border-bottom: 1px dashed $text-main ;
+    }
+    .btncolor{
+        background: $text-main;
+        color:$main-bg;
+        border: 0;
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+    }
+}
