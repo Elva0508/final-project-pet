@@ -219,7 +219,6 @@ export default function MissionDetail() {
                             {/* <span className="size-6">NT$ 1,200 / 天</span> */}
                         </div>
                         <p className="size-6 d-flex align-items-center ms-4 ms-sm-0">NT$ 1,200 / 天</p>
-
                     </div>
                     <div className="item d-flex flex-column flex-sm-row">
                         <div className="item-title size-5">
@@ -250,6 +249,18 @@ export default function MissionDetail() {
                             <li>家中有監視器不介意再應徵</li>
                             <li>希望你家中也有寵物，絕對不能使用任何帶有強迫或暴力的動作對貓咪，喜歡貓咪佳</li>
                         </ul>
+                    </div>
+                    <div className="item d-flex flex-column flex-sm-row">
+                        <div className="item-title size-5">
+                            任務類型：
+                        </div>
+                        <p className="size-6 d-flex align-items-center ms-4 ms-sm-0">到府照顧</p>
+                    </div>
+                    <div className="item d-flex flex-column flex-sm-row">
+                        <div className="item-title size-5">
+                            支付方式：
+                        </div>
+                        <p className="size-6 d-flex align-items-center ms-4 ms-sm-0">現金</p>
                     </div>
                     <div className="item">
                         <div className="item-title size-5">相片/影片：</div>
