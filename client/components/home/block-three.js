@@ -9,17 +9,17 @@ export default function BlockThree() {
             <div className="col-md-7">
               <div className="mt-5 ms-5">
                 <div className="d-flex">
-                  <span className="title">開幕慶</span>
+                  <span className="title size-1 m-size-3">開幕慶</span>
                 </div>
                 <div className="d-flex justify-content-start">
                   <span>
-                    限時特賣活動喔喔喔喔限時特賣活動喔喔喔喔,限時特賣活動喔喔喔喔
+                    限時特賣活動喔喔喔喔限時特賣活動喔喔喔喔
                   </span>
                 </div>
               </div>
               <div className="m-3 bg-light">
                 <div className="text-center">
-                  <div className="row align-items-start mt-5 pt-5 pb-5">
+                  <div className="row align-items-start mt-5 py-3">
                     <div className="col price size-6">
                       $99
                       <div className="size-7 content">全館滿額免運</div>
@@ -35,7 +35,7 @@ export default function BlockThree() {
                   </div>
                 </div>
               </div>
-              <div className="m-5">
+              <div className="m-5 d-flex justify-content-center">
                 <button type="reset" className="btn-brown mx-1">
                   立即註冊
                 </button>
