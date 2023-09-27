@@ -10,10 +10,10 @@ export default function BlockFive() {
             <div className="col-5 col-md-5 d-flex align-items-end">
               <div className="row">
                 <div className="col-4"></div>
-                <div className="col-8 py-5">
+                <div className="col-8 ">
                   <img
-                    src="https://i.pinimg.com/564x/2d/5b/28/2d5b28e26a315f3d57ae1e4a4f1a34c7.jpg"
-                    className="img-fluid rounded"
+                    src="https://hips.hearstapps.com/hmg-prod/images/cat-quotes-ginger-cat-on-bed-64e3990220b36.jpeg?crop=0.668xw:1.00xh;0.125xw,0&resize=1200:*"
+                    className="img-fluid"
                     alt="..."
                   ></img>
                 </div>
@@ -21,11 +21,13 @@ export default function BlockFive() {
             </div>
             <div className="col-md-7">
               <div className="mt-5 ms-5">
-                <div className="d-flex justify-content-start title size-1 m-size-3">
-                  小貓上工囉！ <br></br>貓咪互助平台
+                <div className="d-flex justify-content-start title">
+                  小貓上工囉！ 貓咪互助平台
                 </div>
                 <div className="d-flex justify-content-start">
-                  你的貓貓需要幫助嗎？讓其他人來幫助你吧！
+                  文字文字文字文字,你的貓貓需要幫助嗎?
+                  文字文字文字文字,讓其他人來幫助你！
+                  文字文字文字,文字文字文字文字文字,文字文字
                 </div>
               </div>
               <div className="m-5">
@@ -37,16 +39,16 @@ export default function BlockFive() {
                 <div className="container text-center">
                   <div className="row align-items-start mt-5 pt-5 pb-5">
                     <div className="col price size-6">
-                      100+
-                      <div className="size-7 content">百位小幫手</div>
+                      $99
+                      <div className="size-7 content">全館滿額免運</div>
                     </div>
                     <div className="col price size-6">
-                      890+
-                      <div className="size-7 content">刊登需求</div>
+                      9折券
+                      <div className="size-7 content">會員免費領取</div>
                     </div>
                     <div className="col price size-6">
-                      300+
-                      <div className="size-7 content">真實用戶回饋</div>
+                      買一送一
+                      <div className="size-7 content">VIP會員生日禮金</div>
                     </div>
                   </div>
                 </div>
