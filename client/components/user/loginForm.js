@@ -1,59 +1,37 @@
 import React from 'react'
-import Link from 'next/link'
 
-export default function LoginForm() {
+export default function LoginForm({user, error,handleFieldChange,handleSubmit}) {
   return (
     <>
-        <div className="container">
-  <div className="login-box">
-    {/* <div className="lg-header">
-      <a href="#" className="active" id="login-box-link">
-        登入
-      </a>
-      <a href="#" id="signup-box-link">
-        註冊
-      </a>
-    </div> */}
-    
-    <form className="email-signup">
-      <div className="u-form-group">
-        <label htmlFor="">電子信箱</label>
-        <input type="email" placeholder="請輸入電子信箱" />
-      </div>
-      <div className="u-form-group">
-        <label htmlFor="">密碼</label>
-        <input type="password" placeholder="請輸入密碼" />
-      </div>
-      <div className="u-form-group">
-        <label htmlFor="">確認密碼</label>
-        <input type="password" placeholder="請再次輸入密碼" />
-      </div>
-      <div className="u-form-group">
-        <button>註冊</button>
-      </div>
-    </form>
-    <hr className="hr1" />
-    <div className="u-form-group">
-      <a href="#" className="forgot-password">
-        忘記密碼
-      </a>
-    </div>
-    <div>
-      <div>使用其他方式登入</div>
-      <div className="social-login">
-        <a href="#">
-          <i className="fa fa-facebook fa-lg" />
-          Login in with facebook
-        </a>
-        <a href="#">
-          <i className="fa fa-google-plus fa-lg" />
-          log in with Google
-        </a>
-      </div>
-    </div>
-  </div>
-</div>
-
+   <form className="email-signup" onSubmit={handleSubmit}>
+            <div className="u-form-group mb-3">
+              <label htmlFor="">帳號</label>
+              <input 
+              className="form-input " 
+              type="email" 
+              placeholder="請輸入電子信箱"
+              name="username"
+              value={user.username}
+              onChange={handleFieldChange}
+               />
+               <div className="form-alert">{error.username}</div>
+            </div>
+            <div className="u-form-group mb-3">
+              <label htmlFor="">密碼</label>
+              <input className="form-input " 
+              type="password" 
+              placeholder="請輸入密碼"
+              value={user.password}
+              onChange={handleFieldChange}
+               />
+               {/* 錯誤訊息 */}
+              <div className="form-alert">{error.password}</div>
+            </div>
+          
+            <div className="u-form-group">
+              <button className="btn-brown ">登入</button>
+            </div>
+          </form>
     </>
   )
 }
