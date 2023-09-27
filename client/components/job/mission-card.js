@@ -1,4 +1,4 @@
-import React, { useState }  from 'react'
+import React, { useState } from 'react'
 
 
 
@@ -17,11 +17,11 @@ export default function MissionCard() {
                 <div className='mission-content mx-1 mt-2'>
                     <div className='title size-6'>雙十連假顧貓 對我的貓好一點 測試換行</div>
                     <div className='d-flex justify-content-between mt-2'>
-                        <div>台中市大甲區<br />2023-08-21</div>
+                        <div className='size-7'>台中市大甲區<br />2023-08-21</div>
                         <img src={isFavorite ? "/heart-clicked.svg" : "/heart.svg"} alt={isFavorite ? "已收藏" : "未收藏"} onClick={toggleFavorite} />
                     </div>
                     <div className='d-flex justify-content-between align-items-end price'>
-                        <div >單次<span className='size-6'> NT$140</span></div>
+                        <div  >單次<span className='size-6'> NT$140</span></div>
                         <button className='btn-confirm size-6'>應徵</button>
                     </div>
                 </div>
@@ -30,4 +30,13 @@ export default function MissionCard() {
     )
 }
 
-
+// mobile版（命名導出）
+export const MobileMissionCard = () => {
+    return (
+        <>
+            <div className='mission-list-card-mobile'>
+                <MissionCard />
+            </div>
+        </>
+    )
+};
