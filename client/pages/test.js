@@ -10,6 +10,7 @@ import Footer from "@/components/footer";
 import LoginForm from '@/components/user/loginForm'
  import UserForm from '@/components/user/userForm';
 import UserCoupon from "@/components/user-coupon/user-coupon";
+import ResetPassword from "@/components/user/resetPassword";
 const Test = () => {
   return (
     <>
@@ -18,8 +19,8 @@ const Test = () => {
     {/* <LoginForm/> */}
       {/* <HelperInfo /> */}
       {/* <UserForm/> */}
-      <UserCoupon/>
-  
+      {/* <UserCoupon/> */}
+  <ResetPassword/>
 
     </>
   );

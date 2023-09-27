@@ -15,20 +15,20 @@ export default function UserCoupon() {
 
   return (
     <>
-           <div className="">
+           <div className="user-coupon">
         <div className="title">
           <p className=" size-4">
           {/* <Image src={myProfile} alt="myProfile-logo" /> */}
             我的優惠券
           </p>
         </div>
-        <div className='couponSearch d-flex'>
-          <input className='form-input' type='text' placeholder='輸入優惠序號'/>
+        <div className='couponSearch d-flex gap-3 '>
+          <input className='form-input flex-grow-1' type='text' placeholder='輸入優惠序號'/>
           <button className='btn-confirm '>新增</button>
         </div>
-        <div>
-          <a href='#'>全部(12)</a>
-          <a href='#'>即將到期(3)</a>
+        <div className='border-bottom my-3 py-1'>
+          <a className='px-2' href='#'>全部(12)</a>
+          <a className='px-2'  href='#'>即將到期(3)</a>
         </div>
 
         <table className='userTable'>
