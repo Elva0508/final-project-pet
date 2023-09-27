@@ -1,9 +1,8 @@
 
 import React from "react";
 
-
 import ResponsiveAppBar from "@/components/navbar/ResponsiveAppBar";
-import LoginForm from "@/components/user/loginForm";
+
 
 // 沛涵
 import CreateMission from "@/pages/work/create-mission";
@@ -16,15 +15,18 @@ import RequestRecord from "@/components/member/request-record";
 import RequestRecordDetail from "@/components/member/request-record-detail";
 //佳瑜
 import LoginForm from '@/components/user/loginForm'
- import UserForm from '@/components/user/userForm';
+import UserForm from '@/components/user/userForm';
 import UserCoupon from "@/components/user-coupon/user-coupon";
 import ResetPassword from "@/components/user/resetPassword";
+
+//家綺
+import ProductListOffcanvas from "@/components/product/product-list-offcanvas";
 
 const Test = () => {
   return (
     <>
       <HelperDetail />
-    
+
     </>
   );
 };
