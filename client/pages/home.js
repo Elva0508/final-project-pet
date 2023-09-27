@@ -48,7 +48,7 @@ export default function Home() {
             <div className="photo mb-3">
               <img
                 src="https://images.unsplash.com/photo-1555685812-4b943f1cb0eb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80"
-                class="img-fluid"
+                className="img-fluid"
                 alt="..."
               ></img>
               <div className="size-1 mt-3 home-tilte d-flex justify-content-center">
