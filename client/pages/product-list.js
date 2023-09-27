@@ -1,7 +1,7 @@
 import { React, useState } from 'react';
 import Footer from '@/components/footer';
 import Search from '@/components/job/search';
-import ProductCard from '@/components/product/product-card';
+import ProductCard2 from '@/components/product/product-card2';
 import { FaCaretUp, FaCaretDown } from 'react-icons/fa';
 import ProductListOffcanvas from '@/components/product/product-list-offcanvas';
 
@@ -56,8 +56,8 @@ export default function ProductList() {
                     <div className="product-offcanvas-m d-block d-lg-none ">
                         <ProductListOffcanvas />
                     </div>
-                    <section className='sidebar-product d-flex '>
-                        <div className='sidebar col-md-3 ms-3 me-1 d-none d-sm-block '>
+                    <section className='sidebar-product d-flex  flex-column flex-lg-row mt-3 '>
+                        <div className='sidebar col-md-3 ms-3 me-1 d-none d-lg-block pe-4'>
                             <div className="accordion" id="accordionPanelsStayOpenExample">
                                 <div className="accordion-item">
                                     <h2 className="accordion-header" id="panelsStayOpen-headingCategory">
@@ -138,38 +138,34 @@ export default function ProductList() {
                                 </div>
                             </div>
                         </div>
-                        <div className='product col-md-8 mb-2 mx-5 '>
-                            <div className="row  ">
-                                <div className="col-lg-4 col-md-4 col-sm-12">
-                                    <a href='http://localhost:3000/product-detail'>
-                                        <ProductCard />
-                                    </a>
+                        <div className='product d-lg-flex flex-column justify-content-center '>
+                            <div className=" row d-flex mb-3 g-3 g-md-4 ">
+                                <div className="col-6 col-md-4 col-lg-6 col-xl-4">
+                                    <ProductCard2 />
                                 </div>
-                                <div className="col-lg-4 col-md-4 col-sm-12">
-                                    <a href='http://localhost:3000/product-detail'>
-                                        <ProductCard />
-                                    </a>
+                                <div className="col-6 col-md-4 col-lg-6 col-xl-4">
+                                    <ProductCard2 />
                                 </div>
-                                <div className="col-lg-4 col-md-4 col-sm-12">
-                                    <a href='http://localhost:3000/product-detail'>
-                                        <ProductCard />
-                                    </a>
+                                <div className="col-6 col-md-4 col-lg-6 col-xl-4">
+                                    <ProductCard2 />
                                 </div>
-                                <div className="col-lg-4 col-md-4 col-sm-12">
-                                    <a href='http://localhost:3000/product-detail'>
-                                        <ProductCard />
-                                    </a>
+                                <div className="col-6 col-md-4 col-lg-6 col-xl-4">
+                                    <ProductCard2 />
                                 </div>
-                                <div className="col-lg-4 col-md-4 col-sm-12">
-                                    <a href='http://localhost:3000/product-detail'>
-                                        <ProductCard />
-                                    </a>
+                                <div className="col-6 col-md-4 col-lg-6 col-xl-4">
+                                    <ProductCard2 />
                                 </div>
-                                <div className="col-lg-4 col-md-4 col-sm-12">
-                                    <a href='http://localhost:3000/product-detail'>
-                                        <ProductCard />
-                                    </a>
+                                <div className="col-6 col-md-4 col-lg-6 col-xl-4">
+                                    <ProductCard2 />
                                 </div>
+                                <div className="col-6 col-md-4 col-lg-6 col-xl-4">
+                                    <ProductCard2 />
+                                </div>
+                                
+                                {/* 原本錯的 */}
+                                {/* <div className="col-lg-4 col-md-4 col-sm-6">
+                                    <ProductCard />
+                                </div> */}
                             </div>
                         </div>
 

@@ -81,11 +81,23 @@
 }
     }
 
-@media screen and (max-width: 575px){
-    .job-search{
-        width: 90%;
+    .sidebar-product{
+       width: 100%;
     }
+
+@media screen and (max-width: 992px){
+    .job-search{
+        width: 100%;
+    }
+
+    .search-sort{
+        .sort{
+            margin-top: 5%;
+        }
+    }
+   
 }
+
 
     
 

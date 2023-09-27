@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Footer from '@/components/footer';
 import Counter from '@/components/product/quantity-counter';
 import { AiFillStar } from 'react-icons/ai';
-import ProductCard from '@/components/product/product-card';
+import ProductCard2 from '@/components/product/product-card2';
 import { FaChevronRight, FaChevronLeft } from 'react-icons/fa';
 import EvaluationBar from '@/components/evaluation-bar';
 
@@ -196,36 +196,20 @@ export default function ProductDetail() {
                         </div>
                         <div id="carouselExampleControls" className="carousel slide " data-bs-ride="carousel">
                             <div className="carousel-inner">
-                                <div className="carousel-item active">
-                                    <div className="d-flex justify-content-around m-1">
-                                        <a href='http://localhost:3000/product-detail ' className="product-card">
-                                            <ProductCard />
-                                        </a>
-                                        <a href='http://localhost:3000/product-detail ' className="product-card">
-                                            <ProductCard />
-                                        </a>
-                                        <a href='http://localhost:3000/product-detail ' className="product-card">
-                                            <ProductCard />
-                                        </a>
-                                        <a href='http://localhost:3000/product-detail ' className="product-card">
-                                            <ProductCard />
-                                        </a>
+                                <div className="carousel-item active ">
+                                    <div className="d-flex justify-content-around ">
+                                           <ProductCard2 />
+                                           <ProductCard2 />
+                                           <ProductCard2 />
+                                           <ProductCard2 />  
                                     </div>
                                 </div>
                                 <div className="carousel-item">
-                                    <div className="d-flex justify-content-around m-1">
-                                        <a href='http://localhost:3000/product-detail ' className="product-card">
-                                            <ProductCard />
-                                        </a>
-                                        <a href='http://localhost:3000/product-detail ' className="product-card">
-                                            <ProductCard />
-                                        </a>
-                                        <a href='http://localhost:3000/product-detail ' className="product-card">
-                                            <ProductCard />
-                                        </a>
-                                        <a href='http://localhost:3000/product-detail ' className="product-card">
-                                            <ProductCard />
-                                        </a>
+                                    <div className="d-flex justify-content-around ">
+                                        <ProductCard2 />
+                                        <ProductCard2 />
+                                        <ProductCard2 />
+                                        <ProductCard2 />
                                     </div>
                                 </div>
                             </div>
