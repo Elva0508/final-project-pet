@@ -9,7 +9,7 @@ export default function Home() {
   return (
     <>
       <div className="home">
-        <div className="block-one mb-5">
+        <div className="block-one-home mb-5">
           <div className="vedio">
             <BlockOne />
           </div>
@@ -92,8 +92,8 @@ export default function Home() {
           </div>
         </div>
         <div className="container my-5">
-          <div className="block-two my-5">
-            <div className="size-1 home-tilte d-flex justify-content-center mb-5">
+          <div className="block-two-home my-5">
+            <div className="size-1 m-size-3 home-tilte d-flex justify-content-center mb-5">
               新品推薦
             </div>
             <div className="my-5">
@@ -103,12 +103,12 @@ export default function Home() {
               <BlockTwo />
             </div>
           </div>
-          <div className="block-three my-5">
+          <div className="block-three-home my-5">
             <BlockThree />
           </div>
 
           <div className="block-four my-5">
-            <div className="size-1 home-tilte d-flex justify-content-center mb-5">
+            <div className="size-1 m-size-3 home-tilte d-flex justify-content-center mb-5">
               本週排行榜
             </div>
             <div className="mb-3">
@@ -130,7 +130,7 @@ export default function Home() {
                 className="img-fluid"
                 alt="..."
               ></img>
-              <div className="size-1 mt-3 home-tilte d-flex justify-content-center">
+              <div className="size-1 m-size-3 mt-3 home-tilte d-flex justify-content-center">
                 小貓兩三知
               </div>
             </div>
