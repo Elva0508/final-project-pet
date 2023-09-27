@@ -1,12 +1,10 @@
 // @import "@/styles/_variable.scss";
 
 .mission-list-card{
-    $card-width-pc:260px;
-    width: $card-width-pc;
+    width: 100%;
     .mission-img{
         img{
-            width: $card-width-pc;
-            height: $card-width-pc;
+            width: 100%;
             object-fit: cover;
         }
     }
@@ -28,22 +26,3 @@
     }
 }
 
-.mission-list-card-mobile{
-    $card-width-mobile:163.5px;  
-    .mission-list-card{
-        width: $card-width-mobile;
-        .mission-img{
-            img{
-                width: $card-width-mobile;
-                height: $card-width-mobile;
-            }
-        }
-        .mission-content{
-            .price{
-                button{
-                    padding: 2px 8px;
-                }
-            }
-        }
-    }
-}
