@@ -4,8 +4,8 @@ import ProductCard from "@/components/home/home-product-card";
 export default function BlockFive() {
   return (
     <>
-      <div className="block-three mb-5">
-        <div className="container text-center">
+      <div className="block-five mb-5">
+        <div className="text-center">
           <div className="row">
             <div className="col-5 col-md-5 d-flex align-items-end">
               <div className="row">

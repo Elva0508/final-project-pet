@@ -4,7 +4,7 @@ export default function BlockThree() {
   return (
     <>
       <div className="mb-5">
-        <div className="container text-center">
+        <div className="text-center">
           <div className="row">
             <div className="col-md-7">
               <div className="mt-5 ms-5">
