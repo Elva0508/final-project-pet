@@ -1,7 +1,7 @@
 import React from "react";
 import { MdHomeRepairService } from "react-icons/md";
 
-export const RecordTemplate = ({ icon, title, item1 }) => {
+export const RecordTemplete = ({ icon, title, item1 }) => {
   return (
     <>
       <h5 className="size-5 d-flex align-items-start fw-bold">
@@ -9,59 +9,79 @@ export const RecordTemplate = ({ icon, title, item1 }) => {
         {title || "銷售紀錄"}
       </h5>
       <nav className="tab-nav mt-4">
-        <button className="size-7">{item1 || "待處理"}</button>
-        <button className="size-7">進行中</button>
-        <button className="size-7">已完成</button>
-        <button className="size-7">已取消</button>
+        <button className="mx-3 size-7">{item1 || "待處理"}</button>
+        <button className="mx-3 size-7">進行中</button>
+        <button className="mx-3 size-7">已完成</button>
+        <button className="mx-3 size-7">已取消</button>
       </nav>
-      <div className="record-info-pc d-none d-sm-block">
-        <div className="info-title d-flex align-items-center justify-content-around">
-          <p>成立日期</p>
-          <p>預約編號</p>
-          <p>預約日期</p>
-          <p>服務總價</p>
-        </div>
-        <div className="info-content d-flex align-items-center justify-content-around">
-          <p>2023-08-26</p>
-          <p>１５３４８６８</p>
-          <p>
-            2023-09-10 ~<br className="d-md-none d-block" /> 2023-09-12
-          </p>
-          <div className="d-flex flex-column justify-content-center align-items-center">
-            <p className="mb-1 size-6">NT$ 705</p>
-            <button className="btn-outline-confirm">查看明細</button>
-          </div>
+      <div className="info-title d-flex align-items-center justify-content-around">
+        <p>成立日期</p>
+        <p>預約編號</p>
+        <p>預約日期</p>
+        <p>服務總價</p>
+      </div>
+      <div className="info-content d-flex align-items-center justify-content-around">
+        <p>2023-08-26</p>
+        <p>１５３４８６８</p>
+        <p>2023-09-10 ~ 2023-09-12</p>
+        <div className="d-flex flex-column justify-content-center align-items-center">
+          <p className="mb-1 size-6">NT$ 705</p>
+          <button className="btn-outline-confirm">查看明細</button>
         </div>
       </div>
-      <div className="record-info-mobile d-flex flex-column d-sm-none my-3">
-        <div>
-          <p>成立日期</p>
-          <p>2023-08-26</p>
+      <div className="info-content d-flex align-items-center justify-content-around">
+        <p>2023-08-26</p>
+        <p>１５３４８６８</p>
+        <p>2023-09-10 ~ 2023-09-12</p>
+        <div className="d-flex flex-column justify-content-center align-items-center">
+          <p className="mb-1 size-6">NT$ 705</p>
+          <button className="btn-outline-confirm">查看明細</button>
         </div>
-        <div>
-          <p>預約編號</p>
-          <p>１５３４８６８</p>
+      </div>
+      <div className="info-content d-flex align-items-center justify-content-around">
+        <p>2023-08-26</p>
+        <p>１５３４８６８</p>
+        <p>2023-09-10 ~ 2023-09-12</p>
+        <div className="d-flex flex-column justify-content-center align-items-center">
+          <p className="mb-1 size-6">NT$ 705</p>
+          <button className="btn-outline-confirm">查看明細</button>
         </div>
-        <div>
-          <p>預約日期</p>
-          <p>2023-09-10 ~ 2023-09-12</p>
+      </div>
+      <div className="info-content d-flex align-items-center justify-content-around">
+        <p>2023-08-26</p>
+        <p>１５３４８６８</p>
+        <p>2023-09-10 ~ 2023-09-12</p>
+        <div className="d-flex flex-column justify-content-center align-items-center">
+          <p className="mb-1 size-6">NT$ 705</p>
+          <button className="btn-outline-confirm">查看明細</button>
         </div>
-        <div>
-          <p>服務總價</p>
-          <div className="d-flex align-items-center justify-content-center">
-            <p className="size-6 me-2 fw-bold">NT$ 705</p>
-            <button className="btn-outline-confirm">查看明細</button>
-          </div>
+      </div>
+      <div className="info-content d-flex align-items-center justify-content-around">
+        <p>2023-08-26</p>
+        <p>１５３４８６８</p>
+        <p>2023-09-10 ~ 2023-09-12</p>
+        <div className="d-flex flex-column justify-content-center align-items-center">
+          <p className="mb-1 size-6">NT$ 705</p>
+          <button className="btn-outline-confirm">查看明細</button>
+        </div>
+      </div>
+      <div className="info-content d-flex align-items-center justify-content-around">
+        <p>2023-08-26</p>
+        <p>１５３４８６８</p>
+        <p>2023-09-10 ~ 2023-09-12</p>
+        <div className="d-flex flex-column justify-content-center align-items-center">
+          <p className="mb-1 size-6">NT$ 705</p>
+          <button className="btn-outline-confirm">查看明細</button>
         </div>
       </div>
     </>
   );
 };
-// icon={reactIcon} 要在使用的icon上加入className <BsCalendarDateFill className="icon me-1" />
+// icon={reactIccon} 要在使用的icon上加入classname <BsCalendarDateFill className="icon me-1" />
 // title={大標題名稱}
 // item1={第一個button}
 
-export const RecordDetailTemplate = ({ icon, title }) => {
+export const RecordDetailTemplete = ({ icon, title }) => {
   return (
     <>
       <h5 className="size-5 d-flex align-items-start fw-bold">
@@ -149,5 +169,5 @@ export const RecordDetailTemplate = ({ icon, title }) => {
     //         </div> */}
   );
 };
-// icon={reactIcon} 要在使用的icon上加入className <BsCalendarDateFill className="icon me-1" />
+// icon={reactIccon} 要在使用的icon上加入classname <BsCalendarDateFill className="icon me-1" />
 // title={大標題名稱}

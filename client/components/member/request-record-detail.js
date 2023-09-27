@@ -1,11 +1,11 @@
 import React from "react";
-import { RecordDetailTemplate } from "./Record-template";
+import { RecordDetailTemplete } from "./Record-template";
 import { BsCalendarDateFill } from "react-icons/bs";
 
 const RequestRecordDetail = () => {
   return (
-    <div className="col-12 col-sm-8 sales-record-detail">
-      <RecordDetailTemplate
+    <div className="col-12 col-sm-8 sales-record-detail p-3">
+      <RecordDetailTemplete
         icon={<BsCalendarDateFill className="icon me-1" />}
         title={"預約紀錄"}
       />

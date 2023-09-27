@@ -1,16 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
-import Filter from "../../../components/job/filter";
-import LatestMission from "../../../components/job/latest-mission";
-import RoleSelection from "../../../components/job/role-selection";
-import Search from "../../../components/job/search";
+import Filter from "./filter";
+import LatestMission from "./latest-mission";
+import RoleSelection from "./role-selection";
+import Search from "./search";
 import { Swiper, SwiperSlide } from "swiper/react";
 import useRWD from "@/hooks/useRWD";
 import { register } from "swiper/element/bundle";
 import { Carousel } from "@trendyol-js/react-carousel";
 import { AiOutlineLeftCircle, AiOutlineRightCircle } from "react-icons/ai";
-import Pagination from "@/components/pagination";
-import WorkService from "@/services/work-service";
 register();
 // Import Swiper styles
 import "swiper/css";
@@ -139,26 +137,17 @@ const MobileFamousHelper = () => {
   );
 };
 
-const SingleHelperCard = ({ ...helper }) => {
+const SingleHelperCard = () => {
   const [isFavorite, setIsFavorite] = useState(false); // 初始狀態為未收藏
   const toggleFavorite = () => {
     setIsFavorite(!isFavorite); // 切換收藏狀態
   };
-  const service = [
-    { label: "到府代餵", value: parseInt(helper.feed_service) },
-    { label: "安親寄宿", value: parseInt(helper.home_service) },
-    { label: "到府美容", value: parseInt(helper.beauty_service) },
-  ];
   return (
     <>
       <div className="single-card d-flex flex-column align-items-center col-4">
-        <img
-          className="single-card-img"
-          src={helper.cover_photo}
-          alt="貓頭貼"
-        />
+        <img className="single-card-img" src="/kitten.jpg" alt="任務" />
         <div className="single-card-content">
-          <div className="single-card-title size-6">{helper.name}</div>
+          <div className="single-card-title size-6">Pet House</div>
           <div className="ranking d-flex align-items-center mb-1">
             <img src="/star.svg" alt="星星" />
             <img src="/star.svg" alt="星星" />
@@ -168,22 +157,11 @@ const SingleHelperCard = ({ ...helper }) => {
           </div>
           <div className="single-card-info d-flex justify-content-between">
             <div>
-              <p className="m-size-7">{helper.service_county}</p>
-              <p className="service-items m-size-7">
-                服務項目：
-                {service
-                  .filter((item) => item.value != 0)
-                  .map((item, index, arr) =>
-                    index < arr.length - 1 ? (
-                      <span>{item.label}、</span>
-                    ) : (
-                      <span>{item.label}</span>
-                    )
-                  )}
+              <p className="m-size-7">台中市大甲區</p>
+              <p className="m-size-7">
+                服務項目：<span>安親寄宿</span>
               </p>
-              <p className="service-time m-size-7">
-                服務時間：<span>周一至周日</span>
-              </p>
+              <p className="m-size-7">服務時間：周一至周日</p>
             </div>
             <img
               src={isFavorite ? "/heart-clicked.svg" : "/heart.svg"}
@@ -204,27 +182,8 @@ const SingleHelperCard = ({ ...helper }) => {
   );
 };
 const MissionHelperList = () => {
+  const status = useRWD();
   const arr = Array.from({ length: 12 });
-  const [allHelpers, setAllHelpers] = useState([]);
-  useEffect(() => {
-    WorkService.getAllHelpers()
-      .then((res) => {
-        setAllHelpers(res.data.data);
-        console.log(res.data.data);
-      })
-      .catch((e) => {
-        console.log(e);
-      });
-    // WorkService.getCat()
-    //   .then((res) => {
-    //     const arr = [];
-    //     res.data.photos.map((item) => {
-    //       arr.push(item.src.tiny);
-    //     });
-    //     console.log(arr);
-    //   })
-    //   .catch((e) => console.log(e));
-  }, []);
   return (
     <div className="mission-helper-list">
       <nav className="breadcrumb-wrapper" aria-label="breadcrumb">
@@ -235,6 +194,9 @@ const MissionHelperList = () => {
           <li class="breadcrumb-item active" aria-current="page">
             小貓上工-小幫手總覽
           </li>
+          {/* <li class="breadcrumb-item active" aria-current="page">
+            Library
+          </li> */}
         </ol>
       </nav>
 
@@ -262,10 +224,9 @@ const MissionHelperList = () => {
           </div>
         </section>
         <section className="helper-list d-flex row flex-wrap">
-          {allHelpers?.map((helper) => (
-            <SingleHelperCard {...helper} />
+          {arr.map((item) => (
+            <SingleHelperCard />
           ))}
-          <Pagination />
         </section>
       </div>
     </div>
@@ -273,3 +234,4 @@ const MissionHelperList = () => {
 };
 
 export default MissionHelperList;
+// 375 10px編劇 + 44px按鈕 + 321卡片(內編劇20px)

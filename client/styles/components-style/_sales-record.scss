@@ -1,7 +1,6 @@
 .sales-and-request {
   background: $content-bg;
   // color: $text-main;
-  padding: 1rem;
   width: 70%;
   p {
     margin: 0;
@@ -16,7 +15,6 @@
       border: none;
       border-bottom: 4px solid transparent;
       padding-top: 4px;
-      margin: 0 0.2rem;
       &:hover,
       &:focus {
         border-bottom: 4px solid $hover;
@@ -45,34 +43,11 @@
       text-align: center;
     }
   }
-  .record-info-mobile {
-    box-shadow: 1px 0px 5px rgba(0, 0, 0, 0.1);
-    max-width: 420px;
-    margin: auto;
-    & > div {
-      border-bottom: 1px solid $light-gray;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      & > :first-child {
-        width: 25%;
-        background-color: $main-bg;
-        text-align: center;
-        color: $text-main;
-      }
-      & > :last-child {
-        padding: 0.5rem;
-        width: 75%;
-        background-color: $content-bg;
-        text-align: center;
-      }
-    }
-  }
 }
 
 .sales-record-detail {
   background: $content-bg;
-  padding: 1rem;
+
   p {
     margin: 5px 0;
   }
@@ -124,13 +99,7 @@
 }
 
 @media screen and (max-width: 768px) {
-  .sales-and-request,
-  .sales-record-detail {
-    width: 100%;
-    background: $main-bg;
-    padding: 0;
-  }
-  .sales-record-detail {
+  .sales-and-request {
     .pet-img {
       width: 130px;
       height: 130px;
@@ -139,8 +108,10 @@
 }
 @media screen and (max-width: 576px) {
   .sales-and-request {
-    .tab-nav {
-      border-bottom: 2px solid darken($light-gray, 10%);
+    width: 100%;
+    background: $main-bg;
+    .date {
+      background: #fff;
     }
   }
   .sales-record-detail {

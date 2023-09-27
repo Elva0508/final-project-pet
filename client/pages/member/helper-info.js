@@ -2,11 +2,11 @@ import React from "react";
 import ListD from "@/components/member/list-d";
 import ListM from "@/components/member/list-m";
 import ListUserM from "@/components/member/list-user-m";
-import SalesRecord from "@/components/member/sales-record";
+import HelperInfo from "@/components/member/helper-info";
 
-const MemberSelling = () => {
+const HelperInfoPage = () => {
   return (
-    <div className="d-flex container-fluid flex-column flex-md-row my-3">
+    <div className="d-flex container-fluid flex-column flex-md-row">
       <div className="d-flex justify-content-end">
         {/* mobile版的左側tab */}
         <ListM />
@@ -14,9 +14,11 @@ const MemberSelling = () => {
 
       {/* <ListUserM /> */}
       <ListD />
-      <SalesRecord />
+      <HelperInfo />
     </div>
+
+    //
   );
 };
 
-export default MemberSelling;
+export default HelperInfoPage;

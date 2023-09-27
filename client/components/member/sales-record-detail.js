@@ -1,13 +1,13 @@
 import React from "react";
 import { MdHomeRepairService } from "react-icons/md";
-import { RecordDetailTemplate } from "./Record-template";
+import { RecordDetailTemplete } from "./Record-template";
 const Tag = () => {
   return <div>{}</div>;
 };
 const SalesRecordDetail = () => {
   return (
-    <div className="col-12 col-sm-8 sales-record-detail my-3">
-      <RecordDetailTemplate
+    <div className="col-12 col-sm-8 sales-record-detail p-3">
+      <RecordDetailTemplete
         icon={<MdHomeRepairService className="icon me-1" />}
         title={"銷售紀錄"}
       />
