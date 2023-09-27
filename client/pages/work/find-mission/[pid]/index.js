@@ -124,7 +124,7 @@ export const MissionDetailSticky=()=>{
 
     return(
         <>
-            <section className="ask-and-apply d-flex justify-content-center align-items-center position-relative">
+            <section className="ask-and-apply d-flex justify-content-center align-items-center">
                 <div className='position-absolute fav' onClick={toggleFavorite}>
                     {isFavorite ? (
                         <div className='d-flex flex-column justify-content-end align-items-cnter'><FaHeart className='size-4 heart-icon' /><span>取消</span></div>
@@ -144,7 +144,6 @@ export const MissionDetailSticky=()=>{
         </>
     )
 }
-
 
 
 export default function MissionDetail() {
@@ -281,7 +280,3 @@ export default function MissionDetail() {
         </>
     )
 }
-
-
-
-
