@@ -3,7 +3,7 @@ import React from "react";
 export default function BlockThree() {
   return (
     <>
-      <div className="block-three mb-5">
+      <div className="mb-5">
         <div className="container text-center">
           <div className="row">
             <div className="col-md-7">
@@ -18,7 +18,7 @@ export default function BlockThree() {
                 </div>
               </div>
               <div className="m-3 bg-light">
-                <div className="container text-center">
+                <div className="text-center">
                   <div className="row align-items-start mt-5 pt-5 pb-5">
                     <div className="col price size-6">
                       $99

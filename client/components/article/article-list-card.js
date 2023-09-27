@@ -12,8 +12,8 @@ export default function ArticleListCard() {
               alt="..."
             />
             <div className="card-body">
-              <h5 className="card-title">何謂天然豆腐砂：讓貓咪擁有舒適的體驗</h5>
-              <p className="card-text">19.Aug.2023</p>
+              <h5 className="card-title size-6 m-size-6">何謂天然豆腐砂：讓貓咪擁有舒適的體驗</h5>
+              <p className="card-text size-7 m-size-7">19.Aug.2023</p>
             </div>
           </div>
         </a>
