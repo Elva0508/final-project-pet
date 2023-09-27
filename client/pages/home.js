@@ -22,9 +22,9 @@ export default function Home() {
               xmlns="http://www.w3.org/2000/svg"
             >
               <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stop-color="#00B4DB" />
-                <stop offset="50%" stop-color="#224488" />
-                <stop offset="100%" stop-color="#0083B0" />
+                <stop offset="0%" stopColor="#00B4DB" />
+                <stop offset="50%" stopColor="#224488" />
+                <stop offset="100%" stopColor="#0083B0" />
               </linearGradient>
               <path
                 fill="#fbf5ef"
