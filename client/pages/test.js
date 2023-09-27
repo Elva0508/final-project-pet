@@ -7,7 +7,6 @@ import React from "react";
 // import HelperInfo from "@/components/member-helper";
 import Footer from "@/components/footer";
 
-import ResponsiveAppBar from '@/components/navbar/ResponsiveAppBar'
 import LoginForm from '@/components/user/loginForm'
  import UserForm from '@/components/user/userForm';
 import UserCoupon from "@/components/user-coupon/user-coupon";
@@ -15,12 +14,12 @@ const Test = () => {
   return (
     <>
     
-      {/* <ResponsiveAppBar/> */}
+  
     {/* <LoginForm/> */}
       {/* <HelperInfo /> */}
-      <UserForm/>
-      {/* <UserCoupon/> */}
-      {/* <Footer/> */}
+      {/* <UserForm/> */}
+      <UserCoupon/>
+  
 
     </>
   );
