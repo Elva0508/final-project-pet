@@ -11,10 +11,13 @@ import SalesRecordDetail from "@/components/member/sales-record-detail";
 import SalesRecord from "@/components/member/sales-record";
 import RequestRecord from "@/components/member/request-record";
 import RequestRecordDetail from "@/components/member/request-record-detail";
+
+//nono
+import { HomeVedio } from "@/pages/index";
 const Test = () => {
   return (
     <>
-      <HelperDetail />
+      <HomeVedio />
     </>
   );
 };
