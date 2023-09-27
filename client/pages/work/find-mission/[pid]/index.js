@@ -5,6 +5,7 @@ import { PiWechatLogoThin } from "react-icons/pi";
 import { FaRegHeart, FaHeart } from "react-icons/fa";
 
 
+
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Scrollbar, Navigation } from "swiper/modules";
 // import function to register Swiper custom elements
@@ -115,8 +116,34 @@ const ImageSwiper = () => {
     );
 };
 
+export const MissionDetailSticky=()=>{
+    const [isFavorite, setIsFavorite] = useState(false); // 初始狀態為未收藏
+    const toggleFavorite = () => {
+        setIsFavorite(!isFavorite); // 切換收藏狀態
+    };
 
-
+    return(
+        <>
+            <section className="ask-and-apply d-flex justify-content-center align-items-center">
+                <div className='position-absolute fav' onClick={toggleFavorite}>
+                    {isFavorite ? (
+                        <div className='d-flex flex-column justify-content-end align-items-cnter'><FaHeart className='size-4 heart-icon' /><span>取消</span></div>
+                    ) : (
+                        <div className='d-flex flex-column justify-content-end align-items-cnter '><FaRegHeart className='size-4 heart-icon' /><span>收藏</span></div>
+                    )}
+                </div>
+                <button className="ask-and-apply-btn btn-outline-confirm d-flex align-items-center justify-content-center">
+                    <PiWechatLogoThin />
+                    線上詢問
+                </button>
+                <button className="ask-and-apply-btn btn-second d-flex align-items-center justify-content-center" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                    <IoPaperPlaneOutline />
+                    立即應徵
+                </button>
+            </section>
+        </>
+    )
+}
 
 
 export default function MissionDetail() {
@@ -136,15 +163,15 @@ export default function MissionDetail() {
     return (
         <>
             {/* Modal */}
-            <div class="modal fade apply-modal" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title size-4" id="exampleModalLabel">立即應徵</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div className="modal fade apply-modal" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div className="modal-dialog">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <h5 className="modal-title size-4" id="exampleModalLabel">立即應徵</h5>
+                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div className='modal-body'>
-                            <div class="profile d-flex justify-content-center align-items-center">
+                            <div className="profile d-flex justify-content-center align-items-center">
                                 <div className="avatar">
                                     <img src="/kitten.jpg" />
                                 </div>
@@ -162,22 +189,22 @@ export default function MissionDetail() {
                                 <div className='size-5 mb-2'>自我推薦</div>
                                 <textarea className='recommend-content'></textarea>
 
-                                <div className='auto-send d-flex my-4'>
+                                <div className='auto-send d-flex my-4 align-items-center'>
                                     <input type="checkbox" className='checkbox' />
                                     <div className='size-6 ms-2'>自動發送小幫手履歷<span className='size-7' >（需開啟小幫手資料）</span></div>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="modal-footer justify-content-center py-4">
-                            <button type="button" class="btn btn-outline-confirm" data-bs-dismiss="modal">取消</button>
-                            <button type="button" class="btn btn-second">確認送出</button>
+                        <div className="modal-footer justify-content-center py-4">
+                            <button type="button" className=" btn-outline-confirm" data-bs-dismiss="modal">取消</button>
+                            <button type="button" className=" btn-second">確認送出</button>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div className='container mission-detail'>
+            <div className='container mission-detail my-3'>
                 <div>麵包屑放這裡</div>
                 <header className='mt-3 p-4'>
                     <p>案件編號：2685xy</p>
@@ -233,8 +260,7 @@ export default function MissionDetail() {
                 </section>
             </div>
 
-            <Footer />
-            <section className="ask-and-apply d-flex justify-content-center align-items-center position-relative">
+            {/* <section className="ask-and-apply d-flex justify-content-center align-items-center position-relative">
                 <div className='position-absolute fav' onClick={toggleFavorite}>
                     {isFavorite ? (
                         <div className='d-flex flex-column justify-content-end align-items-cnter'><FaHeart className='size-4 heart-icon' /><span>取消</span></div>
@@ -250,11 +276,7 @@ export default function MissionDetail() {
                     <IoPaperPlaneOutline />
                     立即應徵
                 </button>
-            </section>
+            </section> */}
         </>
     )
 }
-
-
-
-

@@ -190,6 +190,20 @@ const ReviewSwiper = () => {
   );
 };
 
+export const HelperDetailSticky = () => {
+  return (
+    <section className="get-price d-flex justify-content-around align-items-center">
+      <p className="get-price-number size-4 m-0">
+        NT$<span>500</span>/次
+      </p>
+      <button className="get-price-btn btn-second d-flex  align-items-center justify-content-center">
+        <FiSend className="get-price-icon" />
+        查看報價
+      </button>
+    </section>
+  );
+};
+
 const HelperDetail = () => {
   return (
     <>
@@ -310,16 +324,6 @@ const HelperDetail = () => {
           </div>
         </section>
       </div>
-      <Footer />
-      <section className="get-price d-flex justify-content-around align-items-center">
-        <p className="get-price-number size-4 m-0">
-          NT$<span>500</span>/次
-        </p>
-        <button className="get-price-btn btn-second d-flex  align-items-center justify-content-center">
-          <FiSend className="get-price-icon" />
-          查看報價
-        </button>
-      </section>
     </>
   );
 };
