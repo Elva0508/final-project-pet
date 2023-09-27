@@ -65,13 +65,3 @@ export default function MissionCard() {
     )
 }
 
-// mobile版（命名導出）
-export const MobileMissionCard = () => {
-    return (
-        <>
-            <div className='mission-list-card-mobile'>
-                <MissionCard />
-            </div>
-        </>
-    )
-};

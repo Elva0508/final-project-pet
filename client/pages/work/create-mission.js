@@ -1,6 +1,6 @@
 import React from "react";
 import { DatePicker, Cascader } from "antd";
-import cityData from "@/json/CityCountyData.json";
+import cityData from "@/data/CityCountyData.json";
 
 const options = cityData.map((city) => {
   return {
