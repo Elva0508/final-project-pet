@@ -1,6 +1,7 @@
 .create-mission {
+  margin: 24px 12px;
   .block {
-    width: calc(100vw - 80px);
+    // width: calc(100vw - 80px);
     margin: auto;
     &-title {
       background-color: $header-bg;
@@ -44,7 +45,12 @@
     }
   }
   .btn-groups {
-    margin-top: 50px;
+    margin-top: 20px;
+    button {
+      width: 80px;
+      height: 40px;
+      font-size: 18px;
+    }
   }
 }
 
@@ -73,7 +79,7 @@
 @media screen and (max-width: 576px) {
   .create-mission {
     .block {
-      width: calc(100% - 10px);
+      width: 100%;
       margin-bottom: 1rem;
       &-body {
         background-color: transparent;
