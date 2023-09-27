@@ -7,6 +7,10 @@ class WorkService {
   getAllHelpers() {
     return axios.get(API_URL + "helpers");
   }
+
+  getFamousHelper() {
+    return axios.get(API_URL + "helpers/famous");
+  }
   getCat() {
     // 用來找貓的圖片
     return axios.get(

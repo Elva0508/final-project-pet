@@ -65,9 +65,28 @@
         }
       }
     }
-    // &-mobile {
-    //   display: none;
-    // }
+    &-mobile {
+      .slick-slider {
+        width: calc(100% - 56px);
+        margin: auto;
+        .slick-slide {
+          min-width: 300px;
+        }
+        .slick-arrow {
+          color: $text-main;
+          // background-color: $text-main;
+          $arrow-size: 28px;
+          width: $arrow-size;
+          height: $arrow-size;
+        }
+        .slick-prev {
+          left: -26px;
+        }
+        .slick-next {
+          right: -27px;
+        }
+      }
+    }
   }
   .helper-list {
     width: calc(100% - 40% - 10px);
@@ -187,13 +206,18 @@
       padding: 15px 0;
       &-title {
         margin-left: 15px;
+        margin-bottom: 1rem;
       }
       &-card {
         padding: 0 10px;
         $img-size: 100px;
+        margin-bottom: 0.4rem;
         &-img {
           width: $img-size;
           height: $img-size;
+        }
+        .ranking img {
+          display: inline-block;
         }
       }
     }
