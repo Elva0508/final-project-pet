@@ -12,7 +12,7 @@ export default function BlockFive() {
                 <div className="col-4"></div>
                 <div className="col-8 ">
                   <img
-                    src="https://hips.hearstapps.com/hmg-prod/images/cat-quotes-ginger-cat-on-bed-64e3990220b36.jpeg?crop=0.668xw:1.00xh;0.125xw,0&resize=1200:*"
+                    src="https://i.pinimg.com/564x/2d/5b/28/2d5b28e26a315f3d57ae1e4a4f1a34c7.jpg"
                     className="img-fluid"
                     alt="..."
                   ></img>
