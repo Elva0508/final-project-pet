@@ -1,5 +1,3 @@
-// @import "@/styles/_variable.scss";
-
 .latest-mission-card {
   width: 380px;
   margin: 30px 0;
@@ -17,7 +15,7 @@
     }
     .price {
       span {
-        color: #d30000;
+        color: $price;
         font-weight: 600;
       }
       button {
@@ -36,6 +34,18 @@
     // }
   }
 }
+@media screen and (max-width: 991px) {
+  .latest-mission-card {
+      width: 100%;
+      .mission-img {
+          img {
+            width: 150px;
+            height: 150px;
+          }
+        }
+  }
+}
+
 @media screen and (max-width: 575px) {
     .latest-mission-card {
         width: 100%;
@@ -43,6 +53,13 @@
             img {
               width: 130px;
               height: 130px;
+            }
+          }
+          .mission-content {
+            .price {
+              button {
+                padding: 2px 8px;
+              }
             }
           }
     }

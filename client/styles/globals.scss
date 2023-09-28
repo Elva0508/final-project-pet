@@ -86,12 +86,13 @@ ul {
 @import "@/styles/components-style/_mission_helper_list.scss";
 
 //小貓商城、購物流程
-@import "@/styles/components-style/_product-card.scss";
+@import "@/styles/components-style/_product-card2.scss";
 @import "@/styles/_product-detail.scss";
 @import "@/styles/components-style/_quantity-counter.scss";
 @import "@/styles/_product-list.scss";
 @import "@/styles/product/_product_cart.scss";
 @import "@/styles/product/_product_cart._checkout.scss";
+@import "@/styles/components-style/_product-list-offcanvas.scss";
 
 //會員頁面
 @import "@/styles/components-style/_list-d.scss";
@@ -109,6 +110,7 @@ ul {
 @import "@/styles/components-style/_userform.scss";
 @import "/styles/components-style/_ResponsiveAppBar.scss";
 @import "/styles/components-style/_resetPassword.scss";
+@import "/styles/components-style/_user-coupon.scss";
 
 // 首頁
 @import "@/styles/_home.scss";
@@ -123,4 +125,6 @@ ul {
 @import "@/styles/components-style/_article-catogory.scss";
 @import "@/styles/components-style/_article-card.scss";
 @import "@/styles/_article.scss";
+@import "@/styles/components-style/home/_block-three.scss";
+@import "@/styles/components-style/home/_block-six.scss";
 
