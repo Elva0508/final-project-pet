@@ -1,21 +1,30 @@
 @import "@/styles/_variable.scss";
 
-.container{
-    //background-color: aqua;
-}
 
+.product-list{
+    .product-offcanvas-m{
+        z-index: 99;
+        position: fixed;
+        right: 0;
+
+    }
 .accordion{
     border: none;
 }
 .sidebar-product{
     margin-top: 20px;
    .sidebar {
+    .accordion-item{
+         border: none;
+    }
     .accordion-button{
         background-color: $content-bg;
         color: $text-main;
         font-size: 1.25rem;
         text-align: center ; 
         border-bottom: 1px dashed $text-mark;
+        display: block;
+    }
     }
     .button-subcategory{
         background-color:$cos-white;
@@ -28,7 +37,10 @@
 }
 
 .filter{
-    border: 1px solid $content-bg;
+    border: none;
+    .card{
+        border: none;
+    }
     .card-header{
          background-color: $content-bg;
         color: $text-main;
@@ -68,6 +80,30 @@
     font-weight:bold;
 }
     }
+
+    .sidebar-product{
+       width: 100%;
+    }
+
+@media screen and (max-width: 992px){
+    .job-search{
+        width: 100%;
+    }
+
+    .search-sort{
+        .sort{
+            margin-top: 5%;
+        }
+    }
+   
+}
+
+
+    
+
+
+
+    
 
 
 

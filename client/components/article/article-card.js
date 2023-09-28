@@ -13,8 +13,8 @@ export default function ArticleCard() {
             />
           </div>
           <div className="card-body">
-            <span className="card-title">何謂天然豆腐砂：讓貓咪擁有舒適的體驗</span>
-            <p className="card-text">
+            <span className="card-title size-3 m-size-4">何謂天然豆腐砂：讓貓咪擁有舒適的體驗</span>
+            <p className="card-text size-5 m-size-6">
               <small className="text-body-secondary">19.Aug.2023</small>
             </p>
           </div>

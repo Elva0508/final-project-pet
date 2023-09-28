@@ -1,11 +1,10 @@
 // @import "@/styles/_variable.scss";
 
 .mission-list-card{
-    width: 260px;
+    width: 100%;
     .mission-img{
         img{
-            width: 260px;
-            height: 260px;
+            width: 100%;
             object-fit: cover;
         }
     }
@@ -16,7 +15,7 @@
         }
         .price{
             span{
-                color: #D30000;
+                color: $price;
                 font-weight: 600;
             }
             button{
@@ -26,3 +25,4 @@
         }
     }
 }
+

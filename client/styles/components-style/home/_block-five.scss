@@ -1,14 +1,7 @@
-.block-three{
+.block-five{
     background-color: #EEDDCC;
-    @media (max-width: 375px) { 
-        .img-fluid {
-            max-width: 200%;
-            height: auto;
-            margin: 10px;
-        }
-    }
-
     .title{
+        font-size: 4.375rem;
         color: #34251F;
         font-weight: bold;
     }

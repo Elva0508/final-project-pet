@@ -1,8 +1,7 @@
-.home-product-card{
-    .card:hover {
-        box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2); 
-    }
+.product-card{   
+    width: 100%;
     .card{
+        width: 100%;
         border: none;
         .card-body{
             background-color: $main-bg;
@@ -53,7 +52,6 @@
             }
             .card-text{
                 color: #34251F;
-                font-size: 1.25rem;
                 font-weight: bold;
                 height: 60px;
             }

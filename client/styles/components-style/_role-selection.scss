@@ -6,12 +6,14 @@
     padding: 3px 30px;
     button{
         color: #a1a1a1;
+        &:hover {
+            color: $text-main; 
+            font-weight: bold;
+          }
     }
-    &:hover {
-        color: $text-main; 
-      }
     .active{
         color: $text-main;
+        font-weight: bold;
     }
     button:first-child{
         margin-right: 30px;
