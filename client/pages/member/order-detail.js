@@ -1,21 +1,57 @@
-import React, { useState } from "react";
+import React, { useState ,useEffect } from "react";
 import ListM from "@/components/member/list-m";
 import ListD from "@/components/member/list-d";
 import ListUserM from "@/components/member/list-user-m";
 import { RiFileList3Fill } from "react-icons/ri";
+import Star from '@/components/member/star'
+import axios from "axios";
 
 export default function Orderdetail() {
   const [comment, setComment] = useState("");
+  const [isText, setIsText] = useState("");
+  const [value1, setValue1] = useState(0)
+  const [detail,setDetail]=useState([{}])
+
 
   const handleComment = (n) => {
     setComment(n);
   };
 
-  const [isText, setIsText] = useState("");
-
-  const handleText = (text) => {
+    const handleText = (text) => {
     setIsText(text.target.value);
   };
+
+
+  // const addMessage = async (id) => {
+  //   try {
+  //     const response = await axios.delete(
+  //       `http://localhost:3005/member/wishlist/${id}`
+  //     );
+  //     const newWishlist = wishlist.filter((v) => v.collection_id !== id);
+  //     setWishlist(newWishlist);
+  //   } catch (error) {
+  //     console.error("Error:", error);
+  //   }
+  // };
+
+  const getDetail =  () => {
+    axios
+     .get("http://localhost:3005/order-detail")
+     .then((response) => {
+       const data = response.data.result;
+       console.log(data);
+       setDetail(data);
+       console.log(detail);
+     })
+     .catch((error) => {
+       console.error("Error:", error);
+     });
+ };
+
+ useEffect(() => {
+   getDetail();
+ }, []);
+
 
   return (
     <>
@@ -34,7 +70,7 @@ export default function Orderdetail() {
                 我的訂單
               </h5>
 
-              <p className="date my-3 size-7">2023-08-26</p>
+              <p className="date my-3 size-7">{detail[0].created_at}</p>
               <p className="size-7">狀態 : 已完成</p>
               <p className="size-7">訂單編號 :1534868</p>
               <p className="size-7">收件資訊 :</p>
@@ -89,13 +125,14 @@ export default function Orderdetail() {
                 </button>
               </div>
               {comment === "1" && (
-                <div>
+                <form>
                   <h5 className="size-6 mt-3">商品評論</h5>
+                  <Star startRating={value1} onRatingChange={setValue1} />                 
                   <textarea
                     className="form-control col-12 textareasize "
                     value={isText}
                     onChange={() => {
-                      setIsText();
+                      addMessage();
                     }}
                   ></textarea>
                   <div className="d-flex  justify-content-end">
@@ -107,11 +144,11 @@ export default function Orderdetail() {
                     >
                       取消
                     </button>
-                    <button className="btn btn-confirm m-2 size-6 m-size-6">
+                    <button className="btn btn-confirm m-2 size-6 m-size-6" type="submit">
                       儲存
                     </button>
                   </div>
-                </div>
+                </form>
               )}
 
               <div className="d-flex justify-content-end">

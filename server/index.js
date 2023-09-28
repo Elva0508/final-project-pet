@@ -1,14 +1,16 @@
-const mysql = require("mysql2");
-const connection = require("./db");
-const express = require("express");
-const app = express();
-const cors = require("cors");
+const mysql=require("mysql2");
+const connection=require("./db");
+const express=require("express");
+const app=express();
+const cors = require('cors');
+const bodyParser=require('body-parser')
+
 const memberRouter = require("./routes/member-route");
 const workRouter = require("./routes/work-route");
 
 app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(bodyParser.json()); // 解析 JSON 请求体
+app.use(bodyParser.urlencoded({ extended: true })); 
 
 app.use("/api/member", memberRouter);
 app.use("/api/work", workRouter);
@@ -39,6 +41,18 @@ app.get("/member/order", (req, res) => {
         res.json({result})
         }
 )})
+
+app.get("/order-detail",(req,res)=>{
+      
+    connection.execute(
+        `SELECT o.* FROM orders AS o WHERE o.oid=1`,
+        (error,result)=>{
+            res.json({result})
+        }    
+    )
+})
+
+
 
 app.post("/addMessage",(req,res)=>{
       
@@ -116,4 +130,3 @@ app.delete("/member/wishlist/:id",(req,res)=>{
 app.listen(3005,()=>{
     console.log("server is running");
 })
-
