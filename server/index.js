@@ -5,6 +5,7 @@ const app = express();
 const cors = require("cors");
 const memberRouter = require("./routes/member-route");
 const workRouter = require("./routes/work-route");
+const missionRouter = require("./routes/mission-route");
 
 app.use(cors());
 app.use(express.json());
@@ -12,6 +13,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use("/api/member", memberRouter);
 app.use("/api/work", workRouter);
+app.use("/api/mission", missionRouter);
 
 app.get("/member/order", (req, res) => {
   connection.execute(

@@ -1,14 +1,17 @@
 import React, { useState, useEffect, useRef } from 'react'
+import axios from "axios"
+// components
 import RoleSelection from '@/components/job/role-selection'
 // 用 {} 導入的內容是命名導出的，而不加{}導入的內容是默認導出的。
 import LatestMission, { MobileLatestMission } from '@/components/job/latest-mission'
 import Search from '@/components/job/search'
 import Filter from '@/components/job/filter'
-import MissionCard, { MobileMissionCard } from '@/components/job/mission-card'
-import { FaCaretUp, FaCaretDown } from 'react-icons/fa';
+import MissionCard from '@/components/job/mission-card'
 import Pagination from '@/components/pagination';
+// react-icons
+import { FaCaretUp, FaCaretDown } from 'react-icons/fa';
+// Swiper
 import { Swiper, SwiperSlide } from "swiper/react";
-// Import Swiper styles
 import "swiper/css";
 import "swiper/css/navigation";
 
@@ -93,6 +96,22 @@ const Sort = () => {
 }
 
 export default function MissionList() {
+
+  const [allMissions,setAllMissions]=useState([])
+  const getAllMissions = async() => {
+      await axios.get("http://localhost:3005/api/mission/all-missions")
+        .then((response) => {
+          const data = response.data.result;
+          console.log(data);
+          setAllMissions(data)     
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+      });
+    }
+      useEffect(() => {
+        getAllMissions()
+        }, [])
 
   return (
     <>
