@@ -1,4 +1,12 @@
 .home{
+
+    //首頁通用的樣式
+    .home-tilte{
+        color: $text-main;
+        font-weight: bold;
+    }
+
+    //各區樣式
     .block-one{
         position: relative;
         .vedio{
@@ -10,9 +18,18 @@
             margin-top: -200px;
         }
     }
-    .home-tilte{
-        color: $text-main;
-        font-weight: bold;
+    .block-two-mobile{
+        display: none;
     }
+
+    @media (max-width: 375px) {
+        .block-two {
+          display: none;
+        }
+        .block-two-mobile{
+            display: block;
+        }
+      }
+
     
 }

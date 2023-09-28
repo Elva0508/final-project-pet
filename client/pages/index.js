@@ -1,6 +1,7 @@
 import React from "react";
 import BlockOne from "@/components/home/block-one";
 import BlockTwo from "@/components/home/block-two";
+import BlockTwoMobile from "@/components/home/block-two-mobile";
 import BlockThree from "@/components/home/block-three";
 import BlockFive from "@/components/home/block-five";
 import BlockSix from "@/components/home/block-six";
@@ -111,6 +112,19 @@ export default function Index() {
               <BlockTwo />
             </div>
           </div>
+
+          <div className="block-two-mobile my-5 ">
+            <div className="m-size-3 home-tilte d-flex justify-content-center mb-5">
+              新品推薦
+            </div>
+            <div className="my-5">
+              <BlockTwoMobile />
+            </div>
+            <div className="my-5">
+              <BlockTwoMobile />
+            </div>
+          </div>
+
           <div className="block-three my-5">
             <BlockThree />
           </div>
