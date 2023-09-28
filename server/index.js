@@ -3,8 +3,11 @@ const connection=require("./db");
 const express=require("express");
 const app=express();
 const cors = require('cors');
+const bodyParser=require('body-parser')
 
 app.use(cors());
+app.use(bodyParser.json()); // 解析 JSON 请求体
+app.use(bodyParser.urlencoded({ extended: true })); 
 
 app.get("/",(req,res)=>{
     res.send("首頁");
@@ -36,13 +39,22 @@ app.get("/member/order",(req,res)=>{
         ,(error,result)=>{
         res.json({result})
         }
-)
-  
+)})
+
+app.post("/addMessage",(req,res)=>{
+      
+    connection.execute(
+        `INSERT INTO product_reviews(user_id, product_id, review_content, star_rating, review_date) VALUES (1,,);`,
+        [addId]
+        ,(error,result)=>{
+            res.json({result})
+        }    
+    )
 })
 
+//用來新增購物車裡沒有的商品
 app.put("/products/cart/:id",(req,res)=>{
-    const addId=req.params.id
-    
+    const addId=req.params.id   
     connection.execute(
         `INSERT INTO cart(user_id, product_id, quantity) VALUES (1,?,1);`,
         [addId]
@@ -51,7 +63,18 @@ app.put("/products/cart/:id",(req,res)=>{
         }    
     )
 })
-
+//用來修改購物車裡已經有的商品數量
+app.put("/products/cartplus",(req,res)=>{
+    console.log(req);
+    const {id ,newQuantity}=req.body
+    connection.execute(
+        `UPDATE cart SET quantity=? WHERE user_id=1 AND product_id=?`,
+        [ newQuantity,id]
+        ,(error,result)=>{
+            res.json({result})
+        }    
+    )
+})
 
 app.get("/member/wishlist",(req,res)=>{
     connection.execute(
@@ -61,6 +84,15 @@ app.get("/member/wishlist",(req,res)=>{
         JOIN products AS p ON pc.product_id = p.product_id 
         JOIN images_product AS i ON p.product_group_id = i.id 
         WHERE pc.user_id = 1;`
+        ,(error,result)=>{
+            res.json({result})
+        }    
+    )
+})
+
+app.get("/cart",(req,res)=>{
+    connection.execute(
+        `SELECT * FROM cart WHERE user_id=1;`
         ,(error,result)=>{
             res.json({result})
         }    

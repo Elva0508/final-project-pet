@@ -1,14 +1,14 @@
 @import "@/styles/variable";
 .order-detail {
   background: $content-bg;
-  @media screen and (max-width: 576px) {
+  color:$text-main;
+  @media screen and (max-width: 768px) {
     background: $main-bg;
   }
   .date {
-    background: $main-bg;
-    @media screen and (max-width: 576px) {
+
       background: #fff;
-    }
+
   }
   .textcolor {
     color: $text-mark;
@@ -16,23 +16,36 @@
   .textareasize {
     height: 160px;
   }
-  tbody {
-    td:nth-child(1) {
-      width: 30%;
-    }
-    td:nth-child(2) {
-      width: 30%;
-    }
-    td:nth-child(3) {
-      width: 20%;
-    }
-    td:nth-child(4) {
-      width: 20%;
-    }
 
     img {
       width: 150px;
       height: 150px;
+      @media screen and (max-width: 768px) {
+        width: 100px;
+        height: 100px;
+
     }
+  }
+  button.pressed{
+    display: none;
+  }
+
+  .on {
+    color: gold;
+  }
+  
+  .off {
+    color: gray;
+  }
+  
+  .good-style{
+    color:red;
+  }
+  
+  .star-btn{
+    background-color: transparent;
+    border: none;
+    outline: none;
+    cursor: pointer;
   }
 }
