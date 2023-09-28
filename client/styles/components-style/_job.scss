@@ -63,6 +63,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
+
       img {
         width: 22px;
         height: 22px;
@@ -70,24 +71,32 @@
     }
 
     .icon {
-      margin-right: 1rem;
+      margin-right: 0.4rem;
     }
   }
   &-menu {
-    background-color: $cos-white;
-    width: $drop-down-width;
-    box-shadow: 0 0 5px white;
-    position: relative;
-    z-index: 100;
-
-    li {
-      padding: 0.1rem 0;
-      margin: 0.1rem 0;
-      text-align: center;
-      color: $text-main;
-      &:hover {
-        background-color: $header-bg;
-        cursor: pointer;
+    .MuiPaper-elevation {
+      box-shadow: 0 0 5px white;
+    }
+    .MuiMenu-list {
+      background-color: $cos-white;
+      width: $drop-down-width;
+      li {
+        // padding: 0.1rem 0;
+        // margin: 0.1rem 0;
+        width: 100%;
+        color: $text-main;
+        span {
+          width: 100%;
+          text-align: center;
+          font-family: "Poppins", "Noto Sans TC", Helvetica, Arial,
+            "PingFang TC", "苹方-繁", "Heiti TC", "黑體-繁",
+            "Microsoft JhengHei", "微軟正黑體";
+        }
+        &:hover {
+          background-color: $header-bg;
+          cursor: pointer;
+        }
       }
     }
   }

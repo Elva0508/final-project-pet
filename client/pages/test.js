@@ -11,10 +11,11 @@ import SalesRecordDetail from "@/components/member/sales-record-detail";
 import SalesRecord from "@/components/member/sales-record";
 import RequestRecord from "@/components/member/request-record";
 import RequestRecordDetail from "@/components/member/request-record-detail";
+import Filter from "@/components/job/filter";
 const Test = () => {
   return (
     <>
-      <HelperDetail />
+      <Filter />
     </>
   );
 };

@@ -4,12 +4,17 @@ const API_URL = URL + "api/work/";
 const auth = "wK9VpbpUOir2747DCVqZ0rlPG9satEQkJ5gy0zJ5RVUCB6gkXUPilIou";
 
 class WorkService {
-  getAllHelpers() {
-    return axios.get(API_URL + "helpers");
+  getAllHelpers(type) {
+    return axios.get(API_URL + "helpers", { params: { type } });
   }
 
-  getFamousHelper() {
-    return axios.get(API_URL + "helpers/famous");
+  getFamousHelper(type) {
+    return axios.get(API_URL + "helpers/famous", { params: { type } });
+  }
+  getOrderHelper(filterType, orderType, orderWay) {
+    return axios.get(API_URL + "helpers/order", {
+      params: { filterType, orderType, orderWay },
+    });
   }
   getCat() {
     // 用來找貓的圖片

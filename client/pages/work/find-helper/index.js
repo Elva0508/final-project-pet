@@ -19,35 +19,102 @@ register();
 import "swiper/css";
 import "swiper/css/navigation";
 
-const MobileFilter = () => {
+const MobileFilter = ({
+  allHelpers,
+  setAllHelpers,
+  filterType,
+  setFilterType,
+}) => {
+  const [titleContent, setTitleContent] = useState("服務類型");
+  const handleType = (value) => {
+    setFilterType(value);
+  };
+  const handleOrder = (value, parentValue) => {
+    console.log(value, parentValue);
+    WorkService.getOrderHelper(filterType, parentValue, value)
+      .then((response) => {
+        console.log(response);
+        setAllHelpers(response?.data.data);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  };
+  useEffect(() => {
+    // useEffect監聽filterType的狀態，透過狀態來更新title的名稱
+    switch (filterType) {
+      case "all":
+        setTitleContent("服務類型");
+        break;
+      case "feed":
+        setTitleContent("到府代餵");
+        break;
+      case "house":
+        setTitleContent("安親寄宿");
+        break;
+      case "beauty":
+        setTitleContent("到府美容");
+        break;
+    }
+  }, [filterType]);
+  console.log(titleContent);
   return (
     <Swiper slidesPerView="auto" className="mobile-filter">
       <SwiperSlide>
         <Filter
-          items={["測試1", "測試2"]}
-          title="服務類型"
+          items={{
+            title: titleContent,
+            value: "type",
+            children: [
+              { label: "到府代餵", value: "feed" },
+              { label: "安親寄宿", value: "house" },
+              { label: "到府美容", value: "beauty" },
+            ],
+          }}
           src={"/job-icon/plus-service.svg"}
+          onClick={handleType}
         />
       </SwiperSlide>
       <SwiperSlide>
         <Filter
-          items={["測試1", "測試2"]}
-          title="服務費用"
+          items={{
+            title: "服務費用",
+            value: "price",
+            children: [
+              { label: "由高到低", value: "DESC" },
+              { label: "由低到高", value: "ASC" },
+            ],
+          }}
           src={"/job-icon/Heart-price.svg"}
+          onClick={handleOrder}
         />
       </SwiperSlide>
       <SwiperSlide>
         <Filter
-          items={["測試1", "測試2"]}
-          title="服務地區"
+          items={{
+            title: "熱門程度",
+            value: "hot",
+            children: [
+              { label: "由高到低", value: "DESC" },
+              { label: "由低到高", value: "ASC" },
+            ],
+          }}
           src={"/job-icon/Discovery-date.svg"}
+          onClick={handleOrder}
         />
       </SwiperSlide>
       <SwiperSlide>
         <Filter
-          items={["測試1", "測試2"]}
-          title="服務次數"
+          items={{
+            title: "服務評價",
+            value: "rating",
+            children: [
+              { label: "由高到低", value: "DESC" },
+              { label: "由低到高", value: "ASC" },
+            ],
+          }}
           src={"/job-icon/Discovery-date.svg"}
+          onClick={handleOrder}
         />
       </SwiperSlide>
     </Swiper>
@@ -241,8 +308,9 @@ const MissionHelperList = () => {
   const arr = Array.from({ length: 12 });
   const [allHelpers, setAllHelpers] = useState([]);
   const [famous, setFamous] = useState([]);
+  const [filterType, setFilterType] = useState("all");
   useEffect(() => {
-    WorkService.getAllHelpers()
+    WorkService.getAllHelpers(filterType)
       .then((res) => {
         setAllHelpers(res.data.data);
         // console.log(res.data.data);
@@ -250,7 +318,7 @@ const MissionHelperList = () => {
       .catch((e) => {
         console.log(e);
       });
-    WorkService.getFamousHelper()
+    WorkService.getFamousHelper(filterType)
       .then((res) => {
         setFamous(res?.data.famous);
         // console.log(res?.data.data);
@@ -267,7 +335,10 @@ const MissionHelperList = () => {
     //     console.log(arr);
     //   })
     //   .catch((e) => console.log(e));
-  }, []);
+  }, [filterType]);
+  const handleBack = () => {
+    setFilterType("all");
+  };
   return (
     <div className="mission-helper-list">
       <nav className="breadcrumb-wrapper" aria-label="breadcrumb">
@@ -275,8 +346,19 @@ const MissionHelperList = () => {
           <li class="breadcrumb-item">
             <Link href="#">首頁</Link>
           </li>
+          <li class="breadcrumb-item" aria-current="page">
+            <Link href="" onClick={handleBack}>
+              小幫手總覽
+            </Link>
+          </li>
           <li class="breadcrumb-item active" aria-current="page">
-            小貓上工-小幫手總覽
+            {filterType === "feed"
+              ? "到府代餵"
+              : filterType === "house"
+              ? "安親寄宿"
+              : filterType === "beauty"
+              ? "到府美容"
+              : "所有"}
           </li>
         </ol>
       </nav>
@@ -286,7 +368,12 @@ const MissionHelperList = () => {
         <Search />
       </div>
       <div className="filters">
-        <MobileFilter />
+        <MobileFilter
+          allHelpers={allHelpers}
+          setAllHelpers={setAllHelpers}
+          filterType={filterType}
+          setFilterType={setFilterType}
+        />
       </div>
 
       <div className="d-flex flex-md-row flex-column justify-content-between">
