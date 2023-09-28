@@ -1,25 +1,32 @@
+
 import React from "react";
-import CreateMission from "@/components/create-mission";
-import HelperDetail from "@/components/helper-detail";
-import Search from "@/components/job/search";
-import Filter from "@/components/job/filter";
+
+import ResponsiveAppBar from "@/components/navbar/ResponsiveAppBar";
+
+
+// 沛涵
+import CreateMission from "@/pages/work/create-mission";
+import HelperDetail from "@/pages/work/find-helper/[pid]";
 import HelperInfo from "@/components/member/helper-info";
-import MissionHelperList from "@/components/job/mission-helper-list";
-import Order from "@/components/member/order";
-import Orderdetail from "@/components/member/order-detail";
+import MissionHelperList from "@/pages/work/find-helper";
 import SalesRecordDetail from "@/components/member/sales-record-detail";
 import SalesRecord from "@/components/member/sales-record";
 import RequestRecord from "@/components/member/request-record";
 import RequestRecordDetail from "@/components/member/request-record-detail";
-import ResponsiveAppBar from "@/components/navbar/ResponsiveAppBar";
-import LoginForm from "@/components/user/loginForm";
+//佳瑜
+import LoginForm from '@/components/user/loginForm'
+import UserForm from '@/components/user/userForm';
+import UserCoupon from "@/components/user-coupon/user-coupon";
+import ResetPassword from "@/components/user/resetPassword";
+
+//家綺
+import ProductListOffcanvas from "@/components/product/product-list-offcanvas";
+
 const Test = () => {
   return (
     <>
-      <SalesRecord />
-      <SalesRecordDetail />
-      <RequestRecord />
-      <RequestRecordDetail />
+      <HelperDetail />
+
     </>
   );
 };
