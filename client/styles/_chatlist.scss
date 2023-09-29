@@ -1,0 +1,15 @@
+.chatlist {
+    .list-group{
+        height: 100%;
+    }
+  .active {
+    background-color: $hover !important;
+    border: none !important;
+  }
+  .list {
+    .avatar {
+      width: 80px;
+      height: 80px;
+    }
+  }
+}
