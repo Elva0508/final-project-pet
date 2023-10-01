@@ -1,5 +1,4 @@
 const router = require("express").Router();
-const { log } = require("console");
 const conn = require("../db");
 const multer = require("multer");
 const path = require("path");

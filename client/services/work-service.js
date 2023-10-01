@@ -1,7 +1,6 @@
 import axios from "axios";
 import { URL } from "@/config";
 const API_URL = URL + "api/work/";
-const auth = "wK9VpbpUOir2747DCVqZ0rlPG9satEQkJ5gy0zJ5RVUCB6gkXUPilIou";
 
 class WorkService {
   getAllHelpers(type) {

@@ -1,23 +1,33 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { BiUpload } from "react-icons/bi";
 import { Switch } from "antd";
-const SwitchInput = ({ label }) => {
-  const [status, setStatus] = useState(false);
+import memberService from "@/services/member-service";
+const SwitchInput = ({ label, status, price }) => {
+  const [switchStatus, setSwitchStatus] = useState(false);
+  useEffect(() => {
+    if (status === 0) {
+      setSwitchStatus(false);
+    }
+    if (status === 1) {
+      setSwitchStatus(true);
+    }
+  }, [status]);
   const handleSwitch = (e) => {
-    setStatus(e);
+    setSwitchStatus(e);
   };
   return (
-    <div className={`switch-info ${status && "mb-5"}`}>
+    <div className={`switch-info ${switchStatus && "mb-5"}`}>
       <label className="size-6 m-size-7 ">{label}：</label>
       <div className="switch-info-price col-auto">
-        <Switch onChange={handleSwitch} />
+        <Switch onChange={handleSwitch} checked={switchStatus} />
         <input
           type="number"
           name=""
           id=""
           placeholder="服務價格"
-          className={`form-input m-form-input ${!status && "d-none"}`}
+          defaultValue={price && price}
+          className={`form-input m-form-input ${!switchStatus && "d-none"}`}
         />
       </div>
     </div>
@@ -39,7 +49,7 @@ const Close = ({ open, setOpen }) => {
   );
 };
 
-const Open = ({ open, setOpen }) => {
+const Open = ({ open, setOpen, info, setInfo }) => {
   const handleOpen = () => {
     if (open) {
       setOpen(false);
@@ -54,6 +64,7 @@ const Open = ({ open, setOpen }) => {
             className="form-input m-form-input"
             type="text"
             placeholder="請輸入名稱"
+            defaultValue={info?.name}
           />
         </div>
         <div className="form-item">
@@ -62,6 +73,7 @@ const Open = ({ open, setOpen }) => {
             className="form-input m-form-input"
             type="text"
             placeholder="請簡單輸入自我介紹"
+            defaultValue={info?.Introduction}
           />
         </div>
 
@@ -71,6 +83,7 @@ const Open = ({ open, setOpen }) => {
             className="form-input m-form-input"
             type="text"
             placeholder="請輸入Email"
+            defaultValue={info?.email}
           />
         </div>
         <div className="form-item">
@@ -79,6 +92,7 @@ const Open = ({ open, setOpen }) => {
             className="form-input m-form-input"
             type="text"
             placeholder="請輸入聯絡電話"
+            defaultValue={info?.phone}
           />
         </div>
         <div className="form-item">
@@ -100,6 +114,7 @@ const Open = ({ open, setOpen }) => {
             className="form-input m-form-input"
             type="text"
             placeholder="請輸入服務介紹"
+            defaultValue={info?.job_description}
           />
         </div>
         <div className="form-item">
@@ -114,9 +129,21 @@ const Open = ({ open, setOpen }) => {
         <div className="form-item">
           <label className="size-6 m-size-7 service-type">可服務類型：</label>
           <div className="service-switch">
-            <SwitchInput label="到府照顧" />
-            <SwitchInput label="安親寄宿" />
-            <SwitchInput label="到府美容" />
+            <SwitchInput
+              label="到府照顧"
+              status={info?.feed_service}
+              price={info?.feed_price}
+            />
+            <SwitchInput
+              label="安親寄宿"
+              status={info?.house_service}
+              price={info?.house_price}
+            />
+            <SwitchInput
+              label="到府美容"
+              status={info?.beauty_service}
+              price={info?.beauty_price}
+            />
           </div>
         </div>
         <div className="form-item">
@@ -163,6 +190,21 @@ const Open = ({ open, setOpen }) => {
 };
 const HelperInfo = () => {
   const [open, setOpen] = useState(false);
+  const [info, setInfo] = useState({});
+  useEffect(() => {
+    memberService
+      .getHelperInfo()
+      .then((response) => {
+        if (response?.data?.data?.length > 0) {
+          console.log(response);
+          setOpen(true);
+          setInfo(response?.data?.data[0]);
+        }
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  }, []);
   return (
     <>
       <div className="helper-info ">
@@ -178,7 +220,7 @@ const HelperInfo = () => {
           </p>
         </div>
         {open ? (
-          <Open open={open} setOpen={setOpen} />
+          <Open open={open} setOpen={setOpen} info={info} setInfo={setInfo} />
         ) : (
           <Close open={open} setOpen={setOpen} />
         )}
