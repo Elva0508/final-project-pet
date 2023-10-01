@@ -12,22 +12,28 @@
 
 $detail-block-width: 12px; //標題左側直槓槓
 .helper-detail {
-  max-width: 1400px;
+  width: calc(100% - 80px);
   margin: auto;
   header,
   section {
-    width: calc(100% - 80px);
     background-color: $content-bg;
     margin: 1rem auto;
     padding: 1rem 1rem 1.5rem 1rem;
   }
   .avatar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
     $size: 220px;
     background-color: $light-gray;
     width: $size;
     height: $size;
     border-radius: 50%;
     margin-right: 2rem;
+    img {
+      height: $size;
+    }
   }
   .profile {
     width: 70%;
@@ -40,6 +46,10 @@ $detail-block-width: 12px; //標題左側直槓槓
     .intro {
       color: $text-mark;
       font-weight: 500;
+    }
+    .icon {
+      font-size: 26px;
+      color: #faaf00;
     }
     .btn-message {
       @extend %helper-button-style;
@@ -72,7 +82,13 @@ $detail-block-width: 12px; //標題左側直槓槓
     margin-top: 1rem;
 
     swiper-slide {
-      width: 300px;
+      $image_size: 300px;
+      width: $image_size + 50px;
+      height: $image_size;
+      img {
+        width: $image_size + 50px;
+        height: $image_size;
+      }
     }
   }
 
@@ -104,6 +120,7 @@ $detail-block-width: 12px; //標題左側直槓槓
       }
       &-body {
         text-align: justify;
+        min-height: 120px;
       }
     }
     .swiper-slide {
@@ -128,9 +145,8 @@ $detail-block-width: 12px; //標題左側直槓槓
   &-left {
     width: calc($block-width * 0.5);
 
-    .ranking img {
-      width: 40px;
-      height: 40px;
+    .ranking svg {
+      font-size: 42px;
     }
   }
   &-divider {
@@ -156,15 +172,11 @@ $detail-block-width: 12px; //標題左側直槓槓
       height: 10px;
       display: flex;
       margin-left: 0.8rem;
+      background-color: $light-gray;
       --width: 5%; //評論總數的百分比
       .have {
-        width: var(--width);
+        // width: var(--width);
         background-color: $hover;
-        border-radius: 0 2px 2px 0;
-      }
-      .no-have {
-        width: calc(100% - var(--width));
-        background-color: $light-gray;
         border-radius: 0 2px 2px 0;
       }
     }
@@ -214,11 +226,11 @@ $detail-block-width: 12px; //標題左側直槓槓
 @media screen and (max-width: 576px) {
   $detail-block-width: 8px;
   .helper-detail {
+    width: 100%;
     header,
     section {
       background-color: transparent;
       padding: 0;
-      width: calc(100% - 10px);
     }
 
     .avatar {
@@ -243,8 +255,10 @@ $detail-block-width: 12px; //標題左側直槓槓
       }
       .review {
         order: -1;
+
         // display: inline-block;
       }
+
       .btn-message {
         font-size: 1.4rem;
         width: 160px;

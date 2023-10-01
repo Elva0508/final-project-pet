@@ -1,8 +1,9 @@
 import React, { useRef } from "react";
 import { BiSearchAlt } from "react-icons/bi";
 
-const Search = ({ placeholder, color }) => {
+const Search = ({ placeholder, color, onClick }) => {
   const rippleBtnRef = useRef(null);
+  const inputRef = useRef(null);
   const handleRipple = () => {
     const btn = rippleBtnRef.current;
     btn.classList.add("ripple");
@@ -13,8 +14,16 @@ const Search = ({ placeholder, color }) => {
 
   return (
     <div className="job-search">
-      <input type="text" placeholder={placeholder || ""} />
-      <button onClick={handleRipple} ref={rippleBtnRef}>
+      <input type="text" placeholder={placeholder || ""} ref={inputRef} />
+      <button
+        onClick={() => {
+          handleRipple();
+          if (onClick) {
+            onClick(inputRef.current.value);
+          }
+        }}
+        ref={rippleBtnRef}
+      >
         <BiSearchAlt className="job-search-icon" />
       </button>
     </div>
@@ -25,3 +34,4 @@ export default Search;
 
 // Search元件可傳入變數(props)：
 // placehoder={輸入自訂的placeholder文字}
+// onClick={handleBack} 函式可自訂，第一個參數value可以取得input的值

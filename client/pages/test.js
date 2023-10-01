@@ -4,7 +4,7 @@ import ResponsiveAppBar from "@/components/navbar/ResponsiveAppBar";
 
 // 沛涵
 import CreateMission from "@/pages/work/create-mission";
-import HelperDetail from "@/pages/work/find-helper/[pid]";
+import HelperDetail from "@/pages/work/find-helper/[uid]";
 import HelperInfo from "@/components/member/helper-info";
 import MissionHelperList from "@/pages/work/find-helper";
 import SalesRecordDetail from "@/components/member/sales-record-detail";

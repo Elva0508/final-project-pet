@@ -2,6 +2,10 @@
   max-width: 1440px;
   padding: 0 20px;
   margin: auto;
+  a,
+  a:hover {
+    border: none;
+  }
   .breadcrumb-wrapper {
     margin: 10px 0 20px 0;
     .breadcrumb {
@@ -215,9 +219,6 @@
         &-img {
           width: $img-size;
           height: $img-size;
-        }
-        .ranking img {
-          display: inline-block;
         }
       }
     }

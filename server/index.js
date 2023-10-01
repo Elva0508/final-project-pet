@@ -6,10 +6,10 @@ const cors = require("cors");
 const memberRouter = require("./routes/member-route");
 const workRouter = require("./routes/work-route");
 
-app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
+app.use(cors());
+app.use(express.static("public")); //建立靜態資源資料夾
 app.use("/api/member", memberRouter);
 app.use("/api/work", workRouter);
 

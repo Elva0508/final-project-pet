@@ -13,7 +13,7 @@ import MenuItem from "@mui/material/MenuItem";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { ThemeProvider, createTheme, styled } from "@mui/material/styles";
 import Badge from "@mui/material/Badge";
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -22,7 +22,6 @@ import catLogo from "@/assets/catLogo.svg";
 import McatLogo from "@/assets/McatLogo.svg";
 //shoppingCart
 import ShoppingCart from "@/assets/shoppingCart.svg";
-
 
 const theme = createTheme({
   // 自定義色調
@@ -38,7 +37,7 @@ const theme = createTheme({
     },
   },
   typography: {
-    fontFamily: "Noto Sans TC", 
+    fontFamily: "Noto Sans TC",
     fontWeight: 700,
     color: "#f8cb9f",
     // 在这里定义其他文本样式
@@ -69,16 +68,16 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
 }));
 
 const pages = [
-  {path: "/testLink/brand", name: "品牌介紹",id:1},
-  {path: "/testLink/allproducts", name: "全部商品",id:2},
-  {path: "/testLink/catjob", name: "小貓上工", id:3},
-  {path: "/testLink/catknowledge", name: "小貓兩三知", id:4},
-  {path: "/testLink/qa", name: "常見問題",id:5},
+  { path: "/testLink/brand", name: "品牌介紹", id: 1 },
+  { path: "/testLink/allproducts", name: "全部商品", id: 2 },
+  { path: "/work/find-mission", name: "小貓上工", id: 3 },
+  { path: "/testLink/catknowledge", name: "小貓兩三知", id: 4 },
+  { path: "/testLink/qa", name: "常見問題", id: 5 },
 ];
 const settings = [
-  {path: "/register", name: "註冊",id:1},
-  {path: "/login", name: "登入",id:2},
-  ];
+  { path: "/register", name: "註冊", id: 1 },
+  { path: "/login", name: "登入", id: 2 },
+];
 
 function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -135,69 +134,62 @@ function ResponsiveAppBar() {
                   display: { xs: "block", md: "none" },
                 }}
               >
-              
                 {pages.map((v) => (
-                  <Link href={v.path}  key={v.id}>   
-                  <MenuItem
-                    sx={{
-                      width: "330px",
-                      background: "#f8cb9f",
-                      fontSize: "16px",
-                      fontWeight: "700",
-                      my: 2,
-                    }}
-                   
-                    onClick={handleCloseNavMenu}
-                  >
-                    <Typography textAlign="center">{v.name}</Typography>
-                  </MenuItem>
+                  <Link href={v.path} key={v.id}>
+                    <MenuItem
+                      sx={{
+                        width: "330px",
+                        background: "#f8cb9f",
+                        fontSize: "16px",
+                        fontWeight: "700",
+                        my: 2,
+                      }}
+                      onClick={handleCloseNavMenu}
+                    >
+                      <Typography textAlign="center">{v.name}</Typography>
+                    </MenuItem>
                   </Link>
                 ))}
-            
               </Menu>
               <Button>
-              
                 <Image src={McatLogo} alt="logo" />
               </Button>
             </Box>
 
-         
-
             {/* Desktop 裝置*/}
             {/* logo */}
             <Box sx={{ flexShrink: 0, display: { xs: "none", md: "flex" } }}>
-            <Button>
-            <Image src={catLogo} alt="logo" />
-            </Button>
+              <Button>
+                <Image src={catLogo} alt="logo" />
+              </Button>
             </Box>
             {/* nav-item */}
-            <Box sx={{ width: '100%',display: { xs: "none", md: "flex" } }}>
+            <Box sx={{ width: "100%", display: { xs: "none", md: "flex" } }}>
               {pages.map((v) => (
-                <Link href={v.path}  key={v.id}>
-                <Button
-                 
-                  onClick={handleCloseNavMenu}
-                  sx={{
-                    my: 3.5,
-                    mx: 1.5,
-                    color: "#512f10",
-                    display: "block",
-                    fontSize: "20px",
-                    fontWeight: "700",
-                  }}
-                >
-                  {v.name}
-                </Button>
+                <Link href={v.path} key={v.id}>
+                  <Button
+                    onClick={handleCloseNavMenu}
+                    sx={{
+                      my: 3.5,
+                      mx: 1.5,
+                      color: "#512f10",
+                      display: "block",
+                      fontSize: "20px",
+                      fontWeight: "700",
+                    }}
+                  >
+                    {v.name}
+                  </Button>
                 </Link>
               ))}
             </Box>
             {/* 會員＆購物車icon */}
-            <Box sx={{flexShrink: 0,}}>
+            <Box sx={{ flexShrink: 0 }}>
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                   <AccountCircleIcon
                     color="tertiary"
-                    style={{ fontSize: 40,}}
+                    style={{ fontSize: 40 }}
                     sx={{ display: { xs: "flex", md: "flex" }, mr: 2 }}
                   />
                 </IconButton>
@@ -223,9 +215,9 @@ function ResponsiveAppBar() {
               >
                 {settings.map((v) => (
                   <Link href={v.path} key={v.id}>
-                  <MenuItem  onClick={handleCloseUserMenu}>
-                    <Typography textAlign="center">{v.name}</Typography>
-                  </MenuItem>
+                    <MenuItem onClick={handleCloseUserMenu}>
+                      <Typography textAlign="center">{v.name}</Typography>
+                    </MenuItem>
                   </Link>
                 ))}
               </Menu>

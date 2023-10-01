@@ -14,6 +14,9 @@ import WorkService from "@/services/work-service";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { Rate } from "antd";
+import Rating from "@mui/material/Rating";
+import StarIcon from "@mui/icons-material/Star";
 register();
 // Import Swiper styles
 import "swiper/css";
@@ -130,6 +133,7 @@ const FamousHelperCard = ({ ...helper }) => {
   const toggleFavorite = () => {
     setIsFavorite(!isFavorite); // 切換收藏狀態
   };
+  console.log("fa", helper);
   return (
     <>
       <div className="famous-helper-card d-flex align-items-center">
@@ -140,13 +144,15 @@ const FamousHelperCard = ({ ...helper }) => {
         />
         <div className="helper-content ms-2">
           <div className="title size-6">{helper?.name}</div>
-          <div className="ranking">
-            <img src="/star.svg" alt="星星" />
-            <img src="/star.svg" alt="星星" />
-            <img src="/star.svg" alt="星星" />
-            <img src="/star.svg" alt="星星" />
-            <img src="/star.svg" alt="星星" />
-            <span className="ms-2 size-7">({helper.review_count})</span>
+          <div className="ranking d-flex">
+            <Rating
+              name="half-rating-read"
+              value={parseFloat(helper?.average_star)}
+              precision={0.5}
+              readOnly
+              emptyIcon={<StarIcon style={{ opacity: 0.35 }} />}
+            />
+            <span className="ms-1 size-7">({helper.review_count})</span>
           </div>
           <div className="helper-content-info d-flex justify-content-between">
             <div>
@@ -177,7 +183,9 @@ const FamousHelperCard = ({ ...helper }) => {
             <div>
               單次<span className="size-6"> NT$140</span>
             </div>
-            <button className="size-6 btn-confirm">洽詢</button>
+            <button className="size-6 btn-confirm">
+              <Link href={`/work/find-helper/${helper.user_id}`}>洽詢</Link>
+            </button>
           </div>
         </div>
       </div>
@@ -248,7 +256,7 @@ const SingleHelperCard = ({ ...helper }) => {
     { label: "安親寄宿", value: parseInt(helper.home_service) },
     { label: "到府美容", value: parseInt(helper.beauty_service) },
   ];
-
+  console.log(typeof parseFloat(helper.average_star), helper.average_star);
   const servicePrice = [];
   return (
     <>
@@ -261,11 +269,17 @@ const SingleHelperCard = ({ ...helper }) => {
         <div className="single-card-content">
           <div className="single-card-title size-6">{helper.name}</div>
           <div className="ranking d-flex align-items-center mb-1">
-            <img src="/star.svg" alt="星星" />
-            <img src="/star.svg" alt="星星" />
-            <img src="/star.svg" alt="星星" />
-            <img src="/star.svg" alt="星星" />
-            <img src="/star.svg" alt="星星" />
+            <Rating
+              name="half-rating-read"
+              value={parseFloat(helper.average_star)}
+              precision={0.5}
+              readOnly
+              emptyIcon={<StarIcon style={{ opacity: 0.35 }} />}
+            />
+
+            <span className="ms-1 size-7">
+              ({helper.review_count === null ? "0" : helper.review_count})
+            </span>
           </div>
           <div className="single-card-info d-flex justify-content-between">
             <div>
@@ -297,7 +311,9 @@ const SingleHelperCard = ({ ...helper }) => {
             <div>
               單次<span className="size-6"> NT$140</span>
             </div>
-            <button className="size-6 btn-confirm">洽詢</button>
+            <button className="size-6 btn-confirm">
+              <Link href={`/work/find-helper/${helper.user_id}`}>洽詢</Link>
+            </button>
           </div>
         </div>
       </div>
@@ -309,6 +325,7 @@ const MissionHelperList = () => {
   const [allHelpers, setAllHelpers] = useState([]);
   const [famous, setFamous] = useState([]);
   const [filterType, setFilterType] = useState("all");
+  const [search, setSearch] = useState(null);
   useEffect(() => {
     WorkService.getAllHelpers(filterType)
       .then((res) => {
@@ -336,9 +353,32 @@ const MissionHelperList = () => {
     //   })
     //   .catch((e) => console.log(e));
   }, [filterType]);
+
   const handleBack = () => {
     setFilterType("all");
+    setSearch(null);
+    WorkService.getAllHelpers(filterType)
+      .then((res) => {
+        setAllHelpers(res.data.data);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
   };
+
+  const handleSubmit = (value) => {
+    console.log(value);
+    WorkService.getSearchHelper(value)
+      .then((response) => {
+        console.log(response);
+        setAllHelpers(response?.data.data);
+        setSearch(value);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  };
+
   return (
     <div className="mission-helper-list">
       <nav className="breadcrumb-wrapper" aria-label="breadcrumb">
@@ -351,21 +391,34 @@ const MissionHelperList = () => {
               小幫手總覽
             </Link>
           </li>
-          <li class="breadcrumb-item active" aria-current="page">
-            {filterType === "feed"
-              ? "到府代餵"
-              : filterType === "house"
-              ? "安親寄宿"
-              : filterType === "beauty"
-              ? "到府美容"
-              : "所有"}
-          </li>
+          {search ? (
+            <>
+              <li class="breadcrumb-item" aria-current="page">
+                搜尋結果
+              </li>
+              <li class="breadcrumb-item active" aria-current="page">
+                {search}
+              </li>
+            </>
+          ) : (
+            <>
+              <li class="breadcrumb-item active" aria-current="page">
+                {filterType === "feed"
+                  ? "到府代餵"
+                  : filterType === "house"
+                  ? "安親寄宿"
+                  : filterType === "beauty"
+                  ? "到府美容"
+                  : "所有"}
+              </li>
+            </>
+          )}
         </ol>
       </nav>
 
       <div className="search d-flex flex-md-row flex-column justify-content-between align-items-center">
         <RoleSelection />
-        <Search />
+        <Search placeholder={"搜尋小幫手"} onClick={handleSubmit} />
       </div>
       <div className="filters">
         <MobileFilter
@@ -378,7 +431,7 @@ const MissionHelperList = () => {
 
       <div className="d-flex flex-md-row flex-column justify-content-between">
         <section className="famous-helper justify-content-between">
-          <p className="famous-helper-title size-5">最熱門小幫手</p>
+          <p className="famous-helper-title size-5">熱門小幫手</p>
           <div className="famous-helper-pc d-md-block d-none">
             {famous.map((helper) => (
               <FamousHelperCard {...helper} />

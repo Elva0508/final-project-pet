@@ -18,62 +18,6 @@ $mobile-font: 3rem, 2.625rem, 2.125rem, 1.5rem, 1.25rem, 1rem, 0.875rem;
 
 @import "@/styles/_buttons.scss";
 
-//  { 前一版font-size
-//   // $web-size: ();
-//   // $m-size: ();
-//   // @for $i from 1 through length($web-font) {
-//   //   $size: nth($web-font, $i);
-//   //   $web-size: map-merge(
-//   //     $web-size,
-//   //     (
-//   //       size-#{$i}:
-//   //         (
-//   //           font-size: $size,
-//   //         )
-//   //     )
-//   //   );
-//   // }
-
-//   // @for $i from 1 through length($mobile-font) {
-//   //   $size: nth($mobile-font, $i);
-//   //   $m-size: map-merge(
-//   //     $m-size,
-//   //     (
-//   //       m-size-#{$i}:
-//   //         (
-//   //           font-size: $size,
-//   //         )
-//   //     )
-//   //   );
-//   // }
-
-//   // @each $name, $value in $web-size {
-//   //   $font-size: map-get($value, font-size);
-//   //   // size-1~7
-//   //   .#{$name} {
-//   //     font-size: $font-size;
-//   //     color: $text-dark;
-//   //     margin: 0;
-//   //     @if $name != size-7 {
-//   //       color: $text-main;
-//   //     }
-//   //   }
-//   // }
-
-//   // @each $name, $value in $m-size {
-//   //   $font-size: map-get($value, font-size);
-//   //   // m-size-1~7
-//   //   .#{$name} {
-//   //     font-size: $font-size;
-//   //   }
-//   // }
-
-//   // .size-1 {
-//   //   font-size: 4vw;
-//   //   font-size: max(3rem, min(4vw, 4.375rem));
-//   // }
-// }
-
 @for $i from 1 through 7 {
   .size-#{$i} {
     font-size: 4vw;
@@ -122,8 +66,8 @@ $mobile-font: 3rem, 2.625rem, 2.125rem, 1.5rem, 1.25rem, 1rem, 0.875rem;
 }
 
 // 麵包屑樣式
-%breadcrumb-wrapper-extend {
-  margin: 10px 0 20px 0;
+.breadcrumb-wrapper {
+  margin: 15px 0 20px 0;
   .breadcrumb {
     margin: 0;
     color: $text-main;

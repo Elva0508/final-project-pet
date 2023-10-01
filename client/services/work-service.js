@@ -16,6 +16,20 @@ class WorkService {
       params: { filterType, orderType, orderWay },
     });
   }
+  getSearchHelper(search) {
+    return axios.get(API_URL + "helpers/search", { params: { search } });
+  }
+  getHelperDetail(uid) {
+    console.log(uid);
+    return axios.get(API_URL + "/helpers/detail/" + uid);
+  }
+  createMission(formData) {
+    return axios.post(API_URL + "/mission", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+  }
   getCat() {
     // 用來找貓的圖片
     return axios.get(
