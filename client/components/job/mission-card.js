@@ -61,8 +61,14 @@ export default function MissionCard() {
         getAllMissions()
     }, [])
 
-
-
+    // 格式化日期
+    function formatDate(dateString) {
+        const date = new Date(dateString);
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}/${month}/${day}`;
+    }
 
     return (
         <>
@@ -74,7 +80,7 @@ export default function MissionCard() {
                             <div className='mission-content mx-1 mt-2'>
                                 <div className='title size-6'>{v.title}</div>
                                 <div className='d-flex justify-content-between mt-2'>
-                                    <div className='size-7'>{v.city}{v.area}<br />{v.post_date}</div>
+                                    <div className='size-7'>{v.city}{v.area}<br />{formatDate(v.post_date)}</div>
                                     <img src={isFavorite ? "/heart-clicked.svg" : "/heart.svg"} alt={isFavorite ? "已收藏" : "未收藏"} onClick={toggleFavorite} />
                                 </div>
                                 <div className='d-flex justify-content-between align-items-end price'>
