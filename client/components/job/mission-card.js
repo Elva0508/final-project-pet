@@ -66,32 +66,27 @@ export default function MissionCard() {
 
     return (
         <>
-            {/* <div className='mission-list-card'> */}
-            {/* <div className='mission-img'>
-                    <img src="/kitten.jpg" alt="任務" />
-                </div> */}
-            {/* <ImageWithEqualDimensions /> */}
             {allMissions.map((v, i) => {
                 return (
-                    <div className='mission-list-card'>
-                        <ImageWithEqualDimensions file_path={v.file_path} />
-                        <div className='mission-content mx-1 mt-2'>
-                            <div className='title size-6'>{v.title}</div>
-                            <div className='d-flex justify-content-between mt-2'>
-                                <div className='size-7'>{v.city}{v.area}<br />{v.post_date}</div>
-                                <img src={isFavorite ? "/heart-clicked.svg" : "/heart.svg"} alt={isFavorite ? "已收藏" : "未收藏"} onClick={toggleFavorite} />
-                            </div>
-                            <div className='d-flex justify-content-between align-items-end price'>
-                                <div  >單次<span className='size-6'> NT${v.price}</span></div>
-                                <button className='btn-confirm size-6'>應徵</button>
+                    <div className='col-6 col-md-4 col-lg-6 col-xl-4'>
+                        <div className='mission-list-card '>
+                            <ImageWithEqualDimensions file_path={v.file_path} />
+                            <div className='mission-content mx-1 mt-2'>
+                                <div className='title size-6'>{v.title}</div>
+                                <div className='d-flex justify-content-between mt-2'>
+                                    <div className='size-7'>{v.city}{v.area}<br />{v.post_date}</div>
+                                    <img src={isFavorite ? "/heart-clicked.svg" : "/heart.svg"} alt={isFavorite ? "已收藏" : "未收藏"} onClick={toggleFavorite} />
+                                </div>
+                                <div className='d-flex justify-content-between align-items-end price'>
+                                    <div  >單次<span className='size-6'> NT${v.price}</span></div>
+                                    <button className='btn-confirm size-6'>應徵</button>
+                                </div>
                             </div>
                         </div>
                     </div>
-
                 )
             })
             }
-            {/* </div> */}
         </>
     )
 

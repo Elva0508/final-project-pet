@@ -97,21 +97,21 @@ const Sort = () => {
 
 export default function MissionList() {
 
-  const [allMissions,setAllMissions]=useState([])
-  const getAllMissions = async() => {
-      await axios.get("http://localhost:3005/api/mission/all-missions")
-        .then((response) => {
-          const data = response.data.result;
-          console.log(data);
-          setAllMissions(data)     
-        })
-        .catch((error) => {
-          console.error("Error:", error);
+  const [allMissions, setAllMissions] = useState([])
+  const getAllMissions = async () => {
+    await axios.get("http://localhost:3005/api/mission/all-missions")
+      .then((response) => {
+        const data = response.data.result;
+        console.log(data);
+        setAllMissions(data)
+      })
+      .catch((error) => {
+        console.error("Error:", error);
       });
-    }
-      useEffect(() => {
-        getAllMissions()
-        }, [])
+  }
+  useEffect(() => {
+    getAllMissions()
+  }, [])
 
   return (
     <>
@@ -128,7 +128,7 @@ export default function MissionList() {
           <button className='add-mission-btn-pc  d-none d-lg-block position-absolute'><img src='/add-mission.svg' className='me-2' />新增任務</button>
           <button className='add-mission-btn-mobile size-6 d-bolck d-lg-none'><img src='/add-mission.svg' className='' /></button>
         </div>
-        
+
         <div className='d-flex my-2'>
           <Sort />
         </div>
@@ -149,25 +149,8 @@ export default function MissionList() {
           <div className='mission-list d-lg-flex flex-column justify-content-center'>
             {/* 不能使用d-flex d-lg-block block會導致MissionCard垂直排列 */}
             <div className='row d-flex mb-3 g-3 g-md-4'>
-            {/* 使用g-3 不用justify-content-between 預設是start 卡片就會照順序排列 */}
-              <div className='col-6 col-md-4 col-lg-6 col-xl-4'>
-                <MissionCard />
-              </div>
-              <div className='col-6 col-md-4 col-lg-6 col-xl-4'>
-                <MissionCard />
-              </div>
-              <div className='col-6 col-md-4 col-lg-6 col-xl-4'>
-                <MissionCard />
-              </div>
-              <div className='col-6 col-md-4 col-lg-6 col-xl-4'>
-                <MissionCard />
-              </div>
-              <div className='col-6 col-md-4 col-lg-6 col-xl-4'>
-                <MissionCard />
-              </div>
-              <div className='col-6 col-md-4 col-lg-6 col-xl-4'>
-                <MissionCard />
-              </div>
+              {/* 使用g-3 不用justify-content-between 預設是start 卡片就會照順序排列 */}
+              <MissionCard />
             </div>
           </div>
         </section>
