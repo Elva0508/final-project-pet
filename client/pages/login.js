@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import LoginForm from "@/components/user/loginForm";
 import RegisterForm from "@/components/user/registerForm";
+// import { useAuth } from "@/hooks/use-auth";
 
 import { AiFillGoogleCircle } from "react-icons/ai";
 import { BsLine } from "react-icons/bs";

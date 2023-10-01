@@ -55,6 +55,34 @@ app.get("/member/wishlist", (req, res) => {
   );
 });
 
+//------------------------------------------佳瑜
+// //jwt路由使用
+const authJWTRouter = require("./routes/auth-jwt");
+
+// // // 掛載 auth-jwt 路由
+app.use('/api/auth-jwt', authJWTRouter);
+
+//跨網域資源共用、設置白名單
+app.use(
+  cors({
+    origin: [ "http://127.0.0.1:3005",
+    "http://localhost:3005",
+    "http://127.0.0.1:3000",
+    "http://localhost:3000",],
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true,
+  })
+)
+
+
+app.get("/login", (req,res)=>{
+  res.send("登入頁面測試")
+})
+
+
+
+
+
 app.listen(3005, () => {
   console.log("server is running");
 });
