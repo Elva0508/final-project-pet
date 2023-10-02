@@ -1,0 +1,67 @@
+import React, { useState, useEffect, useRef } from 'react'
+
+// 使圖片高度與寬度同寬
+function ImageWithEqualDimensions() {
+    const imgRef = useRef(null);
+
+    // 使得圖片高度會在螢幕大小改變時跟著改變 而非在重整時才改變
+    const handleResize = () => {
+        const image = imgRef.current;
+        const imageWidth = image.offsetWidth;
+        image.style.height = imageWidth + 'px';
+    };
+
+    useEffect(() => {
+        // 獲取圖片元素的引用
+        const image = imgRef.current;
+        // 獲取圖片的寬度
+        const imageWidth = image.offsetWidth;
+        // 將寬度值分配给高度
+        image.style.height = imageWidth + 'px';
+        // 添加螢幕大小變化事件監聽器
+        window.addEventListener('resize', handleResize);
+        // 在組件卸載時移除事件監聽器
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
+    return (
+        <div className="mission-img">
+            <img
+                ref={imgRef}
+                src="/kitten.jpg"
+                alt="任務"
+            />
+        </div>
+    );
+}
+
+export default function MissionCard() {
+    const [isFavorite, setIsFavorite] = useState(false); // 初始狀態為未收藏
+
+    const toggleFavorite = () => {
+        setIsFavorite(!isFavorite); // 切換收藏狀態
+    };
+    return (
+        <>
+            <div className='mission-list-card'>
+                {/* <div className='mission-img'>
+                    <img src="/kitten.jpg" alt="任務" />
+                </div> */}
+                <ImageWithEqualDimensions />
+                <div className='mission-content mx-1 mt-2'>
+                    <div className='title size-6'>雙十連假顧貓 對我的貓好一點 測試換行</div>
+                    <div className='d-flex justify-content-between mt-2'>
+                        <div className='size-7'>台中市大甲區<br />2023-08-21</div>
+                        <img src={isFavorite ? "/heart-clicked.svg" : "/heart.svg"} alt={isFavorite ? "已收藏" : "未收藏"} onClick={toggleFavorite} />
+                    </div>
+                    <div className='d-flex justify-content-between align-items-end price'>
+                        <div  >單次<span className='size-6'> NT$140</span></div>
+                        <button className='btn-confirm size-6'>應徵</button>
+                    </div>
+                </div>
+            </div>
+        </>
+    )
+}
+

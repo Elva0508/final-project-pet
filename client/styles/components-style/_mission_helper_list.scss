@@ -1,0 +1,259 @@
+.mission-helper-list {
+  max-width: 1440px;
+  padding: 0 20px;
+  margin: auto;
+  .breadcrumb-wrapper {
+    margin: 10px 0 20px 0;
+    .breadcrumb {
+      margin: 0;
+      color: $text-main;
+      & > * {
+        color: $text-main;
+      }
+      .active {
+        color: $text-mark;
+      }
+    }
+  }
+  .filters {
+    display: flex;
+    width: 90%;
+    max-width: 1000px;
+    margin: 2rem auto;
+    justify-content: space-around;
+  }
+  .famous-helper {
+    width: 40%;
+    min-width: 355px;
+    background-color: $content-bg;
+    padding: 15px;
+    &-title {
+      font-weight: bold;
+      margin-bottom: 2rem;
+    }
+    &-card {
+      $img-size: 120px;
+      margin-bottom: 3rem;
+      min-width: 325px;
+      &-img {
+        width: $img-size;
+        height: $img-size;
+        border-radius: 50%;
+      }
+      .helper-content {
+        width: calc(100% - $img-size);
+        .title {
+          font-weight: bold;
+        }
+        &-info p {
+          margin: 0 0 0.5rem 0;
+        }
+        &-info span {
+          color: $price;
+        }
+        &-info img {
+          cursor: pointer;
+        }
+        .price {
+          span {
+            color: $price;
+            font-weight: 600;
+          }
+          button {
+            padding: 3px 10px;
+          }
+        }
+      }
+    }
+    // &-mobile {
+    //   display: none;
+    // }
+  }
+  .helper-list {
+    width: calc(100% - 40% - 10px);
+    justify-content: space-between;
+  }
+  .single-card {
+    width: calc((100% - 18px) / 3);
+    margin-bottom: 20px;
+    min-width: 220px;
+    background-color: $cos-white;
+    padding: 0.6rem;
+    &-img {
+      $img-size: 160px;
+      width: $img-size;
+      height: $img-size;
+      border-radius: 50%;
+    }
+    &-content {
+      width: 100%;
+    }
+    &-title {
+      font-weight: bold;
+      margin: 0.5rem 0;
+    }
+
+    &-info {
+      p {
+        margin: 0.2rem 0;
+      }
+      .service-items span,
+      .service-time span {
+        color: $price;
+      }
+    }
+
+    .price {
+      margin-top: 1rem;
+      span {
+        color: $price;
+        font-weight: 600;
+      }
+      button {
+        padding: 3px 10px;
+      }
+    }
+  }
+  .famous-carousel {
+    background-color: $content-bg;
+    & > :first-child,
+    & > :last-child {
+      display: flex;
+      align-items: center;
+      svg {
+        color: $text-main;
+        font-size: 30px;
+        cursor: pointer;
+      }
+    }
+  }
+}
+.mobile-filter {
+  margin: 1.2rem 0;
+  // height: 100px;
+  .swiper-wrapper {
+    display: flex;
+    justify-content: space-between;
+    & > * {
+      margin-right: 30px;
+    }
+    & .swiper-slide:last-child {
+      margin-right: 10px;
+    }
+  }
+  .swiper-slide {
+    width: 130px;
+  }
+}
+@media screen and (max-width: 1200px) {
+  .mission-helper-list {
+    .helper-list {
+      .single-card {
+        width: calc((100% - 10px) / 2);
+      }
+    }
+  }
+}
+@media screen and (max-width: 900px) {
+  .mission-helper-list {
+    .famous-helper {
+      //   padding: 1rem;
+      width: 50%;
+    }
+    .helper-list {
+      justify-content: center;
+      .single-card {
+        width: calc((100% - 30px));
+        max-width: 350px;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .mission-helper-list {
+    padding: 0 5px;
+
+    .job-search {
+      width: 100%;
+      margin-top: 19px;
+    }
+    .filters {
+      margin: 0rem auto;
+    }
+    .famous-helper {
+      width: 100%;
+      margin: auto;
+      padding: 15px 0;
+      &-title {
+        margin-left: 15px;
+      }
+      &-card {
+        padding: 0 10px;
+        $img-size: 100px;
+        &-img {
+          width: $img-size;
+          height: $img-size;
+        }
+      }
+    }
+    .famous-carousel {
+      & > :first-child,
+      & > :last-child {
+        svg {
+          font-size: 22px;
+        }
+      }
+    }
+    .helper-list {
+      width: 100%;
+      justify-content: space-around;
+      margin: 10px auto;
+      .single-card {
+        width: calc((100% - 10px) / 3);
+        margin: 0 0 10px 0;
+        min-width: 175px;
+        padding: 0.5rem;
+        &-img {
+          $img-size: 120px;
+          width: $img-size;
+          height: $img-size;
+        }
+        // .price {
+        //   button {
+        //     font-size: 16px;
+        //     width: 50px;
+        //     height: 30px;
+        //     padding: 3px 10px;
+        //   }
+        // }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 576px) {
+  .mission-helper-list {
+    .helper-list {
+      .single-card {
+        width: calc((100% - 10px) / 2);
+
+        min-width: 175px;
+        // padding: 0.5rem;
+        // &-img {
+        //   $img-size: 120px;
+        //   width: $img-size;
+        //   height: $img-size;
+        // }
+        // .price {
+        //   button {
+        //     font-size: 16px;
+        //     width: 50px;
+        //     height: 30px;
+        //     padding: 3px 10px;
+        //   }
+        // }
+      }
+    }
+  }
+}

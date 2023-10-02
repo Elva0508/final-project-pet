@@ -1,7 +1,21 @@
 import React from "react";
-import { DatePicker, Space } from "antd";
-const { RangePicker } = DatePicker;
+import { DatePicker, Cascader } from "antd";
+import cityData from "@/data/CityCountyData.json";
+
+const options = cityData.map((city) => {
+  return {
+    value: city.CityName,
+    label: city.CityName,
+    children: city.AreaList.map((area) => {
+      return { value: area.ZipCode, label: area.AreaName };
+    }),
+  };
+});
+
 const CreateMission = () => {
+  const onChange = (value) => {
+    console.log(value);
+  };
   return (
     <div className="create-mission">
       <div className="block">
@@ -23,22 +37,28 @@ const CreateMission = () => {
               <DatePicker
                 className="mission-time"
                 placeholder="請輸入開始日期"
-                // suffixIcon={<></>}
+                style={{ textIndent: "50px" }}
               />
               <DatePicker
                 className="mission-time"
                 placeholder="請輸入結束日期"
-                // suffixIcon={<></>}
               />
             </div>
           </div>
           <div className="body-item">
             <label className="size-6">任務地點</label>
             <br />
+            <Cascader
+              options={options}
+              onChange={onChange}
+              placeholder="選擇縣市"
+              className="location-select"
+              popupClassName="location-cascader"
+            />
+
             <input
-              className="form-input"
-              type="text"
-              placeholder="請輸入任務地點"
+              placeholder="請輸入街道地址"
+              className="form-input m-size-7"
             />
           </div>
           <div className="body-item">

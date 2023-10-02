@@ -1,7 +1,7 @@
 .helper-info {
   min-height: 913px;
-  width: 60%;
-  margin: 2rem auto; //到時候要去掉
+  width: 75%;
+  margin: 8px 0;
   background-color: $content-bg;
   $form-height: 80px;
   padding: 10px 40px;
@@ -17,6 +17,10 @@
         height: 28px;
       }
     }
+    .to-detail {
+      color: $text-mark;
+      margin-left: 0.5rem;
+    }
   }
 
   .form-item {
@@ -31,10 +35,6 @@
       width: 70%;
       max-width: 400px;
     }
-
-    // input[type="text"] {
-    //   max-width: ;
-    // }
     .upload {
       button {
         display: flex;
@@ -97,5 +97,43 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+  }
+}
+@media screen and (max-width: 768px) {
+  .helper-info {
+    width: 100%;
+    min-height: 670px;
+    background-color: transparent;
+    padding: 0 5px;
+    .title {
+      margin-bottom: 10px;
+      & > p {
+        // font-weight: bold;
+        display: flex;
+        align-items: center;
+        img {
+          margin-right: 0.8rem;
+          height: 20px;
+        }
+      }
+    }
+    .form-item {
+      margin-bottom: 2rem;
+      & > :first-child {
+        min-width: 110px;
+      }
+      & > :last-child {
+        font-size: 14px;
+        &::placeholder {
+          font-size: 14px;
+        }
+      }
+    }
+    .switch-info {
+      margin-bottom: 0.4rem;
+    }
+    .open-helper {
+      font-size: 22px;
+    }
   }
 }

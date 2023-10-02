@@ -1,0 +1,15 @@
+.block-five{
+    background-color: #EEDDCC;
+    .title{
+        font-size: 4.375rem;
+        color: #34251F;
+        font-weight: bold;
+    }
+    .price{
+        color: $price;
+        font-weight: bold;
+        .content{
+            color: #34251F;
+        }
+    }
+}

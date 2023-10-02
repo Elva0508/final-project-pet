@@ -1,0 +1,28 @@
+// @import "@/styles/_variable.scss";
+
+.mission-list-card{
+    width: 100%;
+    .mission-img{
+        img{
+            width: 100%;
+            object-fit: cover;
+        }
+    }
+    .mission-content{
+        img{
+            cursor: pointer;
+            width: 45px;
+        }
+        .price{
+            span{
+                color: $price;
+                font-weight: 600;
+            }
+            button{
+                padding: 3px 10px;
+                color: $main-bg;
+            }
+        }
+    }
+}
+

@@ -1,0 +1,185 @@
+@import "@/styles/_variable.scss";
+
+.product-detail{
+.container{
+background-color: $main-bg;
+}
+
+// product-itembox
+//product-pic
+.product-pic {
+  max-width: 648px; /* 容器的最大寬度為600px */
+  width: 100%;     /* 容器的寬度為其父元素的100% */
+}
+
+.main-pic {
+  width: 100%;
+  img {
+    max-width: 100%; /* 圖片的最大寬度為其容器的100% */
+    width: 100%;
+    max-width: 620px;
+    height: auto; /* 自動調整高度以保持圖片比例 */
+  }
+}
+
+.other-pic {
+  width: 100%;
+  img {
+    max-width: 100%; /* 圖片的最大寬度為其容器的100% */
+     width: 100%;
+     max-width: 145px;
+    height: auto; /* 自動調整高度以保持圖片比例 */
+  }
+}
+
+//product-detail
+.product-detail{
+     max-width: 648px;
+     width: 100%; 
+}
+
+.pricebox_detail {
+  display: flex;
+  align-items: center; /* 垂直居中對齊 */
+}
+
+.priceBlock {
+  display: inline-block;
+  vertical-align: middle; /* 垂直居中對齊 */
+  margin-right: 4px; /* 調整右邊的間距 */
+  .PriceName1,
+  .font-big{
+  color: $price;
+}
+}
+
+.font-delete {
+  text-decoration: line-through;
+  vertical-align: middle; /* 垂直居中對齊 */
+  color:$text-mark;
+}
+
+.name,
+.brand,
+.price-wrapper,
+.type,
+.quantity-counter{
+  margin-top: 20px;
+}
+
+.add-to-cart{
+    margin-top: 20px;
+    button {
+        max-width: 648px;
+     width: 100%;
+        
+    }
+}
+.add-to-favorites{
+    margin-top: 20px;
+    button {
+      max-width: 648px;
+      width: 100%;   
+    }
+}
+
+//section-product-detail-tabs
+ .product-detail-tabs {
+    border-top: 1px solid $light-gray; 
+    border-bottom: 1px solid $light-gray; 
+    margin-top: 50px;
+    .nav-item1,
+    .nav-item2{ 
+    .nav-link {
+            color: $text-main;
+        }
+    }
+  }
+
+//product-description
+.description{
+  margin-top: 10px;
+  padding: 15px;
+  p{
+    color: $text-main;
+  }
+}
+
+.product-description{
+  border-bottom: 1px solid $light-gray; 
+}
+
+//customer-message
+.customer-message{
+  border-bottom: 1px solid $light-gray; 
+  padding-bottom: 20px;
+
+  .star{
+    width: 100%;
+    max-height: 100%;
+    background-color: $content-bg;
+    margin-top: 20px;
+  }.Overall-rating{
+      border-right: 1px solid $text-main ;
+      max-height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center; /* 垂直置中 */
+      justify-content: center; /* 水平置中 */
+    }
+    
+  }
+
+.staricon {
+  display: flex; /* 將星星圖標容器設置為彈性容器 */
+  align-items: center; /* 垂直置中 */
+  margin-left: 5px; /*添加一些間距以調整位置 */
+  color: $star;
+  font-size: 1.875rem;
+}
+
+.customer-message{
+  .customer{
+    width: 100%;
+    background-color: $content-bg;
+    margin-top: 20px;
+    padding: 15px;
+  }.customer-star{
+  color: $star;
+  font-size: 1rem;
+
+  }
+}
+
+//carousel slide
+.product-card {
+    border-bottom: none;
+    padding: 1%;
+}
+
+.carousel-control-prev {
+    left: -10%; /* 向左移動的距離，調整此值以移動按鈕 */
+}
+
+.carousel-control-next {
+    right: -10%; /* 向右移動的距離，調整此值以移動按鈕 */
+}
+}
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
