@@ -1,18 +1,18 @@
-const express = require('express');
+const express = require("express");
 const router = require("express").Router();
+const cookieParser = require("cookie-parser");
 
 //const moment = require('moment');
-const multer = require('multer');
-const jwt = require('jsonwebtoken');
+const multer = require("multer");
+const jwt = require("jsonwebtoken");
 const secretKey = "secretkey";
 
-const cors = require('cors');
+const cors = require("cors");
 const upload = multer();
 
 //連接資料庫
 const db = require("../db");
 //---------------------------------------------
-
 
 // 設定部份
 let whitelist = [
@@ -20,129 +20,136 @@ let whitelist = [
   "http://localhost:3005",
   "http://127.0.0.1:3000",
   "http://localhost:3000",
-  undefined
+  undefined,
 ];
 let corsOptions = {
-credentials: true,
-origin: function (origin, callback) {
-  if (whitelist.indexOf(origin) !== -1) {
-    callback(null, true)
-  } else {
-    callback(new Error('Not allowed by CORS'))
-  }
-}
-}
-const app = express()
-app.use(cors(corsOptions))
+  credentials: true,
+  origin: function (origin, callback) {
+    if (whitelist.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+};
+const app = express();
+app.use(cors(corsOptions));
 //解析 json 格式的要求主體
-app.use(express.json())
+app.use(express.json());
 //解析 URL 編碼的要求主體
-app.use(express.urlencoded({extended:true}))
+app.use(express.urlencoded({ extended: true }));
 //---------------------------------------------
 
-
-router.get("/", (req,res)=>{
-    res.send("auth-jwt測試成功，這是 auth-jwt 路由的根路徑");
-})
+router.get("/", (req, res) => {
+  res.send("auth-jwt測試成功，這是 auth-jwt 路由的根路徑");
+});
 router.get("/test", (req, res) => {
-    const user = req.user
-    return res.json({message: 'authorized', user})
-  });
+  const user = req.user;
+  return res.json({ message: "authorized", user });
+});
 
 router.post("/login", upload.none(), async (req, res) => {
-    const { email, password } = req.body;
-    try {
-      const results = await new Promise((resolve, reject) => {
-        // 使用email和password進行登入驗證
-        db.query('SELECT * FROM users WHERE email = ? AND password = ?', [email, password], (err, results) => {
+  const { email, password } = req.body;
+  try {
+    const results = await new Promise((resolve, reject) => {
+      // 使用email和password進行登入驗證
+      db.query(
+        "SELECT * FROM users WHERE email = ? AND password = ?",
+        [email, password],
+        (err, results) => {
           if (err) {
-            console.error('資料庫-查詢錯誤：', err);
+            console.error("資料庫-查詢錯誤：", err);
             reject(err);
-            return
+            return;
           }
           if (results.length === 0) {
-            reject('帳號或密碼錯誤');
-            return
+            reject("帳號或密碼錯誤");
+            return;
           } else {
             resolve(results[0]);
           }
-        });
-      });
-  
-      if (results.length === 0) {
-        res.status(401).json({ message: '帳號或密碼錯誤', code: '401' });
-        return;
-      } else {
-        // 登入成功，執行你的JWT發送邏輯
-        const user = results;
-        const token = jwt.sign(
-          {
-            user_id: user.user_id, // 使用者的唯一識別符
+        }
+      );
+    });
+
+    if (results.length === 0) {
+      res.status(401).json({ message: "帳號或密碼錯誤", code: "401" });
+      return;
+    } else {
+      // 登入成功，執行你的JWT發送邏輯
+      const user = results;
+      const token = jwt.sign(
+        {
+          user_id: user.user_id, // 使用者的唯一識別符
           username: user.username, // 使用者的名稱
-          email: user.email // 使用者的電子郵件
-          },
-          secretKey,
-          { expiresIn: '30m' }
-        );
-         return res.status(200).json({ message: 'success login', code: '200', token: token })
-        
-      }
-    } catch (err) {
-      console.error('捕獲到異常：', err);
-      return res.status(500).json({ message: '資料庫查詢錯誤', code: '500' });
+          email: user.email, // 使用者的電子郵件
+        },
+        secretKey,
+        { expiresIn: "30m" }
+      );
+      // 設置httpOnly的Cookie
+      res.cookie("token", token, { httpOnly: true });
+      return res
+        .status(200)
+        .json({ message: "success login", code: "200", token: token });
     }
-  });
+  } catch (err) {
+    console.error("捕獲到異常：", err);
+    return res.status(500).json({ message: "資料庫查詢錯誤", code: "500" });
+  }
+});
 
-router.post("/logout", checkToken,(req,res)=>{
-  console.log(req.decoded) //解碼後的資料-終端機
+router.post("/logout", checkToken, (req, res) => {
+  console.log(req.decoded); //解碼後的資料-終端機
   const currentUser = req.decoded.email;
-  db.query('SELECT * FROM users WHERE email = ?', [currentUser], (err, results) => {
-    if(err){
-      console.error('資料庫-查詢錯誤：', err);
-      res.status(500).json({ message: '登出失敗請洽管理人員', code: '500' });
-    }else{
-      if(results.length>0){
-        const token = jwt.sign(
-          {
-          //清空
-          },
-          secretKey,
-          { expiresIn: '-10s' }
-        );
-        res.status(200).json({ message: 'success login', code: '200', token: token });
+  db.query(
+    "SELECT * FROM users WHERE email = ?",
+    [currentUser],
+    (err, results) => {
+      if (err) {
+        console.error("資料庫-查詢錯誤：", err);
+        res.status(500).json({ message: "登出失敗請洽管理人員", code: "500" });
+      } else {
+        if (results.length > 0) {
+          const token = jwt.sign(
+            {
+              //清空
+            },
+            secretKey,
+            { expiresIn: "-10s" }
+          );
+          res.clearCookie('token', { httpOnly: true });
+          res
+            .status(200)
+            .json({ message: "success login", code: "200", token: token });
+        }
+      }
     }
-  }})
-})
+  );
+});
 
-router.post("/checkLogin", checkToken,(req,res)=>{
+router.post("/checkLogin", checkToken, (req, res) => {
   const currentUser = req.decoded;
-  const token=jwt.sign(
+  const token = jwt.sign(
     {
       user_id: currentUser.user_id,
       username: currentUser.username,
-      email: currentUser.email
+      email: currentUser.email,
     },
     secretKey,
-    { expiresIn: '30m' }
-
+    { expiresIn: "30m" }
   );
   res.status(200).json({
-    message:"用戶已登入",
-    code:"200",
-    user:{
+    message: "用戶已登入",
+    code: "200",
+    user: {
       user_id: currentUser.user_id,
       username: currentUser.username,
-      email: currentUser.email
+      email: currentUser.email,
     },
-    token:token
-  })
-
-
-
-})
-
-
-
+    token: token,
+  });
+});
 
 // router.get('/private', authenticate, (req, res) => {
 //     const user = req.user
@@ -215,22 +222,21 @@ router.post("/checkLogin", checkToken,(req,res)=>{
 //   res.json({ message: 'success', code: '200' });
 // });
 
-function checkToken(req,res,next){
-const token = req.headers.authorization;
-if(token){
-  jwt.verify(token,secretKey,(err,decoded)=>{
-    if(err){
-      res.status(400).json({message: '登入驗證失效', code: '400'})
-      return;
-    }
-    //成功驗證
-    req.decoded = decoded;
-    next();
-   
-  })
-}else{
-  res.status(400).json({message: 'fail logout 無登入資料', code: '400'})
-}
+function checkToken(req, res, next) {
+  const token = req.headers.authorization;
+  if (token) {
+    jwt.verify(token, secretKey, (err, decoded) => {
+      if (err) {
+        res.status(400).json({ message: "登入驗證失效", code: "400" });
+        return;
+      }
+      //成功驗證
+      req.decoded = decoded;
+      next();
+    });
+  } else {
+    res.status(400).json({ message: "fail logout 無登入資料", code: "400" });
+  }
 }
 
- module.exports = router;
+module.exports = router;

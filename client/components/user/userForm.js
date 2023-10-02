@@ -65,7 +65,7 @@ export default function userForm() {
             <label className={userRfs}>性別：</label>
             <div>
               <input
-                class="form-check-input position-static"
+                //class="form-check-input position-static"
                 type="radio"
                 name="blankRadio"
                 id="blankRadio1"
@@ -75,7 +75,7 @@ export default function userForm() {
               />
               男
               <input
-                class="form-check-input position-static"
+                // class="form-check-input position-static"
                 type="radio"
                 name="blankRadio"
                 id="blankRadio1"
