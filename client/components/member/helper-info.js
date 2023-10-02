@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import Link from "next/link";
 import { BiUpload } from "react-icons/bi";
-import { Switch, Form } from "antd";
+import { Switch, message } from "antd";
 import memberService from "@/services/member-service";
 const countyOption = [
   "台北市",
@@ -26,6 +26,9 @@ const countyOption = [
   "金門縣",
   "連江縣",
 ];
+const Context = React.createContext({
+  name: "Default",
+});
 
 const SwitchInput = ({ label, status, price, type, setStatus }) => {
   const [switchStatus, setSwitchStatus] = useState(false);
@@ -88,8 +91,14 @@ const Close = ({ open, setOpen }) => {
 const Open = ({ open, setOpen, info, setInfo }) => {
   const [feedStatus, setFeedStatus] = useState(info?.feed_service);
   const [houseStatus, setHouseStatus] = useState(info?.house_service);
-  const [beautyStatus, setBeautydStatus] = useState(info?.beauty_service);
-
+  const [beautyStatus, setBeautyStatus] = useState(info?.beauty_service);
+  const [messageApi, contextHolder] = message.useMessage();
+  const success = () => {
+    messageApi.open({
+      type: "success",
+      content: "小幫手資料修改成功",
+    });
+  };
   const handleOpen = () => {
     if (open) {
       memberService
@@ -117,11 +126,16 @@ const Open = ({ open, setOpen, info, setInfo }) => {
       .handleHelperEdit(formData)
       .then((response) => {
         console.log(response);
+        if (response?.data?.status === 200) {
+          setInfo(response?.data?.info);
+          success();
+        }
       })
       .catch((e) => {
         console.log(e);
       });
   };
+  const handleCancel = () => {};
   return (
     <>
       <form
@@ -230,7 +244,7 @@ const Open = ({ open, setOpen, info, setInfo }) => {
               status={beautyStatus}
               price={info?.beauty_price}
               type="beauty"
-              setStatus={setBeautydStatus}
+              setStatus={setBeautyStatus}
             />
           </div>
         </div>
@@ -253,10 +267,15 @@ const Open = ({ open, setOpen, info, setInfo }) => {
         </div>
         <div className="d-flex mb-2">
           <div className="btn-groups d-flex justify-content-start ">
-            <button className="btn-outline-confirm" type="button">
+            <button
+              className="btn-outline-confirm"
+              type="button"
+              onClick={handleCancel}
+            >
               取消
             </button>
-            <button type="submit" className="btn-confirm ">
+            {contextHolder}
+            <button type="submit" className="btn-confirm">
               送出
             </button>
           </div>
@@ -275,12 +294,12 @@ const Open = ({ open, setOpen, info, setInfo }) => {
 const HelperInfo = () => {
   const [open, setOpen] = useState(false);
   const [info, setInfo] = useState({});
+
   useEffect(() => {
     memberService
       .getHelperInfo()
       .then((response) => {
         if (response?.data?.data?.length > 0) {
-          // console.log(response);
           setOpen(true);
           setInfo(response?.data?.data[0]);
         }
