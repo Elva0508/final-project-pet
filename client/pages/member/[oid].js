@@ -62,6 +62,17 @@ export default function Orderdetail() {
    getDetail();
  }, []);
 
+ useEffect(() => {
+  if (router.isReady) {
+    // 確保能得到router.query有值
+    const { pid } = router.query
+    console.log(pid)
+    // 有pid後，向伺服器要求資料，設定到狀態中
+    getDetail(pid)
+  }
+  // eslint-disable-next-line
+}, [router.isReady, router.query])
+
 
   return (
     <>
