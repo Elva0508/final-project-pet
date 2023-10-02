@@ -13,6 +13,22 @@ import OrderStatusFour from "@/components/member/order-status-four";
 
 export default function Order() {
   const [currentScreen, setCurrentScreen] = useState("1");
+  const [order, setOrder] = useState([])
+  const getOrder = async() => {
+    await axios.get("http://localhost:3005/api/member-order")
+      .then((response) => {
+        const data = response.data.result;
+        console.log(data);
+        setOrder(data)
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+    });
+  }
+
+useEffect(() => {
+    getOrder()
+  }, [])
 
   const handleButtonClick = (screenName) => {
     setCurrentScreen(screenName);
@@ -70,10 +86,10 @@ export default function Order() {
                     已取消
                   </button>
 
-                  {currentScreen === "1" && (<OrderStatusOne />)}
-                  {currentScreen === "2" && (<OrderStatusTwo />)}
-                  {currentScreen === "3" && (<OrderStatusThree />)}
-                  {currentScreen === "4" && (<OrderStatusFour />)}
+                  {currentScreen === "1" && (<OrderStatusOne order={order}/>)}
+                  {currentScreen === "2" && (<OrderStatusTwo order={order}/>)}
+                  {currentScreen === "3" && (<OrderStatusThree order={order}/>)}
+                  {currentScreen === "4" && (<OrderStatusFour order={order}/>)}
                 </div>
 
 

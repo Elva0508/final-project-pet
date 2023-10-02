@@ -27,27 +27,6 @@ router.get("/", (req, res) => {
           }
   )})
   
-  //拿訂單細節資料
-  router.get("/order-detail",(req,res)=>{     
-      connection.execute(
-          `SELECT o.* FROM orders AS o WHERE o.oid=1`,
-          (error,result)=>{
-              res.json({result})
-          }    
-      )
-  })
-  
-  
-  //商品評論
-  router.post("/addMessage",(req,res)=>{
-        
-      connection.execute(
-          `INSERT INTO product_reviews(user_id, product_id, review_content, star_rating, review_date) VALUES (1,,);`,
-          [addId]
-          ,(error,result)=>{
-              res.json({result})
-          }    
-      )
-  })
+
 
   module.exports = router;

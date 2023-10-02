@@ -4,13 +4,14 @@ import axios from "axios";
 import { GrFormPrevious } from 'react-icons/gr';
 import { GrFormNext } from 'react-icons/gr';
 
-export default function OrderStatusOne() {
+export default function OrderStatusOne({order}) {
     const itemsPerPage = 5
-    const [order, setOrder] = useState([])
     const [currentPage, setCurrentPage] = useState(1)
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
-    const currentData = order.slice(startIndex, endIndex);
+    const type=order.filter((v)=>v.status_id==1)
+    const currentData = type.slice(startIndex, endIndex);
+
 
 
     const handlePageChange = (newPage) => {
@@ -18,21 +19,7 @@ export default function OrderStatusOne() {
       };
 
 
-    const getOrder = async() => {
-        await axios.get("http://localhost:3005/api/member-order")
-          .then((response) => {
-            const data = response.data.result;
-            console.log(data);
-            setOrder(data)
-          })
-          .catch((error) => {
-            console.error("Error:", error);
-        });
-      }
-  
-    useEffect(() => {
-        getOrder()
-      }, [])
+ 
     return (
         <>
 
@@ -62,7 +49,7 @@ export default function OrderStatusOne() {
                   })}
         <div className="pagination size-7 d-flex justify-content-center">
             <button className='btn prev border-0'><GrFormPrevious /></button>
-            {Array.from({ length: Math.ceil(order.length / itemsPerPage) }).map((_, index) => (
+            {Array.from({ length: Math.ceil(type.length / itemsPerPage) }).map((_, index) => (
           <button key={index} onClick={() => handlePageChange(index + 1)} className='btn me-1 '>
             {index + 1}
           </button>

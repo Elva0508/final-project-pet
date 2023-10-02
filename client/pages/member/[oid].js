@@ -4,6 +4,7 @@ import ListD from "@/components/member/list-d";
 import ListUserM from "@/components/member/list-user-m";
 import { RiFileList3Fill } from "react-icons/ri";
 import Star from '@/components/member/star'
+import { useRouter } from 'next/router'
 import axios from "axios";
 
 export default function Orderdetail() {
@@ -11,7 +12,7 @@ export default function Orderdetail() {
   const [isText, setIsText] = useState("");
   const [value1, setValue1] = useState(0)
   const [detail,setDetail]=useState([{}])
-
+  const router = useRouter()
 
   const handleComment = (n) => {
     setComment(n);
@@ -21,7 +22,8 @@ export default function Orderdetail() {
     setIsText(text.target.value);
   };
 
-
+  
+  
   // const addMessage = async (id) => {
   //   try {
   //     const response = await axios.delete(
@@ -34,19 +36,27 @@ export default function Orderdetail() {
   //   }
   // };
 
-  const getDetail =  () => {
-    axios
-     .get("http://localhost:3005/order-detail")
-     .then((response) => {
-       const data = response.data.result;
-       console.log(data);
-       setDetail(data);
-       console.log(detail);
-     })
-     .catch((error) => {
-       console.error("Error:", error);
-     });
- };
+  const getDetail = async (oid) => {
+    try {
+      const res = await fetch(
+        'https://3005/api/member-order-detail/' +oid
+      )
+
+      const data = await res.json()
+
+      console.log(data)
+      // 設定到狀態中 -> 會觸發重新渲染(re-render)
+      setDetail(data)
+    } catch (e) {
+      // 這裡可以作錯誤處理
+
+      // setTimeout(() => {
+      //   setIsLoading(false)
+      // }, 2000)
+      alert('伺服器連線失敗')
+      console.error(e)
+    }
+  }
 
  useEffect(() => {
    getDetail();
@@ -69,48 +79,49 @@ export default function Orderdetail() {
                 <RiFileList3Fill />
                 我的訂單
               </h5>
+            {detail.map((v,i)=>{
+              <div key={i}>
+                <p className="date my-3 size-7">{v.created_at}</p>
+                <p className="size-7">狀態 : 已完成</p>
+                <p className="size-7">訂單編號 :1534868</p>
+                <p className="size-7">收件資訊 :</p>
+                <p className="textcolor size-7">收件人 王大明</p>
+                <p className="textcolor size-7">地址 125646台北市信義區福德街</p>
+                <p className="textcolor size-7">電話 0988436641</p>
+                <p className="size-7">付款資訊 : 貨到付款</p>
+                <p className="size-7">寄送方式 : 宅配</p>
+                <p className="size-7">購買項目 :</p>
 
-              <p className="date my-3 size-7">{detail[0].created_at}</p>
-              <p className="size-7">狀態 : 已完成</p>
-              <p className="size-7">訂單編號 :1534868</p>
-              <p className="size-7">收件資訊 :</p>
-              <p className="textcolor size-7">收件人 王大明</p>
-              <p className="textcolor size-7">地址 125646台北市信義區福德街</p>
-              <p className="textcolor size-7">電話 0988436641</p>
-              <p className="size-7">付款資訊 : 貨到付款</p>
-              <p className="size-7">寄送方式 : 宅配</p>
-              <p className="size-7">購買項目 :</p>
-
-              <div className="d-flex border-bottom pb-3 d-md-flex d-none">
-                <div className="d-flex col-9">
-                  <img src="https://cdn-front.mao-select.com.tw//upload_files/fonlego-rwd/prodpic/D_1(12).jpg"></img>
-                  <p className="ms-3 size-7">巨型開放式貓砂盆 (多色)</p>
-                </div>
-                <div className="col-1">
-                  <p className="ms-2 size-7">x1</p>
-                </div>
-                <div className="col-2 size-7">
-                  <p>NT$690</p>
-                </div>
-              </div>
-
-              <div className="border-bottom pb-3 d-md-none">
-                <div className="d-flex">
-                  <img src="https://cdn-front.mao-select.com.tw//upload_files/fonlego-rwd/prodpic/D_1(12).jpg"></img>
-                  <div className="ms-3 d-flex flex-column justify-content-around">
-                    <div>
-                        <p className="size-7">巨型開放式貓砂盆 (多色)</p>
-                    </div>
-                        <div>
-                            <p className="size-7">x1</p>
-                        </div>
-
-                        <div >
-                            <p className="size-7">NT$690</p>
-                        </div>
+                <div className="d-flex border-bottom pb-3 d-md-flex d-none">
+                  <div className="d-flex col-9">
+                    <img src="https://cdn-front.mao-select.com.tw//upload_files/fonlego-rwd/prodpic/D_1(12).jpg"></img>
+                    <p className="ms-3 size-7">巨型開放式貓砂盆 (多色)</p>
+                  </div>
+                  <div className="col-1">
+                    <p className="ms-2 size-7">x1</p>
+                  </div>
+                  <div className="col-2 size-7">
+                    <p>NT$690</p>
                   </div>
                 </div>
-              </div>
+
+                <div className="border-bottom pb-3 d-md-none">
+                  <div className="d-flex">
+                    <img src="https://cdn-front.mao-select.com.tw//upload_files/fonlego-rwd/prodpic/D_1(12).jpg"></img>
+                    <div className="ms-3 d-flex flex-column justify-content-around">
+                      <div>
+                          <p className="size-7">巨型開放式貓砂盆 (多色)</p>
+                      </div>
+                          <div>
+                              <p className="size-7">x1</p>
+                          </div>
+
+                          <div >
+                              <p className="size-7">NT$690</p>
+                          </div>
+                    </div>
+                  </div>
+                </div>
 
               <div className="d-flex justify-content-end">
                 <button
@@ -150,6 +161,13 @@ export default function Orderdetail() {
                   </div>
                 </form>
               )}
+
+              </div>
+              
+            })}
+
+
+
 
               <div className="d-flex justify-content-end">
                 <table className="col-12 col-sm-6">
