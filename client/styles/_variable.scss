@@ -79,3 +79,43 @@ $mobile-font: 3rem, 2.625rem, 2.125rem, 1.5rem, 1.25rem, 1rem, 0.875rem;
     }
   }
 }
+
+// 分頁導覽樣式
+.cos-pagination {
+  display: flex;
+  justify-content: center;
+  margin: 2rem 0;
+  .ant-pagination-item,
+  .ant-pagination-prev .ant-pagination-item-link,
+  .ant-pagination-next .ant-pagination-item-link {
+    border-radius: 50%;
+    background-color: transparent;
+  }
+  .ant-pagination-item-active {
+    background-color: $text-main;
+    border-color: transparent;
+    color: $cos-white;
+    &:hover {
+      // 被選中時的hover，邊框顏色變淺一點
+      background-color: lighten($text-main, 5%);
+      border-color: transparent;
+    }
+  }
+  .ant-pagination-prev:hover:not(.ant-pagination-disabled)
+    .ant-pagination-item-link,
+  .ant-pagination-next:not(.ant-pagination-disabled):hover
+    .ant-pagination-item-link {
+    // 去除hover時左右鍵的背景灰色及增加外邊框，並禁止disabled時增加border外框
+    background-color: transparent;
+    border-color: $text-main;
+  }
+  .ant-pagination-item:not(.ant-pagination-item-active):hover {
+    // hover時的效果
+    background-color: transparent;
+    border-color: $text-main;
+  }
+  .ant-pagination-item-container * {
+    // 改變分頁收納icon的顏色
+    color: $text-main;
+  }
+}

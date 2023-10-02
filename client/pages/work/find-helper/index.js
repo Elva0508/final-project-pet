@@ -9,7 +9,6 @@ import useRWD from "@/hooks/useRWD";
 import { register } from "swiper/element/bundle";
 import { Carousel } from "@trendyol-js/react-carousel";
 import { AiOutlineLeftCircle, AiOutlineRightCircle } from "react-icons/ai";
-import Pagination from "@/components/pagination";
 import WorkService from "@/services/work-service";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
@@ -17,6 +16,7 @@ import "slick-carousel/slick/slick-theme.css";
 import { Rate } from "antd";
 import Rating from "@mui/material/Rating";
 import StarIcon from "@mui/icons-material/Star";
+import { Pagination } from "antd";
 register();
 // Import Swiper styles
 import "swiper/css";
@@ -445,9 +445,14 @@ const MissionHelperList = () => {
           {allHelpers?.map((helper) => (
             <SingleHelperCard {...helper} />
           ))}
-          <Pagination />
         </section>
       </div>
+      <Pagination
+        defaultCurrent={1}
+        total={500}
+        showSizeChanger={false}
+        rootClassName="cos-pagination"
+      />
     </div>
   );
 };

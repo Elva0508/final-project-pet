@@ -9,7 +9,7 @@ const storage = multer.diskStorage({
   },
   filename: function (req, file, cb) {
     const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-    cb(null, uniqueSuffix + "-" + file.originalname); // 設置上船文件的文件名
+    cb(null, uniqueSuffix + "-" + file.originalname); // 設置上傳文件的文件名
   },
 });
 
@@ -198,7 +198,6 @@ router.post("/mission", upload.array("missionImage"), async (req, res) => {
     area,
   } = req.body;
   const taskId = uuidv4();
-  console.log(req.files);
   conn.execute(
     "INSERT INTO `mission_detail` (`mission_id`, `pid`, `title`, `price`, `start_date`, `end_date`, `city`, `area`, `location_detail`, `description`, `mission_type`, `payment_type`) VALUES (NULL, ?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?)",
     [
