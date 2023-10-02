@@ -2,6 +2,7 @@ import React from "react";
 import BreadCrumb from "@/components/article/bread-crumb";
 import ArticleCatogory from "@/components/article/article-catogory";
 import ArticleListCard from "@/components/article/article-list-card";
+import Pagination from "@/components/pagination";
 
 export default function ArticleList() {
   return (
@@ -63,7 +64,9 @@ export default function ArticleList() {
           </div>
         </div>
 
-        <div>分頁</div>
+        <div>
+          <Pagination />
+        </div>
       </div>
     </>
   );

@@ -113,7 +113,15 @@ ul {
 @import "/styles/components-style/_resetPassword.scss";
 @import "/styles/components-style/_user-coupon.scss";
 
-// 文章、首頁
+// 首頁
+@import "@/styles/_home.scss";
+@import "@/styles/components-style/home/_block-one.scss";
+@import "@/styles/components-style/home/_block-three.scss";
+@import "@/styles/components-style/home/_block-five.scss";
+@import "@/styles/components-style/home/_block-six.scss";
+
+
+//文章
 @import "@/styles/components-style/_article-list-card.scss";
 @import "@/styles/components-style/_article-catogory.scss";
 @import "@/styles/components-style/_article-card.scss";
