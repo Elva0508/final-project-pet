@@ -17,7 +17,7 @@ export default function Wishlist() {
     if(have===undefined){     
       try {
         const response =  axios.put(
-          `http://localhost:3005/products/cart/${id}`
+          `http://localhost:3005/api/member-wishlist/cart/${id}`
         );
       } catch (error) {
         console.error("Error:", error);
@@ -29,7 +29,7 @@ export default function Wishlist() {
         console.log(newQuantity);
         console.log(id);
         const response = await axios.put(
-          `http://localhost:3005/products/cartplus`,{id ,newQuantity }
+          `http://localhost:3005/api/member-wishlist/cartplus`,{id ,newQuantity }
         );
       } catch (error) {
         console.error("Error:", error);
@@ -43,7 +43,7 @@ export default function Wishlist() {
   const deleteWishlist = async (id) => {
     try {
       const response = await axios.delete(
-        `http://localhost:3005/member/wishlist/${id}`
+        `http://localhost:3005/api/member-wishlist/${id}`
       );
       const newWishlist = wishlist.filter((v) => v.collection_id !== id);
       setWishlist(newWishlist);
@@ -54,7 +54,7 @@ export default function Wishlist() {
 
   const getWishlist = async () => {
     await axios
-      .get("http://localhost:3005/member/wishlist")
+      .get("http://localhost:3005/api/member-wishlist")
       .then((response) => {
         const data = response.data.result;
         console.log(data);
@@ -67,7 +67,7 @@ export default function Wishlist() {
 
   const getCart =  () => {
      axios
-      .get("http://localhost:3005/cart")
+      .get("http://localhost:3005/api/member-wishlist/cart")
       .then((response) => {
         const data = response.data.result;
         console.log(data);

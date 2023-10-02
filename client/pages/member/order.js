@@ -19,33 +19,23 @@ export default function Order() {
     
   };
 
-  // const [order, setOrder] = useState([])
+  const [order, setOrder] = useState([])
 
-  // const getOrder = async() => {
-  //     await axios.get("http://localhost:3005/member/order")
-  //       .then((response) => {
-  //         const data = response.data.result;
-  //         console.log(data);
-  //         setOrder(data)
-  //       })
-  //       .catch((error) => {
-  //         console.error("Error:", error);
-  //     });
-  //   }
-  // const getCart = async () => {
-  //     try {
-  //       const response = await axios.get("http://localhost:3005/product/cart");
-  //       const data = response.data.result;
-  //       console.log(data);
-  //       setCart([data]);
-  //       console.log(cart);
-  //     } catch (error) {
-  //       console.error("Error:", error);
-  //     }
-  //   }
-  // useEffect(() => {
-  //     getOrder()
-  //   }, [])
+  const getOrder = async() => {
+      await axios.get("http://localhost:3005/api/member-order")
+        .then((response) => {
+          const data = response.data.result;
+          console.log(data);
+          setOrder(data)
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+      });
+    }
+
+  useEffect(() => {
+      getOrder()
+    }, [])
 
   return (
     <>
@@ -103,7 +93,7 @@ export default function Order() {
                   {currentScreen === "4" && (<OrderStatusFour />)}
                 </div>
 
-                {/* {order.map((v,i)=>{
+                {order.map((v,i)=>{
                     return(
                       <div key={i}>
                         <p className='date my-3 size-7'>2023-08-26 訂單編號 : 134868</p>
@@ -125,9 +115,9 @@ export default function Order() {
                       </div>
                       
                     )
-                  })} */}
+                  })}
 
-                {/* { screenName==="1" && <orderStatusOne />} */}
+                { screenName==="1" && <orderStatusOne />}
               </div>
             </div>
           </div>

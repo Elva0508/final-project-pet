@@ -5,6 +5,20 @@ import ListUserM from "@/components/member/list-user-m";
 import { BiSolidShoppingBag } from "react-icons/bi";
 
 export default function Purchast() {
+
+
+  // const getCart = async () => {
+  //   try {
+  //     const response = await axios.get("http://localhost:3005/product/cart");
+  //     const data = response.data.result;
+  //     console.log(data);
+  //     setCart([data]);
+  //     console.log(cart);
+  //   } catch (error) {
+  //     console.error("Error:", error);
+  //   }
+  // }
+
   return (
     <>
       <div className="my-3">
