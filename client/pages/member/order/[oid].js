@@ -39,14 +39,15 @@ export default function Orderdetail() {
   const getDetail = async (oid) => {
     try {
       const res = await fetch(
-        'https://3005/api/member-order-detail/' +oid
+        'http://localhost:3005/api/member-order-detail/' +oid
       )
 
       const data = await res.json()
 
-      console.log(data)
+      console.log(data.result)
       // 設定到狀態中 -> 會觸發重新渲染(re-render)
-      setDetail(data)
+      setDetail(data.result)
+      console.log(detail);
     } catch (e) {
       // 這裡可以作錯誤處理
 
@@ -58,20 +59,17 @@ export default function Orderdetail() {
     }
   }
 
- useEffect(() => {
-   getDetail();
- }, []);
 
  useEffect(() => {
   if (router.isReady) {
     // 確保能得到router.query有值
-    const { pid } = router.query
-    console.log(pid)
+    const { oid } = router.query
+    console.log(oid)
     // 有pid後，向伺服器要求資料，設定到狀態中
-    getDetail(pid)
+    getDetail(oid)
   }
   // eslint-disable-next-line
-}, [router.isReady, router.query])
+}, [router.query])
 
 
   return (
@@ -90,29 +88,38 @@ export default function Orderdetail() {
                 <RiFileList3Fill />
                 我的訂單
               </h5>
-            {detail.map((v,i)=>{
-              <div key={i}>
-                <p className="date my-3 size-7">{v.created_at}</p>
-                <p className="size-7">狀態 : 已完成</p>
-                <p className="size-7">訂單編號 :1534868</p>
+          
+        
+                <p className="date my-3 size-7">{detail[0].created_at}</p>
+                <p className="size-7">狀態 : {detail[0].status_name}</p>
+                <p className="size-7">訂單編號 :{detail[0].oid}</p>
                 <p className="size-7">收件資訊 :</p>
-                <p className="textcolor size-7">收件人 王大明</p>
-                <p className="textcolor size-7">地址 125646台北市信義區福德街</p>
-                <p className="textcolor size-7">電話 0988436641</p>
-                <p className="size-7">付款資訊 : 貨到付款</p>
-                <p className="size-7">寄送方式 : 宅配</p>
+                <p className="textcolor size-7">收件人{detail[0].buyer_name}</p>
+                <p className="textcolor size-7">地址 {detail[0].buyer_address}</p>
+                <p className="textcolor size-7">電話 {detail[0].buyer_phone}</p>
+                <p className="size-7">付款資訊 : {detail[0].payment}</p>
+                <p className="size-7">寄送方式 : {detail[0].shipment}</p>
                 <p className="size-7">購買項目 :</p>
+                {detail.map((v,i)=>{
+              return(
+                <div key={i}>
+                <div className="d-flex border-bottom pb-3 d-md-flex d-none align-items-center">
+                  <div className="d-flex col-8 align-items-center">
+                    <img src={v.image}></img>
+                    <div>
+                      <p className="ms-3 size-7">商品名稱:{v.product_name}</p>
+                      <p className="ms-3 size-7">{v.type}</p>
+                      <p className="ms-3 size-7">NT${v.price}</p>
 
-                <div className="d-flex border-bottom pb-3 d-md-flex d-none">
-                  <div className="d-flex col-9">
-                    <img src="https://cdn-front.mao-select.com.tw//upload_files/fonlego-rwd/prodpic/D_1(12).jpg"></img>
-                    <p className="ms-3 size-7">巨型開放式貓砂盆 (多色)</p>
+                    </div>
                   </div>
                   <div className="col-1">
-                    <p className="ms-2 size-7">x1</p>
+                  <p className="ms-3 size-7">x{v.quantity}</p>
+
                   </div>
-                  <div className="col-2 size-7">
-                    <p>NT$690</p>
+                  <div className="ms-auto size-7 me-3">
+                  <p className="ms-3 size-7">NT${v.quantity*v.price}</p>
+
                   </div>
                 </div>
 
@@ -174,7 +181,7 @@ export default function Orderdetail() {
               )}
 
               </div>
-              
+              )
             })}
 
 

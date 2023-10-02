@@ -29,7 +29,7 @@ export default function OrderStatusFour({order}) {
                     return(
                       <div key={i}>
                         <p className='date my-3 size-7'>{v.created_at} 訂單編號 :{v.oid}</p>
-                        <div className='d-flex justify-content-between border-bottom'>
+                        <div className='d-flex justify-content-between border-bottom pb-3'>
                           <div>
                             <p className='size-7'>狀態 : {v.status_name}</p>
                             <p className='size-7'>付款方式 : {v.payment}</p>
@@ -40,7 +40,7 @@ export default function OrderStatusFour({order}) {
                           <div className='d-flex align-self-end'>
                             <img src={v.image} className='d-sm-block d-none' alt='產品圖片'></img>
                             <div className='d-flex align-self-center'>
-                              <Link className="btn btn-outline-confirm m-2 size-6" href={`/member/${v.oid}`}>查看明細</Link>
+                              <Link className="btn btn-outline-confirm m-2 size-6" href={`/member/order/${v.oid}`}>查看明細</Link>
                             </div>
                           </div>
                         </div>
