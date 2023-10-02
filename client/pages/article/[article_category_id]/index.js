@@ -1,10 +1,30 @@
-import React from "react";
+import { useState, useEffect } from "react";
 import BreadCrumb from "@/components/article/bread-crumb";
 import ArticleCatogory from "@/components/article/article-catogory";
 import ArticleListCard from "@/components/article/article-list-card";
 import Pagination from "@/components/pagination";
+import axios from "axios";
 
 export default function ArticleList() {
+  const [articlelist, setArticleList] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState(1);
+
+  const getArticleList = async () => {
+    await axios
+      .get(`http://localhost:3005/article/${setSelectedCategory}`)
+      .then((response) => {
+        const data = response.data.result;
+        console.log(data);
+        setArticleList(data);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  };
+  useEffect(() => {
+    getArticleList();
+  }, []);
+
   return (
     <>
       <div className="container mt-5">
@@ -16,52 +36,8 @@ export default function ArticleList() {
           <ArticleCatogory />
         </div>
 
-        <div className="row row-cols-1 row-cols-md-3 g-4 mb-5">
-          <div className="col">
-            <ArticleListCard />
-          </div>
-          <div className="col">
-            <ArticleListCard />
-          </div>
-          <div className="col">
-            <ArticleListCard />
-          </div>
-        </div>
-
-        <div className="row row-cols-1 row-cols-md-3 g-4 mb-5">
-          <div className="col">
-            <ArticleListCard />
-          </div>
-          <div className="col">
-            <ArticleListCard />
-          </div>
-          <div className="col">
-            <ArticleListCard />
-          </div>
-        </div>
-
-        <div className="row row-cols-1 row-cols-md-3 g-4 mb-5">
-          <div className="col">
-            <ArticleListCard />
-          </div>
-          <div className="col">
-            <ArticleListCard />
-          </div>
-          <div className="col">
-            <ArticleListCard />
-          </div>
-        </div>
-
-        <div className="row row-cols-1 row-cols-md-3 g-4 mb-5">
-          <div className="col">
-            <ArticleListCard />
-          </div>
-          <div className="col">
-            <ArticleListCard />
-          </div>
-          <div className="col">
-            <ArticleListCard />
-          </div>
+        <div>
+          <ArticleListCard category={selectedCategory} />
         </div>
 
         <div>

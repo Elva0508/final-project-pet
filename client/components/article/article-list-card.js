@@ -1,25 +1,52 @@
-import React from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
+import axios from "axios";
 
-export default function ArticleListCard() {
+export default function ArticleListCard({ category }) {
+  const [articleListCard, setArticleListCard] = useState([]);
+
+  const getArticleListCard = async () => {
+    await axios
+      .get(`http://localhost:3005/article/${category}`)
+      .then((response) => {
+        const data = response.data.result;
+        console.log(data);
+        setArticleListCard(data);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  };
+  useEffect(() => {
+    getArticleListCard();
+  }, [category]);
+
   return (
     <>
       <div className="article-list-card">
-        <Link href="/">
-          <div className="card h-100">
-            <img
-              src="https://www.pet-care.com.tw/Content/upload/News/143594e8-2512-4c18-9f34-9ca02045beca.jpeg"
-              className="card-img-top"
-              alt="..."
-            />
-            <div className="card-body">
-              <h5 className="card-title size-6 m-size-6">
-                何謂天然豆腐砂：讓貓咪擁有舒適的體驗
-              </h5>
-              <p className="card-text size-7 m-size-7">19.Aug.2023</p>
-            </div>
-          </div>
-        </Link>
+        <div className="row row-cols-1 row-cols-md-3 g-4 mb-5">
+          {articleListCard.map((v, i) => {
+            return (
+              <>
+                <div className="col">
+                  <Link href={`/article/${v.article_id}`}>
+                    <div className="card h-100" key={v.article_id}>
+                      <img src={v.img} alt="..." />
+                      <div className="card-body">
+                        <h5 className="card-title size-6 m-size-6">
+                          {v.title}
+                        </h5>
+                        <p className="card-text size-7 m-size-7">
+                          {v.published_date}
+                        </p>
+                      </div>
+                    </div>
+                  </Link>
+                </div>
+              </>
+            );
+          })}
+        </div>
       </div>
     </>
   );
