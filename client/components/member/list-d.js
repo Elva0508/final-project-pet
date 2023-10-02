@@ -13,24 +13,22 @@ import { RiFileList3Fill } from "react-icons/ri";
 export default function ListD() {
   return (
     <>
-      <div className="list-d col-3 d-md-block d-none m-2">
+      <div className="list-d col-3 d-md-block d-none">
         <div className="user">
-          <div className="d-flex">
+          <div className="d-flex justify-content-center">
             <img
               src="https://cdn-front.mao-select.com.tw//upload_files/fonlego-rwd/prodpic/D_A1VK080502.jpg"
               className="m-3"
             ></img>
-            <div className="d-flex flex-column justify-content-between mt-3">
+            <div className="d-flex flex-column justify-content-around mt-3">
               <div>
                 <h6 className="size-6">Hi,</h6>
                 <h6 className="size-6">使用者</h6>
               </div>
-              <button className="size-7 level">會員等級: 幼貓</button>
+              <button className="size-7 level">幼貓</button>
             </div>
           </div>
-          <div className="d-flex justify-content-end">
-            <button className="btn btn-confirm m-2 size-6">登出</button>
-          </div>
+
         </div>
 
         <ul className="text-center mt-5">

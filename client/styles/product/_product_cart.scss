@@ -16,7 +16,25 @@
         }
     }
 
+    .form-check-input:checked{
+        background-color: $text-main;
+        color: #fff;
+    }
+    .form-check-input{
+        border: 1px solid $text-main;
+        vertical-align: middle
+    }
+    .price{
+        color: $light-gray;
+        text-decoration: line-through
+    }
+    .newprice{
+        color: $price;
+    }
+
+
     .cart-d-content{
+ 
             thead{
                 border-top: 1px $light-gray solid;
                 border-bottom: 1px $light-gray solid;
