@@ -1,7 +1,45 @@
-import React from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 
 export default function Chatroom() {
+  const [chatContent, setChatContent] = useState({}); //內容設置的狀態
+  const [ws, setWs] = useState(null); // WebSocket連接的狀態
+  const [msgInputValue, setMsgInputValue] = useState(""); // 輸入框的值
+
+  // WebSocket連接
+  useEffect(() => {
+    const newWs = new WebSocket("ws://localhost:8080");
+
+    newWs.addEventListener("open", () => {
+      console.log("WebSocket連接已打開");
+      setWs(newWs); // 設置WebSocket連接
+    });
+
+    newWs.addEventListener("message", (event) => {
+      handleTextsend(event); // 處理WebSocket消息
+    });
+
+    return () => {
+      newWs.close(); //關掉處理WebSocket消息
+    };
+  }, []);
+
+  // 處理送出事件
+  const handleSendClick = () => {
+    if (ws) {
+      ws.send(msgInputValue);
+      setMsgInputValue(""); // 清空输入框的值
+    }
+  };
+
+  // 處理WebSocket消息
+  const handleTextsend = async (event) => {
+    if (event.data instanceof Blob) {
+      let text = await event.data.text();
+      console.log(text);
+      // 更新chatContent狀態或其他處理
+    }
+  };
   return (
     <>
       <div className="chatroom">
@@ -56,13 +94,21 @@ export default function Chatroom() {
           </div>
           <div class="input-group mb-3">
             <input
+              name="msg"
               type="text"
               class="form-control"
               placeholder="請輸入訊息內容"
               aria-label="Recipient's username"
               aria-describedby="button-addon2"
+              value={msgInputValue}
+              onChange={(e) => setMsgInputValue(e.target.value)}
             />
-            <button class="btn-second mx-1" type="button" id="button-addon2">
+            <button
+              class="btn-second mx-1"
+              type="button"
+              id="button-addon2"
+              onClick={handleSendClick}
+            >
               送出
             </button>
           </div>

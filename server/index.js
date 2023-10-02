@@ -90,6 +90,26 @@ app.get("/article/:cid/:id", (req, res) => {
   );
 });
 
+// 聊天室websocket
+const WebSocket = require("ws");
+const wss = new WebSocket.Server({ port: 8080 });
+
+wss.on("connection", (connection) => {
+  console.log("新的使用者已連線");
+
+  connection.on("message", (message) => {
+    const msg = message.toString("utf-8");
+    console.log("收到消息:", msg);
+    wss.clients.forEach((client) => {
+      client.send(msg);
+    });
+  });
+
+  connection.on("close", () => {
+    console.log("使用者已斷線");
+  });
+});
+
 app.listen(3005, () => {
   console.log("server is running");
 });
