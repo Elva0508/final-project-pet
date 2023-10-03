@@ -1,8 +1,9 @@
 const express = require("express");
 const router = require("express").Router();
 const app = express();
-app.use(express.json());
-
+//app.use(express.json());
+const multer = require("multer");
+const upload = multer();
 
 const jwt = require("jsonwebtoken");
 const secretKey = "thisistokensecretkey";
@@ -121,6 +122,7 @@ const Register = async (req, res) => {
 };
 
 const Login = async (req, res) => {
+  console.log(req.body)
   try {
     // 建立MySQL連接
     const connection = mysql.createConnection({
@@ -134,7 +136,7 @@ const Login = async (req, res) => {
     // 查詢用戶
     const { email, password } = req.body;
     const emailQuery = "SELECT * FROM users WHERE email = ?";
-    connection.query(emailQuery, [email], async (error, results) => {
+    connection.query(emailQuery,req.body.email, async (error, results) => {
       if (error) {
         console.error(error);
         return res.status(500).json({ error: "資料庫 Error" });
@@ -162,8 +164,8 @@ const Login = async (req, res) => {
       });
 
       // 更新refresh_token字段
-      const updateQuery = "UPDATE users SET refresh_token = ? WHERE user_id = ?";
-      connection.query(updateQuery, [refreshToken, userId], (updateError) => {
+      const updateQuery = "UPDATE users SET refresh_token = ? WHERE email = ?";
+      connection.query(updateQuery, [refreshToken, email], (updateError) => {
         if (updateError) {
           console.error(updateError);
           return res.status(500).json({ error: "Internal Server Error" });
@@ -177,7 +179,6 @@ const Login = async (req, res) => {
 
         // 關閉連接
         connection.end();
-        res.json({ msg: "Login Success" });
       });
     });
   } catch (error) {
@@ -187,6 +188,7 @@ const Login = async (req, res) => {
 };
 
 const Logout = async (req, res) => {
+  const { email, password } = req.body;
   try {
     const refreshToken = req.cookies.refreshToken;
 
@@ -200,17 +202,17 @@ const Logout = async (req, res) => {
       database: "cat",
     });
     // 查詢用戶
-    const query = "SELECT * FROM users WHERE refresh_token = ?";
-    const [rows] = await connection.promise().query(query, [refreshToken]);
+    const tokenQuery = "SELECT * FROM users WHERE refresh_token = ?";
+    const [rows] = await connection.promise().query(tokenQuery, [refreshToken]);
 
     if (rows.length === 0) return res.sendStatus(204);
 
     const user = rows[0];
 
     // 更新refresh_token字段為null
-    const userId = user.id;
-    const updateQuery = "UPDATE users SET refresh_token = null WHERE user_id = ?";
-    await connection.promise().query(updateQuery, [userId]);
+    //const userId = user.id;
+    const updateQuery = "UPDATE users SET refresh_token = null WHERE email = ?";
+    await connection.promise().query(updateQuery, [email]);
 
     // 關閉連接
     connection.end();
@@ -239,7 +241,7 @@ router.get("/", (req, res) => {
 router.get("/getUsers", getUsers);
 router.get("/users", verifyToken, getUsers);
 router.post("/users", Register);
-router.post("/login", Login);
+router.post("/login",upload.none() , Login);
 // router.get("/token", refreshToken);
 // router.delete("/logout", Logout);
 router.post("/users",(req, res) => {
