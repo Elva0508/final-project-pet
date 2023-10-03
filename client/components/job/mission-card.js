@@ -95,9 +95,5 @@ export default function MissionCard() {
             }
         </>
     )
-
-
-
-
 }
 

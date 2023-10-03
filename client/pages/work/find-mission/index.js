@@ -133,20 +133,20 @@ export default function MissionList() {
           <Sort />
         </div>
 
-        <section className='d-flex all-mission flex-column flex-lg-row'>
+        <section className='d-flex all-mission flex-column flex-lg-row mt-3'>
           {/* 最新任務桌機 */}
-          <div className='latest-mission d-none d-lg-flex flex-column'>
+          <div className='latest-mission latest-mission-pc d-none d-lg-flex flex-column'>
             <h3 className='size-4  '>最新任務</h3>
             <LatestMission />
-            <LatestMission />
+            
           </div>
           {/* 最新任務手機 */}
-          <div className='latest-mission d-lg-none mb-3 mt-1'>
+          <div className='latest-mission latest-mission-mobile d-lg-none mb-3 mt-1'>
             <h3 className='size-4'>最新任務</h3>
             <MobileLatestMission />
           </div>
           {/* 任務列表 */}
-          <div className='mission-list d-lg-flex flex-column justify-content-center'>
+          <div className='mission-list d-lg-flex justify-content-center'>
             {/* 不能使用d-flex d-lg-block block會導致MissionCard垂直排列 */}
             <div className='row d-flex mb-3 g-3 g-md-4'>
               {/* 使用g-3 不用justify-content-between 預設是start 卡片就會照順序排列 */}
