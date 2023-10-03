@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import Link from "next/link";
 import LoginForm from "@/components/user/loginForm";
 import RegisterForm from "@/components/user/registerForm";
-// import { useAuth } from "@/hooks/use-auth";
 
 import { AiFillGoogleCircle } from "react-icons/ai";
 import { BsLine } from "react-icons/bs";
@@ -71,12 +70,16 @@ export default function Login() {
           </div>
 
           {isLogin ?
-         ( <LoginForm
+         ( 
+    
+          <LoginForm
             user={user}
             error={error}
             handleFieldChange={handleFieldChange}
             handleSubmit={handleSubmit}
-          />) :(<RegisterForm 
+          />
+  
+          ) :(<RegisterForm 
             user={user}
             error={error}
             handleFieldChange={handleFieldChange}
@@ -120,7 +123,7 @@ export default function Login() {
             </a>
           </div>
 
-     <hr class="hr-divider"/>
+     <hr className="hr-divider"/>
           <div className="u-form-group"> 
             <div>使用其他方式登入</div>
             <div className="social-login my-2">
@@ -174,7 +177,7 @@ export default function Login() {
             </a>
           </div>
 
-     <hr class="hr-divider"/>
+     <hr className="hr-divider"/>
           <div className="u-form-group"> 
             <div>使用其他方式登入</div>
             <div className="social-login my-2">

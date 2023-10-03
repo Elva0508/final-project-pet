@@ -1,6 +1,9 @@
-import React from 'react'
+import React, {useContext} from 'react'
+import {useAuth} from '@/hooks/user-auth'
 
 export default function LoginForm({user, error,handleFieldChange,handleSubmit}) {
+  //const {login}=useAuth()
+
   return (
     <>
    <form className="email-signup" onSubmit={handleSubmit}>
@@ -29,7 +32,7 @@ export default function LoginForm({user, error,handleFieldChange,handleSubmit}) 
             </div>
           
             <div className="u-form-group">
-              <button className="btn-brown ">登入</button>
+              <button className="btn-brown" >登入</button>
             </div>
           </form>
     </>
