@@ -18,7 +18,7 @@
     .notice{
         p{
             font-weight: 600;
-            line-height: 0.5;
+            line-height: 1.5;
         }
     }
     .title{
@@ -157,6 +157,13 @@
             /* 当屏幕宽度小于等于1024px时应用的样式 */
             border: 0px ;
         }
+    }
+    .price{
+        color: $light-gray;
+        text-decoration: line-through
+    }
+    .newprice{
+        color: $price;
     }   
     .progress-part{
         p{

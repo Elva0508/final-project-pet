@@ -1,27 +1,31 @@
-import React,{useState,useEffect} from 'react'
-import {RiDeleteBin5Fill} from 'react-icons/Ri';
-import useRWD from '@/hooks/useRWD';
-import Footer from '@/components/footer';
+import React,{useState,useEffect } from 'react'
+import {RiDeleteBin5Fill} from 'react-icons/ri';
+import { useRouter } from 'next/router';
 import axios from "axios";
 // import moment from "moment";
 
 export default function Cart() {
+    const router = useRouter();
     const [cart, setCart] = useState([])
-    const [isChecked, setIsChecked] = useState(false);
+    const [isChecked, setIsChecked] = useState(true);
     const [coupon, setCoupon] = useState([])
     const [allPrice, setAllPrice] = useState(0)
-    const [selectedOption, setSelectedOption] = useState(["no",0])
-    const [discount, setDiscount] = useState(["no",0])
+    const [selectedOption, setSelectedOption] = useState(["no",0,0])
+    const [discount, setDiscount] = useState(["no",0,0])
     const [sale,setSale]=useState(0)
     const [freight,setFreight]=useState(100)
+
+    const buyLength=cart.filter((v)=>v.buy===true)
+
     let all=0
+
     //抓購物車內所有商品 ，並增加屬性
     const getCart =  () => {
          axios.get("http://localhost:3005/api/product/cart")
           .then((response) => {
             const data = response.data.result;
             const newData=data.map((v)=>{
-                return  { ...v, buy: false }
+                return  { ...v, buy: true }
             })
             setCart(newData)     
           })
@@ -31,21 +35,31 @@ export default function Cart() {
 
       }
     //抓可使用優惠券
-    const getCoupon = async () => {
+    const getCoupon =  async() => {   
         let data = await axios.get("http://localhost:3005/api/product/cart/coupon",{ params: {allPrice}})
           .then((response) => {
-            const data = response.data.result;
-            return data;
+            if(allPrice!==0){
+                const data = response.data.result;
+                setCoupon(data);
+            }
           })
           .catch((error) => {
             console.error("Error:", error);
             return {};
         });
-        setCoupon(data);
+
       }
     //第一次渲染，抓購物車內所有商品  
     useEffect(() => {
-        getCart()
+        let cartData
+        if (localStorage.getItem('cart')) {
+            // 如果有資料，將其轉換為JavaScript對象或陣列
+            cartData = JSON.parse(localStorage.getItem('cart'));
+            setCart(cartData)
+
+        }else{
+            getCart()
+        }
       }, []) 
     useEffect(() => {
         //判斷是否全選
@@ -58,13 +72,12 @@ export default function Cart() {
             }
         });
         setAllPrice(total);
-    // getCoupon()
     }, [cart])
       //判斷該引入哪些優惠券
     useEffect(() => {
         getCoupon()
         setSale(0)
-        setSelectedOption(["no",0])
+        setSelectedOption(["no",0,0])
     }, [allPrice])
     //判斷運費是0或是100
     useEffect(() => {
@@ -91,13 +104,10 @@ export default function Cart() {
     //是否全選
     const allChange=(cart,isChecked)=>{
         const isAllTrue = cart.find((v)=>v.buy === false)
-        const isAllFalse = cart.find((v)=>v.buy === true)
         if(isAllTrue===undefined){
             return true
-        }else if(isAllFalse===undefined){
-            return false
         }else{
-            return isChecked
+            return false
         }
     }
     //更改數量
@@ -146,8 +156,8 @@ export default function Cart() {
       } 
     //change優惠券
     const handleDiscountChange=(value)=>{
-        const[type,amount]=value.split(",")
-        setDiscount([type,amount])
+        const[type,amount,id]=value.split(",")
+        setDiscount([type,amount,id])
         if(type==="minus"){
             setSale(amount) 
         }else if(type==="off"){
@@ -156,16 +166,30 @@ export default function Cart() {
             setSale(0)
         }
     }
-  
+    //下一步
+    const saveCartToLocalStorage=()=>{
+        const buy=cart.find((v)=>v.buy===true)
+        if(buy){
+            localStorage.setItem('cart', JSON.stringify(cart));
+            localStorage.setItem('allPrice', allPrice);
+            localStorage.setItem('sale',sale );
+            localStorage.setItem('freight',freight );
+            localStorage.setItem('discount', discount);
+            router.push('/product/cart/checkout');
+        }else{
+            alert("請先勾選商品在進行結帳")
+        }
+
+    }  
     // let time=moment().format("YYYY MM DD")
 
   return (
     <>
-        <div className="cart">
+        <div className="cart mt-5">
             <div className='container'>
             {/* 步驟 */}
-                <div className='d-flex justify-content-center step text-center mb-sm-5 mb-4'>
-                    <div className='col-lg-2 col-sm-4 col-5 size-6 step1'>
+                <div className='d-flex justify-content-center step text-center  mb-4'>
+                    <div className='col-lg-2 col-sm-4 col-5 size-6 step1 '>
                         購物車
                     </div>
                     <div className='col-lg-2 col-sm-4 col-5 size-6  step2'>
@@ -182,7 +206,7 @@ export default function Cart() {
                                 <th className='text-center'><input type="checkbox"  className='form-check-input m-0 size-7' checked={isChecked} onChange={(e)=>{
                                     handleToggleSelectedAll(e.target.checked)
                                 }}/></th>
-                                <th>商品({cart.length})</th>
+                                <th>商品({buyLength.length})</th>
                                 <th>商品名稱</th>
                                 <th  className='text-center'>單價</th>
                                 <th  className='text-center'>數量</th>
@@ -269,7 +293,7 @@ export default function Cart() {
                                 <th className='text-center'><input type="checkbox" className='form-check-input m-0 m-size-7' checked={isChecked} onChange={(e)=>{
                                     handleToggleSelectedAll(e.target.checked)
                                 }}/></th>
-                                <th colSpan="4">我的購物車({cart.length})</th>                              
+                                <th colSpan="4">我的購物車({buyLength.length})</th>                              
                             </tr>
                         </thead>
                         <tbody>                           
@@ -340,10 +364,10 @@ export default function Cart() {
                             handleDiscountChange(e.target.value)
                             setSelectedOption(e.target.value)
                         }}>                           
-                            <option selected value={`no,${0}`}>請選擇</option>
+                            <option selected value={`no,${0},${0}`}>請選擇</option>
                             {coupon.map((v,i)=>{
                                 return(
-                                    <option key={`coupon${i}`} value={`${v.type},${v.amount}`}>{v.title}</option>
+                                    <option key={`coupon${i}`} value={`${v.type},${v.amount},${v.id}`}>{v.title}</option>
                                 )
                             })}
                         </select>
@@ -392,10 +416,9 @@ export default function Cart() {
             <div className='next py-2 size-7'>
                 <div className='container d-flex justify-content-end align-items-center'>
                     <p className='m-0 pe-2'>總計NT${allPrice-sale+freight}</p>
-                    <button className='btn btn-brown'>下一步</button>
+                    <button className='btn btn-brown' onClick={saveCartToLocalStorage}>下一步</button>
                 </div> 
-            </div>
-            <Footer />              
+            </div>           
         </div>
 
     </>
