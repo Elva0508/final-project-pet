@@ -1,7 +1,34 @@
-import React from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 
 export default function ChatList() {
+  const [chatList, setChatList] = useState([]); //聊天列表設置的狀態
+  const [ws, setWs] = useState(null); // WebSocket連接的狀態
+
+  // WebSocket連接
+  useEffect(() => {
+    //之後userId要改成登入者的userID
+    const userId = "aaa";
+    const newWs = new WebSocket("ws://localhost:8080");
+
+    // 設置WebSocket連接
+    newWs.addEventListener("open", () => {
+      console.log("WebSocket連接已打開");
+      let params = {
+        type: "register",
+        userId,
+      };
+      newWs.send(JSON.stringify(params));
+      setWs(newWs);
+    });
+
+    // 處理WebSocket消息
+    newWs.addEventListener("message", (event) => {});
+
+    return () => {
+      newWs.close(); //關掉處理WebSocket消息
+    };
+  }, []);
   return (
     <>
       <div className="chatlist">

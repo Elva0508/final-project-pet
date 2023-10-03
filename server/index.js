@@ -35,18 +35,71 @@ app.listen(3005, () => {
 const WebSocket = require("ws");
 const wss = new WebSocket.Server({ port: 8080 });
 
+const clients = {};
+
 wss.on("connection", (connection) => {
   console.log("新的使用者已連線");
 
   connection.on("message", (message) => {
     const msg = message.toString("utf-8");
-    console.log("收到消息:", msg);
-    wss.clients.forEach((client) => {
-      client.send(msg);
-    });
+    console.log(`收到消息=>${msg}`);
+    const parseMessage = JSON.parse(message);
+
+    if (parseMessage.type === "register") {
+      const userId = parseMessage.userId;
+      clients[userId] = connection;
+      connection.userId = userId;
+      const otherClients = Object.keys(clients);
+      wss.clients.forEach((client) => {
+        if (client.readyState === WebSocket.OPEN) {
+          client.send(
+            JSON.stringify({
+              type: "registered",
+              otherClients,
+            })
+          );
+        }
+      });
+      return false;
+    }
+
+    if (parseMessage.type === "message") {
+      const targetUserId = parseMessage.targetUserId;
+      const fromID = targetUserId.fromID;
+      const chatmsg = parseMessage.message;
+      if (targetUserId) {
+        let targetClient = clients[targetUserId];
+        if (targetClient.readyState === WebSocket.OPEN) {
+          targetClient.send(
+            JSON.stringify({
+              type: "message",
+              message: chatmsg,
+              fromID,
+              private: true,
+            })
+          );
+        }
+      }
+      return false;
+    }
   });
 
   connection.on("close", () => {
     console.log("使用者已斷線");
+    if (connection.userId) {
+      delete clients[connection.userId];
+    }
+    const otherClients = Object.keys(clients);
+    wss.clients.forEach((client) => {
+      if (client.readyState === WebSocket.OPEN) {
+        client.send(
+          JSON.stringify({
+            type: "disconnected",
+            otherClients,
+            disconnectedID: connection.userId,
+          })
+        );
+      }
+    });
   });
 });

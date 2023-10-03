@@ -2,21 +2,31 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 
 export default function Chatroom() {
-  const [chatContent, setChatContent] = useState({}); //內容設置的狀態
+  const [chatContent, setChatContent] = useState([]); //內容設置的狀態
   const [ws, setWs] = useState(null); // WebSocket連接的狀態
   const [msgInputValue, setMsgInputValue] = useState(""); // 輸入框的值
+
+  //之後userId要改成登入者的userID
+  const userId = "aaa";
 
   // WebSocket連接
   useEffect(() => {
     const newWs = new WebSocket("ws://localhost:8080");
 
+    // 設置WebSocket連接
     newWs.addEventListener("open", () => {
       console.log("WebSocket連接已打開");
-      setWs(newWs); // 設置WebSocket連接
+      let params = {
+        type: "register",
+        userId,
+      };
+      newWs.send(JSON.stringify(params));
+      setWs(newWs);
     });
 
+    // 處理WebSocket消息
     newWs.addEventListener("message", (event) => {
-      handleTextsend(event); // 處理WebSocket消息
+      handleTextsend(event);
     });
 
     return () => {
@@ -34,12 +44,36 @@ export default function Chatroom() {
 
   // 處理WebSocket消息
   const handleTextsend = async (event) => {
-    if (event.data instanceof Blob) {
-      let text = await event.data.text();
-      console.log(text);
-      // 更新chatContent狀態或其他處理
+    let result = JSON.parse(event.data);
+    let clientList;
+    if (result.type === "registered") {
+      clientList = result.otherClients;
+      setClients();
+      return false;
     }
+    if (result.type === "message") {
+      return false;
+    }
+    if (result.type === "disconnected") {
+      return false;
+    }
+
+    function setClients() {
+      console.log(clientList);
+      let DOMS = "";
+      clientList.forEach((client) => {
+        let myself = client === userId ? "myself" : "";
+        DOMS += `<div className='${myself}'>${client}<div>`;
+      });
+    }
+
+    // 新增一塊聊天框框
+    const newMessage = {};
+
+    //更新聊天內容
+    setChatContent((prevContent) => [...prevContent, newMessage]);
   };
+
   return (
     <>
       <div className="chatroom">
@@ -73,15 +107,15 @@ export default function Chatroom() {
                   <span>客服小幫手</span>
                 </div>
                 <div className="size-7 m-size-7 rounded-pill content py-1 px-2">
-                  我跟你說你不要跟別人說
+                  您好，請問有什麼需要為您服務的嗎？
                 </div>
               </div>
             </div>
             {/* 自己 */}
             <div className="user p-3">
-              <div className="d-flex align-items-center justify-content-end">
+              <div className="d-flex align-items-center justify-content-end my-1 chat-box">
                 <div className="size-7 m-size-7 rounded-pill content py-1 px-2">
-                  我跟你說你不要跟別人說
+                  沒有
                 </div>
                 <div className="avatar rounded-circle mr-3 overflow-hidden rounded-circle ms-2">
                   <img
@@ -92,11 +126,11 @@ export default function Chatroom() {
               </div>
             </div>
           </div>
-          <div class="input-group mb-3">
+          <div className="input-group mb-3">
             <input
               name="msg"
               type="text"
-              class="form-control"
+              className="form-control"
               placeholder="請輸入訊息內容"
               aria-label="Recipient's username"
               aria-describedby="button-addon2"
@@ -104,7 +138,7 @@ export default function Chatroom() {
               onChange={(e) => setMsgInputValue(e.target.value)}
             />
             <button
-              class="btn-second mx-1"
+              className="btn-second mx-1"
               type="button"
               id="button-addon2"
               onClick={handleSendClick}
