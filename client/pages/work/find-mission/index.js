@@ -146,7 +146,7 @@ export default function MissionList() {
             <MobileLatestMission />
           </div>
           {/* 任務列表 */}
-          <div className='mission-list d-lg-flex justify-content-center'>
+          <div className='mission-list d-lg-flex justify-content-center align-items-start'>
             {/* 不能使用d-flex d-lg-block block會導致MissionCard垂直排列 */}
             <div className='row d-flex mb-3 g-3 g-md-4'>
               {/* 使用g-3 不用justify-content-between 預設是start 卡片就會照順序排列 */}
