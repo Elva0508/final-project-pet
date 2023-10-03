@@ -21,7 +21,8 @@ router.get("/", (req, res) => {
      JOIN order_status AS os ON o.status_id = os.status_id 
      JOIN order_payment AS op ON o.order_payment = op.id 
      JOIN order_shipment AS oship ON o.order_shipment = oship.id 
-     WHERE o.user_id = 1;`
+     WHERE o.user_id = 1
+     ORDER BY o.created_at DESC;`
           ,(error,result)=>{
           res.json({result})
           }
