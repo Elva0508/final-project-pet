@@ -3,7 +3,7 @@ import { BiSolidDownArrow, BiSolidUpArrow } from "react-icons/bi";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 
-const Filter = ({ items, src, onClick }) => {
+const Filter = ({ items, src, onClick, order }) => {
   const dropDownRef = useRef(null);
   const [anchorEl, setAnchorEl] = useState(null);
   const handleClick = (event) => {
@@ -45,18 +45,39 @@ const Filter = ({ items, src, onClick }) => {
         onClose={handleClose}
         className="drop-down-filter-menu"
       >
-        {items?.children?.map((item) => (
-          <MenuItem
-            onClick={() => {
-              handleClose();
-              if (onClick) {
-                onClick(item.value, items.value);
-              }
-            }}
-          >
-            <span value={item.value}>{item.label}</span>
-          </MenuItem>
-        ))}
+        {items?.children?.map((item) => {
+          if (
+            order &&
+            order.value === item.value &&
+            order.parentValue === items.value
+          ) {
+            return (
+              <MenuItem
+                disabled={true}
+                onClick={() => {
+                  handleClose();
+                  if (onClick) {
+                    onClick(item.value, items.value);
+                  }
+                }}
+              >
+                <span value={item.value}>{item.label}</span>
+              </MenuItem>
+            );
+          }
+          return (
+            <MenuItem
+              onClick={() => {
+                handleClose();
+                if (onClick) {
+                  onClick(item.value, items.value);
+                }
+              }}
+            >
+              <span value={item.value}>{item.label}</span>
+            </MenuItem>
+          );
+        })}
       </Menu>
     </div>
   );

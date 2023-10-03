@@ -12,7 +12,6 @@ const storage = multer.diskStorage({
     cb(null, uniqueSuffix + "-" + file.originalname); // 設置上傳文件的文件名
   },
 });
-
 const upload = multer({ storage: storage });
 
 router.get("/helpers/famous", (req, res) => {
@@ -48,20 +47,176 @@ router.get("/helpers/famous", (req, res) => {
   }
 });
 
-router.get("/helpers/order", (req, res) => {
+router.get("/helpers/order", async (req, res) => {
   // 排序小幫手資料
-  const { filterType, orderType, orderWay } = req.query;
-  const filters = `AND h.${filterType}_service = 1`;
+  const { filterType, orderType, orderWay, page } = req.query;
+  console.log(orderType, orderWay, page);
+  const pageSize = 18;
+  const limitRows = (page - 1) * 18;
+  const filters = ``;
+  let totalRows;
   if (filterType === "all") {
-    orders(res, "feed", orderType, orderWay, "");
-    // res.send({ status: 200, data: result });
+    // orders(res, "feed", orderType, orderWay, "", limitRows, pageSize);
+    try {
+      totalRows = await new Promise((resolve, reject) => {
+        return conn.execute(
+          `SELECT COUNT(*) AS totalRows FROM mission_helper_info WHERE valid = ?`,
+          [1],
+          (err, results) => {
+            if (err) {
+              reject({ status: 500, error: "查詢錯誤" });
+            }
+            resolve(results[0].totalRows);
+          }
+        );
+      });
+    } catch (err) {
+      console.log(err);
+    }
+
+    if (orderType === "price") {
+      // 依服務價格排序
+      conn.execute(
+        `SELECT h.*,u.cover_photo,r.review_count,r.average_star FROM mission_helper_info h LEFT JOIN (SELECT helper_id, SUM(star_rating) /  COUNT(*) AS average_star , COUNT(*) AS review_count FROM mission_helper_reviews GROUP BY helper_id) r ON h.user_id = r.helper_id LEFT JOIN userinfo u ON h.user_id = u.user_id WHERE h.valid = ?  ORDER by h.feed_price ${orderWay} LIMIT ?,?`,
+        [1, limitRows, pageSize],
+        (err, result) => {
+          if (err) {
+            console.log(err);
+            return err;
+          }
+          return res.send({ status: 200, data: result, totalRows });
+        }
+      );
+    } else if (orderType === "hot") {
+      // 依熱門程度排序
+      conn.execute(
+        `SELECT h.*,u.cover_photo,r.review_count,r.average_star FROM mission_helper_info h LEFT JOIN (SELECT helper_id, SUM(star_rating) /  COUNT(*) AS average_star , COUNT(*) AS review_count FROM mission_helper_reviews GROUP BY helper_id) r  ON h.user_id = r.helper_id  LEFT JOIN userinfo u ON h.user_id = u.user_id WHERE h.valid = ? ORDER by r.review_count ${orderWay} LIMIT ?,?`,
+        [1, limitRows, pageSize],
+        (err, result) => {
+          if (err) {
+            console.log(err);
+            return err;
+          }
+          return res.send({ status: 200, data: result, totalRows });
+        }
+      );
+    } else if (orderType === "rating") {
+      // 依評分高低排序
+      conn.execute(
+        `SELECT DISTINCT h.*, u.cover_photo, CAST(r.average_star AS DECIMAL(10, 2)) AS average_star, r.review_count
+    FROM mission_helper_info h
+    LEFT JOIN (
+      SELECT helper_id, SUM(star_rating) / COUNT(*) AS average_star, COUNT(*) AS review_count
+      FROM mission_helper_reviews
+      GROUP BY helper_id
+    ) r ON h.user_id = r.helper_id
+    LEFT JOIN userinfo u ON h.user_id = u.user_id
+    WHERE h.valid = ? ORDER BY average_star ${orderWay}
+    LIMIT ?,?`,
+        [1, limitRows, pageSize],
+        (err, result) => {
+          if (err) {
+            console.log(err);
+            return err;
+          }
+          return res.send({ status: 200, data: result, totalRows });
+        }
+      );
+    }
   } else {
-    orders(res, filterType, orderType, orderWay, filters);
+    // orders(res, filterType, orderType, orderWay, filters, limitRows, pageSize);
+
+    try {
+      totalRows = await new Promise((resolve, reject) => {
+        return conn.execute(
+          `SELECT COUNT(*) AS totalRows FROM mission_helper_info WHERE valid = ? AND ${filterType}_service = ?`,
+          [1, 1],
+          (err, results) => {
+            if (err) {
+              reject({ status: 500, error: "查詢錯誤" });
+            }
+            resolve(results[0].totalRows);
+          }
+        );
+      });
+    } catch (err) {
+      console.log(err);
+    }
+
+    if (orderType === "price") {
+      // 依服務價格排序
+      conn.execute(
+        `SELECT h.*,u.cover_photo,r.review_count,r.average_star FROM mission_helper_info h LEFT JOIN (SELECT helper_id, SUM(star_rating) /  COUNT(*) AS average_star , COUNT(*) AS review_count FROM mission_helper_reviews GROUP BY helper_id) r ON h.user_id = r.helper_id LEFT JOIN userinfo u ON h.user_id = u.user_id WHERE h.valid = ? AND ${filterType}_service= ? ORDER by h.${filterType}_price ${orderWay} LIMIT ?,?`,
+        [1, 1, limitRows, pageSize],
+        (err, result) => {
+          if (err) {
+            console.log(err);
+            return err;
+          }
+          return res.send({ status: 200, data: result, totalRows });
+        }
+      );
+    } else if (orderType === "hot") {
+      // 依熱門程度排序
+      conn.execute(
+        `SELECT h.*,u.cover_photo,r.review_count,r.average_star FROM mission_helper_info h LEFT JOIN (SELECT helper_id, SUM(star_rating) /  COUNT(*) AS average_star , COUNT(*) AS review_count FROM mission_helper_reviews GROUP BY helper_id) r  ON h.user_id = r.helper_id  LEFT JOIN userinfo u ON h.user_id = u.user_id WHERE h.valid = ? AND ${filterType}_service= ? ORDER by r.review_count ${orderWay} LIMIT ?,?`,
+        [1, 1, limitRows, pageSize],
+        (err, result) => {
+          if (err) {
+            console.log(err);
+            return err;
+          }
+          return res.send({ status: 200, data: result, totalRows });
+        }
+      );
+    } else if (orderType === "rating") {
+      // 依評分數高低排序
+      conn.execute(
+        `SELECT DISTINCT h.*, u.cover_photo, CAST(r.average_star AS DECIMAL(10, 2)) AS average_star, r.review_count
+        FROM mission_helper_info h
+        LEFT JOIN (
+          SELECT helper_id, SUM(star_rating) / COUNT(*) AS average_star, COUNT(*) AS review_count
+          FROM mission_helper_reviews
+          GROUP BY helper_id
+        ) r ON h.user_id = r.helper_id
+        LEFT JOIN userinfo u ON h.user_id = u.user_id
+        WHERE h.valid = ? AND ${filterType}_service= ?
+        ORDER BY average_star ${orderWay}
+        LIMIT ?,?`,
+        [1, 1, limitRows, pageSize],
+        (err, result) => {
+          if (err) {
+            console.log(err);
+            return err;
+          }
+
+          return res.send({ status: 200, data: result, totalRows });
+        }
+      );
+    }
   }
 });
 
-router.get("/helpers/search", (req, res) => {
+router.get("/helpers/search", async (req, res) => {
   const { search } = req.query;
+  let totalRows;
+  try {
+    totalRows = await new Promise((resolve, reject) => {
+      return conn.execute(
+        `SELECT COUNT(*) AS totalRows FROM mission_helper_info WHERE valid = ? AND (name LIKE ? OR email LIKE ? OR phone LIKE ?)`,
+        [1, `%${search}%`, `%${search}%`, `%${search}%`],
+        (err, results) => {
+          if (err) {
+            reject({ status: 500, error: "查詢錯誤" });
+          }
+          resolve(results[0].totalRows);
+        }
+      );
+    });
+  } catch (e) {
+    console.log(e);
+  }
+
   conn.execute(
     `SELECT h.*, u.cover_photo, r.review_count, r.average_star
     FROM mission_helper_info h
@@ -73,14 +228,14 @@ router.get("/helpers/search", (req, res) => {
     LEFT JOIN userinfo u ON h.user_id = u.user_id
     WHERE h.valid = ? AND (h.name LIKE ? OR h.email LIKE ? OR h.phone LIKE ?)
     LIMIT ?, ?`,
-    [1, `%${search}%`, `%${search}%`, `%${search}%`, 0, 8],
+    [1, `%${search}%`, `%${search}%`, `%${search}%`, 0, 18],
     (err, result) => {
       if (err) {
         console.log(err);
         return false;
       }
 
-      return res.send({ status: 200, data: result });
+      return res.send({ status: 200, data: result, totalRows });
     }
   );
 });
@@ -88,32 +243,62 @@ router.get("/helpers/search", (req, res) => {
 router.get("/helpers", (req, res) => {
   // sql所有開啟小幫手功能的小幫手資料 & 依類型篩選小幫手資料
 
-  const { type } = req.query;
-  console.log(type);
+  const { type, page } = req.query;
+  const pageSize = 18;
+  const limitRows = (page - 1) * 18;
+  let totalRows;
   if (type === "all") {
     conn.execute(
-      "SELECT h.*,u.cover_photo,r.review_count,r.average_star FROM `mission_helper_info` h LEFT JOIN `userinfo` u ON h.user_id = u.user_id LEFT JOIN (SELECT helper_id ,COUNT(*) AS review_count , SUM(star_rating) /  COUNT(*) AS average_star FROM mission_helper_reviews GROUP BY helper_id) r ON h.user_id = r.helper_id WHERE `valid`=? LIMIT ?,?",
-      [1, 0, 15],
-      (err, result) => {
-        // 一次只撈15筆資料
+      "SELECT COUNT(*) AS totalRows FROM `mission_helper_info` WHERE `valid`=?",
+      [1],
+
+      (err, results) => {
+        // 先查詢總筆數
         if (err) {
           console.log(err);
-          return;
+          res.status(500).send({ status: 500, msg: "查詢失敗" });
         }
-        res.send({ status: 200, data: result });
+        totalRows = results[0].totalRows;
+        // console.log(totalRows);
+
+        // 篩資料
+        conn.execute(
+          "SELECT h.*,u.cover_photo,r.review_count,r.average_star FROM `mission_helper_info` h LEFT JOIN `userinfo` u ON h.user_id = u.user_id LEFT JOIN (SELECT helper_id ,COUNT(*) AS review_count , SUM(star_rating) /  COUNT(*) AS average_star FROM mission_helper_reviews GROUP BY helper_id) r ON h.user_id = r.helper_id WHERE `valid`=? LIMIT ?,?",
+          [1, limitRows, pageSize],
+          (err, result) => {
+            // 一次只撈18筆資料
+            if (err) {
+              console.log(err);
+              return;
+            }
+            res.send({ status: 200, data: result, totalRows });
+          }
+        );
       }
     );
   } else if (type) {
     // 依類型篩選
     conn.execute(
-      `SELECT * FROM mission_helper_info h LEFT JOIN userinfo u ON h.user_id = u.user_id LEFT JOIN (SELECT helper_id ,COUNT(*) AS review_count , SUM(star_rating) /  COUNT(*) AS average_star FROM mission_helper_reviews GROUP BY helper_id) r ON h.user_id = r.helper_id WHERE ${type}_service=? AND valid=? LIMIT ?,?`,
-      [true, 1, 0, 15],
-      (err, result) => {
+      `SELECT COUNT(*) AS totalRows FROM mission_helper_info WHERE ${type}_service=? AND valid=?`,
+      [1, 1],
+      (err, results) => {
         if (err) {
           console.log(err);
-          return;
+          res.status(500).send({ status: 500, msg: "查詢失敗" });
         }
-        res.send({ status: 200, data: result });
+        totalRows = results[0].totalRows;
+
+        conn.execute(
+          `SELECT * FROM mission_helper_info h LEFT JOIN userinfo u ON h.user_id = u.user_id LEFT JOIN (SELECT helper_id ,COUNT(*) AS review_count , SUM(star_rating) /  COUNT(*) AS average_star FROM mission_helper_reviews GROUP BY helper_id) r ON h.user_id = r.helper_id WHERE ${type}_service=? AND valid=? LIMIT ?,?`,
+          [true, 1, limitRows, pageSize],
+          (err, result) => {
+            if (err) {
+              console.log(err);
+              return;
+            }
+            res.send({ status: 200, data: result, totalRows });
+          }
+        );
       }
     );
   }
@@ -268,33 +453,76 @@ router.post("/mission", upload.array("missionImage"), async (req, res) => {
 });
 module.exports = router;
 
-function orders(res, filterType, orderType, orderWay, filters) {
+async function orders(
+  res,
+  filterType,
+  orderType,
+  orderWay,
+  filters,
+  limitRows,
+  pageSize
+) {
+  let totalRows;
+  try {
+    totalRows = await new Promise((resolve, reject) => {
+      if (filterType === "all") {
+        return conn.execute(
+          `SELECT COUNT(*) AS totalRows FROM mission_helper_info WHERE valid = ?`,
+          [1],
+          (err, results) => {
+            if (err) {
+              reject({ status: 500, error: "查詢錯誤" });
+            }
+            console.log(results);
+            resolve(results[0].totalRows);
+          }
+        );
+      } else {
+        return conn.execute(
+          `SELECT COUNT(*) AS totalRows FROM mission_helper_info WHERE valid = ? AND ${filterType}_service = ?`,
+          [1, 1],
+          (err, results) => {
+            if (err) {
+              reject({ status: 500, error: "查詢錯誤" });
+            }
+            console.log(results);
+            resolve(results[0].totalRows);
+          }
+        );
+      }
+    });
+  } catch (err) {
+    console.log(err);
+    // res.status(500).send({ status: 500, error: "查詢錯誤" });
+  }
+
+  // console.log("total=" + totalRows);
+
   // 依服務價格排序
   if (orderType === "price") {
     conn.execute(
       `SELECT h.*,u.cover_photo,r.review_count,r.average_star FROM mission_helper_info h LEFT JOIN (SELECT helper_id, SUM(star_rating) /  COUNT(*) AS average_star , COUNT(*) AS review_count FROM mission_helper_reviews GROUP BY helper_id) r ON h.user_id = r.helper_id LEFT JOIN userinfo u ON h.user_id = u.user_id WHERE h.valid = ? ${filters} ORDER by h.${filterType}_price ${orderWay} LIMIT ?,?`,
-      [1, 0, 15],
+      [1, limitRows, pageSize],
       (err, result) => {
         if (err) {
           console.log(err);
           return err;
         }
-        console.log(result);
-        return res.send({ status: 200, data: result });
+        return res.send({ status: 200, data: result, totalRows });
       }
     );
   } else if (orderType === "hot") {
     // 依熱門程度排序
     conn.execute(
       `SELECT h.*,u.cover_photo,r.review_count,r.average_star FROM mission_helper_info h LEFT JOIN (SELECT helper_id, SUM(star_rating) /  COUNT(*) AS average_star , COUNT(*) AS review_count FROM mission_helper_reviews GROUP BY helper_id) r  ON h.user_id = r.helper_id  LEFT JOIN userinfo u ON h.user_id = u.user_id WHERE h.valid = ? ${filters} ORDER by r.review_count ${orderWay} LIMIT ?,?`,
-      [1, 0, 15],
+      [1, limitRows, pageSize],
       (err, result) => {
         if (err) {
           console.log(err);
           return err;
         }
-        console.log(result);
-        return res.send({ status: 200, data: result });
+
+        return res.send({ status: 200, data: result, totalRows });
       }
     );
   } else if (orderType === "rating") {
@@ -311,14 +539,14 @@ function orders(res, filterType, orderType, orderWay, filters) {
       WHERE h.valid = ? ${filters}
       ORDER BY average_star ${orderWay}
       LIMIT ?,?`,
-      [1, 0, 15],
+      [1, limitRows, pageSize],
       (err, result) => {
         if (err) {
           console.log(err);
           return err;
         }
-        console.log(result);
-        return res.send({ status: 200, data: result });
+
+        return res.send({ status: 200, data: result, totalRows });
       }
     );
   }
@@ -327,9 +555,11 @@ function orders(res, filterType, orderType, orderWay, filters) {
 const transferDate = (date) => {
   const originDate = date;
   const transferDate = new Date(originDate);
+  console.log(date, transferDate);
   const year = transferDate.getFullYear();
   const month = transferDate.getMonth() + 1;
   const day = transferDate.getDate();
+  console.log(day);
   const newFormat = `${year}年${month}月${day}日`;
   return newFormat;
 };

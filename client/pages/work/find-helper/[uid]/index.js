@@ -12,6 +12,7 @@ import workService from "@/services/work-service";
 import { GoStarFill } from "react-icons/go";
 import Rating from "@mui/material/Rating";
 import StarIcon from "@mui/icons-material/Star";
+import { Button, Modal } from "antd";
 // register Swiper custom elements
 register();
 
@@ -131,14 +132,92 @@ export const HelperDetailSticky = () => {
       <p className="get-price-number size-4 m-0">
         NT$<span>500</span>/次
       </p>
-      <button className="get-price-btn btn-second d-flex  align-items-center justify-content-center">
-        <FiSend className="get-price-icon" />
-        查看報價
-      </button>
+      <Quotation />
     </section>
   );
 };
-
+const Quotation = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+  const handleOk = () => {
+    setIsModalOpen(false);
+  };
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
+  return (
+    <div>
+      <button
+        onClick={showModal}
+        className="get-price-btn btn-second d-flex  align-items-center justify-content-center"
+      >
+        <FiSend className="get-price-icon" />
+        查看報價
+      </button>
+      <Modal
+        title="預約細節"
+        open={isModalOpen}
+        onOk={handleOk}
+        onCancel={handleCancel}
+        className="req-quotation"
+      >
+        <div className="d-flex justify-content-between">
+          <p>寵物</p>
+          <div>選擇寵物</div>
+        </div>
+        <div className="d-flex justify-content-between">
+          <p>開始日期</p>
+          <div>選擇開始日期</div>
+        </div>
+        <div className="d-flex justify-content-between">
+          <p>結束日期</p>
+          <div>選擇結束日期</div>
+        </div>
+        <div className="d-flex justify-content-between">
+          <p>地點</p>
+          <div>台灣桃園市楊梅區環南路309巷13號</div>
+        </div>
+        <div className="d-flex justify-content-between">
+          <p>備註</p>
+          <input
+            type="text"
+            placeholder="輸入備註或是您毛小孩的需求與個性狀況"
+          />
+        </div>
+        <div className="divider my-2"></div>
+        <div className="col-md-6 col-8 offset-md-6 offset-4 settlement-amount ">
+          <div className="d-flex justify-content-between">
+            <p className="">小計</p>
+            <p>
+              NT$<span>400</span>
+            </p>
+          </div>
+          <div className="d-flex justify-content-between">
+            <p>天數</p>
+            <p>x1</p>
+          </div>
+          <div className="d-flex justify-content-between">
+            <p>服務時間(每30分鐘)</p>
+            <p>x1</p>
+          </div>
+          <div className="d-flex justify-content-between">
+            <p>每天次數</p>
+            <p>x2</p>
+          </div>
+          <div className="divider"></div>
+          <div className="d-flex justify-content-between">
+            <p>總金額</p>
+            <p>
+              NT$<span>800</span>
+            </p>
+          </div>
+        </div>
+      </Modal>
+    </div>
+  );
+};
 const HelperDetail = () => {
   const router = useRouter();
   const { uid } = router.query;

@@ -1,7 +1,8 @@
 import React, { useRef } from "react";
+import { set } from "react-hook-form";
 import { BiSearchAlt } from "react-icons/bi";
 
-const Search = ({ placeholder, color, onClick }) => {
+const Search = ({ placeholder, color, onClick, search, setSearch }) => {
   const rippleBtnRef = useRef(null);
   const inputRef = useRef(null);
   const handleRipple = () => {
@@ -14,7 +15,17 @@ const Search = ({ placeholder, color, onClick }) => {
 
   return (
     <div className="job-search">
-      <input type="text" placeholder={placeholder || ""} ref={inputRef} />
+      <input
+        id="search-input"
+        type="text"
+        placeholder={placeholder || ""}
+        ref={inputRef}
+        value={search}
+        onChange={(e) => {
+          console.log(e.target.value);
+          setSearch(e.target.value);
+        }}
+      />
       <button
         onClick={() => {
           handleRipple();

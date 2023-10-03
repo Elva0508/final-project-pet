@@ -1,14 +1,14 @@
-import React, { useEffect, useState, Component } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import Filter from "../../../components/job/filter";
 import LatestMission from "../../../components/job/latest-mission";
 import RoleSelection from "../../../components/job/role-selection";
-import Search from "../../../components/job/search";
 import { Swiper, SwiperSlide } from "swiper/react";
 import useRWD from "@/hooks/useRWD";
 import { register } from "swiper/element/bundle";
 import { Carousel } from "@trendyol-js/react-carousel";
 import { AiOutlineLeftCircle, AiOutlineRightCircle } from "react-icons/ai";
+import { BsArrowBarRight } from "react-icons/bs";
 import WorkService from "@/services/work-service";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
@@ -17,27 +17,80 @@ import { Rate } from "antd";
 import Rating from "@mui/material/Rating";
 import StarIcon from "@mui/icons-material/Star";
 import { Pagination } from "antd";
+import { BiSearchAlt } from "react-icons/bi";
 register();
 // Import Swiper styles
 import "swiper/css";
 import "swiper/css/navigation";
 
+const Search = ({
+  handleSearch,
+  placeholder,
+  color,
+  onClick,
+  search,
+  setSearch,
+}) => {
+  const rippleBtnRef = useRef(null);
+  const handleRipple = () => {
+    const btn = rippleBtnRef.current;
+    btn.classList.add("ripple");
+    setTimeout(() => {
+      btn.classList.remove("ripple");
+    }, 500); //動畫持續時間結束後移除動畫效果，讓動畫可以重複使用
+  };
+
+  return (
+    <div className="job-search">
+      <input
+        type="text"
+        placeholder={"搜尋小幫手"}
+        value={search}
+        onChange={(e) => {
+          console.log(e.target.value);
+          setSearch(e.target.value);
+        }}
+      />
+      <button
+        onClick={() => {
+          handleRipple();
+          handleSearch();
+        }}
+        ref={rippleBtnRef}
+      >
+        <BiSearchAlt className="job-search-icon" />
+      </button>
+    </div>
+  );
+};
 const MobileFilter = ({
   allHelpers,
   setAllHelpers,
   filterType,
   setFilterType,
+  order,
+  setOrder,
+  setPage,
+  setTotalRows,
+  setCurrentSearch,
 }) => {
   const [titleContent, setTitleContent] = useState("服務類型");
   const handleType = (value) => {
+    if (value === filterType) {
+      return;
+    }
+    setPage(1);
     setFilterType(value);
+    setCurrentSearch(null);
   };
   const handleOrder = (value, parentValue) => {
-    console.log(value, parentValue);
-    WorkService.getOrderHelper(filterType, parentValue, value)
+    setPage(1);
+    setOrder({ value, parentValue });
+    WorkService.getOrderHelper(filterType, parentValue, value, 1)
       .then((response) => {
         console.log(response);
         setAllHelpers(response?.data.data);
+        setTotalRows(response?.data?.totalRows);
       })
       .catch((e) => {
         console.log(e);
@@ -60,7 +113,7 @@ const MobileFilter = ({
         break;
     }
   }, [filterType]);
-  console.log(titleContent);
+
   return (
     <Swiper slidesPerView="auto" className="mobile-filter">
       <SwiperSlide>
@@ -76,6 +129,7 @@ const MobileFilter = ({
           }}
           src={"/job-icon/plus-service.svg"}
           onClick={handleType}
+          order={order}
         />
       </SwiperSlide>
       <SwiperSlide>
@@ -90,6 +144,7 @@ const MobileFilter = ({
           }}
           src={"/job-icon/Heart-price.svg"}
           onClick={handleOrder}
+          order={order}
         />
       </SwiperSlide>
       <SwiperSlide>
@@ -104,6 +159,7 @@ const MobileFilter = ({
           }}
           src={"/job-icon/Discovery-date.svg"}
           onClick={handleOrder}
+          order={order}
         />
       </SwiperSlide>
       <SwiperSlide>
@@ -118,6 +174,7 @@ const MobileFilter = ({
           }}
           src={"/job-icon/Discovery-date.svg"}
           onClick={handleOrder}
+          order={order}
         />
       </SwiperSlide>
     </Swiper>
@@ -133,7 +190,7 @@ const FamousHelperCard = ({ ...helper }) => {
   const toggleFavorite = () => {
     setIsFavorite(!isFavorite); // 切換收藏狀態
   };
-  console.log("fa", helper);
+
   return (
     <>
       <div className="famous-helper-card d-flex align-items-center">
@@ -256,11 +313,10 @@ const SingleHelperCard = ({ ...helper }) => {
     { label: "安親寄宿", value: parseInt(helper.home_service) },
     { label: "到府美容", value: parseInt(helper.beauty_service) },
   ];
-  console.log(typeof parseFloat(helper.average_star), helper.average_star);
   const servicePrice = [];
   return (
     <>
-      <div className="single-card d-flex flex-column align-items-center col-4">
+      <div className="single-card d-flex flex-column align-items-center">
         <img
           className="single-card-img"
           src={helper.cover_photo}
@@ -325,12 +381,17 @@ const MissionHelperList = () => {
   const [allHelpers, setAllHelpers] = useState([]);
   const [famous, setFamous] = useState([]);
   const [filterType, setFilterType] = useState("all");
+  const [order, setOrder] = useState(null);
   const [search, setSearch] = useState(null);
+  const [currentSearch, setCurrentSearch] = useState(null);
+  const [currentPage, setPage] = useState(1);
+  const [totalRows, setTotalRows] = useState(18);
   useEffect(() => {
-    WorkService.getAllHelpers(filterType)
+    setPage(1);
+    WorkService.getAllHelpers(filterType, 1)
       .then((res) => {
         setAllHelpers(res.data.data);
-        // console.log(res.data.data);
+        setTotalRows(res?.data?.totalRows);
       })
       .catch((e) => {
         console.log(e);
@@ -343,36 +404,63 @@ const MissionHelperList = () => {
       .catch((e) => {
         console.log(e);
       });
-    // WorkService.getCat()
-    //   .then((res) => {
-    //     const arr = [];
-    //     res.data.photos.map((item) => {
-    //       arr.push(item.src.tiny);
-    //     });
-    //     console.log(arr);
-    //   })
-    //   .catch((e) => console.log(e));
   }, [filterType]);
+
+  useEffect(() => {
+    console.log(currentPage);
+    if (order) {
+      WorkService.getOrderHelper(
+        filterType,
+        order.parentValue,
+        order.value,
+        currentPage
+      )
+        .then((response) => {
+          console.log(response);
+          setAllHelpers(response?.data?.data);
+          setTotalRows(response?.data?.totalRows);
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    } else {
+      WorkService.getAllHelpers(filterType, currentPage)
+        .then((res) => {
+          setAllHelpers(res.data.data);
+          setTotalRows(res?.data?.totalRows);
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    }
+  }, [currentPage]);
 
   const handleBack = () => {
     setFilterType("all");
-    setSearch(null);
-    WorkService.getAllHelpers(filterType)
+    setPage(1);
+    setOrder(null);
+    setCurrentSearch(null);
+    WorkService.getAllHelpers(filterType, currentPage)
       .then((res) => {
-        setAllHelpers(res.data.data);
+        setAllHelpers(res?.data?.data);
       })
       .catch((e) => {
         console.log(e);
       });
   };
-
-  const handleSubmit = (value) => {
-    console.log(value);
-    WorkService.getSearchHelper(value)
+  const changePage = (page) => {
+    console.log("Page: ", page);
+    setPage(page);
+  };
+  const handleSearch = () => {
+    WorkService.getSearchHelper(search)
       .then((response) => {
         console.log(response);
         setAllHelpers(response?.data.data);
-        setSearch(value);
+        setPage(1);
+        setTotalRows(response?.data?.totalRows);
+        setCurrentSearch(search);
+        setSearch("");
       })
       .catch((e) => {
         console.log(e);
@@ -391,13 +479,13 @@ const MissionHelperList = () => {
               小幫手總覽
             </Link>
           </li>
-          {search ? (
+          {currentSearch ? (
             <>
               <li class="breadcrumb-item" aria-current="page">
                 搜尋結果
               </li>
               <li class="breadcrumb-item active" aria-current="page">
-                {search}
+                {currentSearch}
               </li>
             </>
           ) : (
@@ -418,7 +506,12 @@ const MissionHelperList = () => {
 
       <div className="search d-flex flex-md-row flex-column justify-content-between align-items-center">
         <RoleSelection />
-        <Search placeholder={"搜尋小幫手"} onClick={handleSubmit} />
+        <Search
+          placeholder={"搜尋小幫手"}
+          handleSearch={handleSearch}
+          search={search}
+          setSearch={setSearch}
+        />
       </div>
       <div className="filters">
         <MobileFilter
@@ -426,11 +519,55 @@ const MissionHelperList = () => {
           setAllHelpers={setAllHelpers}
           filterType={filterType}
           setFilterType={setFilterType}
+          order={order}
+          setOrder={setOrder}
+          setPage={setPage}
+          setTotalRows={setTotalRows}
+          setCurrentSearch={setCurrentSearch}
         />
       </div>
+      <div className="mb-2">
+        <p className="size-6 d-flex justify-content-end align-items-center me-2">
+          {order?.parentValue === "price" &&
+            (order?.value === "ASC" ? (
+              <>
+                服務費用 <BsArrowBarRight /> 由低到高
+              </>
+            ) : (
+              <>
+                服務費用 <BsArrowBarRight /> 由高到低
+              </>
+            ))}
+        </p>
+        <p className="size-6 d-flex justify-content-end align-items-center me-2 ">
+          {order &&
+            order?.parentValue === "hot" &&
+            (order?.value === "ASC" ? (
+              <>
+                熱門程度 <BsArrowBarRight /> 由低到高
+              </>
+            ) : (
+              <>
+                熱門程度 <BsArrowBarRight /> 由高到低
+              </>
+            ))}
+        </p>
+        <p className="size-6 d-flex justify-content-end align-items-center me-2 ">
+          {order?.parentValue === "rating" &&
+            (order?.value === "ASC" ? (
+              <>
+                服務評價 <BsArrowBarRight /> 由低到高
+              </>
+            ) : (
+              <>
+                服務評價 <BsArrowBarRight /> 由高到低
+              </>
+            ))}
+        </p>
+      </div>
 
-      <div className="d-flex flex-md-row flex-column justify-content-between">
-        <section className="famous-helper justify-content-between">
+      <div className="d-flex flex-md-row flex-column align-items-start justify-content-center">
+        <section className="famous-helper">
           <p className="famous-helper-title size-5">熱門小幫手</p>
           <div className="famous-helper-pc d-md-block d-none">
             {famous.map((helper) => (
@@ -441,17 +578,19 @@ const MissionHelperList = () => {
             <MobileFamousHelper famous={famous} setFamous={setFamous} />
           </div>
         </section>
-        <section className="helper-list d-flex row flex-wrap">
+        <section className="helper-list d-flex flex-wrap">
           {allHelpers?.map((helper) => (
             <SingleHelperCard {...helper} />
           ))}
         </section>
       </div>
       <Pagination
-        defaultCurrent={1}
-        total={500}
+        current={currentPage}
+        total={totalRows}
+        pageSize="18"
         showSizeChanger={false}
         rootClassName="cos-pagination"
+        onChange={changePage}
       />
     </div>
   );

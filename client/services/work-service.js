@@ -3,25 +3,31 @@ import { URL } from "@/config";
 const API_URL = URL + "api/work/";
 
 class WorkService {
-  getAllHelpers(type) {
-    return axios.get(API_URL + "helpers", { params: { type } });
+  // list頁的api
+  getAllHelpers(type, page) {
+    console.log(page);
+    return axios.get(API_URL + "helpers", { params: { type, page } });
   }
 
   getFamousHelper(type) {
     return axios.get(API_URL + "helpers/famous", { params: { type } });
   }
-  getOrderHelper(filterType, orderType, orderWay) {
+  getOrderHelper(filterType, orderType, orderWay, page) {
     return axios.get(API_URL + "helpers/order", {
-      params: { filterType, orderType, orderWay },
+      params: { filterType, orderType, orderWay, page },
     });
   }
   getSearchHelper(search) {
     return axios.get(API_URL + "helpers/search", { params: { search } });
   }
+
+  // detail頁
   getHelperDetail(uid) {
     console.log(uid);
     return axios.get(API_URL + "/helpers/detail/" + uid);
   }
+
+  // createMission頁
   createMission(formData) {
     return axios.post(API_URL + "/mission", formData, {
       headers: {

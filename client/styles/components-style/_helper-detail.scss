@@ -135,7 +135,13 @@ $detail-block-width: 12px; //標題左側直槓槓
     }
   }
 }
-
+.req-quotation {
+  .divider {
+    width: 100%;
+    height: 1px;
+    background-color: $light-gray;
+  }
+}
 .evaluation-bar {
   $block-width: calc(100% - 3px);
   width: calc(100% - 80px);

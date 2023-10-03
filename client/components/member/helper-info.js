@@ -1,8 +1,10 @@
 import React, { useEffect, useState, useMemo } from "react";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { BiUpload } from "react-icons/bi";
 import { Switch, message } from "antd";
 import memberService from "@/services/member-service";
+import { useForm } from "react-hook-form";
 const countyOption = [
   "台北市",
   "新北市",
@@ -89,16 +91,35 @@ const Close = ({ open, setOpen }) => {
 };
 
 const Open = ({ open, setOpen, info, setInfo }) => {
+  const { register, handleSubmit, watch } = useForm({
+    defaultValues: {
+      name: info?.name,
+    },
+  });
   const [feedStatus, setFeedStatus] = useState(info?.feed_service);
   const [houseStatus, setHouseStatus] = useState(info?.house_service);
   const [beautyStatus, setBeautyStatus] = useState(info?.beauty_service);
   const [messageApi, contextHolder] = message.useMessage();
-  const success = () => {
+  const [name] = watch(["name"]);
+  const editSuccess = () => {
     messageApi.open({
       type: "success",
-      content: "小幫手資料修改成功",
+      content: "小幫手資料修改成功。",
     });
   };
+  const editError = () => {
+    messageApi.open({
+      type: "error",
+      content: "資料修改失敗，請稍後重試一次。",
+    });
+  };
+  const editWarning = () => {
+    messageApi.open({
+      type: "warning",
+      content: "網路連線錯誤，修改失敗。",
+    });
+  };
+
   const handleOpen = () => {
     if (open) {
       memberService
@@ -128,21 +149,38 @@ const Open = ({ open, setOpen, info, setInfo }) => {
         console.log(response);
         if (response?.data?.status === 200) {
           setInfo(response?.data?.info);
-          success();
+          editSuccess();
+        } else {
+          editError();
+        }
+      })
+      .catch((e) => {
+        console.log(e);
+        editWarning();
+      });
+  };
+  const handleCancel = () => {
+    console.log("有cancel");
+    memberService
+      .getHelperInfo()
+      .then((response) => {
+        if (response?.data?.status === 200) {
+          console.log(response.data);
+          setInfo(response?.data?.data[0]);
         }
       })
       .catch((e) => {
         console.log(e);
       });
   };
-  const handleCancel = () => {};
+
   return (
     <>
       <form
         className=""
         id="helper-form"
         name="helper-form"
-        onSubmit={handleEdit}
+        onSubmit={handleSubmit((data) => console.log(data))}
       >
         <div className="form-item">
           <label className="size-6 m-size-7">姓名：</label>
@@ -150,8 +188,8 @@ const Open = ({ open, setOpen, info, setInfo }) => {
             className="form-input m-form-input"
             type="text"
             placeholder="請輸入名稱"
-            defaultValue={info?.name}
             name="name"
+            {...register("name")}
           />
         </div>
         <div className="form-item">
@@ -316,7 +354,11 @@ const HelperInfo = () => {
             <img src="/member-icon/helper-info.svg" />
             小幫手資料
             {open && (
-              <Link href="" className="to-detail size-7 m-size-7">
+              <Link
+                href={`/work/find-helper/30`}
+                // 修改為user_id
+                className="to-detail size-7 m-size-7"
+              >
                 點我查看細節頁
               </Link>
             )}
