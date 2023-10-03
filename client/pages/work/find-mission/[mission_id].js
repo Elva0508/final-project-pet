@@ -4,9 +4,7 @@ import axios from "axios"
 import { IoPaperPlaneOutline } from "react-icons/io5";
 import { PiWechatLogoThin } from "react-icons/pi";
 import { FaRegHeart, FaHeart } from "react-icons/fa";
-
-
-
+// swiper:
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Scrollbar, Navigation } from "swiper/modules";
 // import function to register Swiper custom elements
@@ -19,7 +17,7 @@ import "swiper/css";
 import "swiper/css/scrollbar";
 import "swiper/css/navigation";
 
-const ImageSwiper = () => {
+const ImageSwiper = ({ missionImages }) => {
     const swiperRef = useRef(null);
 
     useEffect(() => {
@@ -28,32 +26,31 @@ const ImageSwiper = () => {
             navigation: true,
             injectStyles: [
                 `
-            .swiper-button-next,
-            .swiper-button-prev {
-              background-color: #FFFDFB;
-              width:50px;
-              height:50px;
-              border-radius: 50%;
-              color: #F8CB9F;
-              box-shadow: 0 0 9px rgba(0, 0, 0, 0.5);
-              background-position: center;
-              background-size: 25px;
-              background-repeat: no-repeat;
-            }
-  
-            .swiper-button-prev {
-              background-image: url("/caret-left.svg");
-  
-            }
-            .swiper-button-next {
-              background-image: url("/caret-right.svg");    
-            }
-            .swiper-button-next svg,
-            .swiper-button-prev svg {
-              color: transparent;
-            }
-           
-        `,
+        .swiper-button-next,
+        .swiper-button-prev {
+          background-color: #FFFDFB;
+          width:50px;
+          height:50px;
+          border-radius: 50%;
+          color: #F8CB9F;
+          box-shadow: 0 0 9px rgba(0, 0, 0, 0.5);
+          background-position: center;
+          background-size: 25px;
+          background-repeat: no-repeat;
+        }
+
+        .swiper-button-prev {
+          background-image: url("/caret-left.svg");
+
+        }
+        .swiper-button-next {
+          background-image: url("/caret-right.svg");    
+        }
+        .swiper-button-next svg,
+        .swiper-button-prev svg {
+          color: transparent;
+        }
+    `,
             ],
         };
 
@@ -72,46 +69,11 @@ const ImageSwiper = () => {
                 prev-el=".custom-prev-button"
                 init="false"
             >
-                <swiper-slide>
-                    <img
-                        src='https://picsum.photos/id/40/300/300'
-                    />
-                </swiper-slide>
-                <swiper-slide>
-                    <img
-                        src='https://images.pexels.com/photos/982300/pexels-photo-982300.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2'
-                    />
-                </swiper-slide>
-                <swiper-slide>
-                    <img
-                        src='https://images.pexels.com/photos/384555/pexels-photo-384555.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2'
-                    />
-                </swiper-slide>
-                <swiper-slide>
-                    <img
-                        src='https://images.pexels.com/photos/7149465/pexels-photo-7149465.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2'
-                    />
-                </swiper-slide>
-                <swiper-slide>
-                    <img
-                        src='https://images.pexels.com/photos/8985189/pexels-photo-8985189.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2'
-                    />
-                </swiper-slide>
-                <swiper-slide>
-                    <img
-                        src='https://images.pexels.com/photos/14721098/pexels-photo-14721098.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2'
-                    />
-                </swiper-slide>
-                <swiper-slide>
-                    <img
-                        src='https://images.pexels.com/photos/2194261/pexels-photo-2194261.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2'
-                    />
-                </swiper-slide>
-                <swiper-slide>
-                    <img
-                        src='https://images.pexels.com/photos/979247/pexels-photo-979247.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2'
-                    />
-                </swiper-slide>
+                {missionImages.map((v, i) => (
+                    <swiper-slide key={i}>
+                        <img src={v.file_path} alt={`Image ${i}`} />
+                    </swiper-slide>
+                ))}
             </swiper-container>
         </>
     );
@@ -166,6 +128,8 @@ export default function MissionDetail() {
     const { mission_id } = router.query;
 
     const [missionDetail, setMissionDetail] = useState([])
+    const [missionImages, setMissionImages] = useState([])
+
     const getMissionDetail = async (mission_id) => {  // 接受 mission_id 作為參數
         try {
             const response = await axios.get(`http://localhost:3005/api/mission/mission-details/${mission_id}`);
@@ -183,6 +147,20 @@ export default function MissionDetail() {
             getMissionDetail(mission_id);
         }
     }, [mission_id])
+
+    // 使用useEffect發起第二個API請求，供ImageSwiper使用
+    useEffect(() => {
+        if (mission_id) {
+            axios.get(`http://localhost:3005/api/mission/mission-details-img/${mission_id}`)
+                .then((response) => {
+                    // 將第二個API的數據儲存到missionImages狀態中
+                    setMissionImages(response.data.data);
+                })
+                .catch((error) => {
+                    console.error('Error fetching data from API 2:', error);
+                });
+        }
+    }, [mission_id]);
 
     // 格式化日期
     function formatDate(dateString) {
@@ -264,7 +242,7 @@ export default function MissionDetail() {
                                 <div className="item-title size-5">
                                     任務地點：
                                 </div>
-                                <p className="size-6 d-flex align-items-center ms-4 ms-sm-0">{v.city}{v.area}</p>
+                                <p className="size-6 d-flex align-items-center ms-4 ms-sm-0">{v.city}{v.area}{v.location_detail}</p>
                             </div>
                             <div><iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d28912.322574287376!2d121.48607389999998!3d25.066622449999997!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3442a8de05921eb3%3A0xe818cd4640a88cc6!2zMjQx5paw5YyX5biC5LiJ6YeN5Y2A!5e0!3m2!1szh-TW!2stw!4v1695367764015!5m2!1szh-TW!2stw" referrerpolicy="no-referrer-when-downgrade"></iframe></div>
 
@@ -309,7 +287,7 @@ export default function MissionDetail() {
                             <div className="item">
                                 <div className="item-title size-5">相片/影片：</div>
                                 <div className="item-image item-content">
-                                    <ImageSwiper />
+                                    <ImageSwiper missionImages={missionImages} />
                                 </div>
                             </div>
                         </section>

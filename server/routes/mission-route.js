@@ -48,16 +48,39 @@ router.get("/latest-missions", (req, res) => {
   );
 });
 
+// 可以成功併成一筆資料：
 router.get("/mission-details/:mission_id", (req, res) => {
   const mission_id = req.params.mission_id; // 從路由參數中獲取 mission_id
   conn.execute(
-    `SELECT md.*, im.file_path AS file_path
+    `
+    SELECT md.*, u.*, GROUP_CONCAT(DISTINCT im.file_path ORDER BY im.image_id) AS file_paths
     FROM mission_detail AS md 
-    JOIN users AS u ON md.post_user_id=u.user_id 
+    JOIN users AS u ON md.post_user_id = u.user_id 
     JOIN image_mission AS im ON md.mission_id = im.mission_id
     WHERE md.mission_id = ?
-    GROUP BY md.mission_id;` // 使用 GROUP BY 確保只返回唯一的任務詳細資料
-    ,[mission_id],  // 使用 mission_id 進行查詢
+    GROUP BY md.mission_id;
+    `,
+    [mission_id],  // 使用 mission_id 進行查詢
+    (err, result) => {
+      if (err) {
+        console.log(err);
+        return;
+      }
+      res.send({ status: 200, data: result });
+    }
+  );
+});
+
+// 可以讓照片正常顯示
+router.get("/mission-details-img/:mission_id", (req, res) => {
+  const mission_id = req.params.mission_id; // 從路由參數中獲取 mission_id
+  conn.execute(
+    `SELECT md.*, im.file_path AS file_path
+    FROM mission_detail AS md
+    JOIN image_mission AS im ON md.mission_id = im.mission_id
+    WHERE md.mission_id = ?
+    ;`
+    , [mission_id],  // 使用 mission_id 進行查詢
     (err, result) => {
       if (err) {
         console.log(err);
