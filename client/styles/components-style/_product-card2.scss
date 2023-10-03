@@ -1,4 +1,4 @@
-.product-card{   
+.product-card2{   
     width: 100%;
     .card{
         width: 100%;
@@ -52,12 +52,15 @@
             }
             .card-text{
                 color: #34251F;
-                font-weight: bold;
-                height: 60px;
+                height: auto;
+            }
+            .btn-confirm{
+                width: 100%;
             }
             .product-sale-price{
                 color: rgb(189, 189, 189);
-                font-weight: bold;
+                // font-weight: bold;
+                margin: 0;
                 .cart{
                     background-color: #E9A790;
                     .cart{
