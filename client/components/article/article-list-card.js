@@ -9,7 +9,7 @@ export default function ArticleListCard() {
   // 向伺服器要求資料，設定到狀態中
   const getArticleListCard = async (article_category_id) => {
     const res = await fetch(
-      "http://localhost:3005/article/" + article_category_id
+      "http://localhost:3005/api/article/" + article_category_id
     );
 
     const data = await res.json();
