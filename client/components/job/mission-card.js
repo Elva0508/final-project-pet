@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import axios from "axios"
+import Link from "next/link";
 
 // 使圖片高度與寬度同寬
 function ImageWithEqualDimensions({ file_path }) {
@@ -74,11 +75,16 @@ export default function MissionCard() {
         <>
             {allMissions.map((v, i) => {
                 return (
-                    <div className='col-6 col-md-4 col-lg-6 col-xl-4'>
+                    <div className='col-6 col-md-4 col-lg-6 col-xl-4' key={v.mission_id}>
+
                         <div className='mission-list-card '>
-                            <ImageWithEqualDimensions file_path={v.file_path} />
+                            <Link href={`/work/find-mission/${v.mission_id}`} >
+                                <ImageWithEqualDimensions file_path={v.file_path} />
+                            </Link>
                             <div className='mission-content mx-1 mt-2'>
-                                <div className='title size-6'>{v.title}</div>
+                                <Link href={`/work/find-mission/${v.mission_id}`} >
+                                    <div className='title size-6'>{v.title}</div>
+                                </Link>
                                 <div className='d-flex justify-content-between mt-2'>
                                     <div className='size-7'>{v.city}{v.area}<br />{formatDate(v.post_date)}</div>
                                     <img src={isFavorite ? "/heart-clicked.svg" : "/heart.svg"} alt={isFavorite ? "已收藏" : "未收藏"} onClick={toggleFavorite} />

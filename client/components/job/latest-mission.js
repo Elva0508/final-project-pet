@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from "axios"
+import Link from "next/link";
 import { CiHeart } from "react-icons/Ci";
 import { BiSolidHeart, BiSolidCart } from "react-icons/bi";
 
@@ -42,24 +43,18 @@ export default function LatestMission() {
       {latestMissions.map((v, i) => {
         return (
           <div className='latest-mission-card d-flex'>
-            <div className='mission-img'>
-              <img src={v.file_path} alt="任務" />
-            </div>
+            <Link href={`/work/find-mission/${v.mission_id}`} >
+              <div className='mission-img'>
+                <img src={v.file_path} alt="任務" />
+              </div>
+            </Link>
             <div className='mission-content ms-2'>
-              <div className='title size-6'>{v.title}</div>
+              <Link href={`/work/find-mission/${v.mission_id}`} >
+                <div className='title size-6'>{v.title}</div>
+              </Link>
               <div className='d-flex justify-content-between mt-1 mt-sm-2'>
                 <div className='size-7'>{v.city}{v.area}<br />{formatDate(v.post_date)}</div>
                 <img src={isFavorite ? "/heart-clicked.svg" : "/heart.svg"} alt={isFavorite ? "已收藏" : "未收藏"} onClick={toggleFavorite} />
-                {/* <div onClick={toggleFavorite}>
-                            {isFavorite ? (
-                                <div className="position-relative inline-block">
-                                    <BiSolidHeart className="heart-icon-red" />
-                                    <CiHeart className="heart-icon-red-line" />
-                                </div>
-                            ) : (
-                                <CiHeart />
-                            )}
-                        </div> */}
               </div>
               <div className='d-flex justify-content-between align-items-end price'>
                 <div >單次<span className='size-6'> NT${v.price}</span></div>
@@ -80,7 +75,7 @@ export const MobileLatestMission = () => {
   const [latestMissions, setLatestMissions] = useState([]);
   const [activeIndex, setActiveIndex] = useState(0);
   // 追蹤動畫狀態 防止多次快速點擊上一張或下一張按鈕 導致卡片重疊
-  const [isAnimating, setIsAnimating] = useState(false); 
+  const [isAnimating, setIsAnimating] = useState(false);
   const [isIndicatorsDisabled, setIsIndicatorsDisabled] = useState(false);
 
   const toggleFavorite = () => {
@@ -162,9 +157,9 @@ export const MobileLatestMission = () => {
             // aria-current={index === activeIndex ? "true" : ""}
             // aria-label={`Slide ${index + 1}`}
             className={`${index === activeIndex ? "active" : ""} ${isIndicatorsDisabled ? "disabled" : ""}`}
-              aria-current={index === activeIndex ? "true" : ""}
-              aria-label={`Slide ${index + 1}`}
-              onClick={() => handleIndicatorClick(index)}
+            aria-current={index === activeIndex ? "true" : ""}
+            aria-label={`Slide ${index + 1}`}
+            onClick={() => handleIndicatorClick(index)}
           ></button>
         ))}
       </div>
