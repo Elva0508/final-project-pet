@@ -39,11 +39,6 @@ function ImageWithEqualDimensions({ file_path }) {
 }
 
 export default function MissionCard() {
-    const [isFavorite, setIsFavorite] = useState(false); // 初始狀態為未收藏
-
-    const toggleFavorite = () => {
-        setIsFavorite(!isFavorite); // 切換收藏狀態
-    };
 
     const [allMissions, setAllMissions] = useState([]);
 
@@ -71,6 +66,15 @@ export default function MissionCard() {
         return `${year}/${month}/${day}`;
     }
 
+    // 為每個卡片創建獨立的isFavorite狀態數組
+    const [isFavorites, setIsFavorites] = useState(allMissions.map(() => false));
+
+    const toggleFavorite = (index) => {
+        const newFavorites = [...isFavorites];
+        newFavorites[index] = !newFavorites[index];
+        setIsFavorites(newFavorites);
+    };
+
     return (
         <>
             {allMissions.map((v, i) => {
@@ -87,7 +91,7 @@ export default function MissionCard() {
                                 </Link>
                                 <div className='d-flex justify-content-between mt-2'>
                                     <div className='size-7'>{v.city}{v.area}<br />{formatDate(v.post_date)}</div>
-                                    <img src={isFavorite ? "/heart-clicked.svg" : "/heart.svg"} alt={isFavorite ? "已收藏" : "未收藏"} onClick={toggleFavorite} />
+                                    <img src={isFavorites[i] ? "/heart-clicked.svg" : "/heart.svg"} alt={isFavorites[i] ? "已收藏" : "未收藏"} onClick={() => toggleFavorite(i)} />
                                 </div>
                                 <div className='d-flex justify-content-between align-items-end price'>
                                     <div  >單次<span className='size-6'> NT${v.price}</span></div>
