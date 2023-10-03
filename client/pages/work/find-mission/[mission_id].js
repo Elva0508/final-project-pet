@@ -146,6 +146,14 @@ export const MissionDetailSticky = () => {
     )
 }
 
+function CustomHTMLRenderer({ htmlContent }) {
+    return (
+        <div className="item">
+            <div className="item-title size-5">詳細說明</div>
+            <ul className="item-content size-6" dangerouslySetInnerHTML={{ __html: htmlContent }} />
+        </div>
+    );
+}
 
 export default function MissionDetail() {
     // const [inputValue, setInputValue] = useState('');
@@ -160,9 +168,9 @@ export default function MissionDetail() {
     const [missionDetail, setMissionDetail] = useState([])
     const getMissionDetail = async (mission_id) => {  // 接受 mission_id 作為參數
         try {
-            const response = await axios.get(`http://localhost:3005/api/mission/mission-details/${mission_id}` );
+            const response = await axios.get(`http://localhost:3005/api/mission/mission-details/${mission_id}`);
             const data = response.data.data;
-            console.log("data是"+data);
+            console.log("data是" + data);
             setMissionDetail(data);
         } catch (error) {
             console.error("Error:", error);
@@ -176,6 +184,14 @@ export default function MissionDetail() {
         }
     }, [mission_id])
 
+    // 格式化日期
+    function formatDate(dateString) {
+        const date = new Date(dateString);
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}/${month}/${day}`;
+    }
 
     return (
         <>
@@ -226,24 +242,23 @@ export default function MissionDetail() {
                     <div className='container mission-detail my-3'>
                         <div>麵包屑放這裡</div>
                         <header className='mt-3 p-4'>
-                            <p>案件編號：2685xy</p>
-                            <h2 className='size-3'>新北9/20~9/25 貓咪代餵</h2>
-                            <p className='size-6 mt-3'>刊登日期：2023/08/19</p>
-                            <p className='size-6 mt-2'>最後更新：2023/08/20</p>
+                            <p>案件編號：{v.pid}</p>
+                            <h2 className='size-3'>{v.title}</h2>
+                            <p className='size-6 mt-3'>刊登日期：{formatDate(v.post_date)}</p>
+                            <p className='size-6 mt-2'>最後更新：{formatDate(v.update_date)}</p>
                         </header>
                         <section className='description my-4 py-1 '>
                             <div className="item d-flex flex-column flex-sm-row ">
                                 <div className="item-title size-5">
                                     預算金額：
-                                    {/* <span className="size-6">NT$ 1,200 / 天</span> */}
                                 </div>
-                                <p className="size-6 d-flex align-items-center ms-4 ms-sm-0">NT$ 1,200 / 天</p>
+                                <p className="size-6 d-flex align-items-center ms-4 ms-sm-0">NT$ {v.price} / 天</p>
                             </div>
                             <div className="item d-flex flex-column flex-sm-row">
                                 <div className="item-title size-5">
                                     任務日期：
                                 </div>
-                                <p className="size-6 d-flex align-items-center ms-4 ms-sm-0">2023/9/20~2023/9/25</p>
+                                <p className="size-6 d-flex align-items-center ms-4 ms-sm-0">{formatDate(v.start_date)}～{formatDate(v.end_date)}</p>
                             </div>
                             <div className="item d-flex flex-column flex-sm-row">
                                 <div className="item-title size-5">
@@ -252,23 +267,9 @@ export default function MissionDetail() {
                                 <p className="size-6 d-flex align-items-center ms-4 ms-sm-0">{v.city}{v.area}</p>
                             </div>
                             <div><iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d28912.322574287376!2d121.48607389999998!3d25.066622449999997!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3442a8de05921eb3%3A0xe818cd4640a88cc6!2zMjQx5paw5YyX5biC5LiJ6YeN5Y2A!5e0!3m2!1szh-TW!2stw!4v1695367764015!5m2!1szh-TW!2stw" referrerpolicy="no-referrer-when-downgrade"></iframe></div>
-                            <div className="item">
-                                <div className="item-title size-5">詳細說明</div>
-                                <ul className="item-content size-6">
-                                    <li>幫我照顧兩隻貓咪</li>
-                                    <li>
-                                        <p>你需要：</p>
-                                        <p>📍打掃貓咪弄髒的地方（貓咪有嘔吐的話要幫我撿）</p>
-                                        <p>📍清理貓砂</p>
-                                        <p>📍清洗貓咪的飲水機</p>
-                                        <p>📍需幫我餵罐頭</p>
-                                        <p>📍確認網路是否正常（如果斷線要幫我重新插插頭）</p>
-                                    </li>
-                                    <li>一次約20分鐘內可以完成</li>
-                                    <li>家中有監視器不介意再應徵</li>
-                                    <li>希望你家中也有寵物，絕對不能使用任何帶有強迫或暴力的動作對貓咪，喜歡貓咪佳</li>
-                                </ul>
-                            </div>
+                            
+                            <CustomHTMLRenderer htmlContent={v.description} />
+
                             <div className="item d-flex flex-column flex-sm-row">
                                 <div className="item-title size-5">
                                     任務類型：

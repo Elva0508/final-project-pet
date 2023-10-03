@@ -55,7 +55,9 @@ router.get("/mission-details/:mission_id", (req, res) => {
     FROM mission_detail AS md 
     JOIN users AS u ON md.post_user_id=u.user_id 
     JOIN image_mission AS im ON md.mission_id = im.mission_id
-    WHERE md.mission_id = ?;`,[mission_id],  // 使用 mission_id 進行查詢
+    WHERE md.mission_id = ?
+    GROUP BY md.mission_id;` // 使用 GROUP BY 確保只返回唯一的任務詳細資料
+    ,[mission_id],  // 使用 mission_id 進行查詢
     (err, result) => {
       if (err) {
         console.log(err);
