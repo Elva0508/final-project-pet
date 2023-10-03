@@ -252,13 +252,13 @@ export default function MissionDetail() {
                                 <div className="item-title size-5">
                                     預算金額：
                                 </div>
-                                <p className="size-6 d-flex align-items-center ms-4 ms-sm-0">NT$ {v.price} / 天</p>
+                                <p className="size-6 d-flex align-items-center ms-4 ms-sm-0 salary">NT$ {v.price} / 次</p>
                             </div>
                             <div className="item d-flex flex-column flex-sm-row">
                                 <div className="item-title size-5">
                                     任務日期：
                                 </div>
-                                <p className="size-6 d-flex align-items-center ms-4 ms-sm-0">{formatDate(v.start_date)}～{formatDate(v.end_date)}</p>
+                                <p className="size-6 d-flex align-items-center ms-4 ms-sm-0">{v.start_date === v.end_date ? formatDate(v.start_date) : `${formatDate(v.start_date)}～${formatDate(v.end_date)}`}</p>
                             </div>
                             <div className="item d-flex flex-column flex-sm-row">
                                 <div className="item-title size-5">
@@ -267,20 +267,44 @@ export default function MissionDetail() {
                                 <p className="size-6 d-flex align-items-center ms-4 ms-sm-0">{v.city}{v.area}</p>
                             </div>
                             <div><iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d28912.322574287376!2d121.48607389999998!3d25.066622449999997!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3442a8de05921eb3%3A0xe818cd4640a88cc6!2zMjQx5paw5YyX5biC5LiJ6YeN5Y2A!5e0!3m2!1szh-TW!2stw!4v1695367764015!5m2!1szh-TW!2stw" referrerpolicy="no-referrer-when-downgrade"></iframe></div>
-                            
+
                             <CustomHTMLRenderer htmlContent={v.description} />
 
                             <div className="item d-flex flex-column flex-sm-row">
                                 <div className="item-title size-5">
                                     任務類型：
                                 </div>
-                                <p className="size-6 d-flex align-items-center ms-4 ms-sm-0">到府照顧</p>
+                                <p className="size-6 d-flex align-items-center ms-4 ms-sm-0"> {(() => {
+                                    switch (v.mission_type) {
+                                        case 1:
+                                            return '到府照顧';
+                                        case 2:
+                                            return '安親寄宿';
+                                        case 3:
+                                            return '到府美容';
+                                        case 4:
+                                            return '行為訓練';
+                                        case 5:
+                                            return '醫療護理';
+                                        default:
+                                            return '其他';
+                                    }
+                                })()}</p>
                             </div>
                             <div className="item d-flex flex-column flex-sm-row">
                                 <div className="item-title size-5">
                                     支付方式：
                                 </div>
-                                <p className="size-6 d-flex align-items-center ms-4 ms-sm-0">現金</p>
+                                <p className="size-6 d-flex align-items-center ms-4 ms-sm-0">{(() => {
+                                    switch (v.payment_type) {
+                                        case 1:
+                                            return '現金';
+                                        case 2:
+                                            return '轉帳匯款';
+                                        default:
+                                            return '其他';
+                                    }
+                                })()}</p>
                             </div>
                             <div className="item">
                                 <div className="item-title size-5">相片/影片：</div>

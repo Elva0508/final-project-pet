@@ -41,6 +41,9 @@
         margin-right: 0.5rem;
       }
     }
+    .salary{
+      color: $price;
+    }
 
     &-content {
       margin-left: $block-width + 5px;
