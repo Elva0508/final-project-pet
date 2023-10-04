@@ -60,37 +60,76 @@ const MobileFilter = () => {
 };
 
 // 排序
+// const Sort = ({ sortOrder, setSortOrder, setSortBy }) => {
+//   const [isDownIconVisible, setIsDownIconVisible] = useState(false);
+//   const [isPriceIconVisible, setIsPriceIconVisible] = useState(false);
+
+//   const toggleDownIcon = () => {
+//     setIsDownIconVisible(!isDownIconVisible);
+//     setIsPriceIconVisible(false); // 重置價格排序圖標
+
+//     if (!isDownIconVisible) {
+//       // 按下刊登時間，切換為降序(10/27-9/2)
+//       setSortOrder("desc");
+//     } else {
+//       // 未按刊登時間，切換為升序
+//       setSortOrder("asc");
+//     }
+//     setSortBy("post_date"); // 按刊登時間排序
+//   };
+
+//   const togglePriceIcon = () => {
+//     setIsPriceIconVisible(!isPriceIconVisible);
+//     setIsDownIconVisible(false); // 重置刊登時間排序圖標
+
+//     if (!isPriceIconVisible) {
+//       // 按下價格，切換為降序
+//       setSortOrder("desc");
+//     } else {
+//       // 未按價格，切換為升序
+//       setSortOrder("asc");
+//     }
+
+//     setSortBy("price"); // 按價格排序
+//   };
+
+//   useEffect(() => {
+//     console.log("現在是" + sortOrder);
+//   }, [sortOrder]);
+
+//   return (
+//     <>
+//       <div className='sort ' >
+//         <div className='sort-btn d-flex   justify-content-center text-align-center'>
+//           <button className={`size-7 m-1 p-1 ${isDownIconVisible ? 'active' : ''}`} onClick={toggleDownIcon}>
+//             刊登時間 {isDownIconVisible ? <FaCaretDown /> : <FaCaretUp />}
+//           </button>
+//           <button className={`size-7 m-1 p-1 ${isPriceIconVisible ? 'active' : ''}`} onClick={togglePriceIcon}>
+//             薪資 {isPriceIconVisible ? <FaCaretDown /> : <FaCaretUp />}
+//           </button>
+//         </div>
+//       </div>
+//     </>
+//   )
+// }
+
 const Sort = ({ sortOrder, setSortOrder, setSortBy }) => {
-  const [isDownIconVisible, setIsDownIconVisible] = useState(false);
-  const [isPriceIconVisible, setIsPriceIconVisible] = useState(false);
+  const [activeButton, setActiveButton] = useState(null);
+  const [iconDirection, setIconDirection] = useState({}); // 用于跟踪图标方向
 
-  const toggleDownIcon = () => {
-    setIsDownIconVisible(!isDownIconVisible);
-    setIsPriceIconVisible(false); // 重置價格排序圖標
-
-    if (!isDownIconVisible) {
-      // 按下刊登時間，切換為降序(10/27-9/2)
-      setSortOrder("desc");
-    } else {
-      // 未按刊登時間，切換為升序
-      setSortOrder("asc");
-    }
-    setSortBy("post_date"); // 按刊登時間排序
-  };
-
-  const togglePriceIcon = () => {
-    setIsPriceIconVisible(!isPriceIconVisible);
-    setIsDownIconVisible(false); // 重置刊登時間排序圖標
-
-    if (!isPriceIconVisible) {
-      // 按下價格，切換為降序
-      setSortOrder("desc");
-    } else {
-      // 未按價格，切換為升序
-      setSortOrder("asc");
-    }
-
-    setSortBy("price"); // 按價格排序
+  const toggleButton = (sortBy) => {
+    setActiveButton(sortBy);
+    setSortOrder((prevSortOrder) => {
+      // 切换排序顺序
+      if (prevSortOrder === "asc" || sortBy !== activeButton) {
+        setIconDirection({ ...iconDirection, [sortBy]: 'down' });
+        return "desc";
+      } else {
+        setIconDirection({ ...iconDirection, [sortBy]: 'up' });
+        return "asc";
+      }
+    });
+    setSortBy(sortBy === "post_date" ? "post_date" : "price"); // 根据按钮设置排序字段
   };
 
   useEffect(() => {
@@ -99,19 +138,71 @@ const Sort = ({ sortOrder, setSortOrder, setSortBy }) => {
 
   return (
     <>
-      <div className='sort ' >
-        <div className='sort-btn d-flex   justify-content-center text-align-center'>
-          <button className={`size-7 m-1 p-1 ${isDownIconVisible ? 'active' : ''}`} onClick={toggleDownIcon}>
-            刊登時間 {isDownIconVisible ? <FaCaretDown /> : <FaCaretUp />}
+      <div className='sort '>
+        <div className='sort-btn d-flex justify-content-center text-align-center'>
+          <button
+            className={`size-7 m-1 p-1 ${activeButton === "post_date" ? 'active' : ''}`}
+            onClick={() => toggleButton("post_date")}
+          >
+            刊登時間 {iconDirection["post_date"] === 'down' ? <FaCaretDown /> : <FaCaretUp />}
           </button>
-          <button className={`size-7 m-1 p-1 ${isPriceIconVisible ? 'active' : ''}`} onClick={togglePriceIcon}>
-            薪資 {isPriceIconVisible ? <FaCaretDown /> : <FaCaretUp />}
+          <button
+            className={`size-7 m-1 p-1 ${activeButton === "price" ? 'active' : ''}`}
+            onClick={() => toggleButton("price")}
+          >
+            薪資 {iconDirection["price"] === 'down' ? <FaCaretDown /> : <FaCaretUp />}
           </button>
         </div>
       </div>
     </>
   )
 }
+
+// const Sort = ({ sortOrder, setSortOrder, setSortBy }) => {
+//   const [activeButton, setActiveButton] = useState(null);
+
+//   const toggleButton = (sortBy) => {
+//     setActiveButton(sortBy);
+
+//     // 切换排序顺序
+//     if (sortOrder === "asc" || sortBy !== activeButton) {
+//       setSortOrder("desc");
+//     } else {
+//       setSortOrder("asc");
+//     }
+
+//     // 根据按钮设置排序字段
+//     setSortBy(sortBy === "post_date" ? "post_date" : "price");
+//   };
+
+//   useEffect(() => {
+//     console.log("現在是" + sortOrder);
+//   }, [sortOrder]);
+
+//   return (
+//     <>
+//       <div className='sort '>
+//         <div className='sort-btn d-flex justify-content-center text-align-center'>
+//           <button
+//             className={`size-7 m-1 p-1 ${activeButton === "post_date" ? 'active' : ''}`}
+//             onClick={() => toggleButton("post_date")}
+//           >
+//             刊登時間 {sortOrder === "asc" && activeButton === "post_date" ? <FaCaretUp /> : <FaCaretDown />}
+//           </button>
+//           <button
+//             className={`size-7 m-1 p-1 ${activeButton === "price" ? 'active' : ''}`}
+//             onClick={() => toggleButton("price")}
+//           >
+//             薪資 {sortOrder === "asc" && activeButton === "price" ? <FaCaretUp /> : <FaCaretDown />}
+//           </button>
+//         </div>
+//       </div>
+//     </>
+//   )
+// }
+
+
+
 
 // 使任務卡片的圖片高度與寬度同寬
 function ImageWithEqualDimensions({ file_path }) {
@@ -220,7 +311,7 @@ const MissionCard = ({ sortOrder, sortBy }) => {
 
 export default function MissionList() {
   const [sortOrder, setSortOrder] = useState("asc");
-  const [sortBy, setSortBy] = useState("post_date");
+  const [sortBy, setSortBy] = useState(null);
   console.log(`http://localhost:3005/api/mission/all-missions?sortOrder=${sortOrder}&sortBy=${sortBy}`);
 
   // const [allMissions, setAllMissions] = useState([]);
