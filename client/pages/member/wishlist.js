@@ -6,12 +6,13 @@ import { FaList } from "react-icons/fa";
 import { RiDeleteBin5Line } from "react-icons/ri";
 import { GrFormPrevious } from "react-icons/gr";
 import { GrFormNext } from "react-icons/gr";
+import {useCart} from "@/hooks/useCart"
 import axios from "axios";
 
 export default function Wishlist() {
   const [wishlist, setWishlist] = useState([]);
   const [wishlisttype, setWishlistType] = useState([]);
-  const [cart, setCart] = useState([]);
+  const {cart, setCart} = useCart();
 
   const itemsPerPage = 5;
   const [currentPage, setCurrentPage] = useState(1);
@@ -108,27 +109,25 @@ export default function Wishlist() {
       });
   };
 
-  const getCart = () => {
-    axios
-      .get("http://localhost:3005/api/member-wishlist/cart")
-      .then((response) => {
+  const getCart =  () => {
+    axios.get("http://localhost:3005/api/product/cart")
+        .then((response) => {
         const data = response.data.result;
-        console.log(data);
-        setCart(data);
-      })
-      .catch((error) => {
+        const newData=data.map((v)=>{
+            return  { ...v, buy: true }
+        })
+            setCart(newData)     
+        })
+        .catch((error) => {
         console.error("Error:", error);
-      });
-  };
+    });
+}
 
   useEffect(() => {
     getWishlistType();
     getWishlist();
-    getCart();
   }, []);
-  useEffect(() => {
-    getCart();
-  },[]);
+
 
 
   return (
@@ -243,10 +242,10 @@ export default function Wishlist() {
                         <>
                             <div key={i} className="d-flex mb-3 border-bottom mx-2">
                               <div className="">
-                                <img src={v.image}></img>
+                                <img src={v.images}></img>
                               </div>
                               <div className="">
-                                <p className="size-7">{v.name}</p>
+                                <p className="size-7">{v.product_name}</p>
                                 <p className="size-7 type">{v.type}</p>
                                 <p className="size-7 price">NT${v.price}</p>
                                 <p className="size-7">數量：{v.quantity}</p>

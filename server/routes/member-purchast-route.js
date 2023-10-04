@@ -17,20 +17,7 @@ router.get("/", (req, res) => {
   });
 
 
-//想先知道購物車內有甚麼商品
-router.get("/cart",(req,res)=>{
-    connection.execute(
-        `SELECT cart.*, p.product_name AS name,pt.type_name AS type,p.images_one AS image,p.specialoffer AS price
-        FROM cart 
-        JOIN products AS p ON cart.product_id=p.product_id 
-        JOIN product_type AS pt ON cart.product_type_id=pt.type_id AND p.product_id=pt.product_id
-        WHERE user_id=1;`
-        ,(error,result)=>{
-            res.json({result})
-        }    
-    )
-})
-  //用來新增購物車裡沒有的商品
+//用來新增購物車裡沒有的商品
   router.put("/cart",(req,res)=>{
     const {id ,type}=req.body  
     connection.execute(
@@ -41,6 +28,7 @@ router.get("/cart",(req,res)=>{
         }    
     )
 })
+
 //用來修改購物車裡已經有的商品數量
 router.put("/cartplus",(req,res)=>{
     console.log(req);

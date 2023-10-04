@@ -5,11 +5,12 @@ import ListUserM from "@/components/member/list-user-m";
 import { BiSolidShoppingBag } from "react-icons/bi";
 import { GrFormPrevious } from "react-icons/gr";
 import { GrFormNext } from "react-icons/gr";
+import {useCart} from "@/hooks/useCart"
 import axios from "axios";
 
 export default function Purchast() {
   const [product, setProduct] = useState([]);
-  const [cart, setCart] = useState([]);
+  const {cart, setCart} = useCart();
 
 
 
@@ -36,19 +37,52 @@ export default function Purchast() {
       });
   };
 
-  const getCart = () => {
-    axios
-      .get("http://localhost:3005/api/member-purchast/cart")
-      .then((response) => {
-        const data = response.data.result;
-        console.log(data);
-        setCart(data);
-      })
-      .catch((error) => {
+
+  const addCart = async (id, type) => {
+    const have = cart.find(
+      (v) => v.product_id === id && v.product_type_id === type
+    );
+    console.log(have);
+    if (have === undefined) {
+      try {
+        const response = await axios.put(
+          `http://localhost:3005/api/member-purchast/cart`,
+          { id, type }
+        );
+      } catch (error) {
         console.error("Error:", error);
-      });
+      }
+      getCart()
+    } else {
+      try {
+        const newQuantity = have.quantity + 1;
+        console.log(newQuantity);
+        console.log(id);
+        const response = await axios.put(
+          `http://localhost:3005/api/member-purchast/cartplus`,
+          { id, newQuantity, type }
+        );
+      } catch (error) {
+        console.error("Error:", error);
+      }
+      getCart()
+    }
   };
 
+  const getCart =  () => {
+    axios.get("http://localhost:3005/api/product/cart")
+        .then((response) => {
+        const data = response.data.result;
+        const newData=data.map((v)=>{
+            return  { ...v, buy: true }
+        })
+            setCart(newData)     
+        })
+        .catch((error) => {
+        console.error("Error:", error);
+    });
+}
+  
 
 
   const handlePageChange = (newPage) => {
@@ -94,7 +128,7 @@ export default function Purchast() {
 
                       <div className="col-3  d-flex flex-column align-items-center justify-content-center">
                         <button className="btn btn-confirm m-2 size-6 m-size-7"
-                        onClick={() => addCart(v.product_id, v.product_type)}
+                        onClick={() => addCart(v.product_id, v.type_id)}
                         >
                           再次購買
                         </button>
