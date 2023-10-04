@@ -18,7 +18,7 @@
     .notice{
         p{
             font-weight: 600;
-            line-height: 0.5;
+            line-height: 1.5;
         }
     }
     .title{
@@ -33,6 +33,7 @@
         .plan{
             font-weight: 600;
         }
+
     }
     .form-control:focus{
         border: 1px solid $text-main;
@@ -141,7 +142,8 @@
         }     
         .content {
             display: none;
-            padding: 10px;
+            padding-top: 10px;
+            padding-bottom: 10px;
         }       
         input[type="radio"]:checked + label + .content {
             display: block;
@@ -157,6 +159,13 @@
             /* 当屏幕宽度小于等于1024px时应用的样式 */
             border: 0px ;
         }
+    }
+    .price{
+        color: $light-gray;
+        text-decoration: line-through
+    }
+    .newprice{
+        color: $price;
     }   
     .progress-part{
         p{
