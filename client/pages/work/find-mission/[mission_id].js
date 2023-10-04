@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useRouter } from "next/router";
 import axios from "axios"
+import Link from "next/link";
 import { IoPaperPlaneOutline } from "react-icons/io5";
 import { PiWechatLogoThin } from "react-icons/pi";
 import { FaRegHeart, FaHeart } from "react-icons/fa";
@@ -218,7 +219,21 @@ export default function MissionDetail() {
             {missionDetail.map((v, i) => {
                 return (
                     <div className='container mission-detail my-3'>
-                        <div>麵包屑放這裡</div>
+                        <nav className="breadcrumb-wrapper" aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item">
+                                    <Link href="/">首頁</Link>
+                                </li>
+                                <li class="breadcrumb-item" aria-current="page">
+                                    <Link href="/work/find-mission" >
+                                        任務總覽
+                                    </Link>
+                                </li>
+                                <li class="breadcrumb-item" aria-current="page">
+                                    {v.title}
+                                </li>
+                            </ol>
+                        </nav>
                         <header className='mt-3 p-4'>
                             <p>案件編號：{v.pid}</p>
                             <h2 className='size-3'>{v.title}</h2>

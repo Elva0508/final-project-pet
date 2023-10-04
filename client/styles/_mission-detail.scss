@@ -8,6 +8,10 @@
 }
 
 .mission-detail {
+  nav a {
+    border-bottom: 0;
+  }
+
   header {
     background-color: $content-bg;
 
@@ -41,7 +45,8 @@
         margin-right: 0.5rem;
       }
     }
-    .salary{
+
+    .salary {
       color: $price;
     }
 
@@ -147,10 +152,11 @@
       .recommend-content {
         width: 100%;
         height: 160px;
+
         // 更改textarea樣式
-        &:focus{
+        &:focus {
           outline: none;
-          border:1.8px solid $hover;
+          border: 1.8px solid $hover;
           border-radius: 3px;
         }
       }

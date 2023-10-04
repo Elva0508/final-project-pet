@@ -70,7 +70,7 @@ const Sort = ({ sortOrder, setSortOrder, setSortBy }) => {
     setSortOrder(newSortOrder);
     setSortBy(sortBy === "post_date" ? "post_date" : "price");
     setActiveButton(sortBy);
-    
+
     // 更新圖標方向
     const newIconDirection = { ...iconDirection };
     newIconDirection[sortBy] = newSortOrder === "asc" ? "up" : "down";
@@ -157,7 +157,7 @@ const MissionCard = ({ sortOrder, sortBy }) => {
 
   useEffect(() => {
     getAllMissions()
-  }, [sortOrder]) // 当排序方式发生变化时重新获取数据
+  }, [sortOrder]) // 當排序方式發生變化時重新獲取數據
 
   // 格式化日期
   function formatDate(dateString) {
@@ -234,7 +234,19 @@ export default function MissionList() {
   return (
     <>
       <div className='container pb-5 my-3 find-mission'>
-        <div>麵包屑放這裡 </div>
+        <nav className="breadcrumb-wrapper" aria-label="breadcrumb">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+              <Link href="/">首頁</Link>
+            </li>
+            <li class="breadcrumb-item" aria-current="page">
+              <Link href="/work/find-mission" >
+                任務總覽
+              </Link>
+            </li>
+          </ol>
+        </nav>
+
         <div className='d-flex flex-column flex-md-row justify-content-between mt-3'>
           <RoleSelection />
           <Search />
