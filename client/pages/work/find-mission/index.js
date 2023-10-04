@@ -248,7 +248,7 @@ export default function MissionList() {
         </nav>
 
         <div className='d-flex flex-column flex-md-row justify-content-between mt-3'>
-          <RoleSelection />
+          <RoleSelection defaultActive="mission" />
           <Search />
         </div>
         <div className='d-flex justify-content-between align-items-center my-md-3 position-relative'>
