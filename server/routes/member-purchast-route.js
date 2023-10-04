@@ -42,4 +42,29 @@ router.put("/cartplus",(req,res)=>{
     )
 })
 
+//先取得追蹤的商品有哪些
+router.get("/wishlist", (req, res) => {
+  connection.execute(
+    `SELECT pc.*,p.product_id AS product_id
+    FROM product_collections AS pc 
+    JOIN products AS p ON pc.product_id = p.product_id 
+    WHERE pc.user_id = 1;`,
+    (error, result) => {
+      res.json({ result });
+    }
+  );
+});
+
+//用來新增追蹤清單裡沒有的商品
+router.put("/addwishlist",(req,res)=>{
+  const {id}=req.body  
+  connection.execute(
+      `INSERT INTO product_collections (user_id, product_id,  product_type, status ) VALUES (1,?,1,1);`,
+      [id]
+      ,(error,result)=>{
+          res.json({result})
+      }    
+  )
+})
+
 module.exports = router;

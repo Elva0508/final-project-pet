@@ -1,17 +1,17 @@
-import React, { useState ,useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import ListM from "@/components/member/list-m";
 import ListD from "@/components/member/list-d";
 import ListUserM from "@/components/member/list-user-m";
 import { BiSolidShoppingBag } from "react-icons/bi";
 import { GrFormPrevious } from "react-icons/gr";
 import { GrFormNext } from "react-icons/gr";
-import {useCart} from "@/hooks/useCart"
+import { useCart } from "@/hooks/useCart"
 import axios from "axios";
 
 export default function Purchast() {
   const [product, setProduct] = useState([]);
-  const {cart, setCart} = useCart();
-
+  const { cart, setCart } = useCart();
+  const [wishlist, setWishlist] = useState([])
 
 
   const itemsPerPage = 5;
@@ -69,20 +69,55 @@ export default function Purchast() {
     }
   };
 
-  const getCart =  () => {
-    axios.get("http://localhost:3005/api/product/cart")
-        .then((response) => {
+
+  const getWishlist = async () => {
+    await axios
+      .get("http://localhost:3005/api/member-purchast/wishlist")
+      .then((response) => {
         const data = response.data.result;
-        const newData=data.map((v)=>{
-            return  { ...v, buy: true }
-        })
-            setCart(newData)     
-        })
-        .catch((error) => {
+        console.log(data);
+        setWishlist(data);
+
+      })
+      .catch((error) => {
         console.error("Error:", error);
-    });
-}
-  
+      });
+  };
+
+  const addWishlist = async (id) => {
+    const have = wishlist.find(
+      (v) => v.product_id === id
+    );
+    console.log(have);
+    if (have === undefined) {
+      try {
+        const response = await axios.put(
+          `http://localhost:3005/api/member-purchast/addwishlist`,
+          { id }
+        );
+      } catch (error) {
+        console.error("Error:", error);
+      }
+      getWishlist()
+    }
+  };
+
+
+
+  const getCart = () => {
+    axios.get("http://localhost:3005/api/product/cart")
+      .then((response) => {
+        const data = response.data.result;
+        const newData = data.map((v) => {
+          return { ...v, buy: true }
+        })
+        setCart(newData)
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  }
+
 
 
   const handlePageChange = (newPage) => {
@@ -91,7 +126,8 @@ export default function Purchast() {
 
   useEffect(() => {
     getProduct();
-  },[]);
+    getWishlist()
+  }, []);
 
   return (
     <>
@@ -108,10 +144,10 @@ export default function Purchast() {
                 <BiSolidShoppingBag />
                 購買紀錄
               </h5>
-              
-                {currentData.map((v,i) => {
-                  return (
-                    <>
+
+              {currentData.map((v, i) => {
+                return (
+                  <>
                     <div className="d-flex border-bottom py-2 justify-content-between">
                       <div className="d-flex  col-9" key={i}>
                         <img
@@ -128,20 +164,97 @@ export default function Purchast() {
 
                       <div className="col-3  d-flex flex-column align-items-center justify-content-center">
                         <button className="btn btn-confirm m-2 size-6 m-size-7"
-                        onClick={() => addCart(v.product_id, v.type_id)}
+                          data-bs-toggle="offcanvas"
+                          data-bs-target="#offcanvasRight"
+                          aria-controls="offcanvasRight"
+                          onClick={() => addCart(v.product_id, v.type_id)}
                         >
                           再次購買
                         </button>
-                        <button className="btn btn-outline-confirm m-2 size-6 m-size-7">
-                          加入收藏
-                        </button>
+
+                        {wishlist.find((w) => w.product_id === v.product_id) === undefined ? (
+                          <button className="btn btn-outline-confirm m-2 size-6 m-size-7"
+                            data-bs-toggle="modal" data-bs-target="#exampleModal"
+                            onClick={() => addWishlist(v.product_id)}
+                          >
+                            加入收藏
+                          </button>
+                        ) : (
+                          <button className="btn btn-outline-confirm m-2 size-6 m-size-7"
+                          >
+                            已加入收藏
+                          </button>
+                        )}
+
+
+
                       </div>
-                      </div>
-                    </>
-                  );
-                })}
-              
-                <div className="pagination size-7 d-flex justify-content-center mt-4">
+                    </div>
+                  </>
+                );
+              })}
+
+
+              <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLabel">通知</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      已成功將商品加入收藏
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-confirm" data-bs-dismiss="modal">關閉</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
+              <div className="offcanvas offcanvas-end" tabIndex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel" >
+                <div className="offcanvas-header">
+                  <p id="offcanvasRightLabel" className="size-6">我的購物車({cart.length})</p>
+                  <button type="button" className="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                </div>
+                <div className="offcanvas-body">
+                  {cart.map((v, i) => {
+                    return (
+                      <>
+                        <div key={i} className="d-flex mb-3 border-bottom mx-2">
+                          <div className="">
+                            <img className="picture" src={v.images}></img>
+                          </div>
+                          <div className="">
+                            <p className="size-7">{v.product_name}</p>
+                            <p className="size-7 type">{v.type}</p>
+                            <p className="size-7 price">NT${v.price}</p>
+                            <p className="size-7">數量：{v.quantity}</p>
+                          </div>
+                        </div>
+                      </>
+                    );
+                  })}
+                  <div className="d-flex justify-content-around mb-3">
+                    <button
+                      type="button"
+                      className="btn btn-confirm"
+                      data-bs-dismiss="offcanvas"
+                      aria-label="Close"
+                    >
+                      繼續購物
+                    </button>
+                    <button type="button" className="btn btn-confirm">
+                      前往購物車
+                    </button>
+                  </div>
+
+                </div>
+              </div>
+
+
+              <div className="pagination size-7 d-flex justify-content-center mt-4">
                 <button className="btn prev border-0">
                   <GrFormPrevious />
                 </button>
@@ -154,9 +267,8 @@ export default function Purchast() {
                       handlePageChange(index + 1);
                       setActivePage(index + 1);
                     }}
-                    className={`btn me-1 ${
-                      activePage === index + 1 ? "active" : ""
-                    }`}
+                    className={`btn me-1 ${activePage === index + 1 ? "active" : ""
+                      }`}
                   >
                     {index + 1}
                   </button>
@@ -165,9 +277,6 @@ export default function Purchast() {
                   <GrFormNext />
                 </button>
               </div>
-
-
-
             </div>
           </div>
         </div>

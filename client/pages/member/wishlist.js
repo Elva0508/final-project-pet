@@ -44,6 +44,7 @@ export default function Wishlist() {
     const have = cart.find(
       (v) => v.product_id === id && v.product_type_id === type
     );
+
     console.log(have);
     if (have === undefined) {
       try {
@@ -217,6 +218,9 @@ export default function Wishlist() {
                         <div className="d-flex justify-content-center">
                           <button
                             className="btn btn-confirm m-2 size-7  m-size-7"
+                            data-bs-toggle="offcanvas" 
+                          data-bs-target="#offcanvasRight" 
+                          aria-controls="offcanvasRight"
                             onClick={() =>
                               addCart(v.product_id, v.product_type)
                             }
@@ -231,12 +235,12 @@ export default function Wishlist() {
               })}
 
 
-              <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
-                <div class="offcanvas-header">
+              <div className="offcanvas offcanvas-end" tabIndex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel" >
+                <div className="offcanvas-header">
                   <p id="offcanvasRightLabel" className="size-6">我的購物車({cart.length})</p>
-                  <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                  <button type="button" className="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                 </div>
-                <div class="offcanvas-body">
+                <div className="offcanvas-body">
                 {cart.map((v, i) => {
                       return (
                         <>
@@ -257,19 +261,20 @@ export default function Wishlist() {
                     <div className="d-flex justify-content-around mb-3">
                       <button
                         type="button"
-                        class="btn btn-confirm"
+                        className="btn btn-confirm"
                         data-bs-dismiss="offcanvas" 
                         aria-label="Close"
                       >
                         繼續購物
                       </button>
-                      <button type="button" class="btn btn-confirm">
+                      <button type="button" className="btn btn-confirm">
                         前往購物車
                       </button>
                     </div>
 
                 </div>
               </div>
+
               <div className="pagination size-7 d-flex justify-content-center mt-4">
                 <button className="btn prev border-0">
                   <GrFormPrevious />
