@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
+import { useRouter } from "next/router";
 import axios from "axios";
 import Link from "next/link";
 
 export default function ArticleCatogory() {
   const [articlecatogory, setArticleCatogory] = useState([]);
   const [activeButtons, setActiveButtons] = useState([]);
+  const router = useRouter();
 
   const getArticleCatogory = async () => {
     await axios
@@ -30,6 +32,27 @@ export default function ArticleCatogory() {
       setActiveButtons(initialActiveButtons);
     }
   }, [articlecatogory]);
+
+  useEffect(() => {
+    // 獲取當前頁面路徑
+    const currentPath = router.asPath;
+
+    // 根據路徑來決定按鈕顏色
+    if (currentPath.startsWith("/article/")) {
+      const parts = currentPath.split("/");
+      if (parts.length >= 3) {
+        const categoryID = parseInt(parts[2]);
+        const newActiveButtons = Array(articlecatogory.length).fill(false);
+        const categoryIndex = articlecatogory.findIndex(
+          (v) => v.article_category_id === categoryID
+        );
+        if (categoryIndex !== -1) {
+          newActiveButtons[categoryIndex] = true;
+        }
+        setActiveButtons(newActiveButtons);
+      }
+    }
+  }, [router.asPath, articlecatogory]);
 
   const handleButtonClick = (articleCategoryId, index) => {
     // 有按鍵active其他沒有
