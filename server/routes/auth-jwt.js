@@ -1,12 +1,12 @@
 const express = require('express');
 const router = require("express").Router();
-
-//const moment = require('moment');
 const multer = require('multer');
-const jwt = require('jsonwebtoken');
-const secretKey = "secretkey";
+//const moment = require('moment');
+
 
 const cors = require('cors');
+const jwt = require('jsonwebtoken');
+const secretKey = "secretkey";
 const upload = multer();
 
 //連接資料庫

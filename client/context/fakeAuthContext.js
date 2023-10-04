@@ -18,23 +18,42 @@ function reducer(state, action) {
   }
 }
 
-const FAKE_USER = {
-  name: "Jack",
-  email: "jack@example.com",
-  password: "qwerty",
-  avatar: "https://i.pravatar.cc/100?u=zz",
-};
+// const FAKE_USER = {
+//   name: "Jack",
+//   email: "jack@example.com",
+//   password: "qwerty",
+//   avatar: "https://i.pravatar.cc/100?u=zz",
+// };
 
 function AuthProvider({ children }) {
   const [{ user, isAuthenticated }, dispatch] = useReducer(
     reducer,
     initialState
   );
+async function login(email, password) {
+    try {
+        const response = await fetch('http://localhost:3005/api/auth-jwt/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ email, password })
+        });
 
-  function login(email, password) {
-    if (email === FAKE_USER.email && password === FAKE_USER.password)
-      dispatch({ type: "login", payload: FAKE_USER });
-  }
+        if (response.ok) {
+            const user = await response.json();
+            dispatch({ type: 'login', payload: user });
+        } else {
+            throw new Error('Login failed');
+        }
+    } catch (error) {
+        console.error(error);
+    }
+}
+//   function login(email, password) {
+//     if (email === FAKE_USER.email && password === FAKE_USER.password)
+//       dispatch({ type: "login", payload: FAKE_USER });
+//   }
 
   function logout() {
     dispatch({ type: "logout" });
