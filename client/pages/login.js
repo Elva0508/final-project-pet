@@ -1,6 +1,7 @@
-import React, { useState,useRef,useContext } from "react";
+import React, { useState} from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import LoginF from '@/components/user/login'
 import LoginForm from "@/components/user/loginForm";
 import RegisterForm from "@/components/user/registerForm";
 
@@ -8,40 +9,20 @@ import { AiFillGoogleCircle } from "react-icons/ai";
 import { BsLine } from "react-icons/bs";
 
 export default function Login() {
-  const {user} = useContext(AuthContext)
  
-//   const [email, setEmail]=useState('')
-// const [password, setPassword]=useState('')
-// const router=useRouter()
-
-// const handleSubmit=async(e)=>{
-//   e.preventDefault()
-
-//   try{
-//     const response=await axios.post('http://localhost:3005/api/auth-jwt/login',{
-//       email:email,
-//       password:password
-//     })
-//     if(response.data.success){
-//       alert('登入成功')
-//       router.push('/')
-//     }else{
-//       //console.log('登入失敗')
-//       console.error('登入失敗:', response.data.message);
-//     }
-//   }catch(error){
-//     console.error('錯誤:', error);
-//   }
-// }
  
+const [email, setEmail]=useState('')
+const [password, setPassword]=useState('')
+const router=useRouter()
+
 
   //登入註冊狀態切換
-  // const [isLogin, setIsLogin] = useState(true);
+  const [isLogin, setIsLogin] = useState(true);
 
   return (
     <>
     
-      {/* <div className="container my-5 ">
+      <div className="container my-5 ">
         <div className="login-box d-flex align-items-center flex-column justify-content-center mx-auto ">
           <div className="login-header d-flex ">
             <div className="size-5 mx-2 my-3">
@@ -76,7 +57,7 @@ export default function Login() {
              
               
                />
-                 <div className="form-alert">{error.username}</div> 
+                <div className="form-alert">{error.username}</div>  
             </div>
             <div className="u-form-group mb-3">
               <label htmlFor="">密碼</label>
@@ -88,13 +69,16 @@ export default function Login() {
        
                />
            
-             <div className="form-alert">{error.password}</div>  
+             <div className="form-alert">{error.password}</div>   
             </div>
+
           
             <div className="u-form-group">
               <button type='submit' className="btn-brown ">登入</button>
             </div>
-          </form>
+
+          </form> */}
+          <LoginF/>
           <div className="u-form-group">
             <a href="#" className="forgot-password">
               忘記密碼
@@ -115,9 +99,9 @@ export default function Login() {
             </div>
           </div>
         </div>
-      </div>  */}
+      </div>  
       {/* 註冊頁面 */}
-      {/* <div className="container my-5 ">
+       <div className="container my-5 ">
         <div className="login-box d-flex align-items-center flex-column justify-content-center mx-auto ">
           <div className="login-header d-flex ">
           <div className="size-5 mx-2 my-3">
@@ -169,7 +153,7 @@ export default function Login() {
             </div>
           </div>
         </div>
-      </div> */}
+      </div> 
 
     </>
   );

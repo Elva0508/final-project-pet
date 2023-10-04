@@ -3,11 +3,14 @@ const router = require("express").Router();
 const multer = require('multer');
 //const moment = require('moment');
 
+const mysql = require("mysql2");
 
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
 const secretKey = "secretkey";
 const upload = multer();
+
+//const bcrypt = require('bcrypt');
 
 //連接資料庫
 const db = require("../db");
@@ -137,10 +140,76 @@ router.post("/checkLogin", checkToken,(req,res)=>{
     token:token
   })
 
-
-
 })
 
+// router.post("/register",  async(req, res) => {
+//   const { name, email, password, confPassword } = req.body;
+//   if (password !== confPassword)
+//     return res.status(400).json({ msg: "密碼不一致" });
+//   const salt = await bcrypt.genSalt(10);
+//   const hashPassword = await bcrypt.hash(password, salt);
+//   const checkUserQuery = "SELECT * FROM users WHERE email = ?";
+//   db.query(checkUserQuery, [email], async (error, results) => {
+//     if (error) {
+//       console.error(error);
+//       return res.status(500).json({ error: "已經有這個email" });
+//     }
+//     if (results.length > 0) {
+//       return res.status(400).json({ msg: "Email 已存在" });
+//     }
+//     // 如果email不存在於數據庫中，則創建新用戶記錄
+//     const createUserQuery = "INSERT INTO users (username, email, password) VALUES (?, ?, ?)";
+//     db.query(createUserQuery, [name, email, hashPassword], (insertError) => {
+//       if (insertError) {
+//         console.error(insertError);
+//         return res.status(500).json({ error: "資料庫輸入有問題" });
+//       }
+//       res.json({ msg: "Register Success" });
+//       // 關閉連接
+//       db.end();
+//     });
+//   });
+//   // try {
+//   //   const results = await new Promise((resolve, reject) => {
+//   //     // 使用email和password進行登入驗證
+//   //     db.query('SELECT * FROM users WHERE email = ?', [email, password], (err, results) => {
+//   //       if (err) {
+//   //         console.error('資料庫-查詢錯誤：', err);
+//   //         reject(err);
+//   //         return
+//   //       }
+//   //       if (results.length === 0) {
+//   //         reject('帳號或密碼錯誤');
+//   //         return
+//   //       } else {
+//   //         resolve(results[0]);
+//   //       }
+//   //     });
+//   //   });
+
+//   //   if (results.length === 0) {
+//   //     res.status(401).json({ message: '帳號或密碼錯誤', code: '401' });
+//   //     return;
+//   //   } else {
+//   //     // 登入成功，執行你的JWT發送邏輯
+//   //     const user = results;
+//   //     const token = jwt.sign(
+//   //       {
+//   //         user_id: user.user_id, // 使用者的唯一識別符
+//   //       username: user.username, // 使用者的名稱
+//   //       email: user.email // 使用者的電子郵件
+//   //       },
+//   //       secretKey,
+//   //       { expiresIn: '30m' }
+//   //     );
+//   //      return res.status(200).json({ message: 'success login', code: '200', token: token })
+      
+//   //   }
+//   // } catch (err) {
+//   //   console.error('捕獲到異常：', err);
+//   //   return res.status(500).json({ message: '資料庫查詢錯誤', code: '500' });
+//   // }
+// });
 
 
 
@@ -214,6 +283,54 @@ router.post("/checkLogin", checkToken,(req,res)=>{
 
 //   res.json({ message: 'success', code: '200' });
 // });
+
+//---------------------------------------------
+const Register = async (req, res) => {
+  console.log(req.body);
+  const { name, email, password, confPassword } = req.body;
+  if (password !== confPassword)
+    return res.status(400).json({ msg: "password 不一致" });
+
+  //  const salt = await bcrypt.genSalt(10);
+  //  const hashPassword = await bcrypt.hash(password, salt);
+  
+  const connection = mysql.createConnection({
+    host: "localhost",
+    port: 3306,
+    user: "admin",
+    password: "12345",
+    database: "cat",
+  });
+
+  // 檢查數據庫中是否存在具有相同email的用戶
+  const checkUserQuery = "SELECT * FROM users WHERE email = ?";
+  connection.query(checkUserQuery, [email], async (error, results) => {
+    if (error) {
+      console.error(error);
+      return res.status(500).json({ error: "已經有這個email" });
+    }
+
+    if (results.length > 0) {
+      return res.status(400).json({ msg: "Email 已存在" });
+    }
+
+    // 如果email不存在於數據庫中，則創建新用戶記錄
+    const createUserQuery = "INSERT INTO users (username, email, password) VALUES (?, ?, ?)";
+    connection.query(createUserQuery, [name, email, password], (insertError) => {
+      if (insertError) {
+        console.error(insertError);
+        return res.status(500).json({ error: "資料庫輸入有問題" });
+      }
+      res.json({ msg: "Register Success" });
+
+      // 關閉連接
+      connection.end();
+      res.json({ msg: "Register Success" });
+    });
+  });
+};
+
+router.post("/register", Register);
 
 function checkToken(req,res,next){
 const token = req.headers.authorization;

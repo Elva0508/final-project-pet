@@ -52,13 +52,14 @@ async function handleSubmit(e) {
   );
 
   return (
-    <main className="login">
+  
    
 
-      <form className="form" onSubmit={handleSubmit}>
-        <div className="row">
-          <label htmlFor="email">Email address</label>
+      <form className="email-signup" onSubmit={handleSubmit}>
+        <div className="u-form-group mb-3">
+          <label htmlFor="email">帳號</label>
           <input
+          className="form-input " 
             type="email"
             id="email"
             onChange={(e) => setEmail(e.target.value)}
@@ -66,9 +67,10 @@ async function handleSubmit(e) {
           />
         </div>
 
-        <div className="row">
-          <label htmlFor="password">Password</label>
+        <div className="u-form-group mb-3">
+          <label htmlFor="password">密碼</label>
           <input
+          className="form-input " 
             type="password"
             id="password"
             onChange={(e) => setPassword(e.target.value)}
@@ -76,12 +78,12 @@ async function handleSubmit(e) {
           />
         </div>
 
-        <div>
+        <div className="u-form-group">
         
-        <button type="submit" className="btn-confirm">Login</button>
+        <button type="submit" className="btn-brown">登入</button>
    
         </div>
       </form>
-    </main>
+
   );
 }
