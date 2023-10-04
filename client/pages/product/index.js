@@ -33,7 +33,7 @@ export default function ProductList() {
 
     const [subcategoryData, setSubcategoryData] = useState({ result: [] });
     useEffect(() => {
-        axios.get("http://localhost:3005/api/product/category/subcategory").then((response) => {
+        axios.get("http://localhost:3005/api/product/category").then((response) => {
             setSubcategoryData({ result: response.data.result });
         });
     }, [])
@@ -68,107 +68,92 @@ export default function ProductList() {
                         <ProductListOffcanvas />
                     </div>
 
-                    { subcategoryData.result.map((v,i)=>{
-                        return (
-                            <section className='sidebar-product d-flex  flex-column flex-lg-row mt-3' key={v.category_id}>
-                                <div className='sidebar col-md-3 ms-3 me-1 d-none d-lg-block pe-4'>
-                                    <div className="accordion" id={`accordionPanelsStayOpenExample-${v.category_id}`}>
-                                        <div className="accordion-item">
-                                            <h2 className="accordion-header" id={`panelsStayOpen-headingCategory-${v.category_id}`}>
-                                                <button
-                                                    className="accordion-button"
-                                                    type="button"
-                                                    data-bs-toggle="collapse"
-                                                    data-bs-target={`#panelsStayOpen-collapseCategory-${v.category_id}`}
-                                                    aria-expanded="true"
-                                                    aria-controls={`panelsStayOpen-collapseCategory-${v.category_id}`}
-                                                >
-                                                    {v.category_name}
-                                                </button>
-                                            </h2>
-                                            <div id={`panelsStayOpen-collapseCategory-${v.category_id}`} className="accordion-collapse collapse show" aria-labelledby={`panelsStayOpen-headingCategory-${v.category_id}`}>
-                                                <div className="accordion-body row">
-                                                    {v.subcategories && v.subcategories.map((subcategory, j) => (
-                                                        <button className="button-subcategory" type="button" key={subcategory.subcategory_id}>
-                                                            {subcategory.subcategory_name}
-                                                        </button>
-                                                    ))}
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="accordion-item">
-                                            <h2 className="accordion-header" id={`panelsStayOpen-headingTwo-${v.category_id}`}>
-                                                <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target={`#panelsStayOpen-collapseTwo-${v.category_id}`} aria-expanded="false" aria-controls={`panelsStayOpen-collapseTwo-${v.category_id}`}>
-                                                    {v.category_name}
-                                                </button>
-                                            </h2>
-                                            <div id={`panelsStayOpen-collapseTwo-${v.category_id}`} className="accordion-collapse collapse" aria-labelledby={`panelsStayOpen-headingTwo-${v.category_id}`}>
-                                                <div className="accordion-body row">
-                                                    {v.subcategories && v.subcategories.map((subcategory, j) => (
-                                                        <button className="button-subcategory no-border-btn" type="button" key={subcategory.subcategory_id}>
-                                                            {subcategory.subcategory_name}
-                                                        </button>
-                                                    ))}
-                                                </div>
+
+                    <section className='sidebar-product d-flex  flex-column flex-lg-row mt-3' >
+                        <div className='sidebar col-md-3 ms-3 me-1 d-none d-lg-block pe-4'>
+                            <div className="accordion" id={`accordionPanelsStayOpenExample`}>
+                                {subcategoryData.result.map((category, index) => (
+                                    <div className="accordion-item" key={index}>
+                                        <h2 className="accordion-header" id={`panelsStayOpen-headingCategory-${index}`}>
+                                            <button
+                                                className="accordion-button"
+                                                type="button"
+                                                data-bs-toggle="collapse"
+                                                data-bs-target={`#panelsStayOpen-collapseCategory-${index}`}
+                                                aria-expanded="true"
+                                                aria-controls={`panelsStayOpen-collapseCategory-${index}`}
+                                                data-bs-parent="#accordionPanelsStayOpenExample" // 將這行添加到這個button元素中
+                                            >
+                                                {category.category_name}
+                                            </button>
+                                        </h2>
+                                        <div id={`panelsStayOpen-collapseCategory-${index}`} className="accordion-collapse collapse show" aria-labelledby={`panelsStayOpen-headingCategory-${index}`}>
+                                            <div className="accordion-body row">
+                                                {category.subcategories && category.subcategories.split(',').map((subcategory, subIndex) => (
+                                                    <button className="button-subcategory" type="button" key={subIndex}>
+                                                        {subcategory.trim()}
+                                                    </button>
+                                                ))}
                                             </div>
                                         </div>
                                     </div>
+                                ))}
+                            </div>
 
 
 
-                                    <div className='filter mt-3 '>
-                                        <div className="card filter-card">
-                                            <div className="card-header">
-                                                其他選項
-                                            </div>
-                                            <div className="card-body">
-                                                <form>
-                                                    <div className="col-12">
-                                                        <label for="inputprice" className="form-label">價格區間</label>
-                                                        <div className="row col-md">
-                                                            <div className="col-md-5">
-                                                                <input type="number" className="form-control" id="price" placeholder="$最低價">
-                                                                </input>
-                                                            </div>
-                                                            <div class="col-md dash">
-                                                                ~
-                                                            </div>
-                                                            <div className="col-md-5">
-                                                                <input type="number" className="form-control" id="price" placeholder="$最高價">
-                                                                </input>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div className="col-12 mt-2">
-                                                        <label for="brand" className="form-label">品牌</label>
-                                                        <input type="text" className="form-control" id="brand" placeholder="請輸入品牌關鍵字">
+                            <div className='filter mt-3 '>
+                                <div className="card filter-card">
+                                    <div className="card-header">
+                                        其他選項
+                                    </div>
+                                    <div className="card-body">
+                                        <form>
+                                            <div className="col-12">
+                                                <label for="inputprice" className="form-label">價格區間</label>
+                                                <div className="row col-md">
+                                                    <div className="col-md-5">
+                                                        <input type="number" className="form-control" id="price" placeholder="$最低價">
                                                         </input>
                                                     </div>
-                                                    <button type="submit" className="btn btn-brown col-12 mt-3">
-                                                        確定
-                                                    </button>
-                                                </form>
+                                                    <div class="col-md dash">
+                                                        ~
+                                                    </div>
+                                                    <div className="col-md-5">
+                                                        <input type="number" className="form-control" id="price" placeholder="$最高價">
+                                                        </input>
+                                                    </div>
+                                                </div>
                                             </div>
-                                        </div>
+                                            <div className="col-12 mt-2">
+                                                <label for="brand" className="form-label">品牌</label>
+                                                <input type="text" className="form-control" id="brand" placeholder="請輸入品牌關鍵字">
+                                                </input>
+                                            </div>
+                                            <button type="submit" className="btn btn-brown col-12 mt-3">
+                                                確定
+                                            </button>
+                                        </form>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
 
 
 
-                                <div className='product d-lg-flex flex-column justify-content-center '>
-                                    <div className=" row d-flex mb-3 g-3 g-md-4 ">
-                                        <ProductCard2 />
-                                        {/* 原本錯的 */}
-                                        {/* <div className="col-lg-4 col-md-4 col-sm-6">
+                        <div className='product d-lg-flex flex-column justify-content-center '>
+                            <div className=" row d-flex mb-3 g-3 g-md-4 ">
+                                <ProductCard2 />
+                                {/* 原本錯的 */}
+                                {/* <div className="col-lg-4 col-md-4 col-sm-6">
                                     <ProductCard />
                                 </div> */}
-                                    </div>
-                                </div>
+                            </div>
+                        </div>
 
-                            </section>
+                    </section>
 
-                        )
-                    })}
+
 
                 </div>
             </div>

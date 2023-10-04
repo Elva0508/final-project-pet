@@ -1,5 +1,8 @@
 .product-card2{   
     width: 100%;
+     a{
+                border-bottom: 0;
+            }
     .card{
         width: 100%;
         border: none;
@@ -71,6 +74,10 @@
                     color: $price;
                 }
             }
+            .card-herat{
+                width: 33px;
+            }
+           
         }
     }
 }
