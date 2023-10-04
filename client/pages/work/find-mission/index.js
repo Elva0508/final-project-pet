@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react'
 import axios from "axios"
+import Link from "next/link";
 // components
 import RoleSelection from '@/components/job/role-selection'
 // 用 {} 導入的內容是命名導出的，而不加{}導入的內容是默認導出的。
 import LatestMission, { MobileLatestMission } from '@/components/job/latest-mission'
 import Search from '@/components/job/search'
 import Filter from '@/components/job/filter'
-import MissionCard from '@/components/job/mission-card'
+// import MissionCard from '@/components/job/mission-card'
 import Pagination from '@/components/pagination';
 // react-icons
 import { FaCaretUp, FaCaretDown } from 'react-icons/fa';
@@ -15,13 +16,14 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
 
+// 篩選
 const MobileFilter = () => {
   return (
     <Swiper slidesPerView="auto" className="mobile-filter">
       <SwiperSlide>
         <Filter
-          items={["測試1", "測試2"]}
-          title="服務類型"
+          items={["到府照顧", "安親寄宿", "到府美容", "行為訓練", "醫療護理"]}
+          title="任務類型"
           src={"/job-icon/plus-service.svg"}
         />
       </SwiperSlide>
@@ -57,6 +59,7 @@ const MobileFilter = () => {
   );
 };
 
+// 排序
 const Sort = () => {
   const [isUpIconVisible, setIsUpIconVisible] = useState(false);
   const [isPriceIconVisible, setIsPriceIconVisible] = useState(false);
@@ -91,6 +94,111 @@ const Sort = () => {
           </button>
         </div>
       </div>
+    </>
+  )
+}
+
+// 使任務卡片的圖片高度與寬度同寬
+function ImageWithEqualDimensions({ file_path }) {
+  const imgRef = useRef(null);
+
+  // 使得圖片高度會在螢幕大小改變時跟著改變 而非在重整時才改變
+  const handleResize = () => {
+    const image = imgRef.current;
+    const imageWidth = image.offsetWidth;
+    image.style.height = imageWidth + 'px';
+  };
+
+  useEffect(() => {
+    // 獲取圖片元素的引用
+    const image = imgRef.current;
+    // 獲取圖片的寬度
+    const imageWidth = image.offsetWidth;
+    // 將寬度值分配给高度
+    image.style.height = imageWidth + 'px';
+    // 添加螢幕大小變化事件監聽器
+    window.addEventListener('resize', handleResize);
+    // 在組件卸載時移除事件監聽器
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+  return (
+    <div className="mission-img">
+      <img
+        ref={imgRef}
+        src={file_path}
+        alt="任務"
+      />
+    </div>
+  );
+}
+
+// 任務卡片
+const MissionCard = () => {
+  const [allMissions, setAllMissions] = useState([]);
+
+  const getAllMissions = async () => {
+    try {
+      const response = await axios.get("http://localhost:3005/api/mission/all-missions");
+      const data = response.data.data;
+      console.log(data);
+      setAllMissions(data);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  }
+
+  useEffect(() => {
+    getAllMissions()
+  }, [])
+
+  // 格式化日期
+  function formatDate(dateString) {
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}/${month}/${day}`;
+  }
+
+  // 為每個卡片創建獨立的isFavorite狀態數組
+  const [isFavorites, setIsFavorites] = useState(allMissions.map(() => false));
+
+  const toggleFavorite = (index) => {
+    const newFavorites = [...isFavorites];
+    newFavorites[index] = !newFavorites[index];
+    setIsFavorites(newFavorites);
+  };
+
+  return (
+    <>
+      {allMissions.map((v, i) => {
+        return (
+          <div className='col-6 col-md-4 col-lg-6 col-xl-4' key={v.mission_id}>
+
+            <div className='mission-list-card '>
+              <Link href={`/work/find-mission/${v.mission_id}`} >
+                <ImageWithEqualDimensions file_path={v.file_path} />
+              </Link>
+              <div className='mission-content mx-1 mt-2'>
+                <Link href={`/work/find-mission/${v.mission_id}`} >
+                  <div className='title size-6'>{v.title}</div>
+                </Link>
+                <div className='d-flex justify-content-between mt-2'>
+                  <div className='size-7'>{v.city}{v.area}<br />{formatDate(v.post_date)}</div>
+                  <img src={isFavorites[i] ? "/heart-clicked.svg" : "/heart.svg"} alt={isFavorites[i] ? "已收藏" : "未收藏"} onClick={() => toggleFavorite(i)} />
+                </div>
+                <div className='d-flex justify-content-between align-items-end price'>
+                  <div  >單次<span className='size-6'> NT${v.price}</span></div>
+                  <button className='btn-confirm size-6'>應徵</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )
+      })
+      }
     </>
   )
 }
@@ -138,7 +246,6 @@ export default function MissionList() {
           <div className='latest-mission latest-mission-pc d-none d-lg-flex flex-column'>
             <h3 className='size-4  '>最新任務</h3>
             <LatestMission />
-            
           </div>
           {/* 最新任務手機 */}
           <div className='latest-mission latest-mission-mobile d-lg-none mb-3 mt-1'>
