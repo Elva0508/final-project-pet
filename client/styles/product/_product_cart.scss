@@ -3,7 +3,6 @@
     background: $main-bg;
     color: $text-main;
     .step{
-
         .step1{
             background: #fff;
             border-bottom: 4px $hover  solid;
@@ -31,13 +30,12 @@
     .newprice{
         color: $price;
     }
-
-
     .cart-d-content{
  
             thead{
-                border-top: 1px $light-gray solid;
-                border-bottom: 1px $light-gray solid;
+                background:$content-bg;
+                // border-bottom: 1px solid $light-gray;
+                // border-top: 1px solid $light-gray;
             }
             th{
                 line-height: 2.5;
@@ -63,7 +61,6 @@
             td:nth-child(7) {
                 width: 10%;
             }
-
         tbody{
             tr{
                 border-bottom: .1px solid $light-gray ;
@@ -83,29 +80,27 @@
                 border: $text-main 1px solid;
                 background: $main-bg;
                 box-shadow: none;
-
             }
             .delete{
                 color: $text-main;
                 background: transparent;
                 border: 0;
             }
-    
         }
 
     }
 
     .cart-m-content{
         thead{
-      
-            border-bottom: 1px $light-gray solid;
-          
+            background: $content-bg;
+            // border-bottom: 1px solid $light-gray;
             }
         th{
             line-height: 1.5;
         }
 
         tbody{
+
             tr{
                 border-bottom: .1px solid $light-gray ;
                 td{
