@@ -8,6 +8,8 @@ export default function Checkout() {
    
     const[city,setCity]=useState(0)
     const[area,setArea]=useState([])
+    const[payment,setPayment]=useState(1)
+    const[shipment,setShipment]=useState(1)
 
     // 從localStorage中獲取資料
     const cart = localStorage.getItem('cart');
@@ -63,17 +65,14 @@ export default function Checkout() {
                 {/* 注意事項 */}
                 <div className='notice  mb-4 size-7 m-size-7'>
                     <p>【出貨公告】港澳地區貓砂將以多箱出貨方式。 <br />【出貨公告】超商取貨請填寫與證件相符之完整姓名，以確保取件權益。 <br />【出貨公告】貨運配送以一樓運送為主，若有需要增加配送樓層或條件，則須另按照樓層及運送材積酌收費用。 <br />【出貨公告】港澳地區恕不提供智能櫃/順豐站點配送，造成不便請見諒。</p>
-                    {/* <p>【出貨公告】超商取貨請填寫與證件相符之完整姓名，以確保取件權益。</p>
-                    <p>【出貨公告】貨運配送以一樓運送為主，若有需要增加配送樓層或條件，則須另按照樓層及運送材積酌收費用。</p>
-                    <p>【出貨公告】港澳地區恕不提供智能櫃/順豐站點配送，造成不便請見諒。</p> */}
                 </div>     
                 {/* 收件人資訊 */}
                 <div className='title size-6 mb-3 py-1 ps-2'>
-                        收件人資訊
+                    收件人資訊
                 </div>
                 <div className='information size-7  mb-3'>
-                    <div className='row row-cols-1 justify-content-center justify-content-sm-start'>
-                        <div className='d-flex mb-3 col-sm-12 col-11 flex-wrap '>
+                    <div className='row row-cols-1 justify-content-center justify-content-sm-start '>
+                        <div className='d-flex mb-3 col-sm-12 col-11 flex-wrap name'>
                             <div className='col-lg-3 col-5 me-3'>
                                 <label  className="form-label ">姓名</label>
                                 <input type="text" className="form-control " ></input>
@@ -83,57 +82,59 @@ export default function Checkout() {
                                 <input type="text" className="form-control " ></input>
                             </div>
                         </div>
-                        <div className=" size-7 col-sm-12 col-11 mb-2">
-                            <input className="form-check-input me-2" type="radio" name="flexRadioDefault" id="flexRadioDefault1" />
-                            <label className=" plan" for="flexRadioDefault1">
-                                宅配
-                            </label>
-                        </div>
-                        <div className='d-flex mb-3 size-7 col-sm-12 col-11'>
-                            <div className='me-3 col-lg-2 col-5'>
-                                <label>縣/市</label>
-                                <select className="form-select" value={city} onChange={handleCityChange}>
-                                    <option selected value={0}>請選擇</option>
-                                    {data.map((v)=>{
-                                        return(
-                                            <option key={v.name} value={v.number} >{v.name}</option>
-                                        )
-                                    })}
-                                </select>
+                        <div className='col-12'>
+                            <div className="accordion size-7 form-check">
+                                <div>
+                                    <input type="radio" name="shipmentAccordion" id="section1" className='form-check-input mb-3' value={1}  checked={shipment === 1}/>
+                                    <label for="section1">宅配</label>
+                                    <div className="content">
+                                        <div className='d-flex mb-3 size-7 col-sm-12 col-11'>
+                                            <div className='me-sm-3 col-lg-2 col-6'>
+                                                <label>縣/市</label>
+                                                <select className="form-select" value={city} onChange={handleCityChange}>
+                                                    <option selected value={0}>請選擇</option>
+                                                    {data.map((v)=>{
+                                                        return(
+                                                            <option key={v.name} value={v.number} >{v.name}</option>
+                                                        )
+                                                })}
+                                                </select>
+                                            </div>
+                                            <div className='col-lg-2 col-6'>
+                                                <label>鄉鎮市區</label>
+                                                <select className="form-select" >
+                                                    <option selected >請選擇</option>
+                                                    {area.map((v, i) => (
+                                                        <option key={i} value={v}>
+                                                            {v}
+                                                        </option>
+                                                        ))}
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div className='col-lg-6 col-11 mb-2'>
+                                            <label  className="form-label ">街道地址</label>
+                                            <input type="text" className="form-control " ></input>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <input type="radio" name="shipmentAccordion" id="section2" className='form-check-input mb-3' value={2} checked={shipment === 2}/>
+                                    <label for="section2">門市取貨</label>
+                                </div>      
                             </div>
-                            <div className='col-lg-2 col-5'>
-                                <label>鄉鎮市區</label>
-                                <select className="form-select" >
-                                    <option selected >請選擇</option>
-                                    {area.map((v, i) => (
-                                        <option key={i} value={v}>
-                                            {v}
-                                        </option>
-                                        ))}
-                                </select>
-                            </div>
-                        </div>
-                        <div className='col-lg-6 col-11 mb-2'>
-                            <label  className="form-label ">街道地址</label>
-                            <input type="text" className="form-control " ></input>
-                        </div>
-                        <div className="size-7 col-sm-12 col-11 mb-2">
-                            <input className="form-check-input me-2" type="radio" name="flexRadioDefault" id="flexRadioDefault2" />
-                            <label className=" plan" for="flexRadioDefault2">
-                                門市取貨
-                            </label>
-                        </div>
+                        </div>                                                             
                     </div>
                 </div>
                 {/* 付款方式 */}
                 <div className='title size-6  mb-3 py-1 ps-2'>
-                        付款方式
+                    付款方式
                 </div>
-                <div className='mb-3 col-sm-12 col-11'>
+                <div className='mb-4 col-sm-12 col-11'>
                     <div className="accordion size-7 form-check">
                         <div>
-                            <input type="radio" name="accordion" id="section1" className='form-check-input mb-3 '/>
-                            <label for="section1">信用卡</label>
+                            <input type="radio" name="paymentAccordion" id="section3" className='form-check-input mb-3' value={1} checked={payment === 1}/>
+                            <label for="section3">信用卡</label>
                             <div className="content col-lg-5 col-12 m-0">
                                 <input type="text" placeholder="信用卡號碼" className="form-control mb-2" />
                                 <div className='d-flex'> 
@@ -143,12 +144,12 @@ export default function Checkout() {
                             </div>
                         </div>
                         <div>
-                            <input type="radio" name="accordion" id="section2" className='form-check-input mb-3'/>
-                            <label for="section2">Line Pay</label>
+                            <input type="radio" name="paymentAccordion" id="section4" className='form-check-input mb-3' value={2} checked={payment === 2}/>
+                            <label for="section4">Line Pay</label>
                         </div>
                         <div>
-                            <input type="radio" name="accordion" id="section3" className='form-check-input'/>
-                            <label for="section3">貨到付款</label>
+                            <input type="radio" name="paymentAccordion" id="section5" className='form-check-input' value={3} checked={payment === 3}/>
+                            <label for="section5">貨到付款</label>
                         </div>       
                     </div>
                 </div>  
@@ -210,25 +211,26 @@ export default function Checkout() {
                     </table>
                 </div>
                     {/* 優惠碼+明細 */}
-                <div className='d-flex justify-content-sm-end justify-content-center  mb-4 col-lg-10 col-sm-11'>     
+                {/* <div className='d-flex justify-content-sm-end justify-content-center  mb-4 col-lg-10 col-sm-11'>      */}
+                <div className='d-flex justify-content-sm-end justify-content-center mb-5'>     
                     <div className='col-lg-4 col-sm-6 col-11 detail d-flex justify-content-center p-sm-4  '>
                         <table className='col-sm-11 col-12'>
-                            <tbody className=''>
+                            <tbody >
                                 <tr>
-                                        <td className=''>商品總金額</td>
-                                        <td className='text-end'>NT${allPrice}</td>
+                                    <td className=''>商品總金額</td>
+                                    <td className='text-end'>NT${allPrice}</td>
                                 </tr>
                                 <tr>
-                                        <td>優惠折扣</td>
-                                        <td className='text-end'>NT$-{sale}</td>
+                                    <td>優惠折扣</td>
+                                    <td className='text-end'>NT$-{sale}</td>
                                 </tr>
                                 <tr className='cal'> 
-                                        <td className='pb-2'>運費</td>
-                                        <td className='text-end'>NT${freight}</td>
+                                    <td className='pb-2'>運費</td>
+                                    <td className='text-end'>NT${freight}</td>
                                 </tr>
                                 <tr > 
-                                        <th className='pt-2'>總計</th>
-                                        <th className='text-end'>NT${allPrice-sale+freight}</th>
+                                    <th className='pt-2'>總計</th>
+                                    <th className='text-end'>NT${allPrice-sale+freight}</th>
                                 </tr>
                             </tbody>
                         </table>

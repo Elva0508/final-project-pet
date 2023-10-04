@@ -2,11 +2,12 @@ import React,{useState,useEffect } from 'react'
 import {RiDeleteBin5Fill} from 'react-icons/ri';
 import { useRouter } from 'next/router';
 import axios from "axios";
+import { useCart } from '@/hooks/useCart';
 // import moment from "moment";
 
 export default function Cart() {
+    const { cart, setCart } = useCart();
     const router = useRouter();
-    const [cart, setCart] = useState([])
     const [isChecked, setIsChecked] = useState(true);
     const [coupon, setCoupon] = useState([])
     const [allPrice, setAllPrice] = useState(0)
@@ -32,7 +33,6 @@ export default function Cart() {
           .catch((error) => {
             console.error("Error:", error);
         });
-
       }
     //抓可使用優惠券
     const getCoupon =  async() => {   
@@ -50,17 +50,17 @@ export default function Cart() {
 
       }
     //第一次渲染，抓購物車內所有商品  
-    useEffect(() => {
-        let cartData
-        if (localStorage.getItem('cart')) {
-            // 如果有資料，將其轉換為JavaScript對象或陣列
-            cartData = JSON.parse(localStorage.getItem('cart'));
-            setCart(cartData)
+    // useEffect(() => {
+    //     let cartData
+    //     if (localStorage.getItem('cart')) {
+    //         // 如果有資料，將其轉換為JavaScript對象或陣列
+    //         cartData = JSON.parse(localStorage.getItem('cart'));
+    //         setCart(cartData)
 
-        }else{
-            getCart()
-        }
-      }, []) 
+    //     }else{
+    //         getCart()
+    //     }
+    //   }, []) 
     useEffect(() => {
         //判斷是否全選
         setIsChecked(allChange(cart,isChecked))

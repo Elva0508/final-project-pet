@@ -33,6 +33,7 @@
         .plan{
             font-weight: 600;
         }
+
     }
     .form-control:focus{
         border: 1px solid $text-main;
@@ -141,7 +142,8 @@
         }     
         .content {
             display: none;
-            padding: 10px;
+            padding-top: 10px;
+            padding-bottom: 10px;
         }       
         input[type="radio"]:checked + label + .content {
             display: block;
