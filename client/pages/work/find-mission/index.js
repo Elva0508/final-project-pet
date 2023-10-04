@@ -63,25 +63,20 @@ const MobileFilter = () => {
 const Sort = ({ sortOrder, setSortOrder, setSortBy }) => {
   const [activeButton, setActiveButton] = useState(null);
   const [iconDirection, setIconDirection] = useState({}); // 用於跟蹤圖標方向
+
   const toggleButton = (sortBy) => {
-    if (sortBy !== activeButton) {
-      setActiveButton(sortBy);
-      setSortOrder("desc"); // 默認切換為降序
-      setSortBy(sortBy === "post_date" ? "post_date" : "price");
-      setIconDirection({ [sortBy]: 'down' });
-    } else {
-      setSortOrder((prevSortOrder) => {
-        // 切換排序順序
-        if (prevSortOrder === "asc") {
-          setIconDirection({ [sortBy]: 'down' });
-          return "desc";
-        } else {
-          setIconDirection({ [sortBy]: 'up' });
-          return "asc";
-        }
-      });
-    }
+    // 切換排序順序
+    const newSortOrder = sortOrder === "asc" ? "desc" : "asc";
+    setSortOrder(newSortOrder);
+    setSortBy(sortBy === "post_date" ? "post_date" : "price");
+    setActiveButton(sortBy);
+    
+    // 更新圖標方向
+    const newIconDirection = { ...iconDirection };
+    newIconDirection[sortBy] = newSortOrder === "asc" ? "up" : "down";
+    setIconDirection(newIconDirection);
   };
+
   useEffect(() => {
     console.log("現在是" + sortOrder);
   }, [sortOrder]);
