@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import { FiSend } from "react-icons/fi";
 import { BiMessageRounded } from "react-icons/bi";
+import { CiCircleChevLeft, CiCircleChevRight } from "react-icons/ci";
 import Footer from "@/components/footer";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Scrollbar, Navigation } from "swiper/modules";
@@ -13,6 +14,7 @@ import { GoStarFill } from "react-icons/go";
 import Rating from "@mui/material/Rating";
 import StarIcon from "@mui/icons-material/Star";
 import { Button, Modal } from "antd";
+import { DatePicker } from "@douyinfe/semi-ui";
 // register Swiper custom elements
 register();
 
@@ -20,6 +22,7 @@ register();
 import "swiper/css";
 import "swiper/css/scrollbar";
 import "swiper/css/navigation";
+import { TextArea } from "@douyinfe/semi-ui";
 const ImageSwiper = ({ images }) => {
   const swiperRef = useRef(null);
   useEffect(() => {
@@ -138,6 +141,9 @@ export const HelperDetailSticky = () => {
 };
 const Quotation = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [time, setTime] = useState(1);
+  const [frequency, setFrequency] = useState(1);
+  const [dateOpen, setDateOpen] = useState(false);
   const showModal = () => {
     setIsModalOpen(true);
   };
@@ -146,6 +152,38 @@ const Quotation = () => {
   };
   const handleCancel = () => {
     setIsModalOpen(false);
+  };
+  const handleDateChange = (date, dateString) => {
+    console.log("date changed", date, dateString);
+    setStartDay(dateString[0]);
+    setEndDay(dateString[1]);
+  };
+  const handleTime = (e) => {
+    const position = e.target.getAttribute("position");
+
+    if (position === "left") {
+      setTime((prevTime) => {
+        return prevTime <= 1 ? prevTime : prevTime - 1;
+      });
+    }
+    if (position === "right") {
+      setTime((prevTime) => {
+        return prevTime >= 10 ? prevTime : prevTime + 1;
+      });
+    }
+  };
+  const handleFrequency = (e) => {
+    const position = e.target.getAttribute("position");
+    if (position === "left") {
+      setFrequency((prevFrequency) => {
+        return prevFrequency <= 1 ? prevFrequency : prevFrequency - 1;
+      });
+    }
+    if (position === "right") {
+      setFrequency((prevFrequency) => {
+        return prevFrequency >= 10 ? prevFrequency : prevFrequency + 1;
+      });
+    }
   };
   return (
     <div>
@@ -169,22 +207,70 @@ const Quotation = () => {
         </div>
         <div className="d-flex justify-content-between">
           <p>開始日期</p>
-          <div>選擇開始日期</div>
+          {/* <label
+            onClick={() => {
+              setDateOpen(!dateOpen);
+            }}
+          >
+            選擇結束日期
+          </label> */}
+          <div>
+            <DatePicker
+              // disabledDate={startDead}
+              // className="d-none"
+              open={dateOpen}
+              placeholder={"選擇開始日期"}
+              autoSwitchDate={false}
+              type={"datePicker"}
+              dropdownClassName="dateRangeTest"
+              // renderFullDate={renderFullDate}
+              onChange={handleDateChange}
+            />
+          </div>
         </div>
         <div className="d-flex justify-content-between">
           <p>結束日期</p>
           <div>選擇結束日期</div>
         </div>
         <div className="d-flex justify-content-between">
-          <p>地點</p>
-          <div>台灣桃園市楊梅區環南路309巷13號</div>
+          <p>服務時間</p>
+          <div className="d-flex align-items-center">
+            <CiCircleChevLeft
+              position="left"
+              className="icon"
+              onClick={handleTime}
+            />
+            <div>{time * 30} 分鐘</div>
+            <CiCircleChevRight
+              position="right"
+              className="icon"
+              onClick={handleTime}
+            />
+          </div>
         </div>
         <div className="d-flex justify-content-between">
+          <div>每天次數</div>
+          <div className="d-flex align-items-center">
+            <CiCircleChevLeft
+              position="left"
+              className="icon"
+              onClick={handleFrequency}
+            />
+            <div>{frequency} 次</div>
+            <CiCircleChevRight
+              position="right"
+              className="icon"
+              onClick={handleFrequency}
+            />
+          </div>
+        </div>
+        <div className="d-flex justify-content-between">
+          <p>地點</p>
+          <input type="text" value={"台灣桃園市楊梅區環南路309巷13號"} />
+        </div>
+        <div className="d-flex flex-column justify-content-between">
           <p>備註</p>
-          <input
-            type="text"
-            placeholder="輸入備註或是您毛小孩的需求與個性狀況"
-          />
+          <TextArea placeholder="輸入備註或是您毛小孩的需求與個性狀況" />
         </div>
         <div className="divider my-2"></div>
         <div className="col-md-6 col-8 offset-md-6 offset-4 settlement-amount ">
@@ -200,17 +286,17 @@ const Quotation = () => {
           </div>
           <div className="d-flex justify-content-between">
             <p>服務時間(每30分鐘)</p>
-            <p>x1</p>
+            <p>x{time}</p>
           </div>
           <div className="d-flex justify-content-between">
             <p>每天次數</p>
-            <p>x2</p>
+            <p>x{frequency}</p>
           </div>
           <div className="divider"></div>
           <div className="d-flex justify-content-between">
             <p>總金額</p>
             <p>
-              NT$<span>800</span>
+              NT$<span>{400 * time * frequency}</span>
             </p>
           </div>
         </div>

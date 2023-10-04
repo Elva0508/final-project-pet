@@ -141,6 +141,10 @@ $detail-block-width: 12px; //標題左側直槓槓
     height: 1px;
     background-color: $light-gray;
   }
+  .icon {
+    font-size: 26px;
+    cursor: pointer;
+  }
 }
 .evaluation-bar {
   $block-width: calc(100% - 3px);
