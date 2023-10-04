@@ -60,37 +60,52 @@ const MobileFilter = () => {
 };
 
 // 排序
-const Sort = () => {
-  const [isUpIconVisible, setIsUpIconVisible] = useState(false);
+const Sort = ({ sortOrder, setSortOrder, setSortBy }) => {
+  const [isDownIconVisible, setIsDownIconVisible] = useState(false);
   const [isPriceIconVisible, setIsPriceIconVisible] = useState(false);
 
-  const toggleUpIcon = () => {
-    setIsUpIconVisible(!isUpIconVisible);
+  const toggleDownIcon = () => {
+    setIsDownIconVisible(!isDownIconVisible);
+    setIsPriceIconVisible(false); // 重置價格排序圖標
 
-    // 如果薪資按鈕已經是 $text-main，則切換薪資按鈕回 $text-mark
-    if (isPriceIconVisible) {
-      setIsPriceIconVisible(false);
+    if (!isDownIconVisible) {
+      // 按下刊登時間，切換為降序(10/27-9/2)
+      setSortOrder("desc");
+    } else {
+      // 未按刊登時間，切換為升序
+      setSortOrder("asc");
     }
+    setSortBy("post_date"); // 按刊登時間排序
   };
 
   const togglePriceIcon = () => {
     setIsPriceIconVisible(!isPriceIconVisible);
+    setIsDownIconVisible(false); // 重置刊登時間排序圖標
 
-    // 如果刊登時間按鈕已經是 $text-main，則切換刊登時間按鈕回 $text-mark
-    if (isUpIconVisible) {
-      setIsUpIconVisible(false);
+    if (!isPriceIconVisible) {
+      // 按下價格，切換為降序
+      setSortOrder("desc");
+    } else {
+      // 未按價格，切換為升序
+      setSortOrder("asc");
     }
+
+    setSortBy("price"); // 按價格排序
   };
+
+  useEffect(() => {
+    console.log("現在是" + sortOrder);
+  }, [sortOrder]);
 
   return (
     <>
       <div className='sort ' >
         <div className='sort-btn d-flex   justify-content-center text-align-center'>
-          <button className={`size-7 m-1 p-1 ${isUpIconVisible ? 'active' : ''}`} onClick={toggleUpIcon}>
-            刊登時間 {isUpIconVisible ? <FaCaretUp /> : <FaCaretDown />}
+          <button className={`size-7 m-1 p-1 ${isDownIconVisible ? 'active' : ''}`} onClick={toggleDownIcon}>
+            刊登時間 {isDownIconVisible ? <FaCaretDown /> : <FaCaretUp />}
           </button>
           <button className={`size-7 m-1 p-1 ${isPriceIconVisible ? 'active' : ''}`} onClick={togglePriceIcon}>
-            薪資 {isPriceIconVisible ? <FaCaretUp /> : <FaCaretDown />}
+            薪資 {isPriceIconVisible ? <FaCaretDown /> : <FaCaretUp />}
           </button>
         </div>
       </div>
@@ -135,12 +150,12 @@ function ImageWithEqualDimensions({ file_path }) {
 }
 
 // 任務卡片
-const MissionCard = () => {
+const MissionCard = ({ sortOrder, sortBy }) => {
   const [allMissions, setAllMissions] = useState([]);
 
   const getAllMissions = async () => {
     try {
-      const response = await axios.get("http://localhost:3005/api/mission/all-missions");
+      const response = await axios.get(`http://localhost:3005/api/mission/all-missions?sortOrder=${sortOrder}&sortBy=${sortBy}`);
       const data = response.data.data;
       console.log(data);
       setAllMissions(data);
@@ -151,7 +166,7 @@ const MissionCard = () => {
 
   useEffect(() => {
     getAllMissions()
-  }, [])
+  }, [sortOrder]) // 当排序方式发生变化时重新获取数据
 
   // 格式化日期
   function formatDate(dateString) {
@@ -204,22 +219,26 @@ const MissionCard = () => {
 }
 
 export default function MissionList() {
+  const [sortOrder, setSortOrder] = useState("asc");
+  const [sortBy, setSortBy] = useState("post_date");
+  console.log(`http://localhost:3005/api/mission/all-missions?sortOrder=${sortOrder}&sortBy=${sortBy}`);
 
-  const [allMissions, setAllMissions] = useState([])
-  const getAllMissions = async () => {
-    await axios.get("http://localhost:3005/api/mission/all-missions")
-      .then((response) => {
-        const data = response.data.result;
-        console.log(data);
-        setAllMissions(data)
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
-  }
-  useEffect(() => {
-    getAllMissions()
-  }, [])
+  // const [allMissions, setAllMissions] = useState([]);
+
+  // const getAllMissions = async () => {
+  //   try {
+  //     const response = await axios.get(`http://localhost:3005/api/mission/all-missions?sortOrder=${sortOrder}`);
+  //     const data = response.data.data;
+  //     console.log(data);
+  //     setAllMissions(data);
+  //   } catch (error) {
+  //     console.error("Error:", error);
+  //   }
+  // }
+
+  // useEffect(() => {
+  //   getAllMissions()
+  // }, [sortOrder])
 
   return (
     <>
@@ -238,7 +257,7 @@ export default function MissionList() {
         </div>
 
         <div className='d-flex my-2'>
-          <Sort />
+          <Sort sortOrder={sortOrder} setSortOrder={setSortOrder} sortBy={sortBy} setSortBy={setSortBy} />
         </div>
 
         <section className='d-flex all-mission flex-column flex-lg-row mt-3'>
@@ -257,7 +276,7 @@ export default function MissionList() {
             {/* 不能使用d-flex d-lg-block block會導致MissionCard垂直排列 */}
             <div className='row d-flex mb-3 g-3 g-md-4'>
               {/* 使用g-3 不用justify-content-between 預設是start 卡片就會照順序排列 */}
-              <MissionCard />
+              <MissionCard sortOrder={sortOrder} sortBy={sortBy} />
             </div>
           </div>
         </section>
