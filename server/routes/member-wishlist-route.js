@@ -43,7 +43,11 @@ router.delete("/:id",(req,res)=>{
 //收藏清單--想先知道購物車內有甚麼商品
 router.get("/cart",(req,res)=>{
     connection.execute(
-        `SELECT * FROM cart WHERE user_id=1;`
+        `SELECT cart.*, p.product_name AS name,pt.type_name AS type,p.images_one AS image,p.specialoffer AS price
+        FROM cart 
+        JOIN products AS p ON cart.product_id=p.product_id 
+        JOIN product_type AS pt ON cart.product_type_id=pt.type_id AND p.product_id=pt.product_id
+        WHERE user_id=1;`
         ,(error,result)=>{
             res.json({result})
         }    
