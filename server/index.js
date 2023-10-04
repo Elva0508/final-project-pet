@@ -10,6 +10,7 @@ const workRouter = require("./routes/work-route");
 const memberOrderRouter = require("./routes/member-order-route");
 const memberOrderDetailRouter = require("./routes/member-order-detail-route");
 const memberWishlistRouter = require("./routes/member-wishlist-route");
+const memberPurchastRouter = require("./routes/member-purchast-route");
 const cartRouter = require("./routes/cart-route");
 
 
@@ -24,6 +25,7 @@ app.use("/api/work", workRouter);
 app.use("/api/member-order", memberOrderRouter);
 app.use("/api/member-order-detail", memberOrderDetailRouter);
 app.use("/api/member-wishlist", memberWishlistRouter);
+app.use("/api/member-purchast", memberPurchastRouter);
 app.use("/api/product/cart", cartRouter);
 
 

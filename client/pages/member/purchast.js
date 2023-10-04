@@ -1,23 +1,63 @@
-import React from "react";
+import React, { useState ,useEffect} from "react";
 import ListM from "@/components/member/list-m";
 import ListD from "@/components/member/list-d";
 import ListUserM from "@/components/member/list-user-m";
 import { BiSolidShoppingBag } from "react-icons/bi";
+import { GrFormPrevious } from "react-icons/gr";
+import { GrFormNext } from "react-icons/gr";
+import axios from "axios";
 
 export default function Purchast() {
+  const [product, setProduct] = useState([]);
+  const [cart, setCart] = useState([]);
 
 
-  // const getCart = async () => {
-  //   try {
-  //     const response = await axios.get("http://localhost:3005/product/cart");
-  //     const data = response.data.result;
-  //     console.log(data);
-  //     setCart([data]);
-  //     console.log(cart);
-  //   } catch (error) {
-  //     console.error("Error:", error);
-  //   }
-  // }
+
+  const itemsPerPage = 5;
+  const [currentPage, setCurrentPage] = useState(1);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentData = product.slice(startIndex, endIndex);
+
+  const [activePage, setActivePage] = useState(1);
+
+
+
+  const getProduct = () => {
+    axios
+      .get("http://localhost:3005/api/member-purchast")
+      .then((response) => {
+        const data = response.data.result;
+        console.log(data);
+        setProduct(data);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  };
+
+  const getCart = () => {
+    axios
+      .get("http://localhost:3005/api/member-purchast/cart")
+      .then((response) => {
+        const data = response.data.result;
+        console.log(data);
+        setCart(data);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  };
+
+
+
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
+  };
+
+  useEffect(() => {
+    getProduct();
+  },[]);
 
   return (
     <>
@@ -29,37 +69,70 @@ export default function Purchast() {
         <div className="d-flex justify-content-around py-2">
           <ListD />
           <div className="row col-lg-8 col-md-8 col-12 purchast-bg  p-3">
-          
             <div>
               <h5 className="size-5">
                 <BiSolidShoppingBag />
                 購買紀錄
               </h5>
-              <div className="d-flex border-bottom py-2 justify-content-between">
+              
+                {currentData.map((v,i) => {
+                  return (
+                    <>
+                    <div className="d-flex border-bottom py-2 justify-content-between">
+                      <div className="d-flex  col-9" key={i}>
+                        <img
+                          className="picture me-4"
+                          src={v.image}
+                        ></img>
 
-                <div className="d-flex  col-9">
-                  <img
-                    className="picture me-4"
-                    src="https://cdn-front.mao-select.com.tw//upload_files/fonlego-rwd/prodpic/D_1(12).jpg"
-                  ></img>
+                        <div className="">
+                          <p className="size-6">{v.product_name}</p>
+                          <p className="size-6 type">{v.type}</p>
+                          <p className="size-6 price">NT${v.price}</p>
+                        </div>
+                      </div>
 
-                  <div className="">
-                    <p className="size-6">巨型開放式貓砂盆 (多色)</p>
-                    <p className="size-6 type">貓砂盆</p>
-                    <p className="size-6 price">NT$690</p>
-                  </div>
-                </div>
-
-                <div className="col-3  d-flex flex-column align-items-center justify-content-center">
-                  <button className="btn btn-confirm m-2 size-6 m-size-7">
-                    再次購買
+                      <div className="col-3  d-flex flex-column align-items-center justify-content-center">
+                        <button className="btn btn-confirm m-2 size-6 m-size-7"
+                        onClick={() => addCart(v.product_id, v.product_type)}
+                        >
+                          再次購買
+                        </button>
+                        <button className="btn btn-outline-confirm m-2 size-6 m-size-7">
+                          加入收藏
+                        </button>
+                      </div>
+                      </div>
+                    </>
+                  );
+                })}
+              
+                <div className="pagination size-7 d-flex justify-content-center mt-4">
+                <button className="btn prev border-0">
+                  <GrFormPrevious />
+                </button>
+                {Array.from({
+                  length: Math.ceil(product.length / itemsPerPage),
+                }).map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => {
+                      handlePageChange(index + 1);
+                      setActivePage(index + 1);
+                    }}
+                    className={`btn me-1 ${
+                      activePage === index + 1 ? "active" : ""
+                    }`}
+                  >
+                    {index + 1}
                   </button>
-                  <button className="btn btn-outline-confirm m-2 size-6 m-size-7">
-                    加入收藏
-                  </button>
-                </div>
-
+                ))}
+                <button className="btn next border-0">
+                  <GrFormNext />
+                </button>
               </div>
+
+
 
             </div>
           </div>
