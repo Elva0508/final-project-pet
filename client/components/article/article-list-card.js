@@ -40,6 +40,7 @@ export default function ArticleListCard() {
               <>
                 <div className="col">
                   <Link
+                    key={v.article_id}
                     href={`/article/${v.article_category_id}/${v.article_id}`}
                   >
                     <div className="card h-100" key={v.article_id}>

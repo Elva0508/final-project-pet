@@ -2,13 +2,19 @@ import { useState, useEffect } from "react";
 import BreadCrumb from "@/components/article/bread-crumb";
 import ArticleCatogory from "@/components/article/article-catogory";
 import ArticleListCard from "@/components/article/article-list-card";
-import Pagination from "@/components/pagination";
+import Pagination from "@/components/article/article-pagination";
 import { useRouter } from "next/router";
 import axios from "axios";
 
 export default function ArticleList() {
   const [articlelist, setArticleList] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1); //目前頁碼
+  const totalPages = 10; // 總頁數
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
+    // 設定頁碼狀態
+  };
   const router = useRouter();
 
   useEffect(() => {
@@ -59,7 +65,11 @@ export default function ArticleList() {
         </div>
 
         <div>
-          <Pagination />
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={handlePageChange}
+          />
         </div>
       </div>
     </>
