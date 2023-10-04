@@ -1,8 +1,13 @@
-import React, {useContext} from 'react'
-import {useAuth} from '@/hooks/user-auth'
+import React, {useContext, useState} from 'react'
+import axios from 'axios'
+import {useRouter} from 'next/router'
+import useAuth from '@/hooks/user-auth'
 
-export default function LoginForm({user, error,handleFieldChange,handleSubmit}) {
-  //const {login}=useAuth()
+export default function LoginForm({}) {
+  const {login}=useAuth()
+
+
+
 
   return (
     <>
@@ -13,26 +18,27 @@ export default function LoginForm({user, error,handleFieldChange,handleSubmit}) 
               className="form-input " 
               type="email" 
               placeholder="請輸入電子信箱"
-              name="username"
-              value={user.username}
-              onChange={handleFieldChange}
+              value={email}
+              onChange={(e)=>setEmail(e.target.value)}
+              
                />
-               <div className="form-alert">{error.username}</div>
+               {/* <div className="form-alert">{error.email}</div> */}
             </div>
             <div className="u-form-group mb-3">
               <label htmlFor="">密碼</label>
               <input className="form-input " 
               type="password" 
               placeholder="請輸入密碼"
-              value={user.password}
-              onChange={handleFieldChange}
+              value={password}
+              onChange={(e)=>setPassword(e.target.value)}
+           
                />
                {/* 錯誤訊息 */}
-              <div className="form-alert">{error.password}</div>
+              {/* <div className="form-alert">{error.password}</div> */}
             </div>
           
             <div className="u-form-group">
-              <button className="btn-brown" >登入</button>
+              <button className="btn-brown" onClick={login}>登入</button>
             </div>
           </form>
     </>

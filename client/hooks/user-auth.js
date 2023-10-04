@@ -1,35 +1,29 @@
 import React, { useContext, } from 'react';
-import { AuthContext } from '@/context/authContext'
-import jwt from "jwt-decode"
-import axios from "axios";
+import { AuthContext } from '@/context/authContext';
+// import jwt from "jwt-decode"
+// import axios from "axios";
 
 const useAuth = ()=>{
   //取得user-auth的狀態
-const {user, setUser, token,setToken}=useContext(AuthContext)
-const appKey = "secretkey";
-const API_LOGIN = 'http://localhost:3005/api/auth-jwt/login';
-const API_LOGOUT = 'http://localhost:3005/api/auth-jwt/logout';
+const {setUser}=useContext(AuthContext)
+// const appKey = "secretkey";
+// const API_LOGIN = 'http://localhost:3005/api/auth-jwt/login';
+// const API_LOGOUT = 'http://localhost:3005/api/auth-jwt/logout';
  
   //登入
-  const login = async(account,password)=>{
-   try{
-    const result = await axios.post(API_LOGIN, {
-      account,password,
-    });
-    // 不再需要將令牌存儲在本地存儲中
-     localStorage.setItem(appKey, result.data.token);
-
-    // 將使用者資訊存儲在 AuthContext 中
-    const u = jwt(result.data.token);
-    setUser(u);
-
-   }catch(error){
-    console.log(error);
-   }
-  }
+  const login = ()=>{
+    const newUser = {
+      account: "ben",
+      password: "a12345",
+      name: "Ben Chen",
+      mail: "BenChen@email.com", 
+      head: "https://randomuser.me/api/portraits/men/44.jpg",
+    };
+    setUser(newUser);
+    }
   //登出
   const logout = ()=>{
-    setUser(undefined)
+setUser(undefined)
   }
   return {login, logout}
 }

@@ -57,7 +57,7 @@ app.get("/member/wishlist", (req, res) => {
 
 //------------------------------------------佳瑜
 // //jwt路由使用
-const authJWTRouter = require("./routes/auth-jwt");
+const authJWTRouter = require("./routes/auth-jwt-other");
 
 // // // 掛載 auth-jwt 路由
 app.use('/api/auth-jwt', authJWTRouter);

@@ -1,6 +1,8 @@
-import { useEffect } from "react";
+import { useEffect,useContext } from "react";
 import Layout from "./layout";
 import "@/styles/globals.scss";
+import { AuthProvider } from '@/context/fakeAuthContext'
+
 
 export default function App({ Component, pageProps }) {
   useEffect(() => {
@@ -8,8 +10,10 @@ export default function App({ Component, pageProps }) {
     import("bootstrap/dist/js/bootstrap");
   }, []);
   return (
+    <AuthProvider> 
     <Layout>
       <Component {...pageProps} />
     </Layout>
+    </AuthProvider>
   );
 }
