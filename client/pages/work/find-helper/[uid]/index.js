@@ -13,8 +13,15 @@ import workService from "@/services/work-service";
 import { GoStarFill } from "react-icons/go";
 import Rating from "@mui/material/Rating";
 import StarIcon from "@mui/icons-material/Star";
-import { Button, Modal } from "antd";
-import { DatePicker } from "@douyinfe/semi-ui";
+// import { Button, Modal } from "antd";
+import {
+  DatePicker,
+  Modal,
+  Button,
+  CheckboxGroup,
+  Checkbox,
+} from "@douyinfe/semi-ui";
+import dayjs from "dayjs";
 // register Swiper custom elements
 register();
 
@@ -140,23 +147,53 @@ export const HelperDetailSticky = () => {
   );
 };
 const Quotation = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [time, setTime] = useState(1);
-  const [frequency, setFrequency] = useState(1);
-  const [dateOpen, setDateOpen] = useState(false);
-  const showModal = () => {
-    setIsModalOpen(true);
+  const [visible, setVisible] = useState(false);
+  const showDialog = () => {
+    setVisible(true);
   };
   const handleOk = () => {
-    setIsModalOpen(false);
+    setVisible(false);
+    console.log("Ok button clicked");
   };
   const handleCancel = () => {
-    setIsModalOpen(false);
+    setVisible(false);
+    console.log("Cancel button clicked");
   };
-  const handleDateChange = (date, dateString) => {
-    console.log("date changed", date, dateString);
-    setStartDay(dateString[0]);
-    setEndDay(dateString[1]);
+  const handleAfterClose = () => {
+    console.log("After Close callback executed");
+  };
+  const [time, setTime] = useState(1);
+  const [frequency, setFrequency] = useState(1);
+  const [days, setDays] = useState(0);
+  const [startDateOpen, setStartDateOpen] = useState(false);
+  const [endDateOpen, setEndDateOpen] = useState(false);
+  const today = dayjs();
+  const [startDay, setStartDay] = useState(undefined);
+  const [endDay, setEndDay] = useState(undefined);
+
+  useEffect(() => {
+    if (startDay && endDay) {
+      const start = dayjs(startDay);
+      const end = dayjs(endDay);
+      setDays(end.diff(start, "day") + 1);
+      console.log(days);
+    } else {
+      setDays(0);
+    }
+  }, [startDay, endDay]);
+
+  const handleDisabledStart = (date) => {
+    if (dayjs(date).isBefore(today)) {
+      return true;
+    }
+  };
+  const handleDisabledEnd = (date) => {
+    if (dayjs(date).isBefore(today)) {
+      return true;
+    }
+    if (startDay && dayjs(date).isBefore(startDay)) {
+      return true;
+    }
   };
   const handleTime = (e) => {
     const position = e.target.getAttribute("position");
@@ -188,49 +225,94 @@ const Quotation = () => {
   return (
     <div>
       <button
-        onClick={showModal}
+        onClick={showDialog}
         className="get-price-btn btn-second d-flex  align-items-center justify-content-center"
       >
         <FiSend className="get-price-icon" />
         查看報價
       </button>
+
       <Modal
         title="預約細節"
-        open={isModalOpen}
+        fullScreen
+        visible={visible}
         onOk={handleOk}
+        afterClose={handleAfterClose} //>=1.16.0
         onCancel={handleCancel}
+        closeOnEsc={true}
         className="req-quotation"
+        footer={
+          <div className="req-quotation-footer">
+            <Button type="tertiary" onClick={handleCancel}>
+              取消
+            </Button>
+            <button className="btn-confirm" onClick={handleOk}>
+              確認
+            </button>
+          </div>
+        }
       >
         <div className="d-flex justify-content-between">
           <p>寵物</p>
-          <div>選擇寵物</div>
+          <PetInfo />
         </div>
         <div className="d-flex justify-content-between">
           <p>開始日期</p>
-          {/* <label
-            onClick={() => {
-              setDateOpen(!dateOpen);
+          <DatePicker
+            open={startDateOpen}
+            autoSwitchDate={false}
+            value={startDay}
+            dropdownClassName="req-quotation-date"
+            position="bottomRight"
+            onChange={(date, dateString) => {
+              setStartDay(dateString);
+              setStartDateOpen(false);
+              console.log(startDay, endDay);
+              if (endDay && dayjs(endDay).isBefore(dateString)) {
+                console.log("要清掉endDay");
+                setEndDay(undefined);
+
+                console.log(endDay);
+              }
+              setEndDateOpen(true);
             }}
-          >
-            選擇結束日期
-          </label> */}
-          <div>
-            <DatePicker
-              // disabledDate={startDead}
-              // className="d-none"
-              open={dateOpen}
-              placeholder={"選擇開始日期"}
-              autoSwitchDate={false}
-              type={"datePicker"}
-              dropdownClassName="dateRangeTest"
-              // renderFullDate={renderFullDate}
-              onChange={handleDateChange}
-            />
-          </div>
+            disabledDate={handleDisabledStart}
+            triggerRender={({ placeholder }) => (
+              <label
+                onClick={() => {
+                  setEndDateOpen(false);
+                  setStartDateOpen(!startDateOpen);
+                }}
+              >
+                {startDay || "選擇開始日期"}
+              </label>
+            )}
+          />
         </div>
         <div className="d-flex justify-content-between">
           <p>結束日期</p>
-          <div>選擇結束日期</div>
+          <DatePicker
+            open={endDateOpen}
+            autoSwitchDate={false}
+            value={endDay}
+            dropdownClassName="dateRangeTest"
+            position="bottomRight"
+            onChange={(date, dateString) => {
+              setEndDay(dateString);
+              setEndDateOpen(false);
+            }}
+            disabledDate={handleDisabledEnd}
+            triggerRender={({ placeholder }) => (
+              <label
+                onClick={() => {
+                  setStartDateOpen(false);
+                  setEndDateOpen(!endDateOpen);
+                }}
+              >
+                {endDay || "選擇結束日期"}
+              </label>
+            )}
+          />
         </div>
         <div className="d-flex justify-content-between">
           <p>服務時間</p>
@@ -282,7 +364,7 @@ const Quotation = () => {
           </div>
           <div className="d-flex justify-content-between">
             <p>天數</p>
-            <p>x1</p>
+            <p>x{days}</p>
           </div>
           <div className="d-flex justify-content-between">
             <p>服務時間(每30分鐘)</p>
@@ -296,12 +378,87 @@ const Quotation = () => {
           <div className="d-flex justify-content-between">
             <p>總金額</p>
             <p>
-              NT$<span>{400 * time * frequency}</span>
+              NT$<span>{400 * days * time * frequency}</span>
             </p>
           </div>
         </div>
       </Modal>
     </div>
+  );
+};
+
+const PetInfo = () => {
+  const router = useRouter();
+  const { uid } = router.query;
+  const [pets, setPets] = useState([]);
+  useEffect(() => {
+    workService
+      .getPetInfo(uid)
+      .then((response) => {
+        console.log(response);
+        setPets(response?.data?.data);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  }, []);
+  const [visible, setVisible] = useState(false);
+  const showDialog = () => {
+    setVisible(true);
+  };
+  const handleOk = () => {
+    setVisible(false);
+    console.log("Ok button clicked");
+  };
+  const handleCancel = () => {
+    setVisible(false);
+    console.log("Cancel button clicked");
+  };
+  const handleAfterClose = () => {
+    console.log("After Close callback executed");
+  };
+
+  return (
+    <>
+      <label onClick={showDialog}>選擇寵物</label>
+      <Modal
+        // title="基本对话框"
+        visible={visible}
+        centered={true}
+        closable={false}
+        afterClose={handleAfterClose} //>=1.16.0
+        onOk={handleOk}
+        onCancel={handleCancel}
+        closeOnEsc={true}
+        className="pet-info-modal"
+        footer={
+          <div className="pet-info-modal-footer">
+            <Button type="tertiary" onClick={handleCancel}>
+              取消
+            </Button>
+            <button className="btn-confirm" onClick={handleOk}>
+              確認
+            </button>
+          </div>
+        }
+      >
+        <CheckboxGroup
+          type="pureCard"
+          direction="horizontal"
+          aria-label="CheckboxGroup 示例"
+        >
+          {pets.map((pet) => (
+            <Checkbox
+              value={pet.pet_id}
+              // extra="Semi Design 是由互娱社区前端团队与 UED 团队共同设计开发并维护的设计系统"
+            >
+              <img className="pet-photo" src={pet.image}></img>
+              <p className="size-6">{pet.name}</p>
+            </Checkbox>
+          ))}
+        </CheckboxGroup>
+      </Modal>
+    </>
   );
 };
 const HelperDetail = () => {

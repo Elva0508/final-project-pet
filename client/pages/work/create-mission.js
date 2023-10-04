@@ -21,7 +21,6 @@ const CreateMission = () => {
   const router = useRouter();
   const imgRef = useRef();
   const today = new Date();
-  console.log("今天", today);
   const [startDay, setStartDay] = useState(undefined);
   const [endDay, setEndDay] = useState(undefined);
   const [city, setCity] = useState(undefined);

@@ -304,6 +304,20 @@ router.get("/helpers", (req, res) => {
   }
 });
 
+router.get("/helpers/detail/petInfo", (req, res) => {
+  const { uid } = req.query;
+  conn.execute(
+    `SELECT * FROM users_pet_info WHERE owner_id = ?`,
+    [uid],
+    (err, results) => {
+      if (err) {
+        console.log(err);
+        return res.status(500).send({ status: 500, msg: "伺服器查詢錯誤" });
+      }
+      return res.send({ status: 200, data: results });
+    }
+  );
+});
 router.get("/helpers/detail/:uid", async (req, res) => {
   const { uid } = req.params;
   console.log(uid);
