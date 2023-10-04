@@ -10,8 +10,6 @@ $carousel-indicator-active-bg: #d7965b;
 $carousel-indicator-height: 5px;
 $breadcrumb-divider: quote(">");
 
-$transition-datepicker_range_input: #d7965b 0.16s ease-in-out;
-$color-datepicker_header-bg-default: red;
 // ↑↑↑  變數覆蓋(Variable overrides) 要寫在這行"上面"  ↑↑↑
 // 導入所有 bootstrap 樣式
 @import "~bootstrap/scss/bootstrap";
@@ -81,7 +79,6 @@ ul {
 @import "@/styles/components-style/_mission-card.scss";
 @import "@/styles/_find-mission.scss";
 @import "@/styles/components-style/_product-card.scss";
-
 @import "@/styles/_mission-detail.scss";
 @import "@/styles/components-style/_mission_helper_list.scss";
 

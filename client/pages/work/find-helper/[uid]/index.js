@@ -18,9 +18,16 @@ import {
   DatePicker,
   Modal,
   Button,
-  CheckboxGroup,
-  Checkbox,
+  RadioGroup,
+  Radio,
+  Empty,
+  Select,
 } from "@douyinfe/semi-ui";
+import {
+  IllustrationConstruction,
+  IllustrationConstructionDark,
+} from "@douyinfe/semi-illustrations";
+
 import dayjs from "dayjs";
 // register Swiper custom elements
 register();
@@ -147,29 +154,71 @@ export const HelperDetailSticky = () => {
   );
 };
 const Quotation = () => {
+  const router = useRouter();
+  const { uid } = router.query;
+  const today = dayjs();
   const [visible, setVisible] = useState(false);
+  const [startDateOpen, setStartDateOpen] = useState(false);
+  const [endDateOpen, setEndDateOpen] = useState(false);
+  const [profile, setProfile] = useState({});
+  const [serviceList, setServiceList] = useState([]);
+  const [petsName, setPetsName] = useState(null);
   const showDialog = () => {
     setVisible(true);
   };
-  const handleOk = () => {
+  const handleSubmit = () => {
     setVisible(false);
-    console.log("Ok button clicked");
+    const user = 1;
+    const requestDate = {
+      customer_id: user,
+      startDay,
+      endDay,
+      days,
+      pet_id: petsValue,
+      helper_id: uid,
+      service_type: serviceType.value,
+      time,
+      frequency,
+      note,
+      location,
+      subtotal: serviceType.price,
+    };
+    workService
+      .createReqOrder(requestDate)
+      .then((response) => {
+        console.log(response.data);
+        if (response.data.status === 200) {
+          setTime(1);
+          setFrequency(1);
+          setDays(0);
+          setStartDay(null);
+          setEndDay(null);
+          setPetsValue(null);
+          setServiceType({});
+          setNote("");
+          setLocation("");
+        }
+      })
+      .catch((e) => {
+        console.log(e);
+      });
   };
   const handleCancel = () => {
     setVisible(false);
-    console.log("Cancel button clicked");
   };
   const handleAfterClose = () => {
     console.log("After Close callback executed");
   };
+
   const [time, setTime] = useState(1);
   const [frequency, setFrequency] = useState(1);
   const [days, setDays] = useState(0);
-  const [startDateOpen, setStartDateOpen] = useState(false);
-  const [endDateOpen, setEndDateOpen] = useState(false);
-  const today = dayjs();
-  const [startDay, setStartDay] = useState(undefined);
-  const [endDay, setEndDay] = useState(undefined);
+  const [startDay, setStartDay] = useState(null);
+  const [endDay, setEndDay] = useState(null);
+  const [petsValue, setPetsValue] = useState(null);
+  const [serviceType, setServiceType] = useState({});
+  const [note, setNote] = useState("");
+  const [location, setLocation] = useState("");
 
   useEffect(() => {
     if (startDay && endDay) {
@@ -182,6 +231,42 @@ const Quotation = () => {
     }
   }, [startDay, endDay]);
 
+  useEffect(() => {
+    workService
+      .getHelperDetail(uid)
+      .then((response) => {
+        const info = response?.data?.data.profile[0];
+        setProfile(info);
+
+        let serviceArr = [{ value: "null", label: "請選擇服務類型", price: 0 }];
+        if (info.feed_service) {
+          serviceArr.push({
+            value: "feed",
+            label: "到府代餵",
+            price: info.feed_price,
+          });
+        }
+        if (info.beauty_service) {
+          serviceArr.push({
+            value: "beauty",
+            label: "到府美容",
+            price: info.beauty_price,
+          });
+        }
+        if (info.house_service) {
+          serviceArr.push({
+            value: "house",
+            label: "安親寄宿",
+            price: info.house_price,
+          });
+        }
+
+        setServiceList(serviceArr);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  }, [uid]);
   const handleDisabledStart = (date) => {
     if (dayjs(date).isBefore(today)) {
       return true;
@@ -236,7 +321,7 @@ const Quotation = () => {
         title="預約細節"
         fullScreen
         visible={visible}
-        onOk={handleOk}
+        onOk={handleSubmit}
         afterClose={handleAfterClose} //>=1.16.0
         onCancel={handleCancel}
         closeOnEsc={true}
@@ -246,7 +331,7 @@ const Quotation = () => {
             <Button type="tertiary" onClick={handleCancel}>
               取消
             </Button>
-            <button className="btn-confirm" onClick={handleOk}>
+            <button className="btn-confirm" onClick={handleSubmit}>
               確認
             </button>
           </div>
@@ -254,7 +339,12 @@ const Quotation = () => {
       >
         <div className="d-flex justify-content-between">
           <p>寵物</p>
-          <PetInfo />
+          <PetInfo
+            petsValue={petsValue}
+            setPetsValue={setPetsValue}
+            petsName={petsName}
+            setPetsName={setPetsName}
+          />
         </div>
         <div className="d-flex justify-content-between">
           <p>開始日期</p>
@@ -315,6 +405,20 @@ const Quotation = () => {
           />
         </div>
         <div className="d-flex justify-content-between">
+          <p>服務類型</p>
+          <Select
+            style={{ width: 150 }}
+            onChangeWithObject
+            optionList={serviceList}
+            placeholder="請選擇服務類型"
+            defaultValue={serviceList[0]}
+            onChange={(value) => {
+              console.log(value);
+              setServiceType(value);
+            }}
+          ></Select>
+        </div>
+        <div className="d-flex justify-content-between">
           <p>服務時間</p>
           <div className="d-flex align-items-center">
             <CiCircleChevLeft
@@ -348,18 +452,30 @@ const Quotation = () => {
         </div>
         <div className="d-flex justify-content-between">
           <p>地點</p>
-          <input type="text" value={"台灣桃園市楊梅區環南路309巷13號"} />
+          <input
+            type="text"
+            value={location}
+            onChange={(e) => {
+              setLocation(e.target.value);
+            }}
+          />
         </div>
         <div className="d-flex flex-column justify-content-between">
           <p>備註</p>
-          <TextArea placeholder="輸入備註或是您毛小孩的需求與個性狀況" />
+          <textarea
+            placeholder="輸入備註或是您毛小孩的需求與個性狀況"
+            onChange={(e) => {
+              console.log(e.target.value);
+              setNote(e.target.value);
+            }}
+          />
         </div>
         <div className="divider my-2"></div>
         <div className="col-md-6 col-8 offset-md-6 offset-4 settlement-amount ">
           <div className="d-flex justify-content-between">
             <p className="">小計</p>
             <p>
-              NT$<span>400</span>
+              NT$<span>{serviceType?.price || 0}</span>
             </p>
           </div>
           <div className="d-flex justify-content-between">
@@ -378,7 +494,8 @@ const Quotation = () => {
           <div className="d-flex justify-content-between">
             <p>總金額</p>
             <p>
-              NT$<span>{400 * days * time * frequency}</span>
+              NT$
+              <span>{serviceType?.price * days * time * frequency || 0}</span>
             </p>
           </div>
         </div>
@@ -387,32 +504,34 @@ const Quotation = () => {
   );
 };
 
-const PetInfo = () => {
+const PetInfo = ({ petsValue, setPetsValue, petsName, setPetsName }) => {
   const router = useRouter();
   const { uid } = router.query;
   const [pets, setPets] = useState([]);
+  let tempValue, tempName;
+
   useEffect(() => {
     workService
       .getPetInfo(uid)
       .then((response) => {
-        console.log(response);
         setPets(response?.data?.data);
       })
       .catch((e) => {
         console.log(e);
       });
   }, []);
+
   const [visible, setVisible] = useState(false);
   const showDialog = () => {
     setVisible(true);
   };
   const handleOk = () => {
     setVisible(false);
-    console.log("Ok button clicked");
+    setPetsValue(tempValue);
+    setPetsName(tempName);
   };
   const handleCancel = () => {
     setVisible(false);
-    console.log("Cancel button clicked");
   };
   const handleAfterClose = () => {
     console.log("After Close callback executed");
@@ -420,7 +539,8 @@ const PetInfo = () => {
 
   return (
     <>
-      <label onClick={showDialog}>選擇寵物</label>
+      <label onClick={showDialog}>{petsName || "選擇寵物"}</label>
+
       <Modal
         // title="基本对话框"
         visible={visible}
@@ -442,21 +562,42 @@ const PetInfo = () => {
           </div>
         }
       >
-        <CheckboxGroup
-          type="pureCard"
-          direction="horizontal"
-          aria-label="CheckboxGroup 示例"
-        >
-          {pets.map((pet) => (
-            <Checkbox
-              value={pet.pet_id}
-              // extra="Semi Design 是由互娱社区前端团队与 UED 团队共同设计开发并维护的设计系统"
-            >
-              <img className="pet-photo" src={pet.image}></img>
-              <p className="size-6">{pet.name}</p>
-            </Checkbox>
-          ))}
-        </CheckboxGroup>
+        {pets.length === 0 ? (
+          <Empty
+            image={
+              <IllustrationConstruction style={{ width: 150, height: 150 }} />
+            }
+            darkModeImage={
+              <IllustrationConstructionDark
+                style={{ width: 150, height: 150 }}
+              />
+            }
+            title={"暫無內容"}
+            description="請添加您的寵物資訊。"
+          />
+        ) : (
+          <RadioGroup
+            type="pureCard"
+            direction="horizontal"
+            aria-label="選擇寵物"
+            defaultValue={petsValue}
+            onChange={(e) => {
+              console.log(e.target);
+              tempValue = e.target.value;
+              tempName = e.target.children[1].props.children;
+            }}
+          >
+            {pets.map((pet) => (
+              <Radio
+                value={pet.pet_id}
+                // extra="Semi Design 是由互娱社区前端团队与 UED 团队共同设计开发并维护的设计系统"
+              >
+                <img className="pet-photo" src={pet.image}></img>
+                <p className="size-6">{pet.name}</p>
+              </Radio>
+            ))}
+          </RadioGroup>
+        )}
       </Modal>
     </>
   );
@@ -510,7 +651,7 @@ const HelperDetail = () => {
     <>
       <div className="helper-detail container-fluid">
         <nav className="breadcrumb-wrapper" aria-label="breadcrumb">
-          <ol class="breadcrumb">
+          <ol className="breadcrumb">
             <li className="breadcrumb-item">
               <Link href="/">首頁</Link>
             </li>

@@ -184,13 +184,12 @@ const FamousHelperCard = ({ ...helper }) => {
   const [isFavorite, setIsFavorite] = useState(false); // 初始狀態為未收藏
   const service = [
     { label: "到府代餵", value: parseInt(helper.feed_service) },
-    { label: "安親寄宿", value: parseInt(helper.home_service) },
+    { label: "安親寄宿", value: parseInt(helper.house_service) },
     { label: "到府美容", value: parseInt(helper.beauty_service) },
   ];
   const toggleFavorite = () => {
     setIsFavorite(!isFavorite); // 切換收藏狀態
   };
-
   return (
     <>
       <div className="famous-helper-card d-flex align-items-center">
@@ -308,12 +307,14 @@ const SingleHelperCard = ({ ...helper }) => {
   const toggleFavorite = () => {
     setIsFavorite(!isFavorite); // 切換收藏狀態
   };
+
   const service = [
     { label: "到府代餵", value: parseInt(helper.feed_service) },
-    { label: "安親寄宿", value: parseInt(helper.home_service) },
+    { label: "安親寄宿", value: parseInt(helper.house_service) },
     { label: "到府美容", value: parseInt(helper.beauty_service) },
   ];
   const servicePrice = [];
+  console.log(service);
   return (
     <>
       <div className="single-card d-flex flex-column align-items-center">

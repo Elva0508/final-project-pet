@@ -1,4 +1,5 @@
 const router = require("express").Router();
+const dayjs = require("dayjs");
 const conn = require("../db");
 const multer = require("multer");
 const path = require("path");
@@ -313,4 +314,48 @@ router.put("/helper", upload.array("helper-image"), async (req, res) => {
     console.error(error);
   }
 });
+router.get("/reserve", (req, res) => {
+  const { user_id } = req.query;
+  const status = 1;
+  conn.execute(
+    `SELECT * FROM mission_req_orders WHERE status = ? AND customer_userId = ?`,
+    [status, user_id],
+    (err, results) => {
+      if (err) {
+        console.log(err);
+        return res.status(500).send({ status: 500, error: "資料查詢錯誤" });
+      }
+      console.log(results);
+      results = results.map((item) => {
+        const start_day = transferDate(item.start_day);
+        const end_day = transferDate(item.end_day);
+        const created_at = transferDate(item.created_at);
+        return { ...item, start_day, end_day, created_at };
+      });
+      return res.send({ status: 200, data: results });
+    }
+  );
+});
 module.exports = router;
+
+function generateOrderNumber() {
+  const timestamp = Date.now().toString().slice(-7); // 取得時間戳記的後六位數
+  const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  let randomLetters = "";
+
+  // 生成隨機的三個英文字母
+  for (let i = 0; i < 3; i++) {
+    const randomIndex = Math.floor(Math.random() * letters.length);
+    randomLetters += letters.charAt(randomIndex);
+  }
+
+  // 組合訂單編號
+  const orderNumber = randomLetters + timestamp;
+  return orderNumber;
+}
+
+const transferDate = (date) => {
+  const newDay = dayjs(date).format("YYYY-MM-DD");
+  console.log(newDay);
+  return newDay;
+};

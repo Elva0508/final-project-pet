@@ -381,7 +381,50 @@ router.get("/helpers/detail/:uid", async (req, res) => {
     res.status(500).send({ status: 500, error: "伺服器端查詢錯誤" });
   }
 });
+router.post("/helpers/request", (req, res) => {
+  // const {customer_userId,start_day,end_day,pet_info_id,helper_userId,service_type,service_time,frequency,note,subtotal_price,total_price,status}
+  console.log(req.body);
+  const {
+    customer_id,
+    startDay,
+    endDay,
+    days,
+    pet_id,
+    helper_id,
+    service_type,
+    time,
+    frequency,
+    note,
+    location,
+    subtotal,
+  } = req.body;
+  const total = subtotal * days * time * frequency;
 
+  conn.execute(
+    "INSERT INTO `mission_req_orders` (`case_id`, `customer_userId`, `start_day`, `end_day`, `pet_info_id`, `helper_userId`, `service_type`, `service_time`, `frequency`, `note`,`location`, `subtotal_price`, `total_price`, `status`) VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, '1')",
+    [
+      customer_id,
+      startDay,
+      endDay,
+      pet_id,
+      helper_id,
+      service_type,
+      time,
+      frequency,
+      note,
+      location,
+      subtotal,
+      total,
+    ],
+    (err, results) => {
+      if (err) {
+        console.log(err);
+        return res.status(500).send({ status: 500, mag: "資料寫入錯誤" });
+      }
+      return res.send({ status: 200, data: results.insertId });
+    }
+  );
+});
 router.post("/mission", upload.array("missionImage"), async (req, res) => {
   // const { formData } = req.body;
   const {

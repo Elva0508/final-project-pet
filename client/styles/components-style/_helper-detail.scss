@@ -190,15 +190,15 @@ $detail-block-width: 12px; //標題左側直槓槓
         }
       }
     }
-    .semi-checkboxGroup {
+    .semi-radioGroup {
       width: auto;
       // justify-content: ;
-      .semi-checkbox {
+      .semi-radio {
         width: calc((575px - 48px - 20px) / 2);
         // background-color: lighten($content-bg, 5%);
         box-shadow: 0px 0px 4px rgba(129, 129, 129, 0.3);
       }
-      .semi-checkbox-checked {
+      .semi-radio-checked {
         background-color: lighten($content-bg, 5%);
         border-color: $header-bg;
       }

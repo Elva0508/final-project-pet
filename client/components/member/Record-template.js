@@ -1,18 +1,79 @@
 import React from "react";
 import { MdHomeRepairService } from "react-icons/md";
 
-export const RecordTemplate = ({ icon, title, item1 }) => {
+export const RecordTemplate = ({
+  icon,
+  title,
+  item1,
+  info,
+  setInfo,
+  status,
+  setStatus,
+}) => {
+  const handleStatus = (e) => {
+    console.log(e.target.id);
+    console.log(e.currentTarget);
+    if (status == e.target.id) {
+      return;
+    }
+    switch (e.target.id) {
+      case 1:
+        setStatus(1);
+        break;
+      case 2:
+        setStatus(2);
+        break;
+      case 3:
+        setStatus(3);
+        break;
+      case 4:
+        setStatus(4);
+        break;
+    }
+  };
   return (
     <>
       <h5 className="size-5 d-flex align-items-start fw-bold">
         {icon || <MdHomeRepairService className="icon me-1" />}
         {title || "銷售紀錄"}
       </h5>
-      <nav className="tab-nav mt-4">
-        <button className="size-7">{item1 || "待處理"}</button>
-        <button className="size-7">進行中</button>
-        <button className="size-7">已完成</button>
-        <button className="size-7">已取消</button>
+      <nav className="tab-nav mt-4" onClick={handleStatus}>
+        <button
+          id={1}
+          className="size-7"
+          onClick={() => {
+            setStatus(1);
+          }}
+        >
+          {item1 || "待處理"}
+        </button>
+        <button
+          id={2}
+          className="size-7"
+          onClick={() => {
+            setStatus(2);
+          }}
+        >
+          進行中
+        </button>
+        <button
+          id={3}
+          className="size-7"
+          onClick={() => {
+            setStatus(3);
+          }}
+        >
+          已完成
+        </button>
+        <button
+          id={4}
+          className="size-7"
+          onClick={() => {
+            setStatus(4);
+          }}
+        >
+          已取消
+        </button>
       </nav>
       <div className="record-info-pc d-none d-sm-block">
         <div className="info-title d-flex align-items-center justify-content-around">
@@ -21,39 +82,48 @@ export const RecordTemplate = ({ icon, title, item1 }) => {
           <p>預約日期</p>
           <p>服務總價</p>
         </div>
-        <div className="info-content d-flex align-items-center justify-content-around">
-          <p>2023-08-26</p>
-          <p>１５３４８６８</p>
-          <p>
-            2023-09-10 ~<br className="d-md-none d-block" /> 2023-09-12
-          </p>
-          <div className="d-flex flex-column justify-content-center align-items-center">
-            <p className="mb-1 size-6">NT$ 705</p>
-            <button className="btn-outline-confirm">查看明細</button>
-          </div>
-        </div>
+        {info &&
+          info.map((item) => (
+            <div className="info-content d-flex align-items-center justify-content-around">
+              <p>{item.created_at}</p>
+              <p>{item.oid}</p>
+              <p>
+                {item.start_day} ~<br className="d-md-none d-block" />
+                {item.end_day}
+              </p>
+              <div className="d-flex flex-column justify-content-center align-items-center">
+                <p className="mb-1 size-6">NT$ {item.total_price}</p>
+                <button className="btn-outline-confirm">查看明細</button>
+              </div>
+            </div>
+          ))}
       </div>
-      <div className="record-info-mobile d-flex flex-column d-sm-none my-3">
-        <div>
-          <p>成立日期</p>
-          <p>2023-08-26</p>
-        </div>
-        <div>
-          <p>預約編號</p>
-          <p>１５３４８６８</p>
-        </div>
-        <div>
-          <p>預約日期</p>
-          <p>2023-09-10 ~ 2023-09-12</p>
-        </div>
-        <div>
-          <p>服務總價</p>
-          <div className="d-flex align-items-center justify-content-center">
-            <p className="size-6 me-2 fw-bold">NT$ 705</p>
-            <button className="btn-outline-confirm">查看明細</button>
+      {info &&
+        info.map((item) => (
+          <div className="record-info-mobile d-flex flex-column d-sm-none my-3">
+            <div>
+              <p>成立日期</p>
+              <p>{item.created_at}</p>
+            </div>
+            <div>
+              <p>預約編號</p>
+              <p>{item.oid}</p>
+            </div>
+            <div>
+              <p>預約日期</p>
+              <p>
+                {item.start_day} ~ {item.end_day}
+              </p>
+            </div>
+            <div>
+              <p>服務總價</p>
+              <div className="d-flex align-items-center justify-content-center">
+                <p className="size-6 me-2 fw-bold">NT$ {item.total_price}</p>
+                <button className="btn-outline-confirm">查看明細</button>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
+        ))}
     </>
   );
 };

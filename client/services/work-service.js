@@ -29,6 +29,9 @@ class WorkService {
   getPetInfo(uid) {
     return axios.get(API_URL + "helpers/detail/petInfo", { params: { uid } });
   }
+  createReqOrder(requestDate) {
+    return axios.post(API_URL + "/helpers/request", requestDate);
+  }
   // createMission頁
   createMission(formData) {
     return axios.post(API_URL + "/mission", formData, {
