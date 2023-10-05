@@ -15,7 +15,6 @@ class MemberService {
     return axios.patch(API_URL + "helper/valid", { valid, user_id });
   }
   handleHelperEdit(formData) {
-    console.log(formData);
     return axios.put(API_URL + "/helper", formData, {
       headers: {
         "Content-Type": "multipart/form-data",
