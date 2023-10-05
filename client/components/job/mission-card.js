@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react'
+import axios from "axios"
+import Link from "next/link";
 
 // 使圖片高度與寬度同寬
-function ImageWithEqualDimensions() {
+function ImageWithEqualDimensions({ file_path }) {
     const imgRef = useRef(null);
 
     // 使得圖片高度會在螢幕大小改變時跟著改變 而非在重整時才改變
@@ -29,7 +31,7 @@ function ImageWithEqualDimensions() {
         <div className="mission-img">
             <img
                 ref={imgRef}
-                src="/kitten.jpg"
+                src={file_path}
                 alt="任務"
             />
         </div>
@@ -37,30 +39,70 @@ function ImageWithEqualDimensions() {
 }
 
 export default function MissionCard() {
-    const [isFavorite, setIsFavorite] = useState(false); // 初始狀態為未收藏
 
-    const toggleFavorite = () => {
-        setIsFavorite(!isFavorite); // 切換收藏狀態
+    const [allMissions, setAllMissions] = useState([]);
+
+    const getAllMissions = async () => {
+        try {
+            const response = await axios.get("http://localhost:3005/api/mission/all-missions");
+            const data = response.data.data;
+            console.log(data);
+            setAllMissions(data);
+        } catch (error) {
+            console.error("Error:", error);
+        }
+    }
+
+    useEffect(() => {
+        getAllMissions()
+    }, [])
+
+    // 格式化日期
+    function formatDate(dateString) {
+        const date = new Date(dateString);
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}/${month}/${day}`;
+    }
+
+    // 為每個卡片創建獨立的isFavorite狀態數組
+    const [isFavorites, setIsFavorites] = useState(allMissions.map(() => false));
+
+    const toggleFavorite = (index) => {
+        const newFavorites = [...isFavorites];
+        newFavorites[index] = !newFavorites[index];
+        setIsFavorites(newFavorites);
     };
+
     return (
         <>
-            <div className='mission-list-card'>
-                {/* <div className='mission-img'>
-                    <img src="/kitten.jpg" alt="任務" />
-                </div> */}
-                <ImageWithEqualDimensions />
-                <div className='mission-content mx-1 mt-2'>
-                    <div className='title size-6'>雙十連假顧貓 對我的貓好一點 測試換行</div>
-                    <div className='d-flex justify-content-between mt-2'>
-                        <div className='size-7'>台中市大甲區<br />2023-08-21</div>
-                        <img src={isFavorite ? "/heart-clicked.svg" : "/heart.svg"} alt={isFavorite ? "已收藏" : "未收藏"} onClick={toggleFavorite} />
+            {allMissions.map((v, i) => {
+                return (
+                    <div className='col-6 col-md-4 col-lg-6 col-xl-4' key={v.mission_id}>
+
+                        <div className='mission-list-card '>
+                            <Link href={`/work/find-mission/${v.mission_id}`} >
+                                <ImageWithEqualDimensions file_path={v.file_path} />
+                            </Link>
+                            <div className='mission-content mx-1 mt-2'>
+                                <Link href={`/work/find-mission/${v.mission_id}`} >
+                                    <div className='title size-6'>{v.title}</div>
+                                </Link>
+                                <div className='d-flex justify-content-between mt-2'>
+                                    <div className='size-7'>{v.city}{v.area}<br />{formatDate(v.post_date)}</div>
+                                    <img src={isFavorites[i] ? "/heart-clicked.svg" : "/heart.svg"} alt={isFavorites[i] ? "已收藏" : "未收藏"} onClick={() => toggleFavorite(i)} />
+                                </div>
+                                <div className='d-flex justify-content-between align-items-end price'>
+                                    <div  >單次<span className='size-6'> NT${v.price}</span></div>
+                                    <button className='btn-confirm size-6'>應徵</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div className='d-flex justify-content-between align-items-end price'>
-                        <div  >單次<span className='size-6'> NT$140</span></div>
-                        <button className='btn-confirm size-6'>應徵</button>
-                    </div>
-                </div>
-            </div>
+                )
+            })
+            }
         </>
     )
 }

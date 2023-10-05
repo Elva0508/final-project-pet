@@ -4,13 +4,14 @@ import ResponsiveAppBar from "@/components/navbar/ResponsiveAppBar";
 
 // 沛涵
 import CreateMission from "@/pages/work/create-mission";
-import HelperDetail from "@/pages/work/find-helper/[pid]";
+import HelperDetail from "@/pages/work/find-helper/[uid]";
 import HelperInfo from "@/components/member/helper-info";
 import MissionHelperList from "@/pages/work/find-helper";
 import SalesRecordDetail from "@/components/member/sales-record-detail";
 import SalesRecord from "@/components/member/sales-record";
 import RequestRecord from "@/components/member/request-record";
 import RequestRecordDetail from "@/components/member/request-record-detail";
+import Filter from "@/components/job/filter";
 
 //nono
 import { HomeVedio } from "@/pages/index";
@@ -32,7 +33,7 @@ import ProductListOffcanvas from "@/components/product/product-list-offcanvas";
 const Test = () => {
   return (
     <>
-      <HelperDetail />
+      <Filter />
     </>
   );
 };
