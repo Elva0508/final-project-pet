@@ -101,7 +101,7 @@ const router=useRouter()
         </div>
       </div>  
       {/* 註冊頁面 */}
-       <div className="container my-5 ">
+       {/* <div className="container my-5 ">
         <div className="login-box d-flex align-items-center flex-column justify-content-center mx-auto ">
           <div className="login-header d-flex ">
           <div className="size-5 mx-2 my-3">
@@ -153,7 +153,8 @@ const router=useRouter()
             </div>
           </div>
         </div>
-      </div> 
+      </div>  */}
+      <RegisterForm/>
 
     </>
   );

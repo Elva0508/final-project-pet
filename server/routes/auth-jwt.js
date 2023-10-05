@@ -126,7 +126,7 @@ router.post("/checkLogin", checkToken,(req,res)=>{
       email: currentUser.email
     },
     secretKey,
-    { expiresIn: '30m' }
+    { expiresIn: '1d' }
 
   );
   res.status(200).json({
@@ -286,7 +286,7 @@ router.post("/checkLogin", checkToken,(req,res)=>{
 
 //---------------------------------------------
 const Register = async (req, res) => {
-  console.log(req.body);
+  
   const { name, email, password, confPassword } = req.body;
   if (password !== confPassword)
     return res.status(400).json({ msg: "password 不一致" });
@@ -321,8 +321,7 @@ const Register = async (req, res) => {
         console.error(insertError);
         return res.status(500).json({ error: "資料庫輸入有問題" });
       }
-      res.json({ msg: "Register Success" });
-
+  
       // 關閉連接
       connection.end();
       res.json({ msg: "Register Success" });
