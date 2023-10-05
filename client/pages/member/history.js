@@ -79,9 +79,9 @@ useEffect(() => {
                   已下架
                 </button>
               </div>
-              {currentScreen === "1" && <HistoryStatusOne history={history}/>}
-              {currentScreen === "2" && <HistoryStatusTwo history={history}/>}
-              {currentScreen === "3" && <HistoryStatusThree history={history}/>}
+              {currentScreen === "1" && <HistoryStatusOne history={history} getHistory={getHistory}/>}
+              {currentScreen === "2" && <HistoryStatusTwo history={history} getHistory={getHistory}/>}
+              {currentScreen === "3" && <HistoryStatusThree history={history} getHistory={getHistory}/>}
             </div>
           </div>
         </div>

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { GrFormPrevious } from "react-icons/gr";
 import { GrFormNext } from "react-icons/gr";
 import dayjs from "dayjs";
-export default function HistoryStatusOne({ history }) {
+export default function HistoryStatusOne({ history ,getHistory }) {
   const itemsPerPage = 5;
   const [currentPage, setCurrentPage] = useState(1);
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -27,6 +27,19 @@ export default function HistoryStatusOne({ history }) {
   const transferDate = (date) => {
     const newDay = dayjs(date).format("YYYY-MM-DD");
     return newDay;
+  };
+
+
+  const remove = async (id) => {
+    console.log(id);
+    try {
+      const response = await axios.put(
+        `http://localhost:3005/api/member-history/${id}`
+      );
+    } catch (error) {
+      console.error("Error:", error);
+    }
+    getHistory()
   };
 
 
@@ -56,7 +69,9 @@ export default function HistoryStatusOne({ history }) {
               </div>
               <div className="col-3">
                 {v.mission_status === 1 ? (
-                  <button className=" btn-confirm m-2 size-6">刊登中</button>
+                  <button className=" btn-confirm m-2 size-6" 
+                  onClick={() =>{remove(v.mission_id)}}
+                  >下架</button>
                 ) : (
                   <button className=" btn-outline-confirm m-2 size-6">
                     已下架
