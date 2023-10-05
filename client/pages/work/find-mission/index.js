@@ -6,18 +6,102 @@ import RoleSelection from '@/components/job/role-selection'
 // 用 {} 導入的內容是命名導出的，而不加{}導入的內容是默認導出的。
 import LatestMission, { MobileLatestMission } from '@/components/job/latest-mission'
 import Search from '@/components/job/search'
-import Filter from '@/components/job/filter'
+// import Filter from '@/components/job/filter'
 // import MissionCard from '@/components/job/mission-card'
 import Pagination from '@/components/pagination';
 // react-icons
 import { FaCaretUp, FaCaretDown } from 'react-icons/fa';
+import { BiSolidDownArrow, BiSolidUpArrow } from "react-icons/bi";
 // Swiper
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
+// Filter
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
 
-// 篩選
-const MobileFilter = () => {
+// 篩選-共用
+const Filter = ({ items, src, onClick, order }) => {
+  const dropDownRef = useRef(null);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+    // console.log(event);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+  // const handleOption = (e) => {
+  //   console.log(e.target.getAttribute("value"));
+  // };
+  return (
+    <div className="drop-down-filter" ref={dropDownRef}>
+      <button
+        className={`drop-down-filter-btn ${anchorEl ? "drop-down-active" : ""}`}
+        onClick={handleClick}
+      >
+        <div
+          className={`drop-down-filter-btn-icon ${anchorEl ? "drop-down-active" : ""
+            }`}
+        >
+          <img src={src} />
+        </div>
+        {items.title || "選項"}
+        <BiSolidDownArrow
+          className={`icon icon-down ${!anchorEl ? "" : "d-none"}`}
+        />
+        <BiSolidUpArrow
+          className={`icon icon-up ${anchorEl ? "" : "d-none"}`}
+        />
+      </button>
+      <Menu
+        id="simple-menu"
+        anchorEl={anchorEl}
+        keepMounted
+        open={Boolean(anchorEl)}
+        onClose={handleClose}
+        className="drop-down-filter-menu"
+      >
+        {items?.children?.map((item) => {
+          if (
+            order &&
+            order.value === item.value &&
+            order.parentValue === items.value
+          ) {
+            return (
+              <MenuItem
+                disabled={true}
+                onClick={() => {
+                  handleClose();
+                  if (onClick) {
+                    onClick(item.value, items.value);
+                  }
+                }}
+              >
+                <span value={item.value}>{item.label}</span>
+              </MenuItem>
+            );
+          }
+          return (
+            <MenuItem
+              onClick={() => {
+                handleClose();
+                if (onClick) {
+                  onClick(item.value, items.value);
+                }
+              }}
+            >
+              <span value={item.value}>{item.label}</span>
+            </MenuItem>
+          );
+        })}
+      </Menu>
+    </div>
+  );
+};
+// 篩選-自訂
+const MobileFilter = ({ missionType, setMissionType, sortOrder, setSortOrder, setSortBy }) => {
+
   return (
     <Swiper slidesPerView="auto" className="mobile-filter">
       <SwiperSlide>
@@ -79,7 +163,7 @@ const MobileFilter = () => {
 };
 
 // 排序
-const Sort = ({ sortOrder, setSortOrder, setSortBy }) => {
+const Sort = ({ missionType, setMissionType, sortOrder, setSortOrder, setSortBy }) => {
   const [activeButton, setActiveButton] = useState(null);
   const [iconDirection, setIconDirection] = useState({}); // 用於跟蹤圖標方向
 
@@ -160,12 +244,17 @@ function ImageWithEqualDimensions({ file_path }) {
 }
 
 // 任務卡片
-const MissionCard = ({ sortOrder, sortBy }) => {
+const MissionCard = ({ missionType, sortOrder, sortBy }) => {
   const [allMissions, setAllMissions] = useState([]);
 
   const getAllMissions = async () => {
     try {
-      const response = await axios.get(`http://localhost:3005/api/mission/all-missions?sortOrder=${sortOrder}&sortBy=${sortBy}`);
+      let apiUrl = `http://localhost:3005/api/mission/all-missions?sortOrder=${sortOrder}&sortBy=${sortBy}`;
+
+      if (missionType) {
+        apiUrl += `&missionType=${missionType}`;
+      }
+      const response = await axios.get(apiUrl);
       const data = response.data.data;
       console.log(data);
       setAllMissions(data);
@@ -229,26 +318,39 @@ const MissionCard = ({ sortOrder, sortBy }) => {
 }
 
 export default function MissionList() {
+  const [missionType, setMissionType] = useState(null);
   const [sortOrder, setSortOrder] = useState("asc");
   const [sortBy, setSortBy] = useState(null);
-  console.log(`http://localhost:3005/api/mission/all-missions?sortOrder=${sortOrder}&sortBy=${sortBy}`);
+  console.log(`http://localhost:3005/api/mission/all-missions?missionType=${missionType}&sortOrder=${sortOrder}&sortBy=${sortBy}`);
 
-  // const [allMissions, setAllMissions] = useState([]);
+  // 篩選按鈕
+  const handleFilterClick = (selectedFilter) => {
+    let updatedMissionType = null; // 默认为 null，表示不筛选
 
-  // const getAllMissions = async () => {
-  //   try {
-  //     const response = await axios.get(`http://localhost:3005/api/mission/all-missions?sortOrder=${sortOrder}`);
-  //     const data = response.data.data;
-  //     console.log(data);
-  //     setAllMissions(data);
-  //   } catch (error) {
-  //     console.error("Error:", error);
-  //   }
-  // }
+    switch (selectedFilter) {
+      case 'feed':
+        updatedMissionType = 1;
+        break;
+      case 'house':
+        updatedMissionType = 2;
+        break;
+      case 'beauty':
+        updatedMissionType = 3;
+        break;
+      case 'training':
+        updatedMissionType = 4;
+        break;
+      case 'medical':
+        updatedMissionType = 5;
+        break;
+      default:
+        // 默认情况下，不筛选
+        updatedMissionType = null;
+    }
 
-  // useEffect(() => {
-  //   getAllMissions()
-  // }, [sortOrder])
+    setMissionType(updatedMissionType); // 更新 missionType 状态
+  };
+
 
   return (
     <>
@@ -272,14 +374,14 @@ export default function MissionList() {
         </div>
         <div className='d-flex justify-content-between align-items-center my-md-3 position-relative'>
           <div className='filters d-flex justify-content-center align-items-center '>
-            <MobileFilter /><button className="btn-second ms-3 filter-button">篩選</button>
+            <MobileFilter missionType={missionType} /><button className="btn-second ms-3 filter-button" onClick={handleFilterClick}>篩選</button>
           </div>
           <button className='add-mission-btn-pc  d-none d-lg-block position-absolute'><img src='/add-mission.svg' className='me-2' />新增任務</button>
           <button className='add-mission-btn-mobile size-6 d-bolck d-lg-none'><img src='/add-mission.svg' className='' /></button>
         </div>
 
         <div className='d-flex my-2'>
-          <Sort sortOrder={sortOrder} setSortOrder={setSortOrder} sortBy={sortBy} setSortBy={setSortBy} />
+          <Sort missionType={missionType} setMissionType={setMissionType} sortOrder={sortOrder} setSortOrder={setSortOrder} sortBy={sortBy} setSortBy={setSortBy} />
         </div>
 
         <section className='d-flex all-mission flex-column flex-lg-row mt-3'>
@@ -298,7 +400,7 @@ export default function MissionList() {
             {/* 不能使用d-flex d-lg-block block會導致MissionCard垂直排列 */}
             <div className='row d-flex mb-3 g-3 g-md-4'>
               {/* 使用g-3 不用justify-content-between 預設是start 卡片就會照順序排列 */}
-              <MissionCard sortOrder={sortOrder} sortBy={sortBy} />
+              <MissionCard sortOrder={sortOrder} sortBy={sortBy} missionType={missionType} />
             </div>
           </div>
         </section>
