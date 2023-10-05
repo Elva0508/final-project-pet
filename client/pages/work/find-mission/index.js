@@ -271,8 +271,8 @@ export default function MissionList() {
           <Search placeholder="搜尋任務" />
         </div>
         <div className='d-flex justify-content-between align-items-center my-md-3 position-relative'>
-          <div className='filters '>
-            <MobileFilter />
+          <div className='filters d-flex justify-content-center align-items-center '>
+            <MobileFilter /><button className="btn-second ms-3 filter-button">篩選</button>
           </div>
           <button className='add-mission-btn-pc  d-none d-lg-block position-absolute'><img src='/add-mission.svg' className='me-2' />新增任務</button>
           <button className='add-mission-btn-mobile size-6 d-bolck d-lg-none'><img src='/add-mission.svg' className='' /></button>
