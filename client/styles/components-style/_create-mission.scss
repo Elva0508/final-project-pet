@@ -22,14 +22,45 @@
         select {
           width: 100%;
         }
-        .mission-time {
+        .start,
+        .end {
           //   覆蓋ant時間選擇器預設樣式
           width: calc((100% - 8px) / 2);
-          border: 1px solid rgba(0, 0, 0, 0.1);
-          border-radius: 2px;
-          height: 2.5rem;
-          &:focus {
-            box-shadow: 0 1px 4px rgb(0, 0, 0, 0.25);
+          .react-datepicker-wrapper {
+            width: 100%;
+          }
+          .react-datepicker__tab-loop {
+            .react-datepicker__triangle::after {
+              border-bottom-color: $header-bg;
+            }
+            // .react-datepicker__navigation-icon::before {
+            //   border-color: $price;
+            // }
+            // .react-datepicker__navigation-icon::before:hover {
+            //   border-color: aquamarine;
+            // }
+            .react-datepicker__header {
+              background-color: $header-bg;
+              border: none;
+            }
+            .react-datepicker__day--selected {
+              background-color: $hover;
+            }
+            // .react-datepicker__day--in-range {
+            //   background-color: pink;
+            // }
+            .react-datepicker__day--in-selecting-range,
+            .react-datepicker__day--in-range {
+              background-color: $header-bg;
+            }
+            .react-datepicker__day--keyboard-selected {
+              background-color: $price;
+              color: white;
+            }
+            //  react-datepicker__day--in-selecting-range
+            .react-datepicker__day--selecting-range-start {
+              background-color: $price;
+            }
           }
         }
         .location-select {
@@ -52,12 +83,49 @@
       font-size: 18px;
     }
   }
+  // 日期選擇器覆蓋樣式
+  .semi-datepicker {
+    width: 100%;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    .semi-datepicker-input {
+      width: 100%;
+      background-color: $cos-white;
+      height: 40px;
+    }
+    .semi-datepicker-range-input-wrapper:hover {
+      background-color: rgba(lighten($light-gray, 5%), $alpha: 0.5);
+    }
+    .semi-datepicker-range-input-wrapper-active {
+      border-color: transparent;
+      background-color: rgba(lighten($light-gray, 5%), $alpha: 0.5);
+    }
+  }
+}
+// 日期選擇器下拉選單覆蓋樣式
+.dateRangeTest {
+  .semi-datepicker-day-inrange .semi-datepicker-day-main {
+    background-color: rgba($header-bg, $alpha: 0.3);
+  }
+  .semi-datepicker-day-selected-start .semi-datepicker-day-main:hover,
+  .semi-datepicker-day-selected-end .semi-datepicker-day-main:hover {
+    background-color: lighten($hover, 10%);
+  }
+
+  .semi-datepicker-day-inhover .semi-datepicker-day-main {
+    background-color: rgba($header-bg, $alpha: 0.3);
+  }
+  .semi-datepicker-day-hoverday-beforerange .semi-datepicker-day-main,
+  .semi-datepicker-day-hoverday-afterrange .semi-datepicker-day-main {
+    background-color: bisque;
+  }
+  .semi-datepicker-day-selected-start .semi-datepicker-day-main,
+  .semi-datepicker-day-selected-end .semi-datepicker-day-main,
+  .semi-datepicker-day-hoverday-around-singleselected
+    .semi-datepicker-day-main {
+    background-color: lighten(rgba($hover, $alpha: 0.8), 5%);
+  }
 }
 
-//   覆蓋antd時間選擇器預設樣式
-.ant-picker-focused {
-  box-shadow: 0 1px 4px rgb(0, 0, 0, 0.25);
-}
 //  覆蓋antd cascader聯集選擇器樣式
 .location-cascader {
   // menu菜單classname
@@ -72,6 +140,13 @@
       &:hover {
         background-color: $header-bg;
       }
+    }
+  }
+}
+@media screen and (max-width: 768px) {
+  .dateRangeTest {
+    .semi-datepicker-month-grid-right {
+      display: none;
     }
   }
 }
