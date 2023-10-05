@@ -75,6 +75,7 @@ export default function Cart() {
     }, [cart])
       //判斷該引入哪些優惠券
     useEffect(() => {
+        setCoupon([])
         getCoupon()
         setSale(0)
         setSelectedOption(["no",0,0])
