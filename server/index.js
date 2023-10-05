@@ -7,6 +7,7 @@ const bodyParser = require("body-parser");
 
 const memberRouter = require("./routes/member-route");
 const workRouter = require("./routes/work-route");
+const productRouter = require("./routes/product-route");
 const missionRouter = require("./routes/mission-route");
 const memberOrderRouter = require("./routes/member-order-route");
 const memberOrderDetailRouter = require("./routes/member-order-detail-route");
@@ -26,6 +27,7 @@ app.use(cors());
 app.use(express.static("public")); //建立靜態資源資料夾
 app.use("/api/member", memberRouter);
 app.use("/api/work", workRouter);
+app.use("/api/product", productRouter);
 app.use("/api/mission", missionRouter);
 app.use("/api/member-order", memberOrderRouter);
 app.use("/api/member-order-detail", memberOrderDetailRouter);
