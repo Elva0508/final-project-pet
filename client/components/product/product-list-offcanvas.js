@@ -1,39 +1,20 @@
-import {React,useState} from 'react';
-import Footer from '@/components/footer';
-import Search from '@/components/job/search';
-import ProductCard from '@/components/product/product-card';
-import { FaCaretUp,FaCaretDown } from 'react-icons/fa';
+import React from 'react';
+import { HiOutlineFilter } from 'react-icons/hi';
 
 
-export default function ProductList() {
-
-    const [isUpIconVisible, setIsUpIconVisible] = useState(false);
-    const [isPriceIconVisible, setIsPriceIconVisible] = useState(false);
-
-    const toggleUpIcon = () => {
-        setIsUpIconVisible(!isUpIconVisible);
-
-        // 如果價格按鈕已經是 $text-main，則切換價格按鈕回 $text-mark
-        if (isPriceIconVisible) {
-            setIsPriceIconVisible(false);
-        }
-    };
-
-    const togglePriceIcon = () => {
-        setIsPriceIconVisible(!isPriceIconVisible);
-
-        // 如果上架時間按鈕已經是 $text-main，則切換上架時間按鈕回 $text-mark
-        if (isUpIconVisible) {
-            setIsUpIconVisible(false);
-        }
-    };
-
+export default function ProductListOffcanvas() {
     return (
         <>
-            <div className='container'>
-                <p>我是麵包蟹</p>
-                <section className='sidebar-product d-flex '>
-                    <div className='sidebar col-md-3  ms-3 me-1 mt-5'>
+            <button className="product-sidebar-btn btn-confirm size-5" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"><HiOutlineFilter /></button>
+
+            <div className="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+
+                <div className="offcanvas-header">
+                    <h5 className="offcanvas-title" id="offcanvasRightLabel">篩選</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                </div>
+
+                <div className="offcanvas-body ">
                         <div className="accordion" id="accordionPanelsStayOpenExample">
                             <div className="accordion-item">
                                 <h2 className="accordion-header" id="panelsStayOpen-headingCategory">
@@ -81,22 +62,22 @@ export default function ProductList() {
                         <div className='filter mt-3 '>
                             <div className="card filter-card">
                                 <div className="card-header">
-                                    快速篩選
+                                    其他選項
                                 </div>
                                 <div className="card-body">
                                     <form>
                                         <div className="col-12">
-                                            <label for="inputprice" className="form-label">價錢篩選</label>
+                                            <label for="inputprice" className="form-label">價格區間</label>
                                             <div className="row col-md">
                                                 <div className="col-md-5">
-                                                    <input type="number" className="form-control" id="price" placeholder="">
+                                                    <input type="number" className="form-control" id="price" placeholder="$最低價">
                                                     </input>
                                                 </div>
                                                 <div class="col-md dash">
                                                     ~
                                                 </div>
                                                 <div className="col-md-5">
-                                                    <input type="number" className="form-control" id="price" placeholder="">
+                                                    <input type="number" className="form-control" id="price" placeholder="$最高價">
                                                     </input>
                                                 </div>
                                             </div>
@@ -107,71 +88,15 @@ export default function ProductList() {
                                             </input>
                                         </div>
                                         <button type="submit" className="btn btn-brown col-12 mt-3">
-                                            一鍵篩選
+                                            確定
                                         </button>
                                     </form>
                                 </div>
-
                             </div>
                         </div>
                     </div>
-                    <div className='product col-md-8 mb-2 mx-5 '>
-                        <div className='search-sort  d-flex  justify-content-center align-items-center '>
-                            <div className='search '>
-                                <Search />
-                            </div>
-                            <div className='sort ' >
-                                <div className='sort-btn d-flex   justify-content-center text-align-center'>
-                                    <button className={`size-7 m-1 p-1 ${isUpIconVisible ? 'active' : ''}`} onClick={toggleUpIcon}>
-                                        上架時間 {isUpIconVisible ? <FaCaretUp /> : <FaCaretDown />}
-                                    </button>
-                                    <button className={`size-7 m-1 p-1 ${isPriceIconVisible ? 'active' : ''}`} onClick={togglePriceIcon}>
-                                        價格 {isPriceIconVisible ? <FaCaretUp /> : <FaCaretDown />}
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="row g-5 ">
-                            <div className="col-lg-4 col-md-4 col-sm-12">
-                                <a href='http://localhost:3000/product-detail'>
-                                    <ProductCard />
-                                </a>
-                            </div>
-                            <div className="col-lg-4 col-md-4 col-sm-12">
-                                <a href='http://localhost:3000/product-detail'>
-                                    <ProductCard />
-                                </a>
-                            </div>
-                            <div className="col-lg-4 col-md-4 col-sm-12">
-                                <a href='http://localhost:3000/product-detail'>
-                                    <ProductCard />
-                                </a>
-                            </div>
-                            <div className="col-lg-4 col-md-4 col-sm-12">
-                                <a href='http://localhost:3000/product-detail'>
-                                    <ProductCard />
-                                </a>
-                            </div>
-                            <div className="col-lg-4 col-md-4 col-sm-12">
-                                <a href='http://localhost:3000/product-detail'>
-                                    <ProductCard />
-                                </a>
-                            </div>
-                            <div className="col-lg-4 col-md-4 col-sm-12">
-                                <a href='http://localhost:3000/product-detail'>
-                                    <ProductCard />
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-
-                </section>
-
-            </div>
-            <footer>
-                <Footer />
-            </footer>
-
+                </div>
+            
 
         </>
     )

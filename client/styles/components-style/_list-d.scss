@@ -1,14 +1,21 @@
 @import "@/styles/variable";
 
 .list-d{
+  // min-width: 280px;
   .user{
     background:$content-bg ; 
   }
   img{
-    width: 120px;
-    height: 120px;
+    width: 100px;
+    height: 100px;
     border-radius: 50%;
+
+  @media screen and (max-width: 780px) {
+    width: 80px;
+    height: 80px;
+}
   }
+  
   .level{
     color: $price;
     border:1px solid;

@@ -1,17 +1,12 @@
 .pagination{
     color:$text-main ;
-    a{
-        display: inline-block;
-        padding: 8px 16px;
-    }
-    a:hover {
-        border-radius: 50%;
-        border: 1px solid $text-main ;
-    }
     .active{
         background: $text-main;
         border-radius: 50%;
         color: $main-bg;
+    }
+    .btn{
+        border-radius: 50%;
     }
 
 }

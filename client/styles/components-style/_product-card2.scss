@@ -1,0 +1,91 @@
+.product-card2{   
+    width: 100%;
+     a{
+                border-bottom: 0;
+            }
+    .card{
+        width: 100%;
+        border: none;
+        .card-body{
+            background-color: $main-bg;
+
+            .heart-icon-container{
+                position: relative;
+            }
+            .heart-icon-red{
+                color:$hover;
+            }
+            .heart-icon-red-line{
+                font-size: 18px;
+                position: absolute;
+                top: 5px;
+                left: -1px;
+            }
+            .btn{
+                padding: 0px 7px;
+                font-size: 1rem;
+                margin: 7px 0px;
+                
+            }
+            // 食物
+            .btn-color-1{
+                background-color: #FACDA0;
+                color: $text-main;
+            }
+            // 用品
+            .btn-color-2{
+                background-color:$text-mark;
+                color: $main-bg
+            }
+            //清潔
+            .btn-color-3{
+                background-color:$star;
+                color: $text-main
+            }
+            //保健
+            .btn-color-4{
+                background-color:#EDC7D0;
+                color: $text-main
+            }
+            //護理
+            .btn-color-5{
+                background-color: $price;
+                color:$main-bg;     
+            }
+            .btn-color-6{
+                background-color: #B4A29C;
+                color:#34251F;     
+            }
+            .btn-color-7{
+                background-color: #34251F;
+                color:#B4A29C;     
+            }
+            .card-text{
+                color: #34251F;
+                height: auto;
+            }
+            .btn-confirm{
+                width: 100%;
+            }
+            .product-sale-price{
+                color: rgb(189, 189, 189);
+                // font-weight: bold;
+                margin: 0;
+                .cart{
+                    background-color: #E9A790;
+                    .cart{
+                        color: white;
+                    }
+                }
+                .price{
+                    color: $price;
+                }
+            }
+            .card-herat{
+                width: 38px;
+            }
+         
+           
+        }
+    }
+}

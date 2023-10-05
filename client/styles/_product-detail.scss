@@ -1,7 +1,11 @@
 @import "@/styles/_variable.scss";
 
+.product-detail{
 .container{
 background-color: $main-bg;
+}
+a{
+  border-bottom: 0;
 }
 
 // product-itembox
@@ -151,9 +155,9 @@ background-color: $main-bg;
 }
 
 //carousel slide
-.product-card:hover {
-    box-shadow: 3px 3px 3px 3px rgba(85, 50, 7, 0.1);
+.product-card {
     border-bottom: none;
+    padding: 1%;
 }
 
 .carousel-control-prev {
@@ -163,7 +167,7 @@ background-color: $main-bg;
 .carousel-control-next {
     right: -10%; /* 向右移動的距離，調整此值以移動按鈕 */
 }
-
+}
   
 
 

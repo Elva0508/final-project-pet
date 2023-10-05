@@ -3,57 +3,40 @@ const connection = require("./db");
 const express = require("express");
 const app = express();
 const cors = require("cors");
+const bodyParser = require("body-parser");
+
 const memberRouter = require("./routes/member-route");
 const workRouter = require("./routes/work-route");
+const productRouter = require("./routes/product-route");
+const missionRouter = require("./routes/mission-route");
+const memberOrderRouter = require("./routes/member-order-route");
+const memberOrderDetailRouter = require("./routes/member-order-detail-route");
+const memberWishlistRouter = require("./routes/member-wishlist-route");
+const memberPurchastRouter = require("./routes/member-purchast-route");
+const memberHistoryRouter = require("./routes/member-history-route");
+const cartRouter = require("./routes/cart-route");
+const articleRouter = require("./routes/article-route");
+const articleCategoryRouter = require("./routes/article-category");
 
-app.use(cors());
+
+app.use(bodyParser.json()); // 解析 JSON 请求体
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
+app.use(cors());
+app.use(express.static("public")); //建立靜態資源資料夾
 app.use("/api/member", memberRouter);
 app.use("/api/work", workRouter);
-
-app.get("/member/order", (req, res) => {
-  connection.execute(
-    `WITH ranked_orders AS (
-            SELECT
-              o.*,
-              d.product_id AS product_id,
-              p.product_name AS product_name,
-              p.specialoffer AS newprice,
-              i.images_one AS image,
-              ROW_NUMBER() OVER (PARTITION BY o.order_id ORDER BY o.order_id) AS row_num
-            FROM
-              orders AS o
-              JOIN users AS u ON o.order_id = u.user_id
-              JOIN order_details AS d ON o.order_id = d.order_id
-              JOIN products AS p ON d.product_id = p.product_id
-              JOIN images_product AS i ON p.product_group_id = i.id
-            WHERE
-              o.user_id = 1
-          )
-          SELECT *
-          FROM ranked_orders
-          WHERE row_num = 1;`,
-    (error, result) => {
-      res.json({ result });
-    }
-  );
-});
-
-app.get("/member/wishlist", (req, res) => {
-  connection.execute(
-    `SELECT pc.*, p.product_name AS product_name, p.product_type AS type,p.specialoffer AS price, i.images_one AS image 
-        FROM product_collections AS pc 
-        JOIN users AS u ON pc.user_id=u.user_id 
-        JOIN products AS p ON pc.product_id = p.product_id 
-        JOIN images_product AS i ON p.product_group_id = i.id 
-        WHERE pc.user_id = 1;`,
-    (error, result) => {
-      res.json({ result });
-    }
-  );
-});
+app.use("/api/product", productRouter);
+app.use("/api/mission", missionRouter);
+app.use("/api/member-order", memberOrderRouter);
+app.use("/api/member-order-detail", memberOrderDetailRouter);
+app.use("/api/member-wishlist", memberWishlistRouter);
+app.use("/api/member-purchast", memberPurchastRouter);
+app.use("/api/member-history", memberHistoryRouter);
+app.use("/api/product/cart", cartRouter);
+app.use("/api/article", articleRouter);
+app.use("/api/article-category", articleCategoryRouter);
 
 //------------------------------------------佳瑜
 // //jwt路由使用
@@ -88,4 +71,77 @@ app.get("/login", (req,res)=>{
 
 app.listen(3005, () => {
   console.log("server is running");
+});
+
+// 聊天室websocket
+const WebSocket = require("ws");
+const wss = new WebSocket.Server({ port: 8080 });
+
+const clients = {};
+
+wss.on("connection", (connection) => {
+  console.log("新的使用者已連線");
+
+  connection.on("message", (message) => {
+    const msg = message.toString("utf-8");
+    console.log(`收到消息=>${msg}`);
+    const parseMessage = JSON.parse(message);
+
+    if (parseMessage.type === "register") {
+      const userId = parseMessage.userId;
+      clients[userId] = connection;
+      connection.userId = userId;
+      const otherClients = Object.keys(clients);
+      wss.clients.forEach((client) => {
+        if (client.readyState === WebSocket.OPEN) {
+          client.send(
+            JSON.stringify({
+              type: "registered",
+              otherClients,
+            })
+          );
+        }
+      });
+      return false;
+    }
+
+    if (parseMessage.type === "message") {
+      const targetUserId = parseMessage.targetUserId;
+      const fromID = targetUserId.fromID;
+      const chatmsg = parseMessage.message;
+      if (targetUserId) {
+        let targetClient = clients[targetUserId];
+        if (targetClient.readyState === WebSocket.OPEN) {
+          targetClient.send(
+            JSON.stringify({
+              type: "message",
+              message: chatmsg,
+              fromID,
+              private: true,
+            })
+          );
+        }
+      }
+      return false;
+    }
+  });
+
+  connection.on("close", () => {
+    console.log("使用者已斷線");
+    if (connection.userId) {
+      delete clients[connection.userId];
+    }
+    const otherClients = Object.keys(clients);
+    wss.clients.forEach((client) => {
+      if (client.readyState === WebSocket.OPEN) {
+        client.send(
+          JSON.stringify({
+            type: "disconnected",
+            otherClients,
+            disconnectedID: connection.userId,
+          })
+        );
+      }
+    });
+  });
 });

@@ -1,54 +1,53 @@
 import React from "react";
-import ProductCard from "@/components/home/home-product-card";
 
 export default function BlockFive() {
   return (
     <>
-      <div className="block-three mb-5">
-        <div class="container text-center">
-          <div class="row">
-            <div class="col-5 col-md-5 d-flex align-items-end">
-              <div class="row">
+      <div className="mb-5">
+        <div className="text-center">
+          <div className="row">
+            <div className="col-5 col-md-5 d-flex align-items-end">
+              <div className="row">
                 <div className="col-4"></div>
-                <div class="col-8 ">
+                <div className="col-8 ">
                   <img
-                    src="https://hips.hearstapps.com/hmg-prod/images/cat-quotes-ginger-cat-on-bed-64e3990220b36.jpeg?crop=0.668xw:1.00xh;0.125xw,0&resize=1200:*"
-                    class="img-fluid"
+                    src="https://images.unsplash.com/photo-1533738363-b7f9aef128ce?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1635&q=80"
+                    className="img-fluid"
                     alt="..."
                   ></img>
                 </div>
               </div>
             </div>
-            <div class="col-md-7">
+            <div className="col-md-7">
               <div className="mt-5 ms-5">
-                <div className="d-flex justify-content-start title">
-                  小貓上工囉！ 貓咪互助平台
+                <div className="desktop-title">
+                  <span className="title size-1 m-size-3 d-flex justify-content-start">
+                    小貓上工囉！<br></br>貓咪互助平台
+                  </span>
                 </div>
                 <div className="d-flex justify-content-start">
-                  文字文字文字文字,你的貓貓需要幫助嗎?
-                  文字文字文字文字,讓其他人來幫助你！
-                  文字文字文字,文字文字文字文字文字,文字文字
+                  <span>你的貓貓需要幫助嗎？讓其他人來幫助你！</span>
                 </div>
               </div>
-              <div className="m-5">
+              <div className="m-5 d-flex justify-content-start">
                 <button type="reset" className="btn-brown mx-1">
                   立即前往
                 </button>
               </div>
               <div className="m-3 bg-light">
-                <div class="container text-center">
-                  <div class="row align-items-start mt-5 pt-5 pb-5">
-                    <div class="col price size-6">
-                      $99
-                      <div className="size-7 content">全館滿額免運</div>
+                <div className="text-center">
+                  <div className="row align-items-start mt-5 py-3 px-1">
+                    <div className="col price size-6">
+                      100+
+                      <div className="size-7 content">超多小幫手</div>
                     </div>
-                    <div class="col price size-6">
-                      9折券
-                      <div className="size-7 content">會員免費領取</div>
+                    <div className="col price size-6">
+                      890+
+                      <div className="size-7 content">多種刊登需求</div>
                     </div>
-                    <div class="col price size-6">
-                      買一送一
-                      <div className="size-7 content">VIP會員生日禮金</div>
+                    <div className="col price size-6">
+                      300+
+                      <div className="size-7 content">真實用戶回饋</div>
                     </div>
                   </div>
                 </div>
