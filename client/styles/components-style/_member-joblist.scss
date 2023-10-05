@@ -2,7 +2,7 @@
 .joblist{
     background: $content-bg;
     color:$text-main;
-    @media screen and (max-width: 576px) {
+    @media screen and (max-width: 768px) {
         background: $main-bg;
     }
     .title{
@@ -19,6 +19,13 @@
     .apply{
         color:$hover;
     }
+    .listbutton{
+        border: 0px;
+        background: transparent;
+    }
 
+    button.pressed{
+        border-bottom: 5px solid $hover;
+    }
 
 }

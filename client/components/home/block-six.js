@@ -7,65 +7,65 @@ export default function BlockSix() {
   return (
     <>
       <div className="block-six">
-        <div id="carouselExample" class="carousel slide">
-          <div class="carousel-inner">
-            <div class="carousel-item active">
-              <div class="row row-cols-1 row-cols-md-3 g-4 px-5">
-                <div class="col">
+        <div id="carouselExample" className="carousel slide">
+          <div className="carousel-inner">
+            <div className="carousel-item active">
+              <div className="row row-cols-1 row-cols-md-3 g-4 px-5">
+                <div className="col">
                   <ArticleListCard />
                 </div>
-                <div class="col">
+                <div className="col">
                   <ArticleListCard />
                 </div>
-                <div class="col">
-                  <ArticleListCard />
-                </div>
-              </div>
-            </div>
-            <div class="carousel-item">
-              <div class="row row-cols-1 row-cols-md-3 g-4 px-5">
-                <div class="col">
-                  <ArticleListCard />
-                </div>
-                <div class="col">
-                  <ArticleListCard />
-                </div>
-                <div class="col">
+                <div className="col">
                   <ArticleListCard />
                 </div>
               </div>
             </div>
-            <div class="carousel-item">
-              <div class="row row-cols-1 row-cols-md-3 g-4 px-5">
-                <div class="col">
+            <div className="carousel-item">
+              <div className="row row-cols-1 row-cols-md-3 g-4 px-5">
+                <div className="col">
                   <ArticleListCard />
                 </div>
-                <div class="col">
+                <div className="col">
                   <ArticleListCard />
                 </div>
-                <div class="col">
+                <div className="col">
+                  <ArticleListCard />
+                </div>
+              </div>
+            </div>
+            <div className="carousel-item">
+              <div className="row row-cols-1 row-cols-md-3 g-4 px-5">
+                <div className="col">
+                  <ArticleListCard />
+                </div>
+                <div className="col">
+                  <ArticleListCard />
+                </div>
+                <div className="col">
                   <ArticleListCard />
                 </div>
               </div>
             </div>
           </div>
           <button
-            class="carousel-control-prev"
+            className="carousel-control-prev"
             type="button"
             data-bs-target="#carouselExample"
             data-bs-slide="prev"
           >
             <FaChevronLeft size={70} style={{ color: "#512f10" }} />
-            <span class="visually-hidden">Previous</span>
+            <span className="visually-hidden">Previous</span>
           </button>
           <button
-            class="carousel-control-next"
+            className="carousel-control-next"
             type="button"
             data-bs-target="#carouselExample"
             data-bs-slide="next"
           >
             <FaChevronRight size={70} style={{ color: "#512f10" }} />
-            <span class="visually-hidden">Next</span>
+            <span className="visually-hidden">Next</span>
           </button>
         </div>
       </div>
