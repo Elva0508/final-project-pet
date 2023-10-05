@@ -66,7 +66,7 @@ router.get("/all-missions", (req, res) => {
   let orderBy = null;
 
   // 獲取任務類型篩選條件
-  const missionTypeFilter = req.query.missionType;
+  let missionTypeFilter = req.query.missionType; 
 
   // 獲取排序條件
   if (req.query.sortBy === "post_date") {
@@ -75,11 +75,24 @@ router.get("/all-missions", (req, res) => {
     orderBy = "md.price";
   }
 
+  // 獲取篩選條件
+  if (req.query.missionType === "feed") {
+    missionTypeFilter = 1;
+  } else if (req.query.missionType === "house") {
+    missionTypeFilter = 2;
+  }else if (req.query.missionType === "beauty") {
+    missionTypeFilter = 3;
+  }else if (req.query.missionType === "training") {
+    missionTypeFilter = 4;
+  }else if (req.query.missionType === "medical") {
+    missionTypeFilter = 5;
+  }
+  
   let query = commonQueryTemplate;
 
   // 如果提供了任務類型篩選條件，將其包含在查詢中
   if (missionTypeFilter) {
-    query += ` WHERE md.mission_type = '${missionTypeFilter}'`;
+    query += ` WHERE md.mission_type = ${missionTypeFilter}`;
   }
 
   if (orderBy) {
