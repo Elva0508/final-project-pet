@@ -96,6 +96,18 @@ export default function ListD() {
               刊登紀錄
             </Link>
           </li>
+          <li>
+            <Link className="size-6" href="">
+              <HiClipboardList />
+              銷售紀錄
+            </Link>
+          </li>
+          <li>
+            <Link className="size-6" href="">
+              <HiClipboardList />
+              預約紀錄
+            </Link>
+          </li>
         </ul>
       </div>
     </>
