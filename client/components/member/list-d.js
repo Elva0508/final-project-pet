@@ -9,6 +9,7 @@ import { BiSolidShoppingBag } from "react-icons/bi";
 import { MdDiscount } from "react-icons/md";
 import { FaList } from "react-icons/fa";
 import { RiFileList3Fill } from "react-icons/ri";
+import Link from "next/link";
 
 export default function ListD() {
   return (
@@ -36,64 +37,64 @@ export default function ListD() {
             <h6 className="size-6">基本資料</h6>
           </li>
           <li>
-            <a className="size-6" href="">
+            <Link className="size-6" href="">
               <FaAddressCard />
               我的資料
-            </a>
+            </Link>
           </li>
           <li>
-            <a className="size-6" href="">
+            <Link className="size-6" href="">
               <FaAward />
               會員等級
-            </a>
+            </Link>
           </li>
           <li>
             <h6 className="size-6">小貓商城</h6>
           </li>
           <li>
-            <a className="size-6" href="">
+            <Link className="size-6" href="http://localhost:3000/member/order">
               <RiFileList3Fill />
               我的訂單
-            </a>
+            </Link>
           </li>
           <li>
-            <a className="size-6" href="">
+            <Link className="size-6" href="http://localhost:3000/member/purchast">
               <BiSolidShoppingBag />
               購買紀錄
-            </a>
+            </Link>
           </li>
           <li>
-            <a className="size-6" href="">
+            <Link className="size-6" href="http://localhost:3000/member/wishlist">
               <FaList />
               追蹤清單
-            </a>
+            </Link>
           </li>
           <li>
-            <a className="size-6" href="">
+            <Link className="size-6" href="">
               <MdDiscount />
               我的優惠券
-            </a>
+            </Link>
           </li>
           <li>
             <h6 className="size-6">小貓上工</h6>
           </li>
           <li>
-            <a className="size-6" href="">
+            <Link className="size-6" href="">
               <FaPencilAlt />
               小幫手資料
-            </a>
+            </Link>
           </li>
           <li>
-            <a className="size-6" href="">
+            <Link className="size-6" href="">
               <LiaListAltSolid />
               任務清單
-            </a>
+            </Link>
           </li>
           <li>
-            <a className="size-6" href="">
+            <Link className="size-6" href="">
               <HiClipboardList />
               刊登紀錄
-            </a>
+            </Link>
           </li>
         </ul>
       </div>
