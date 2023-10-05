@@ -1,9 +1,31 @@
-import React from "react";
+// import React, { useState, useEffect } from "react";
 import BreadCrumbArticle from "@/components/article/bread-crumb-article";
 import ArticleCatogory from "@/components/article/article-catogory";
 import ArticleCard from "@/components/article/article-card";
+// import axios from "axios";
 
 export default function Article() {
+  // const [article, setArticle] = useState(null);
+
+  // useEffect(() => {
+  //   // 獲得路由參數中的文章id和文章類別
+  //   const { category, id } = props.match.params;
+
+  //   // 請求的URL
+  //   const apiUrl = `http://localhost:3005/article/${category}/${id}`;
+
+  //   // 使用axios拿文章資料
+  //   axios
+  //     .get(apiUrl)
+  //     .then((response) => {
+  //       const data = response.data;
+  //       setArticle(data);
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error:", error);
+  //     });
+  // }, [props.match.params]);
+
   return (
     <>
       <div className="container mt-5">
@@ -15,22 +37,6 @@ export default function Article() {
         </div>
         <div className="mt-5">
           <ArticleCard />
-        </div>
-        <div className="my-5 p-3 article size-7">
-          <span>
-            飼主注意！備好急診醫院名單，隨時替牠把關健康才心安。過年期間，窩窩特別整理了2023年全臺有提供急診服務的動物醫院，不論是24小時不打烊、或是提供特定時段的緊急醫療服務，這些獸醫院在春節仍亮著一盞明燈，等待幫助每個「牠」的突發狀況。
-            飼主注意！備好急診醫院名單，隨時替牠把關健康才心安。過年期間，窩窩特別整理了2023年全臺有提供急診服務的動物醫院，不論是24小時不打烊、或是提供特定時段的緊急醫療服務，這些獸醫院在春節仍亮著一盞明燈，等待幫助每個「牠」的突發狀況。
-            飼主注意！備好急診醫院名單，隨時替牠把關健康才心安。過年期間，窩窩特別整理了2023年全臺有提供急診服務的動物醫院，不論是24小時不打烊、或是提供特定時段的緊急醫療服務，這些獸醫院在春節仍亮著一盞明燈，等待幫助每個「牠」的突發狀況。
-            飼主注意！備好急診醫院名單，隨時替牠把關健康才心安。過年期間，窩窩特別整理了2023年全臺有提供急診服務的動物醫院，不論是24小時不打烊、或是提供特定時段的緊急醫療服務，這些獸醫院在春節仍亮著一盞明燈，等待幫助每個「牠」的突發狀況。
-          </span>
-        </div>
-        <div className="my-5 p-3 article size-7">
-          <span>
-            飼主注意！備好急診醫院名單，隨時替牠把關健康才心安。過年期間，窩窩特別整理了2023年全臺有提供急診服務的動物醫院，不論是24小時不打烊、或是提供特定時段的緊急醫療服務，這些獸醫院在春節仍亮著一盞明燈，等待幫助每個「牠」的突發狀況。
-            飼主注意！備好急診醫院名單，隨時替牠把關健康才心安。過年期間，窩窩特別整理了2023年全臺有提供急診服務的動物醫院，不論是24小時不打烊、或是提供特定時段的緊急醫療服務，這些獸醫院在春節仍亮著一盞明燈，等待幫助每個「牠」的突發狀況。
-            飼主注意！備好急診醫院名單，隨時替牠把關健康才心安。過年期間，窩窩特別整理了2023年全臺有提供急診服務的動物醫院，不論是24小時不打烊、或是提供特定時段的緊急醫療服務，這些獸醫院在春節仍亮著一盞明燈，等待幫助每個「牠」的突發狀況。
-            飼主注意！備好急診醫院名單，隨時替牠把關健康才心安。過年期間，窩窩特別整理了2023年全臺有提供急診服務的動物醫院，不論是24小時不打烊、或是提供特定時段的緊急醫療服務，這些獸醫院在春節仍亮著一盞明燈，等待幫助每個「牠」的突發狀況。
-          </span>
         </div>
       </div>
     </>

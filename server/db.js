@@ -8,4 +8,13 @@ const connection = mysql.createConnection({
   database: "cat",
 });
 
+connection.connect((err)=>{
+  if(err){
+    console.error("Database Connection Failed")
+    console.log(err);
+  }
+  console.log("~~~~~~~~Database Connection Successfully~~~~~~~~")
+ // connection.end();
+})
+
 module.exports = connection;

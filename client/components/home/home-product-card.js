@@ -20,7 +20,7 @@ export default function ProductCard() {
             <div className="d-flex justify-content-between align-items-center">
             {/* 類別按鈕顏色已建好 btn-color-1 一直到btn-color-7 再依需求調整className即可 */}
             {/* 顏色設定如果需要再調整，可以到以下檔案調整 \final-project-pet\client\styles\components-style\_product-card.scss */}
-              <div className="btn btn-color-1 d-flex align-items-center">貓草</div>
+              <div className="btn size-7 m-size-7 btn-color-1 d-flex align-items-center">貓草</div>
               <div className="" onClick={toggleFavorite}>
                 {isFavorite ? (
                   <div className="position-relative inline-block">
@@ -33,10 +33,10 @@ export default function ProductCard() {
               </div>
             </div>
 
-            <div className="card-text">單層開放式防濺貓砂盆</div>
-            <div className="product-sale-price d-flex align-items-center" href="#">
+            <div className="card-text size-6 m-size-6">單層開放式防濺貓砂盆</div>
+            <div className="product-sale-price d-flex align-items-center m-size-7" href="#">
               <del>$220</del>
-              <div className="price fs-4 mx-2 w-100">NT$140</div>
+              <div className="price fs-4 mx-2 w-100 m-size-6">NT$140</div>
               <div className="rounded-circle cart p-1 d-flex justify-content-end align-items-center">
               <BiSolidCart className="cart"/>
               </div>
