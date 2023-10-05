@@ -17,7 +17,7 @@ router.get("/coupon",(req,res)=>{
   console.log(req);
   const allPrice= req.query.allPrice; 
     connection.execute(
-        `
+         `
         SELECT u.*,c.title AS title,c.discount_type AS type,c.usage_min AS min,c.discount_amount AS amount,c.discount AS discount 
         FROM users_coupon AS u 
         JOIN coupon AS c on c.coupon_id=u.coupon_id
