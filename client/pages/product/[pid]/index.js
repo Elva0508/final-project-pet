@@ -9,8 +9,16 @@ import ProductCard from '@/components/home/home-product-card';
 import axios from 'axios';
 import { useEffect } from "react";
 import { useRouter } from "next/router";
+import Link from 'next/link';
 
 
+//next裡innerhtml語法
+function ProductDescription({ htmlContent }) {
+    return (
+        <div className="item" dangerouslySetInnerHTML={{ __html: htmlContent }}>
+        </div>
+    );
+}
 
 
 export default function ProductDetail() {
@@ -18,12 +26,28 @@ export default function ProductDetail() {
     //商品介紹和推薦跳頁
     const [activeSection, setActiveSection] = useState('product-description')
 
-
     // 讀取資料庫資料
     const router = useRouter();
     const product_id = router.query.pid;
     const [productData, setProductData] = useState([]);
+    useEffect(() => {
+        if (product_id) {
+            axios.get(`http://localhost:3005/api/product/product-detail/${product_id}`)
+                .then((response) => {
+                    setProductData(response.data.result); // 直接设置为数组
+                    setMainPic(response.data.result[0].images_one)
+                    
+                    console.log(response.data.result[0].images_one)
+                })
+                .catch((error) => {
+                    console.error("Error fetching product data:", error);
+                });
+        }
+    }, [product_id]);
+    // console.log(productData)
 
+    
+    //圖片抽換
     const [mainPic, setMainPic] = useState(''); // 初始化為 v.images_one
 
     // 點擊事件處理函數，更新主圖片的 URL
@@ -31,31 +55,29 @@ export default function ProductDetail() {
         setMainPic(newImageUrl);
     };
 
-    useEffect(() => {
-        if (product_id) {
-            axios.get(`http://localhost:3005/api/product/product-detail/${product_id}`)
-                .then((response) => {
-                    setProductData(response.data.result); // 直接设置为数组
-
-                })
-                .catch((error) => {
-                    console.error("Error fetching product data:", error);
-                });
-        }
-    }, [product_id]);
-    console.log(productData)
-
-    return (
-
-        
+  
+    return ( 
         <>
             <div className='product-detail'>
                 <div className="container ">
-                    <p>我是麵包蟹</p>
-
                     {productData.map((v, i) => {
                         return (
                             <>
+                                <nav className="breadcrumb-wrapper" aria-label="breadcrumb">
+                                    <ol class="breadcrumb">
+                                        <li class="breadcrumb-item">
+                                            <Link href="/">首頁</Link>
+                                        </li>
+                                        <li class="breadcrumb-item" aria-current="page">
+                                            <Link href="/product" >
+                                                全部商品
+                                            </Link>
+                                        </li>
+                                        <li class="breadcrumb-item" aria-current="page">
+                                                {v.product_name}
+                                        </li>
+                                    </ol>
+                                </nav>
                                 <section className="product-itembox row justify-content-center" key={v.product_id} >
                                     <div className="product-pic col-lg-6" >
                                         <figure className="main-pic  ">
@@ -143,7 +165,8 @@ export default function ProductDetail() {
                                 {activeSection === 'product-description' && (
                                     <section className="product-description  " >
                                         <div className="description">
-                                            {v.description}
+                                            <ProductDescription htmlContent={v.description} />
+                                            
                                         </div>
                                         <div className="product-description-pic text-center ">
                                             <figure className="main-pic ">
@@ -164,13 +187,6 @@ export default function ProductDetail() {
 
                                
                             </>
-
-
-
-
-
-
-
                         );
                     })}
 

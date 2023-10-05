@@ -6,6 +6,7 @@ import { FaCaretUp, FaCaretDown } from 'react-icons/fa';
 import ProductListOffcanvas from '@/components/product/product-list-offcanvas';
 import { useEffect } from 'react';
 import axios from 'axios';
+import Link from 'next/link';
 
 
 export default function ProductList() {
@@ -44,7 +45,18 @@ export default function ProductList() {
         <>
             <div className='product-list'>
                 <div className='container'>
-                    <p>我是麵包蟹</p>
+                    <nav className="breadcrumb-wrapper" aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item">
+                                <Link href="/">首頁</Link>
+                            </li>
+                            <li class="breadcrumb-item" aria-current="page">
+                                <Link href="/product" >
+                                    全部商品
+                                </Link>
+                            </li>
+                        </ol>
+                    </nav>
                     <div className="search-sort d-flex flex-md-row flex-column justify-content-between align-items-center ms-3 me-3">
                         <Search />
                         <div className='sort ' >
