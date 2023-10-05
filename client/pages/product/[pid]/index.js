@@ -26,7 +26,7 @@ export default function ProductDetail() {
     //商品介紹和推薦跳頁
     const [activeSection, setActiveSection] = useState('product-description')
 
-    // 讀取product資料庫資料
+    // 讀取product個別id資料
     const router = useRouter();
     const product_id = router.query.pid;
     const [productData, setProductData] = useState([]);
@@ -103,6 +103,23 @@ export default function ProductDetail() {
     // 獲取星星評分的百分比長度數組
     const percentageLengths = calculatePercentageLengths(starRatingLengths, starRatings);
 
+    //推薦隨機8筆
+    const [randomProducts, setRandomProducts] = useState([]);
+
+    useEffect(() => {
+        axios.get('http://localhost:3005/api/product/recommend') // 設有一個API可以獲取隨機產品
+            .then((response) => {
+                // 從API響應中獲取隨機產品
+                const randomProducts = response.data;
+                // 將隨機產品設置為狀態
+                setRandomProducts(randomProducts);
+            })
+            .catch((error) => {
+                console.error('Error fetching random products:', error);
+            });
+    }, []);
+
+
 
     return (
         <>
@@ -153,7 +170,7 @@ export default function ProductDetail() {
                                         </div>
                                         <div className="type d-flex flex-column">
                                             <div className="type-chinese">規格</div>
-                                            <div className="type-btn d-flex ">
+                                            <div className="type-btn d-flex mt-1 ">
                                                 {v.type_names.split(',').map((typeName, i) => (
                                                     <button
                                                         key={i}
@@ -322,5 +339,3 @@ export default function ProductDetail() {
 
     );
 }
-
-

@@ -13,6 +13,8 @@ export default function ProductList() {
 
     const [isUpIconVisible, setIsUpIconVisible] = useState(false);
     const [isPriceIconVisible, setIsPriceIconVisible] = useState(false);
+    const [isModalVisible, setIsModalVisible] = useState(false); // 控制模态框显示与隐藏的状态
+
 
     const toggleUpIcon = () => {
         setIsUpIconVisible(!isUpIconVisible);
@@ -38,8 +40,6 @@ export default function ProductList() {
             setSubcategoryData({ result: response.data.result });
         });
     }, [])
-
-
 
     return (
         <>
@@ -69,7 +69,7 @@ export default function ProductList() {
                                 </button>
                             </div>
                         </div>
-                    </div>              
+                    </div>
                     <div className="product-offcanvas-m d-block d-lg-none ">
                         <ProductListOffcanvas />
                     </div>
@@ -105,8 +105,6 @@ export default function ProductList() {
                                     </div>
                                 ))}
                             </div>
-
-
 
                             <div className='filter mt-3 '>
                                 <div className="card filter-card">
@@ -145,24 +143,19 @@ export default function ProductList() {
                             </div>
                         </div>
 
-
-
                         <div className='product d-lg-flex flex-column justify-content-center '>
-                            <div className=" row d-flex mb-3 g-3 g-md-4 ">
-                                <ProductCard2 />
+                            <div className=" row d-flex mb-3 g-3 g-md-4 ">  
+                             <ProductCard2 /> 
                                 {/* 原本錯的 */}
                                 {/* <div className="col-lg-4 col-md-4 col-sm-6">
                                     <ProductCard />
                                 </div> */}
                             </div>
                         </div>
-
-                    </section>
-
-
-
+                    </section>     
                 </div>
             </div>
+            
         </>
     )
 }

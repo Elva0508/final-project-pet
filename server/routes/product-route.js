@@ -1,16 +1,21 @@
 const router = require("express").Router();
 const connection = require("../db");
 
+
 //product產品資料
 router.get("/", (req, res) => {
     connection.execute(
-        `SELECT
+        ` SELECT
         products.*,
         category.category_name AS category_name,
-        subcategory.subcategory_name AS subcategory_name
+        subcategory.subcategory_name AS subcategory_name,
+        GROUP_CONCAT(product_type.type_name SEPARATOR ', ') AS type_names
         FROM products
         JOIN category ON category.category_id = products.category_id
-        JOIN subcategory ON subcategory.subcategory_id = products.subcategory_id`,
+        JOIN subcategory ON subcategory.subcategory_id = products.subcategory_id
+        LEFT JOIN product_type ON product_type.product_id = products.product_id
+        GROUP BY products.product_id;
+        `,
         (error, result) => {
             res.json({ result });
         }
@@ -88,9 +93,25 @@ router.get("/product-detail/:product_id/reviews", (req, res) => {
     );
 });
 
-
-
 //商品細節頁-你可能會喜歡的商品隨機8筆
+router.get("/recommend", (req, res) => {
+    connection.execute(
+        ` SELECT
+          products.*,
+          category.category_name AS category_name,
+          subcategory.subcategory_name AS subcategory_name
+          FROM products
+          JOIN category ON category.category_id = products.category_id
+          JOIN subcategory ON subcategory.subcategory_id = products.subcategory_id
+          ORDER BY RAND()
+          LIMIT 8;
+        `,
+        (error, result) => {
+            res.json({ result });
+        }
+    );
+});
+
 
 
 module.exports = router;
