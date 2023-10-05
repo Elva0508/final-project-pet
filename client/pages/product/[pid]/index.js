@@ -26,7 +26,7 @@ export default function ProductDetail() {
     //商品介紹和推薦跳頁
     const [activeSection, setActiveSection] = useState('product-description')
 
-    // 讀取資料庫資料
+    // 讀取product資料庫資料
     const router = useRouter();
     const product_id = router.query.pid;
     const [productData, setProductData] = useState([]);
@@ -36,8 +36,7 @@ export default function ProductDetail() {
                 .then((response) => {
                     setProductData(response.data.result); // 直接设置为数组
                     setMainPic(response.data.result[0].images_one)
-                    
-                    console.log(response.data.result[0].images_one)
+                    // console.log(response.data.result[0].images_one)
                 })
                 .catch((error) => {
                     console.error("Error fetching product data:", error);
@@ -46,7 +45,7 @@ export default function ProductDetail() {
     }, [product_id]);
     // console.log(productData)
 
-    
+
     //圖片抽換
     const [mainPic, setMainPic] = useState(''); // 初始化為 v.images_one
 
@@ -55,8 +54,57 @@ export default function ProductDetail() {
         setMainPic(newImageUrl);
     };
 
-  
-    return ( 
+    // 讀取review資料
+    const [reviewData, setReviewData] = useState([]); // 使用空数组作为默认值
+    useEffect(() => {
+        if (product_id) {
+            axios.get(`http://localhost:3005/api/product/product-detail/${product_id}/reviews`)
+                .then((response) => {
+                    setReviewData(response.data.result); // 直接设置为数组
+                    // console.log(response.data.result);
+                })
+                .catch((error) => {
+                    console.error("Error fetching product data:", error);
+                });
+        }
+    }, [product_id]);
+
+    // 從 response.data.result 中獲取星級的數據
+    const starRatings = reviewData.map((review) => review.star_rating);
+
+    // 計算星星平均數
+    const calculateAverageRating = (starRatings) => {
+        if (starRatings.length === 0) {
+            return 0; //如果沒有星星，平均數等於0
+        }
+        //(accumulator, rating) => accumulator + rating, 0 這句看不懂!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        const totalRating = starRatings.reduce((accumulator, rating) => accumulator + rating, 0);
+        const averageRating = totalRating / starRatings.length;
+        return averageRating;
+    };
+
+    const averageRating = calculateAverageRating(starRatings);
+
+    // 星星評論的長度，例如 [5, 4, 3, 2, 1]
+    const starRatingLengths = [5, 4, 3, 2, 1];
+
+    // 計算每個星級的百分比長度
+    const calculatePercentageLengths = (starRatingLengths, starRatings) => {
+        const percentageLengths = starRatingLengths.map((rating) => {
+            // 計算每個星級評分的數量
+            const ratingCount = starRatings.filter((ratingValue) => ratingValue === rating).length;
+            // 計算百分比長度，假設總數量為 starRatings.length
+            const percentage = (ratingCount / starRatings.length) * 100;
+            return percentage;
+        });
+        return percentageLengths;
+    };
+
+    // 獲取星星評分的百分比長度數組
+    const percentageLengths = calculatePercentageLengths(starRatingLengths, starRatings);
+
+
+    return (
         <>
             <div className='product-detail'>
                 <div className="container ">
@@ -74,7 +122,7 @@ export default function ProductDetail() {
                                             </Link>
                                         </li>
                                         <li class="breadcrumb-item" aria-current="page">
-                                                {v.product_name}
+                                            {v.product_name}
                                         </li>
                                     </ol>
                                 </nav>
@@ -87,8 +135,6 @@ export default function ProductDetail() {
                                             <div className='row g-2 d-flex justify-content-start '>
                                                 <img src={v.images_one} alt="..." onClick={() => handleImageClick(v.images_one)}></img>
                                                 <img src={v.images_two} alt="..." onClick={() => handleImageClick(v.images_two)}></img>
-                                                {/* <img src={v.images_three} alt="..." onClick={() => handleImageClick(v.images_three)}></img>
-                                                <img src={v.images_four} alt="..." onClick={() => handleImageClick(v.images_four)}></img> */}
                                             </div>
                                         </div>
                                     </div>
@@ -166,7 +212,7 @@ export default function ProductDetail() {
                                     <section className="product-description  " >
                                         <div className="description">
                                             <ProductDescription htmlContent={v.description} />
-                                            
+
                                         </div>
                                         <div className="product-description-pic text-center ">
                                             <figure className="main-pic ">
@@ -175,17 +221,11 @@ export default function ProductDetail() {
                                             <figure className="main-pic ">
                                                 <img src={v.images_two} alt="..."></img>
                                             </figure>
-                                            {/* <figure className="main-pic ">
-                                                <img src={v.images_three} alt="..."></img>
-                                            </figure>
-                                            <figure className="main-pic ">
-                                                <img src={v.images_four} alt="..."></img>
-                                            </figure> */}
                                         </div>
                                     </section>
                                 )}
 
-                               
+
                             </>
                         );
                     })}
@@ -193,46 +233,50 @@ export default function ProductDetail() {
                     {/* 顧客評價 */}
                     {activeSection === 'customer-message' && (
                         <section className="customer-message" >
-                            <div className="star ">
-                                <div className="Overall-rating-detail ">
-                                    <EvaluationBar />
+                            <div className="star">
+                                <div className="Overall-rating-detail">
+                                    <div className="evaluation-bar">
+                                        <div className="evaluation-bar-left d-flex flex-column justify-content-center">
+                                            <p className="size-4 text-center">{averageRating} 顆星</p>
+                                            <div className="ranking mb-2 mx-auto">
+                                                {/* 渲染平均星級 */}
+                                                {Array.from({ length: Math.floor(averageRating) }, (_, index) => (
+                                                    <AiFillStar key={index} />
+                                                ))}
+                                            </div>
+                                        </div>
+                                        <div className="evaluation-bar-divider"></div>
+                                        <div className="evaluation-bar-right d-flex flex-column justify-content-evenly">
+                                            {starRatingLengths.map((rating, index) => (
+                                                <div className="bar-group" key={index}>
+                                                    <p className="number size-6">{rating}</p>
+                                                    <div className="percentage">
+                                                        <div className="have" style={{ width: `${percentageLengths[index]}%` }}></div>
+                                                        <div className="no-have" style={{ width: `${100 - percentageLengths[index]}%` }}></div>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <div className="customer ">
-                                <div className="customer-name">王小姐</div>
-                                <div className="customer-star">
-                                    <AiFillStar />
-                                    <AiFillStar />
-                                    <AiFillStar />
-                                    <AiFillStar />
-                                </div>
-                                <div className="customer-content">
-                                    唬爛產生器唬爛產生器唬爛產生器唬爛產生器唬爛產生器唬爛產生器唬爛產生器唬爛產生器唬爛產生器唬爛產生器唬爛產生器唬爛產生器唬爛產生器唬爛產生器唬爛產生器唬爛產生器唬爛產生器唬爛產生器唬爛產生器唬爛產生器唬
-                                </div>
-                            </div>
-                            <div className="customer">
-                                <div className="customer-name">王小姐</div>
-                                <div className="customer-star">
-                                    <AiFillStar />
-                                    <AiFillStar />
-                                    <AiFillStar />
-                                    <AiFillStar />
-                                </div>
-                                <div className="customer-content">
-                                    唬爛產生器唬爛產生器唬爛產生器唬爛產生器唬爛產生器唬爛產生器唬爛產生器唬爛產生器唬爛產生器唬爛產生器唬爛產生器唬爛產生器唬爛產生器唬爛產生器唬爛產生器唬爛產生器唬爛產生器唬爛產生器唬爛產生器唬爛產生器唬
-                                </div>
-                            </div><div className="customer">
-                                <div className="customer-name">王小姐</div>
-                                <div className="customer-star">
-                                    <AiFillStar />
-                                    <AiFillStar />
-                                    <AiFillStar />
-                                    <AiFillStar />
-                                </div>
-                                <div className="customer-content">
-                                    唬爛產生器唬爛產生器唬爛產生器唬爛產生器唬爛產生器唬爛產生器唬爛產生器唬爛產生器唬爛產生器唬爛產生器唬爛產生器唬爛產生器唬爛產生器唬爛產生器唬爛產生器唬爛產生器唬爛產生器唬爛產生器唬爛產生器唬爛產生器唬
-                                </div>
-                            </div>
+                            {reviewData.map((v, i) => {
+                                return (
+
+                                    <div className="customer" key={i}>
+                                        <div className="customer-name">{v.name}</div>
+                                        <div className="customer-star">
+                                            {/* _佔位符，要再了解 */}
+                                            {Array.from({ length: v.star_rating }, (_, index) => (
+                                                <AiFillStar key={index} />
+                                            ))}
+                                        </div>
+                                        <div className="customer-content">
+                                            {v.review_content}
+                                        </div>
+                                    </div>
+                                );
+                            })}
                         </section>
                     )}
 
@@ -278,6 +322,5 @@ export default function ProductDetail() {
 
     );
 }
-
 
 

@@ -11,14 +11,13 @@ router.get("/", (req, res) => {
         FROM products
         JOIN category ON category.category_id = products.category_id
         JOIN subcategory ON subcategory.subcategory_id = products.subcategory_id`,
-
         (error, result) => {
             res.json({ result });
         }
     );
 });
 
-//category/subcategory類別
+//category&subcategory類別
 router.get("/category", (req, res) => {
     connection.execute(
         `SELECT
@@ -62,6 +61,36 @@ router.get("/product-detail/:product_id", (req, res) => {
         }
     );
 });
+
+//商品細節頁-reviews
+router.get("/product-detail/:product_id/reviews", (req, res) => {
+    const productId = req.params.product_id; // 取得從路由參數中傳入的 product_id
+    connection.execute(
+        `SELECT
+         product_reviews.review_content AS review_content,
+         userinfo.name AS name,
+         product_reviews.star_rating AS star_rating
+
+         FROM product_reviews
+         
+         JOIN userinfo ON userinfo.user_id = product_reviews.user_id
+         WHERE product_reviews.product_id = ?;`,
+
+        [productId],
+        (error, result) => {
+            if (error) {
+                console.error("Database error:", error);
+                res.status(500).json({ error: "Internal server error" });
+            } else {
+                res.json({ result });
+            }
+        }
+    );
+});
+
+
+
+//商品細節頁-你可能會喜歡的商品隨機8筆
 
 
 module.exports = router;

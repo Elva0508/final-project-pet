@@ -69,13 +69,7 @@ export default function ProductList() {
                                 </button>
                             </div>
                         </div>
-                    </div>
-                    {/* <div className='search-sort  d-flex  justify-content-center align-items-center '>
-                                <div className='search '>
-                                    <Search />
-                                </div>
-                                
-                            </div> */}
+                    </div>              
                     <div className="product-offcanvas-m d-block d-lg-none ">
                         <ProductListOffcanvas />
                     </div>

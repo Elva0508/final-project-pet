@@ -133,13 +133,11 @@ a{
     
   }
 
-.staricon {
-  display: flex; /* 將星星圖標容器設置為彈性容器 */
-  align-items: center; /* 垂直置中 */
-  margin-left: 5px; /*添加一些間距以調整位置 */
-  color: $star;
-  font-size: 1.875rem;
-}
+  .ranking{
+    color: $star;
+    font-size: 2rem;
+
+  }
 
 .customer-message{
   .customer{
@@ -149,7 +147,7 @@ a{
     padding: 15px;
   }.customer-star{
   color: $star;
-  font-size: 1rem;
+  font-size: 1.5rem;
 
   }
 }
