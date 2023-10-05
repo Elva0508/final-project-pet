@@ -16,6 +16,32 @@
             width: 6rem;
         }
     }
+    // BS下拉式選單
+    .dropdown-toggle{
+        background-color: $cos-white;
+        border: 0;
+        color: $text-main;
+        position: relative;
+        padding-left: 0.5rem;
+        .left-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 27%;
+            height: 100%;
+            background-color: $header-bg;
+          }
+        img {
+            position: relative;
+            z-index: 99; /* 使img位於背景色上方 */
+          }
+    }
+    .dropdown-menu{
+        cursor: pointer;
+    }
+      .dropdown-toggle::after {
+        display: none;
+      }
 
     .add-mission-btn-pc,
     .add-mission-btn-mobile {

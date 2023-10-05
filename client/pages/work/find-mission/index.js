@@ -19,6 +19,11 @@ import "swiper/css/navigation";
 // Filter
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
+// 地區篩選
+// import { Cascader } from '@douyinfe/semi-ui';
+import { Cascader } from "antd";
+import cityData from "@/data/CityCountyData.json";
+
 
 // 篩選-共用
 const Filter = ({ items, src, onClick, order }) => {
@@ -99,15 +104,59 @@ const Filter = ({ items, src, onClick, order }) => {
     </div>
   );
 };
+
+
 // 篩選-自訂
 const MobileFilter = ({ missionType, setMissionType, sortOrder, setSortOrder, setSortBy }) => {
 
+  const [selectedTitles, setSelectedTitles] = useState({
+    type: "任務類型",
+    city: "地區",
+    salary: "薪資",
+    update: "更新日期",
+  });
+
+  const handleOptionClick = (selectedValue, filterType) => {
+    setSelectedTitles((prevTitles) => ({
+      ...prevTitles,
+      [filterType]: selectedValue,
+    }));
+  };
+
+  // 地區
+  // const options = cityData.map((city) => {
+  //   return {
+  //     value: city.CityName,
+  //     label: city.CityName,
+  //     children: city.AreaList.map((area) => {
+  //       return { value: area.ZipCode, label: area.AreaName };
+  //     }),
+  //   };
+  // });
+  // const [city, setCity] = useState(undefined);
+  // const [area, setArea] = useState(undefined);
+  // const onChange = (value, selectedOptions) => {
+  //   console.log(value, selectedOptions);
+  //     setCity(selectedOptions[0].label);
+  //     setArea(selectedOptions[1].label);
+  // };
+
+
   return (
     <Swiper slidesPerView="auto" className="mobile-filter">
+      {/* <SwiperSlide>
+        <Cascader
+          options={options}
+          onChange={onChange}
+          placeholder="選擇縣市"
+          className="location-select"
+          popupClassName="location-cascader"
+        />
+      </SwiperSlide> */}
       <SwiperSlide>
         <Filter
           items={{
-            title: "任務類型",
+            title: selectedTitles["type"],
             value: "type",
             children: [
               { label: "到府照顧", value: "feed" },
@@ -118,6 +167,7 @@ const MobileFilter = ({ missionType, setMissionType, sortOrder, setSortOrder, se
             ],
           }}
           src={"/job-icon/plus-service.svg"}
+          onClick={(selectedValue) => handleOptionClick(selectedValue, "type")}
         />
       </SwiperSlide>
       <SwiperSlide>
@@ -147,8 +197,8 @@ const MobileFilter = ({ missionType, setMissionType, sortOrder, setSortOrder, se
       <SwiperSlide>
         <Filter
           items={{
-            title: "更新日期",
-            value: "update_date",
+            title: selectedTitles["update"],
+            value: "update",
             children: [
               { label: "今日", value: "day" },
               { label: "一周內", value: "week" },
@@ -156,11 +206,143 @@ const MobileFilter = ({ missionType, setMissionType, sortOrder, setSortOrder, se
             ],
           }}
           src={"/job-icon/Calendar.svg"}
+          onClick={(selectedValue) => handleOptionClick(selectedValue, "update")}
         />
       </SwiperSlide>
     </Swiper>
   );
 };
+
+// 篩選-bootstrap
+const MyFilter = () => {
+  // 初始化按钮文本的状态
+  const [buttonText, setButtonText] = useState('任務類型');
+
+  // 处理下拉菜单项的点击事件
+  const handleItemClick = (text) => {
+    // 更新按钮文本
+    setButtonText(text);
+  };
+
+  // 地區
+  // const options = cityData.map((city) => {
+  //   return {
+  //     value: city.CityName,
+  //     label: city.CityName,
+  //     children: city.AreaList.map((area) => {
+  //       return { value: area.ZipCode, label: area.AreaName };
+  //     }),
+  //   };
+  // });
+  // const [city, setCity] = useState(undefined);
+  // const [area, setArea] = useState(undefined);
+  // const onChange = (value, selectedOptions) => {
+  //   console.log(value, selectedOptions);
+  //   setCity(selectedOptions[0].label);
+  //   setArea(selectedOptions[1].label);
+  // };
+  return (
+    <>
+      <div class="btn-group">
+        <button className="btn dropdown-toggle" type="button" id="defaultDropdown" data-bs-toggle="dropdown" data-bs-auto-close="true" aria-expanded="false">
+          <div class="left-background"></div>
+          <img src='/job-icon/plus-service.svg' className='me-3' />{buttonText}
+          <BiSolidDownArrow className='ms-2' />
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="defaultDropdown">
+          <li className="dropdown-item text-center" onClick={() => handleItemClick('到府照顧')}>到府照顧</li>
+          <li className="dropdown-item text-center" onClick={() => handleItemClick('安親寄宿')}>安親寄宿</li>
+          <li className="dropdown-item text-center" onClick={() => handleItemClick('到府美容')}>到府美容</li>
+          <li className="dropdown-item text-center" onClick={() => handleItemClick('行為訓練')}>行為訓練</li>
+          <li className="dropdown-item text-center" onClick={() => handleItemClick('醫療護理')}>醫療護理</li>
+        </ul>
+      </div>
+      <div class="btn-group">
+        <button class="btn dropdown-toggle" type="button" id="defaultDropdown" data-bs-toggle="dropdown" data-bs-auto-close="true" aria-expanded="false">
+          <div class="left-background"></div>
+          <img src='/job-icon/plus-service.svg' className='me-3' />任務地區
+          <BiSolidDownArrow className='ms-2' />
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="defaultDropdown">
+          <li className="dropdown-item text-center">到府照顧</li>
+        </ul>
+      </div>
+    </>
+  )
+}
+
+// const MyFilter = () => {
+//   const [selectedCity, setSelectedCity] = useState(null);
+//   const [selectedArea, setSelectedArea] = useState(null);
+
+//   const handleCityChange = (city) => {
+//     setSelectedCity(city);
+//     setSelectedArea(null);
+//   };
+
+//   const handleAreaChange = (area) => {
+//     setSelectedArea(area);
+//   };
+
+//   return (
+//     <div>
+//       {/* 城市下拉菜单 */}
+//       <div className="btn-group">
+//         <button
+//           className="btn dropdown-toggle"
+//           type="button"
+//           id="cityDropdown"
+//           data-bs-toggle="dropdown"
+//           data-bs-auto-close="true"
+//           aria-expanded="false"
+//         >
+//           {selectedCity ? selectedCity.CityName : '選擇城市'}
+//         </button>
+//         <ul className="dropdown-menu" aria-labelledby="cityDropdown">
+//           {cityData.map((city) => (
+//             <li
+//               key={city.CityName}
+//               className="dropdown-item text-center"
+//               onClick={() => handleCityChange(city)}
+//             >
+//               {city.CityName}
+//             </li>
+//           ))}
+//         </ul>
+//       </div>
+
+//       {/* 地區下拉菜單 */}
+//       {selectedCity && (
+//         <div className="btn-group">
+//           <button
+//             className="btn dropdown-toggle"
+//             type="button"
+//             id="areaDropdown"
+//             data-bs-toggle="dropdown"
+//             data-bs-auto-close="true"
+//             aria-expanded="false"
+//           >
+//             {selectedArea ? selectedArea.AreaName : '選擇地區'}
+//           </button>
+//           <ul className="dropdown-menu" aria-labelledby="areaDropdown">
+//             {selectedCity.AreaList.map((area) => (
+//               <li
+//                 key={area.ZipCode}
+//                 className="dropdown-item text-center"
+//                 onClick={() => handleAreaChange(area)}
+//               >
+//                 {area.AreaName}
+//               </li>
+//             ))}
+//           </ul>
+//         </div>
+//       )}
+//     </div>
+//   );
+// };
+
+
+
 
 // 排序
 const Sort = ({ missionType, setMissionType, sortOrder, setSortOrder, setSortBy }) => {
@@ -383,6 +565,9 @@ export default function MissionList() {
         <div className='d-flex my-2'>
           <Sort missionType={missionType} setMissionType={setMissionType} sortOrder={sortOrder} setSortOrder={setSortOrder} sortBy={sortBy} setSortBy={setSortBy} />
         </div>
+        {/* BS下拉式選單 */}
+        <MyFilter />
+
 
         <section className='d-flex all-mission flex-column flex-lg-row mt-3'>
           {/* 最新任務桌機 */}
