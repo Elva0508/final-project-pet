@@ -204,13 +204,13 @@ router.put("/helper", upload.array("helper-image"), async (req, res) => {
   const {
     user_id,
     name,
-    introduction,
+    Introduction,
     email,
     phone,
     job_description,
-    feedprice,
-    houseprice,
-    beautyprice,
+    feed_price,
+    house_price,
+    beauty_price,
     service_county,
     feed_service,
     house_service,
@@ -220,103 +220,105 @@ router.put("/helper", upload.array("helper-image"), async (req, res) => {
   console.log(req.files);
   res.send("123");
 
-  // // 更新小幫手資料
-  // const updateResult = await new Promise((resolve, reject) => {
-  //   conn.execute(
-  //     "UPDATE `mission_helper_info` SET `name` = ?, `Introduction` = ?, `email` = ?, `phone` = ?, `job_description` = ?, `service_county` = ?, `feed_service` = ?, `house_service` = ?, `beauty_service` = ?, `feed_price` = ?, `house_price` = ?, `beauty_price` = ? WHERE `mission_helper_info`.`user_id` = ?",
-  //     [
-  //       name,
-  //       introduction,
-  //       email,
-  //       phone,
-  //       job_description,
-  //       service_county,
-  //       feed_service,
-  //       house_service,
-  //       beauty_service,
-  //       feedprice,
-  //       houseprice,
-  //       beautyprice,
-  //       user_id,
-  //     ],
-  //     (err, results) => {
-  //       if (err) {
-  //         reject({ status: 500, error: "查詢錯誤" });
-  //       }
-  //       resolve(results);
-  //     }
-  //   );
-  // });
+  // 更新小幫手資料
+  const updateResult = await new Promise((resolve, reject) => {
+    conn.execute(
+      "UPDATE `mission_helper_info` SET `name` = ?, `Introduction` = ?, `email` = ?, `phone` = ?, `job_description` = ?, `service_county` = ?, `feed_service` = ?, `house_service` = ?, `beauty_service` = ?, `feed_price` = ?, `house_price` = ?, `beauty_price` = ? WHERE `mission_helper_info`.`user_id` = ?",
+      [
+        name,
+        Introduction,
+        email,
+        phone,
+        job_description,
+        service_county,
+        feed_service,
+        house_service,
+        beauty_service,
+        feed_price,
+        house_price,
+        beauty_price,
+        user_id,
+      ],
+      (err, results) => {
+        if (err) {
+          reject({ status: 500, error: "查詢錯誤" });
+        }
+        resolve(results);
+      }
+    );
+  });
 
-  // // 先刪除舊的小幫手照片
-  // const deleteImageResult = await new Promise((resolve, reject) => {
-  //   conn.execute(
-  //     "DELETE FROM image_helper WHERE `image_helper`.`group_id` = ?",
-  //     [user_id],
-  //     (err, results) => {
-  //       if (err) {
-  //         reject({ status: 500, error: "查詢錯誤" });
-  //       }
-  //       resolve(results);
-  //     }
-  //   );
-  // });
+  // 先刪除舊的小幫手照片
+  const deleteImageResult = await new Promise((resolve, reject) => {
+    conn.execute(
+      "DELETE FROM image_helper WHERE `image_helper`.`group_id` = ?",
+      [user_id],
+      (err, results) => {
+        if (err) {
+          reject({ status: 500, error: "查詢錯誤" });
+        }
+        resolve(results);
+      }
+    );
+  });
 
-  // // 再增加新的小幫手照片
-  // const insertImageResults = await Promise.all(
-  //   req.files.map(async (image) => {
-  //     try {
-  //       const file_path = `http://localhost:3005/helper-image/${image.filename}`;
-  //       return await new Promise((resolve, reject) => {
-  //         conn.execute(
-  //           "INSERT INTO `image_helper` (`image_id`, `group_id`, `file_path`) VALUES (NULL, ?, ?)",
-  //           [user_id, file_path],
-  //           (err, results) => {
-  //             if (err) {
-  //               reject({ status: 500, error: "查詢錯誤" });
-  //             }
-  //             resolve(results);
-  //           }
-  //         );
-  //       });
-  //     } catch (error) {
-  //       throw error;
-  //     }
-  //   })
-  // );
+  // 再增加新的小幫手照片
+  if (req.files.length > 0) {
+    const insertImageResults = await Promise.all(
+      req.files.map(async (image) => {
+        try {
+          const file_path = `http://localhost:3005/helper-image/${image.filename}`;
+          return await new Promise((resolve, reject) => {
+            conn.execute(
+              "INSERT INTO `image_helper` (`image_id`, `group_id`, `file_path`) VALUES (NULL, ?, ?)",
+              [user_id, file_path],
+              (err, results) => {
+                if (err) {
+                  reject({ status: 500, error: "查詢錯誤" });
+                }
+                resolve(results);
+              }
+            );
+          });
+        } catch (error) {
+          throw error;
+        }
+      })
+    );
+  }
 
-  // // 將更新後的資料回傳至client端
+  // 將更新後的資料回傳至client端
 
-  // const infoPromise = new Promise((resolve, reject) => {
-  //   conn.execute(
-  //     `SELECT * FROM mission_helper_info WHERE user_id = ?`,
-  //     [user_id],
-  //     (err, result) => {
-  //       if (err) {
-  //         console.log(err);
-  //         reject(err);
-  //       }
-  //       resolve(result[0]);
-  //     }
-  //   );
-  // });
-  // const imagesPromise = new Promise((resolve, reject) => {
-  //   conn.execute(
-  //     `SELECT file_path FROM image_helper WHERE group_id = ?`,
-  //     [user_id],
-  //     (err, result) => {
-  //       if (err) {
-  //         console.log(err);
-  //         reject(err);
-  //       }
-  //       resolve(result);
-  //     }
-  //   );
-  // });
-  // // 使用 Promise.all 等待所有查詢完成
-  // const [info, images] = await Promise.all([infoPromise, imagesPromise]);
+  const infoPromise = new Promise((resolve, reject) => {
+    conn.execute(
+      `SELECT * FROM mission_helper_info WHERE user_id = ?`,
+      [user_id],
+      (err, result) => {
+        if (err) {
+          console.log(err);
+          reject(err);
+        }
+        resolve(result[0]);
+      }
+    );
+  });
+  const imagesPromise = new Promise((resolve, reject) => {
+    conn.execute(
+      `SELECT file_path FROM image_helper WHERE group_id = ?`,
+      [user_id],
+      (err, result) => {
+        if (err) {
+          console.log(err);
+          reject(err);
+        }
+        resolve(result);
+      }
+    );
+  });
+  // 使用 Promise.all 等待所有查詢完成
+  const [info, images] = await Promise.all([infoPromise, imagesPromise]);
 
-  // res.status(200).send({ status: 200, info, images });
+  res.status(200).send({ status: 200, info, images });
   // } catch (error) {
   //   // 錯誤處理
   //   console.error(error);
