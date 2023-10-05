@@ -2,7 +2,7 @@ import React, { useState} from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import LoginF from '@/components/user/login'
-import LoginForm from "@/components/user/loginForm";
+// import LoginForm from "@/components/user/loginForm";
 import RegisterForm from "@/components/user/registerForm";
 
 import { AiFillGoogleCircle } from "react-icons/ai";
