@@ -23,6 +23,9 @@ import McatLogo from "@/assets/McatLogo.svg";
 //shoppingCart
 import ShoppingCart from "@/assets/shoppingCart.svg";
 
+//cart
+import { useCart } from "@/hooks/useCart";
+
 const theme = createTheme({
   // 自定義色調
   palette: {
@@ -97,6 +100,8 @@ function ResponsiveAppBar() {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+
+  const { cart, setCart } = useCart();
 
   return (
     <ThemeProvider theme={theme}>
@@ -193,8 +198,15 @@ function ResponsiveAppBar() {
                     sx={{ display: { xs: "flex", md: "flex" }, mr: 2 }}
                   />
                 </IconButton>
-                <IconButton onClick={undefined} sx={{ p: 0 }}>
+                <IconButton
+                  onClick={undefined}
+                  sx={{ p: 0 }}
+                  className="cartNum"
+                >
                   <Image src={ShoppingCart} alt="shoppingCart" />
+                  <div className="cartNumber size-7 ">
+                    <p className="">{cart.length}</p>
+                  </div>
                 </IconButton>
               </Tooltip>
               <Menu

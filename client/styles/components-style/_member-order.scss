@@ -2,14 +2,13 @@
 .order{
     background: $content-bg;
     color:$text-main;
-    @media screen and (max-width: 576px) {
+    @media screen and (max-width: 768px) {
         background: $main-bg;
     }
     .date{
-        background: $main-bg;
-        @media screen and (max-width: 576px) {
+
             background: #fff;
-        }
+
     }
     .nav-link{
         color:$text-main;
@@ -23,7 +22,12 @@
         height: 150px;
         
     }
+    .listbutton{
+        border: 0px;
+        background: transparent;
+    }
 
-
-
+    button.pressed{
+        border-bottom: 5px solid $hover;
+    }
 }
