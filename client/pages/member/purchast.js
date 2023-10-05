@@ -40,7 +40,7 @@ export default function Purchast() {
 
   const addCart = async (id, type) => {
     const have = cart.find(
-      (v) => v.product_id === id && v.product_type_id === type
+      (v) => v.product_id == id && v.product_type_id == type
     );
     console.log(have);
     if (have === undefined) {
@@ -229,7 +229,7 @@ export default function Purchast() {
                           <div className="">
                             <p className="size-7">{v.product_name}</p>
                             <p className="size-7 type">{v.type}</p>
-                            <p className="size-7 price">NT${v.price}</p>
+                            <p className="size-7 price">NT${v.newprice}</p>
                             <p className="size-7">數量：{v.quantity}</p>
                           </div>
                         </div>
