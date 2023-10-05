@@ -22,36 +22,55 @@ const MobileFilter = () => {
     <Swiper slidesPerView="auto" className="mobile-filter">
       <SwiperSlide>
         <Filter
-          items={["到府照顧", "安親寄宿", "到府美容", "行為訓練", "醫療護理"]}
-          title="任務類型"
+          items={{
+            title: "任務類型",
+            value: "type",
+            children: [
+              { label: "到府照顧", value: "feed" },
+              { label: "安親寄宿", value: "house" },
+              { label: "到府美容", value: "beauty" },
+              { label: "行為訓練", value: "training" },
+              { label: "醫療護理", value: "medical" },
+            ],
+          }}
           src={"/job-icon/plus-service.svg"}
         />
       </SwiperSlide>
       <SwiperSlide>
         <Filter
-          items={["測試1", "測試2"]}
-          title="薪資"
-          src={"/job-icon/Heart-price.svg"}
-        />
-      </SwiperSlide>
-      <SwiperSlide>
-        <Filter
-          items={["測試1", "測試2"]}
-          title="地區"
+          items={{
+            title: "地區",
+            value: "city",
+            children: [
+              { label: "", value: "" },
+            ],
+          }}
           src={"/job-icon/Discovery-date.svg"}
         />
       </SwiperSlide>
       <SwiperSlide>
         <Filter
-          items={["測試1", "測試2"]}
-          title="貓數量"
-          src={"/job-icon/edit.svg"}
+          items={{
+            title: "薪資",
+            value: "salary",
+            children: [
+              { label: "", value: "" },
+            ],
+          }}
+          src={"/job-icon/Heart-price.svg"}
         />
       </SwiperSlide>
       <SwiperSlide>
         <Filter
-          items={["測試1", "測試2"]}
-          title="貓年齡"
+          items={{
+            title: "更新日期",
+            value: "update_date",
+            children: [
+              { label: "今日", value: "day" },
+              { label: "一周內", value: "week" },
+              { label: "一個月內", value: "month" },
+            ],
+          }}
           src={"/job-icon/Calendar.svg"}
         />
       </SwiperSlide>
@@ -249,7 +268,7 @@ export default function MissionList() {
 
         <div className='d-flex flex-column flex-md-row justify-content-between mt-3'>
           <RoleSelection defaultActive="mission" />
-          <Search />
+          <Search placeholder="搜尋任務" />
         </div>
         <div className='d-flex justify-content-between align-items-center my-md-3 position-relative'>
           <div className='filters '>
