@@ -4,7 +4,6 @@ import ArticleCatogory from "@/components/article/article-catogory";
 import ArticleListCard from "@/components/article/article-list-card";
 import Pagination from "@/components/article/article-pagination";
 import { useRouter } from "next/router";
-import axios from "axios";
 
 export default function ArticleList() {
   const [articlelist, setArticleList] = useState([]);
@@ -14,31 +13,38 @@ export default function ArticleList() {
 
   const router = useRouter();
 
+  // 向伺服器要求資料，設定到狀態中
+  const getArticleList = async (article_category_id) => {
+    const res = await fetch(
+      "http://localhost:3005/api/article/" + article_category_id
+    );
+
+    const data = await res.json();
+
+    // 設定總頁數
+    const totalItems = data.length;
+    const itemsPerPage = 12;
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
+    console.log("totalPages:", totalPages);
+
+    setTotalPages(totalPages);
+
+    // console.log(data);
+    // 設定到狀態中 -> 會觸發重新渲染(re-render)
+    if (Array.isArray(data)) setArticleList(data);
+  };
+
+  // didMount 初次渲染"後", 向伺服器要求資料，設定到狀態中
   useEffect(() => {
-    const getArticleList = async () => {
-      await axios
-        .get(`http://localhost:3005/api/article/${selectedCategory}`)
-        .then((response) => {
-          const data = response.data.result;
-          console.log(data);
-          setArticleList(data);
-
-          // 設定總頁數
-          const totalItems = data.length;
-          const itemsPerPage = 12;
-          const totalPages = Math.ceil(totalItems / itemsPerPage);
-          console.log("totalPages:", totalPages);
-          console.log("吃屎吧");
-
-          setTotalPages(totalPages);
-        })
-        .catch((error) => {
-          console.error("Error:", error);
-        });
-    };
-
-    getArticleList();
-  }, [selectedCategory]);
+    if (router.isReady) {
+      // 確保能得到router.query有值
+      const { article_category_id } = router.query;
+      // console.log(article_category_id);
+      // 有article_category_id後，向伺服器要求資料，設定到狀態中
+      getArticleList(article_category_id);
+    }
+    // eslint-disable-next-line
+  }, [router.isReady]);
 
   useEffect(() => {
     // 使用useRouter監聽路由變化
@@ -56,8 +62,9 @@ export default function ArticleList() {
   }, []);
 
   const handlePageChange = (newPage) => {
-    setCurrentPage(newPage);
     // 設定頁碼狀態
+    // router.push(`/article/${selectedCategory}/?page=${newPage}`);
+    setCurrentPage(newPage);
   };
 
   return (
