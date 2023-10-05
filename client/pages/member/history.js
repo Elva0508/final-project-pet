@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ListM from "@/components/member/list-m";
 import ListD from "@/components/member/list-d";
 import ListUserM from "@/components/member/list-user-m";
@@ -6,13 +6,32 @@ import { HiClipboardList } from "react-icons/hi";
 import HistoryStatusOne from "@/components/member/history-status-one";
 import HistoryStatusTwo from "@/components/member/history-status-two";
 import HistoryStatusThree from "@/components/member/history-status-three";
+import axios from "axios";
 
 export default function History() {
   const [currentScreen, setCurrentScreen] = useState("1");
+  const [history , setHistory]=useState([])
 
   const handleButtonClick = (screenName) => {
     setCurrentScreen(screenName);
   };
+
+  const getHistory = async() => {
+    await axios.get("http://localhost:3005/api/member-history")
+      .then((response) => {
+        const data = response.data.result;
+        console.log(data);
+        setHistory(data)
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+    });
+  }
+
+useEffect(() => {
+  getHistory()
+  }, [])
+
   return (
     <>
       <div className="my-3">
@@ -60,9 +79,9 @@ export default function History() {
                   已下架
                 </button>
               </div>
-              {currentScreen === "1" && <HistoryStatusOne />}
-              {currentScreen === "2" && <HistoryStatusTwo />}
-              {currentScreen === "3" && <HistoryStatusThree />}
+              {currentScreen === "1" && <HistoryStatusOne history={history}/>}
+              {currentScreen === "2" && <HistoryStatusTwo history={history}/>}
+              {currentScreen === "3" && <HistoryStatusThree history={history}/>}
             </div>
           </div>
         </div>

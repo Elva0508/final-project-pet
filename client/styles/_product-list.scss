@@ -8,6 +8,9 @@
         right: 0;
 
     }
+    a{
+        border-bottom: 0;
+    }
 .accordion{
     border: none;
 }
@@ -27,12 +30,17 @@
     }
     }
     .button-subcategory{
-        background-color:$cos-white;
+        background-color:var(--bs-body-bg);
         color: $text-main;
         font-size: 1.25rem;
         border: none;
         margin-top: 5px;
+        padding: 0;
     }
+     .button-subcategory:hover{
+        border-bottom: 2px solid $light-gray;
+    }
+   
    }
 }
 
