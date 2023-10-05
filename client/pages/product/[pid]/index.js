@@ -4,7 +4,7 @@ import Counter from '@/components/product/quantity-counter';
 import { AiFillStar } from 'react-icons/ai';
 import ProductCard2 from '@/components/product/product-card2';
 import { FaChevronRight, FaChevronLeft } from 'react-icons/fa';
-import EvaluationBar from '@/components/evaluation-bar';
+import EvaluationBar from '@/components/job/evaluation-bar';
 import ProductCard from '@/components/home/home-product-card';
 import axios from 'axios';
 import { useEffect } from "react";
