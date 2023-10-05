@@ -3,25 +3,19 @@ import ListM from "@/components/member/list-m";
 import ListD from "@/components/member/list-d";
 import ListUserM from "@/components/member/list-user-m";
 import { BiSolidShoppingBag } from "react-icons/bi";
-import { GrFormPrevious } from "react-icons/gr";
-import { GrFormNext } from "react-icons/gr";
 import { useCart } from "@/hooks/useCart"
 import axios from "axios";
+import Pagination from '@/components/pagination'
 
 export default function Purchast() {
   const [product, setProduct] = useState([]);
   const { cart, setCart } = useCart();
   const [wishlist, setWishlist] = useState([])
-
-
   const itemsPerPage = 5;
-  const [currentPage, setCurrentPage] = useState(1);
-  const startIndex = (currentPage - 1) * itemsPerPage;
+  const [activePage, setActivePage] = useState(1);
+  const startIndex = (activePage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentData = product.slice(startIndex, endIndex);
-
-  const [activePage, setActivePage] = useState(1);
-
 
 
   const getProduct = () => {
@@ -252,31 +246,7 @@ export default function Purchast() {
 
                 </div>
               </div>
-
-
-              <div className="pagination size-7 d-flex justify-content-center mt-4">
-                <button className="btn prev border-0">
-                  <GrFormPrevious />
-                </button>
-                {Array.from({
-                  length: Math.ceil(product.length / itemsPerPage),
-                }).map((_, index) => (
-                  <button
-                    key={index}
-                    onClick={() => {
-                      handlePageChange(index + 1);
-                      setActivePage(index + 1);
-                    }}
-                    className={`btn me-1 ${activePage === index + 1 ? "active" : ""
-                      }`}
-                  >
-                    {index + 1}
-                  </button>
-                ))}
-                <button className="btn next border-0">
-                  <GrFormNext />
-                </button>
-              </div>
+              <Pagination  itemsPerPage={itemsPerPage} total={product} activePage={activePage} setActivePage={setActivePage}/>
             </div>
           </div>
         </div>
