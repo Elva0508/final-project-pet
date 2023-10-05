@@ -24,9 +24,11 @@ class MemberService {
   }
 
   // reserve頁route
-  getReserve() {
+  getReserve(status) {
     const user = 1;
-    return axios.get(API_URL + "reserve", { params: { user_id: user } });
+    return axios.get(API_URL + "reserve", {
+      params: { user_id: user, status },
+    });
   }
 }
 export default new MemberService();

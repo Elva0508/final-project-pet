@@ -11,7 +11,7 @@ const MemberReserve = () => {
   const [status, setStatus] = useState(1);
   useEffect(() => {
     memberService
-      .getReserve()
+      .getReserve(status)
       .then((response) => {
         console.log(response);
         setRequests(response?.data?.data);
@@ -19,7 +19,7 @@ const MemberReserve = () => {
       .catch((e) => {
         console.log(e);
       });
-  }, []);
+  }, [status]);
   return (
     <div className="d-flex container-fluid flex-column flex-md-row my-3">
       <div className="d-flex justify-content-end">

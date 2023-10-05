@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
+import Link from "next/link";
 import { MdHomeRepairService } from "react-icons/md";
-
+import { useRouter } from "next/router";
 export const RecordTemplate = ({
   icon,
   title,
@@ -10,6 +11,7 @@ export const RecordTemplate = ({
   status,
   setStatus,
 }) => {
+  const router = useRouter();
   const handleStatus = (e) => {
     console.log(e.target.id);
     console.log(e.currentTarget);
@@ -31,6 +33,14 @@ export const RecordTemplate = ({
         break;
     }
   };
+  useEffect(() => {
+    for (let i = 1; i <= 4; i++) {
+      const focusBtn = document.querySelector(`#btn${i}`);
+      focusBtn.classList.remove("btn-focus");
+    }
+    const focusBtn = document.querySelector(`#btn${status}`);
+    focusBtn.classList.add("btn-focus");
+  }, [status]);
   return (
     <>
       <h5 className="size-5 d-flex align-items-start fw-bold">
@@ -39,7 +49,7 @@ export const RecordTemplate = ({
       </h5>
       <nav className="tab-nav mt-4" onClick={handleStatus}>
         <button
-          id={1}
+          id="btn1"
           className="size-7"
           onClick={() => {
             setStatus(1);
@@ -48,7 +58,8 @@ export const RecordTemplate = ({
           {item1 || "待處理"}
         </button>
         <button
-          id={2}
+          autoFocus
+          id="btn2"
           className="size-7"
           onClick={() => {
             setStatus(2);
@@ -57,7 +68,7 @@ export const RecordTemplate = ({
           進行中
         </button>
         <button
-          id={3}
+          id="btn3"
           className="size-7"
           onClick={() => {
             setStatus(3);
@@ -66,7 +77,7 @@ export const RecordTemplate = ({
           已完成
         </button>
         <button
-          id={4}
+          id="btn4"
           className="size-7"
           onClick={() => {
             setStatus(4);
@@ -93,7 +104,14 @@ export const RecordTemplate = ({
               </p>
               <div className="d-flex flex-column justify-content-center align-items-center">
                 <p className="mb-1 size-6">NT$ {item.total_price}</p>
-                <button className="btn-outline-confirm">查看明細</button>
+                <button
+                  className="btn-outline-confirm"
+                  onClick={() => {
+                    router.push(`/member/reserve/${item.oid}`);
+                  }}
+                >
+                  查看明細
+                </button>
               </div>
             </div>
           ))}
@@ -119,7 +137,14 @@ export const RecordTemplate = ({
               <p>服務總價</p>
               <div className="d-flex align-items-center justify-content-center">
                 <p className="size-6 me-2 fw-bold">NT$ {item.total_price}</p>
-                <button className="btn-outline-confirm">查看明細</button>
+                <button
+                  className="btn-outline-confirm"
+                  onClick={() => {
+                    router.push(`/member/reserve/${item.oid}`);
+                  }}
+                >
+                  查看明細
+                </button>
               </div>
             </div>
           </div>

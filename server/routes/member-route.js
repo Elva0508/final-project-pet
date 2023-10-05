@@ -315,8 +315,7 @@ router.put("/helper", upload.array("helper-image"), async (req, res) => {
   }
 });
 router.get("/reserve", (req, res) => {
-  const { user_id } = req.query;
-  const status = 1;
+  const { user_id, status } = req.query;
   conn.execute(
     `SELECT * FROM mission_req_orders WHERE status = ? AND customer_userId = ?`,
     [status, user_id],
