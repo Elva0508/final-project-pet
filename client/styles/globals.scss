@@ -9,6 +9,7 @@ $form-select-focus-box-shadow: $box-shadow;
 $carousel-indicator-active-bg: #d7965b;
 $carousel-indicator-height: 5px;
 $breadcrumb-divider: quote(">");
+$offcanvas-horizontal-width:50%;
 
 // ↑↑↑  變數覆蓋(Variable overrides) 要寫在這行"上面"  ↑↑↑
 // 導入所有 bootstrap 樣式
@@ -124,3 +125,7 @@ ul {
 @import "@/styles/_article.scss";
 @import "@/styles/components-style/home/_block-three.scss";
 @import "@/styles/components-style/home/_block-six.scss";
+
+//聊天室
+@import "@/styles/_chatlist.scss";
+@import "@/styles/_chatroom.scss";

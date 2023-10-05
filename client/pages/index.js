@@ -4,7 +4,9 @@ import BlockTwo from "@/components/home/block-two";
 import BlockTwoMobile from "@/components/home/block-two-mobile";
 import BlockThree from "@/components/home/block-three";
 import BlockFive from "@/components/home/block-five";
+import BlockFiveMobile from "@/components/home/block-five-mobile";
 import BlockSix from "@/components/home/block-six";
+import BlockSixMobile from "@/components/home/block-six-mobile";
 
 export function HomeVedio() {
   return (
@@ -120,9 +122,6 @@ export default function Index() {
             <div className="my-5">
               <BlockTwoMobile />
             </div>
-            <div className="my-5">
-              <BlockTwoMobile />
-            </div>
           </div>
 
           <div className="block-three my-5">
@@ -141,8 +140,20 @@ export default function Index() {
             </div>
           </div>
 
+          <div className="block-four-mobile my-5 ">
+            <div className="m-size-3 home-tilte d-flex justify-content-center mb-5">
+              本週排行榜
+            </div>
+            <div className="my-5">
+              <BlockTwoMobile />
+            </div>
+          </div>
+
           <div className="block-five my-5">
             <BlockFive />
+          </div>
+          <div className="block-five-mobile my-5">
+            <BlockFiveMobile />
           </div>
 
           <div className="block-six my-5">
@@ -158,6 +169,22 @@ export default function Index() {
             </div>
             <div className="px-5">
               <BlockSix />
+            </div>
+          </div>
+
+          <div className="block-six-mobile my-5">
+            <div className="photo mb-3">
+              <img
+                src="https://images.unsplash.com/photo-1555685812-4b943f1cb0eb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80"
+                className="img-fluid"
+                alt="..."
+              ></img>
+              <div className="size-1 mt-3 home-tilte d-flex justify-content-center">
+                小貓兩三知
+              </div>
+            </div>
+            <div className="">
+              <BlockSixMobile />
             </div>
           </div>
         </div>

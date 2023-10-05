@@ -1,5 +1,9 @@
 .pagination{
     color:$text-main ;
+    button{
+        width: 35px;
+        height: 35px;
+    }
     .active{
         background: $text-main;
         border-radius: 50%;

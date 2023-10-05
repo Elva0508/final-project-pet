@@ -4,6 +4,9 @@ import Search from '@/components/job/search';
 import ProductCard2 from '@/components/product/product-card2';
 import { FaCaretUp, FaCaretDown } from 'react-icons/fa';
 import ProductListOffcanvas from '@/components/product/product-list-offcanvas';
+import { useEffect } from 'react';
+import axios from 'axios';
+import Link from 'next/link';
 
 
 export default function ProductList() {
@@ -29,11 +32,31 @@ export default function ProductList() {
         }
     };
 
+    const [subcategoryData, setSubcategoryData] = useState({ result: [] });
+    useEffect(() => {
+        axios.get("http://localhost:3005/api/product/category").then((response) => {
+            setSubcategoryData({ result: response.data.result });
+        });
+    }, [])
+
+
+
     return (
         <>
             <div className='product-list'>
                 <div className='container'>
-                    <p>我是麵包蟹</p>
+                    <nav className="breadcrumb-wrapper" aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item">
+                                <Link href="/">首頁</Link>
+                            </li>
+                            <li class="breadcrumb-item" aria-current="page">
+                                <Link href="/product" >
+                                    全部商品
+                                </Link>
+                            </li>
+                        </ol>
+                    </nav>
                     <div className="search-sort d-flex flex-md-row flex-column justify-content-between align-items-center ms-3 me-3">
                         <Search />
                         <div className='sort ' >
@@ -56,52 +79,41 @@ export default function ProductList() {
                     <div className="product-offcanvas-m d-block d-lg-none ">
                         <ProductListOffcanvas />
                     </div>
-                    <section className='sidebar-product d-flex  flex-column flex-lg-row mt-3 '>
+
+
+                    <section className='sidebar-product d-flex  flex-column flex-lg-row mt-3' >
                         <div className='sidebar col-md-3 ms-3 me-1 d-none d-lg-block pe-4'>
-                            <div className="accordion" id="accordionPanelsStayOpenExample">
-                                <div className="accordion-item">
-                                    <h2 className="accordion-header" id="panelsStayOpen-headingCategory">
-                                        <button
-                                            className="accordion-button "
-                                            type="button"
-                                            data-bs-toggle="collapse"
-                                            data-bs-target="#panelsStayOpen-collapseCategory"
-                                            aria-expanded="true"
-                                            aria-controls="panelsStayOpen-collapseCategory"
-                                        >
-                                            大類1
-                                        </button>
-                                    </h2>
-                                    <div id="panelsStayOpen-collapseCategory" class="accordion-collapse collapse show">
-                                        <div className="accordion-body row">
-                                            <button className="button-subcategory" type="button" >
-                                                小類
-                                            </button>
-                                            <button className="button-subcategory" type="button row">
-                                                小類
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div className="accordion-item">
-                                        {/* 要記得改id/data-bs-target/aria-controls/aria-labelledby數字 */}
-                                        <h2 className="accordion-header" id="panelsStayOpen-headingTwo">
-                                            <button className="accordion-button collapsed " type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="false" aria-controls="panelsStayOpen-collapseTwo">
-                                                大類2
+                            <div className="accordion" id={`accordionPanelsStayOpenExample`}>
+                                {subcategoryData.result.map((category, index) => (
+                                    <div className="accordion-item" key={index}>
+                                        <h2 className="accordion-header" id={`panelsStayOpen-headingCategory-${index}`}>
+                                            <button
+                                                className="accordion-button"
+                                                type="button"
+                                                data-bs-toggle="collapse"
+                                                data-bs-target={`#panelsStayOpen-collapseCategory-${index}`}
+                                                aria-expanded="true"
+                                                aria-controls={`panelsStayOpen-collapseCategory-${index}`}
+                                                data-bs-parent="#accordionPanelsStayOpenExample" // 將這行添加到這個button元素中
+                                            >
+                                                {category.category_name}
                                             </button>
                                         </h2>
-                                        <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingTwo">
+                                        <div id={`panelsStayOpen-collapseCategory-${index}`} className="accordion-collapse collapse show" aria-labelledby={`panelsStayOpen-headingCategory-${index}`}>
                                             <div className="accordion-body row">
-                                                <button className="button-subcategory no-border-btn" type="button" >
-                                                    小類
-                                                </button>
-                                                <button className="button-subcategory" type="button">
-                                                    小類
-                                                </button>
+                                                {category.subcategories && category.subcategories.split(',').map((subcategory, subIndex) => (
+                                                    <button className="button-subcategory" type="button" key={subIndex}>
+                                                        {subcategory.trim()}
+                                                    </button>
+                                                ))}
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                ))}
                             </div>
+
+
+
                             <div className='filter mt-3 '>
                                 <div className="card filter-card">
                                     <div className="card-header">
@@ -138,30 +150,12 @@ export default function ProductList() {
                                 </div>
                             </div>
                         </div>
+
+
+
                         <div className='product d-lg-flex flex-column justify-content-center '>
                             <div className=" row d-flex mb-3 g-3 g-md-4 ">
-                                <div className="col-6 col-md-4 col-lg-6 col-xl-4">
-                                    <ProductCard2 />
-                                </div>
-                                <div className="col-6 col-md-4 col-lg-6 col-xl-4">
-                                    <ProductCard2 />
-                                </div>
-                                <div className="col-6 col-md-4 col-lg-6 col-xl-4">
-                                    <ProductCard2 />
-                                </div>
-                                <div className="col-6 col-md-4 col-lg-6 col-xl-4">
-                                    <ProductCard2 />
-                                </div>
-                                <div className="col-6 col-md-4 col-lg-6 col-xl-4">
-                                    <ProductCard2 />
-                                </div>
-                                <div className="col-6 col-md-4 col-lg-6 col-xl-4">
-                                    <ProductCard2 />
-                                </div>
-                                <div className="col-6 col-md-4 col-lg-6 col-xl-4">
-                                    <ProductCard2 />
-                                </div>
-                                
+                                <ProductCard2 />
                                 {/* 原本錯的 */}
                                 {/* <div className="col-lg-4 col-md-4 col-sm-6">
                                     <ProductCard />
@@ -170,6 +164,8 @@ export default function ProductList() {
                         </div>
 
                     </section>
+
+
 
                 </div>
             </div>
