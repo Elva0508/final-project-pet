@@ -1,11 +1,44 @@
 import axios from "axios";
 import { URL } from "@/config";
 const API_URL = URL + "api/work/";
-const auth = "wK9VpbpUOir2747DCVqZ0rlPG9satEQkJ5gy0zJ5RVUCB6gkXUPilIou";
 
 class WorkService {
-  getAllHelpers() {
-    return axios.get(API_URL + "helpers");
+  // list頁的api
+  getAllHelpers(type, page) {
+    console.log(page);
+    return axios.get(API_URL + "helpers", { params: { type, page } });
+  }
+
+  getFamousHelper(type) {
+    return axios.get(API_URL + "helpers/famous", { params: { type } });
+  }
+  getOrderHelper(filterType, orderType, orderWay, page) {
+    return axios.get(API_URL + "helpers/order", {
+      params: { filterType, orderType, orderWay, page },
+    });
+  }
+  getSearchHelper(search) {
+    return axios.get(API_URL + "helpers/search", { params: { search } });
+  }
+
+  // detail頁
+  getHelperDetail(uid) {
+    console.log(uid);
+    return axios.get(API_URL + "/helpers/detail/" + uid);
+  }
+  getPetInfo(uid) {
+    return axios.get(API_URL + "helpers/detail/petInfo", { params: { uid } });
+  }
+  createReqOrder(requestDate) {
+    return axios.post(API_URL + "/helpers/request", requestDate);
+  }
+  // createMission頁
+  createMission(formData) {
+    return axios.post(API_URL + "/mission", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
   }
   getCat() {
     // 用來找貓的圖片
