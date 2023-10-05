@@ -21,43 +21,81 @@ const commonQueryTemplate = `
 `;
 
 // 排序
+// router.get("/all-missions", (req, res) => {
+//   const sortOrder = req.query.sortOrder; 
+//   let orderBy = null;
+
+//   if (req.query.sortBy === "post_date") {
+//     orderBy = "md.post_date";
+//   } else if (req.query.sortBy === "price") {
+//     orderBy = "md.price";
+//   }
+
+//   if (orderBy) {
+//     // 只有在提供有效的 orderBy 時才應用排序
+//     conn.execute(
+//       `${commonQueryTemplate}
+//       ORDER BY ${orderBy} ${sortOrder}
+//       `,
+//       (err, result) => {
+//         if (err) {
+//           console.log(err);
+//           return;
+//         }
+//         res.send({ status: 200, data: result });
+//       }
+//     );
+//   } else {
+//     // 如果 orderBy 仍然為 null，表示沒有提供有效的排序方式，不進行排序
+//     conn.execute(
+//       `${commonQueryTemplate}`,
+//       (err, result) => {
+//         if (err) {
+//           console.log(err);
+//           return;
+//         }
+//         res.send({ status: 200, data: result });
+//       }
+//     );
+//   }
+// });
+
+// 我現在要在排序裡面新增篩選
 router.get("/all-missions", (req, res) => {
-  const sortOrder = req.query.sortOrder; 
+  let sortOrder = req.query.sortOrder;
   let orderBy = null;
 
+  // 獲取任務類型篩選條件
+  const missionTypeFilter = req.query.missionType;
+
+  // 獲取排序條件
   if (req.query.sortBy === "post_date") {
     orderBy = "md.post_date";
   } else if (req.query.sortBy === "price") {
     orderBy = "md.price";
   }
 
+  let query = commonQueryTemplate;
+
+  // 如果提供了任務類型篩選條件，將其包含在查詢中
+  if (missionTypeFilter) {
+    query += ` WHERE md.mission_type = '${missionTypeFilter}'`;
+  }
+
   if (orderBy) {
     // 只有在提供有效的 orderBy 時才應用排序
-    conn.execute(
-      `${commonQueryTemplate}
+    query += `
       ORDER BY ${orderBy} ${sortOrder}
-      `,
-      (err, result) => {
-        if (err) {
-          console.log(err);
-          return;
-        }
-        res.send({ status: 200, data: result });
-      }
-    );
-  } else {
-    // 如果 orderBy 仍然為 null，表示沒有提供有效的排序方式，不進行排序
-    conn.execute(
-      `${commonQueryTemplate}`,
-      (err, result) => {
-        if (err) {
-          console.log(err);
-          return;
-        }
-        res.send({ status: 200, data: result });
-      }
-    );
+    `;
   }
+
+  conn.execute(query, (err, result) => {
+    if (err) {
+      console.log(err);
+      return;
+    }
+    res.send({ status: 200, data: result });
+  });
 });
 
 
