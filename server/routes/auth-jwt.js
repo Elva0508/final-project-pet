@@ -142,6 +142,20 @@ router.post("/checkLogin", checkToken,(req,res)=>{
 
 })
 
+router.post("/profile", checkToken,(req,res)=>{
+  const currentId = req.decoded.user_id;
+  db.query('SELECT * FROM userinfo WHERE user_id = ?',[currentId],(err,results)=>{
+    if(err){
+      console.error('資料庫-查詢錯誤：', err);
+      res.status(500).json({message: '資料庫查詢錯誤', code: '500'});
+    }else{
+      if(results.length>0){
+        res.status(200).json({message:'success',code:'200',results:results})
+      }
+    }
+  })
+})
+
 // router.post("/register",  async(req, res) => {
 //   const { name, email, password, confPassword } = req.body;
 //   if (password !== confPassword)
