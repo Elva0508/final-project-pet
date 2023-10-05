@@ -16,6 +16,9 @@
       cursor: pointer;
       width: 45px;
     }
+    img:hover {
+      content: url("/heart-clicked.svg");
+    }
     .price {
       span {
         color: $price;

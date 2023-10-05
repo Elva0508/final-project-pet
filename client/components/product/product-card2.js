@@ -1,50 +1,95 @@
 import { Fragment, useState } from "react";
-import { CiHeart } from "react-icons/Ci";
-import { BiSolidHeart,BiSolidCart} from "react-icons/bi";
-export default function ProductCard2() {
-  const [isFavorite, setIsFavorite] = useState(false); // 初始狀態為未收藏
+import { BiSolidCart } from "react-icons/bi";
+import axios from 'axios';
+import { useEffect } from "react";
+import Link from "next/link";
 
-  const toggleFavorite = () => {
-    setIsFavorite(!isFavorite); // 切換收藏狀態
+
+
+export default function ProductCard2() {
+  // 讀取資料庫資料
+  const [productData, setProductData] = useState({ result: [] }); // 初始化為一個帶有 result 屬性的物件
+
+  useEffect(() => {
+    axios.get("http://localhost:3005/api/product").then((response) => {
+      setProductData({ result: response.data.result }); // 將伺服器端的 result 放入物件中
+    });
+  }, []);
+
+  // 初始化 isFavorites 並設置與產品數量相同的初始值（都是 false）
+  const [isFavorites, setIsFavorites] = useState(() => (
+    Array(productData.result.length).fill(false)
+  ));
+
+  const toggleFavorite = (index) => {
+    const newFavorites = [...isFavorites];
+    newFavorites[index] = !newFavorites[index];
+    setIsFavorites(newFavorites);
   };
+
+  function getButtonColorClass(categoryName) {
+    switch (categoryName) {
+      case '食物':
+        return 'btn-color-1';
+      case '用品':
+        return 'btn-color-2';
+      case '清潔':
+        return 'btn-color-3';
+      case '保健':
+        return 'btn-color-4';
+      case '護理':
+        return 'btn-color-5';
+      default:
+        return ''; // 如果找不到匹配的類別名稱，可以返回空字符串或其他適當的值
+    }
+  }
+
+
+
   return (
     <>
-      <div className="product-card">
-        {/* <div className="card" style={{ width: "275px", height: "425px" }}> */}
-          <div className="card" >
-          <img
-            src="https://cdn-front.mao-select.com.tw//upload_files/fonlego-rwd/prodpic/D_M3PD150101-e-0.jpg"
-            className="card-img-top"
-            alt="..."
-          />
-          <div className="card-body">
-            <div className="d-flex justify-content-between align-items-center">
-            {/* 類別按鈕顏色已建好 btn-color-1 一直到btn-color-7 再依需求調整className即可 */}
-            {/* 顏色設定如果需要再調整，可以到以下檔案調整 \final-project-pet\client\styles\components-style\_product-card.scss */}
-              <div className="btn btn-color-1 d-flex align-items-center">貓草</div>
-              <div className="" onClick={toggleFavorite}>
-                {isFavorite ? (
-                  <div className="position-relative inline-block">
-                    <BiSolidHeart className="heart-icon-red" />
-                    <CiHeart className="heart-icon-red-line" />
+      {productData.result.map((v, i) => {
+        return (
+          <div className="col-6 col-md-4 col-lg-6 col-xl-4">
+            <div className="product-card2" key={v.product_id}>
+              <div className="card" >
+                <Link href={`/product/${v.product_id}`} >
+                  <img src={v.images_one} className="card-img-top" alt="..." />
+                </Link>
+                <div className="card-body p-0" >
+                  <div className="d-flex justify-content-between align-items-center">
+                    {/* 類別按鈕顏色已建好 btn-color-1 一直到btn-color-7 再依需求調整className即可 */}
+                    {/* 顏色設定如果需要再調整，可以到以下檔案調整 \final-project-pet\client\styles\components-style\_product-card.scss */}
+                    <div className={`btn ${getButtonColorClass(v.category_name)} d-flex align-items-center `}>{v.category_name}</div>
+                    <img className="card-herat" src={isFavorites[i] ? "/heart-clicked.svg" : "/heart.svg"} alt={isFavorites[i] ? "已收藏" : "未收藏"} onClick={() => toggleFavorite(i)} />
                   </div>
-                ) : (
-                  <CiHeart />
-                )}
-              </div>
-            </div>
+                  <Link href={`/product/${v.product_id}`} >
+                      <div className="card-text-vendor size-7 m-size-7">{v.vendor}</div>
+                      <div className="card-text size-6 m-size-7">{v.product_name}</div>
+                    <div className="product-sale-price d-flex align-items-center" href="#">
+                      <div className="price fs-4  size-6 m-size-7 me-3">NT${v.specialoffer}</div>
+                      <del>NT${v.price}</del>
+                    </div>
+                  </Link>
+                  <button type="submit" className=" btn-confirm ">
+                    <BiSolidCart />
+                  </button>
+                  <div>
 
-            <div className="card-text size-6 m-size-7">單層開放式防濺貓砂盆</div>
-            <div className="product-sale-price d-flex align-items-center" href="#">
-              <del>$220</del>
-              <div className="price fs-4 mx-2  size-7 m-size-7">NT$140</div>
-              <div className="rounded-circle cart p-1 d-flex justify-content-end align-items-center">
-              <BiSolidCart className="cart"/>
+                    
+                  </div>
+
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </div>
+
+        )
+      })}
+
     </>
   );
 }
+
+
+

@@ -7,6 +7,7 @@ const bodyParser = require("body-parser");
 
 const memberRouter = require("./routes/member-route");
 const workRouter = require("./routes/work-route");
+const productRouter = require("./routes/product-route");
 const missionRouter = require("./routes/mission-route");
 const memberOrderRouter = require("./routes/member-order-route");
 const memberOrderDetailRouter = require("./routes/member-order-detail-route");
@@ -26,6 +27,7 @@ app.use(cors());
 app.use(express.static("public")); //建立靜態資源資料夾
 app.use("/api/member", memberRouter);
 app.use("/api/work", workRouter);
+app.use("/api/product", productRouter);
 app.use("/api/mission", missionRouter);
 app.use("/api/member-order", memberOrderRouter);
 app.use("/api/member-order-detail", memberOrderDetailRouter);
@@ -35,6 +37,37 @@ app.use("/api/member-history", memberHistoryRouter);
 app.use("/api/product/cart", cartRouter);
 app.use("/api/article", articleRouter);
 app.use("/api/article-category", articleCategoryRouter);
+
+//------------------------------------------佳瑜
+// //jwt路由使用
+const authJWTRouter = require("./routes/auth-jwt");
+const userRouter = require("./routes/user-route");
+
+// // // 掛載 auth-jwt 路由
+app.use('/api/auth-jwt', authJWTRouter);
+app.use('/api/user', userRouter);
+
+
+//跨網域資源共用、設置白名單
+app.use(
+  cors({
+    origin: [ "http://127.0.0.1:3005",
+    "http://localhost:3005",
+    "http://127.0.0.1:3000",
+    "http://localhost:3000",],
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true,
+  })
+)
+
+
+app.get("/login", (req,res)=>{
+  res.send("登入頁面測試")
+})
+
+
+
+
 
 app.listen(3005, () => {
   console.log("server is running");
