@@ -13,7 +13,7 @@ export default function ArticleCatogory() {
       .get("http://localhost:3005/api/article-category")
       .then((response) => {
         const data = response.data.result;
-        console.log(data);
+        // console.log(data);
         setArticleCatogory(data);
       })
       .catch((error) => {
@@ -65,26 +65,24 @@ export default function ArticleCatogory() {
 
   return (
     <>
-      <div className="article-catogory"></div>
+      {/* <div className="article-catogory"></div> */}
       {articlecatogory.map((v, i) => {
         return (
-          <>
-            <Link
+          <Link
+            key={v.article_category_id}
+            href={`/article/${v.article_category_id}`}
+          >
+            <button
+              type="button"
               key={v.article_category_id}
-              href={`/article/${v.article_category_id}`}
+              className={`mx-1 ${
+                activeButtons[i] ? "btn-brown active" : "btn-outline-confirm"
+              }`}
+              onClick={() => handleButtonClick(v.article_category_id, i)}
             >
-              <button
-                type="button"
-                key={v.article_category_id}
-                className={`mx-1 ${
-                  activeButtons[i] ? "btn-brown active" : "btn-outline-confirm"
-                }`}
-                onClick={() => handleButtonClick(v.article_category_id, i)}
-              >
-                {v.name}
-              </button>
-            </Link>
-          </>
+              {v.name}
+            </button>
+          </Link>
         );
       })}
     </>
