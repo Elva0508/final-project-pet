@@ -44,9 +44,7 @@ router.patch("/helper/valid", async (req, res) => {
       [user_id],
       (err, results) => {
         if (err) {
-          reject(
-            res.status(500).send({ status: 500, error: "使用者查詢錯誤" })
-          );
+          reject({ status: 500, error: "使用者查詢錯誤" });
         }
         resolve(results.length);
       }
@@ -64,7 +62,7 @@ router.patch("/helper/valid", async (req, res) => {
         [user_id],
         (err, results) => {
           if (err) {
-            reject(res.status(500).send({ status: 500, error: "查詢錯誤" }));
+            reject({ status: 500, error: "查詢錯誤" });
           }
           resolve(results.length);
         }
@@ -82,9 +80,9 @@ router.patch("/helper/valid", async (req, res) => {
           [1, user_id],
           (err, results) => {
             if (err) {
-              reject(res.status(500).send({ status: 500, error: "查詢錯誤" }));
+              reject({ status: 500, error: "查詢錯誤" });
             } else if (results.affectedRows === 0) {
-              reject(res.status(500).send({ status: 500, error: "更新失敗" }));
+              reject({ status: 500, error: "更新失敗" });
             }
             resolve(results);
           }
@@ -97,7 +95,7 @@ router.patch("/helper/valid", async (req, res) => {
           [user_id],
           (err, results) => {
             if (err) {
-              reject(res.status(500).send({ status: 500, error: "查詢錯誤" }));
+              reject({ status: 500, error: "查詢錯誤" });
             }
             resolve(results);
           }
@@ -109,7 +107,7 @@ router.patch("/helper/valid", async (req, res) => {
           [user_id],
           (err, results) => {
             if (err) {
-              reject(res.status(500).send({ status: 500, error: "查詢錯誤" }));
+              reject({ status: 500, error: "查詢錯誤" });
             }
             resolve(results);
           }
@@ -131,9 +129,7 @@ router.patch("/helper/valid", async (req, res) => {
             [user_id],
             (err, results) => {
               if (err) {
-                reject(
-                  res.status(500).send({ status: 500, error: "查詢錯誤" })
-                );
+                reject({ status: 500, error: "查詢錯誤" });
               }
               resolve(results[0]);
             }
@@ -148,11 +144,7 @@ router.patch("/helper/valid", async (req, res) => {
           [user_id, name, email, phone, city, 1],
           (err, results) => {
             if (err) {
-              reject(
-                res
-                  .status(500)
-                  .send({ status: 500, error: "小幫手資料寫入資料庫錯誤" })
-              );
+              reject({ status: 500, error: "小幫手資料寫入錯誤" });
             }
             resolve(results);
           }
@@ -335,6 +327,69 @@ router.get("/reserve", (req, res) => {
     }
   );
 });
+router.get("/reserve/detail/:pid", (req, res) => {
+  const { pid } = req.params;
+  console.log(pid);
+  conn.execute(
+    `SELECT q.*,p.* FROM mission_req_orders q LEFT JOIN users_pet_info p ON q.pet_info_id = p.pet_id WHERE q.oid = ?`,
+    [pid],
+    (err, results) => {
+      if (err) {
+        console.log(err);
+        return res.status(500).send({ status: 500, error: "資料查詢錯誤" });
+      }
+      results = results.map((item) => {
+        const start_day = transferDate(item.start_day);
+        const end_day = transferDate(item.end_day);
+        const created_at = transferDate(item.created_at);
+        return { ...item, start_day, end_day, created_at };
+      });
+      return res.send({ status: 200, data: results[0] });
+    }
+  );
+});
+router.get("/selling", (req, res) => {
+  const { user_id, status } = req.query;
+  conn.execute(
+    `SELECT * FROM mission_req_orders WHERE status = ? AND helper_userId = ?`,
+    [status, user_id],
+    (err, results) => {
+      if (err) {
+        console.log(err);
+        return res.status(500).send({ status: 500, error: "資料查詢錯誤" });
+      }
+      console.log(results);
+      results = results.map((item) => {
+        const start_day = transferDate(item.start_day);
+        const end_day = transferDate(item.end_day);
+        const created_at = transferDate(item.created_at);
+        return { ...item, start_day, end_day, created_at };
+      });
+      return res.send({ status: 200, data: results });
+    }
+  );
+});
+router.get("/selling/detail/:pid", (req, res) => {
+  const { pid } = req.params;
+  console.log(pid);
+  conn.execute(
+    `SELECT q.*,p.* FROM mission_req_orders q LEFT JOIN users_pet_info p ON q.pet_info_id = p.pet_id WHERE q.oid = ?`,
+    [pid],
+    (err, results) => {
+      if (err) {
+        console.log(err);
+        return res.status(500).send({ status: 500, error: "資料查詢錯誤" });
+      }
+      results = results.map((item) => {
+        const start_day = transferDate(item.start_day);
+        const end_day = transferDate(item.end_day);
+        const created_at = transferDate(item.created_at);
+        return { ...item, start_day, end_day, created_at };
+      });
+      return res.send({ status: 200, data: results[0] });
+    }
+  );
+});
 module.exports = router;
 
 function generateOrderNumber() {
@@ -355,6 +410,5 @@ function generateOrderNumber() {
 
 const transferDate = (date) => {
   const newDay = dayjs(date).format("YYYY-MM-DD");
-  console.log(newDay);
   return newDay;
 };

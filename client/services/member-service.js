@@ -30,5 +30,22 @@ class MemberService {
       params: { user_id: user, status },
     });
   }
+
+  // reserve detail頁
+  getReserveDetail(pid) {
+    return axios.get(`${API_URL}reserve/detail/${pid}`);
+  }
+  // selling頁route
+  getSelling(status) {
+    const user = 45;
+    return axios.get(API_URL + "selling", {
+      params: { user_id: user, status },
+    });
+  }
+
+  // selling detail頁
+  getSellingDetail(pid) {
+    return axios.get(`${API_URL}selling/detail/${pid}`);
+  }
 }
 export default new MemberService();

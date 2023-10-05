@@ -55,7 +55,7 @@ const SwitchInput = ({ label, status, price, type, setStatus }) => {
           type="number"
           id=""
           placeholder="服務價格"
-          defaultValue={price && price}
+          value={price && price}
           className={`form-input m-form-input ${!status && "d-none"}`}
           name={type + "price"}
         />
@@ -90,17 +90,36 @@ const Close = ({ open, setOpen }) => {
   );
 };
 
-const Open = ({ open, setOpen, info, setInfo }) => {
-  const { register, handleSubmit, watch } = useForm({
-    defaultValues: {
-      name: info?.name,
-    },
-  });
+const Open = ({ open, setOpen }) => {
+  const [info, setInfo] = useState({});
   const [feedStatus, setFeedStatus] = useState(info?.feed_service);
   const [houseStatus, setHouseStatus] = useState(info?.house_service);
   const [beautyStatus, setBeautyStatus] = useState(info?.beauty_service);
   const [messageApi, contextHolder] = message.useMessage();
+
+  let defaultInfo;
+
+  const { register, handleSubmit, watch } = useForm({
+    values: {
+      name: info?.name,
+    },
+  });
   const [name] = watch(["name"]);
+  useEffect(() => {
+    memberService
+      .getHelperInfo()
+      .then((response) => {
+        if (response?.data?.data?.length > 0) {
+          setOpen(true);
+          setInfo(response?.data?.data[0]);
+          defaultInfo = response?.data?.data[0];
+          console.log(response?.data?.data[0]);
+        }
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  }, []);
   const editSuccess = () => {
     messageApi.open({
       type: "success",
@@ -189,6 +208,12 @@ const Open = ({ open, setOpen, info, setInfo }) => {
             type="text"
             placeholder="請輸入名稱"
             name="name"
+            value={info?.name}
+            onChange={(e) => {
+              console.log(e.target.value);
+              const value = e.target.value;
+              setInfo({ ...info, name: value });
+            }}
             {...register("name")}
           />
         </div>
@@ -198,7 +223,7 @@ const Open = ({ open, setOpen, info, setInfo }) => {
             className="form-input m-form-input"
             type="text"
             placeholder="請簡單輸入自我介紹"
-            defaultValue={info?.Introduction}
+            value={info?.Introduction}
             name="introduction"
           />
         </div>
@@ -209,7 +234,7 @@ const Open = ({ open, setOpen, info, setInfo }) => {
             className="form-input m-form-input"
             type="text"
             placeholder="請輸入Email"
-            defaultValue={info?.email}
+            value={info?.email}
             name="email"
           />
         </div>
@@ -219,7 +244,7 @@ const Open = ({ open, setOpen, info, setInfo }) => {
             className="form-input m-form-input"
             type="text"
             placeholder="請輸入聯絡電話"
-            defaultValue={info?.phone}
+            value={info?.phone}
             name="phone"
           />
         </div>
@@ -247,7 +272,7 @@ const Open = ({ open, setOpen, info, setInfo }) => {
             className="form-input m-form-input"
             type="text"
             placeholder="請輸入服務介紹"
-            defaultValue={info?.job_description}
+            value={info?.job_description}
             name="job_description"
           />
         </div>
@@ -331,31 +356,17 @@ const Open = ({ open, setOpen, info, setInfo }) => {
 };
 const HelperInfo = () => {
   const [open, setOpen] = useState(false);
-  const [info, setInfo] = useState({});
 
-  useEffect(() => {
-    memberService
-      .getHelperInfo()
-      .then((response) => {
-        if (response?.data?.data?.length > 0) {
-          setOpen(true);
-          setInfo(response?.data?.data[0]);
-        }
-      })
-      .catch((e) => {
-        console.log(e);
-      });
-  }, []);
   return (
     <>
-      <div className="helper-info ">
+      <div className="col-12 col-sm-8 helper-info ">
         <div className="title">
           <p className="size-4 m-size-5">
             <img src="/member-icon/helper-info.svg" />
             小幫手資料
             {open && (
               <Link
-                href={`/work/find-helper/30`}
+                href={`/work/find-helper/1`}
                 // 修改為user_id
                 className="to-detail size-7 m-size-7"
               >
@@ -365,7 +376,7 @@ const HelperInfo = () => {
           </p>
         </div>
         {open ? (
-          <Open open={open} setOpen={setOpen} info={info} setInfo={setInfo} />
+          <Open open={open} setOpen={setOpen} />
         ) : (
           <Close open={open} setOpen={setOpen} />
         )}

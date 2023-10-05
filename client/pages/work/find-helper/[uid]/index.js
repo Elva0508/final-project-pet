@@ -708,15 +708,17 @@ const HelperDetail = () => {
           </div>
           <div className="item">
             <div className="item-title size-4">可服務地區：</div>
-            <span className="size-4 item-content">台北市、新北市</span>
+            <span className="size-4 item-content">
+              {profile.service_county}
+            </span>
           </div>
           <div className="item">
             <div className="item-title size-4">連絡電話：</div>
-            <span className="size-4 item-content">0912-345-678</span>
+            <span className="size-4 item-content">{profile.phone}</span>
           </div>
           <div className="item">
             <div className="item-title size-4">電子信箱</div>
-            <span className="size-4 item-content">example01@test.com</span>
+            <span className="size-4 item-content">{profile.email}</span>
           </div>
         </section>
         <section className="">
