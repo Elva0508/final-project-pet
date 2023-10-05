@@ -2,7 +2,7 @@ export default function Button() {
   return (
     <>
       <form className="d-flex justify-content-center align-items-center mt-2">
-        <button type="submit" className=" btn-confirm mx-1">
+        <button type="submit" className=" btn-confirm mx-1 ">
           按鈕1送出(reqular)
         </button>
         <button type="button" className=" btn-second mx-1">

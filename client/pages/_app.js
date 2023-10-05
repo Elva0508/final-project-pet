@@ -1,6 +1,7 @@
 import { useEffect } from "react";
-import Layout from "./layout";
+import Layout from "../components/layout";
 import "@/styles/globals.scss";
+import {CartProvider} from '@/hooks/useCart' 
 
 export default function App({ Component, pageProps }) {
   useEffect(() => {
@@ -8,8 +9,10 @@ export default function App({ Component, pageProps }) {
     import("bootstrap/dist/js/bootstrap");
   }, []);
   return (
-    <Layout>
-      <Component {...pageProps} />
-    </Layout>
+    <CartProvider>
+      <Layout>
+        <Component {...pageProps} />
+      </Layout>
+    </CartProvider>
   );
 }

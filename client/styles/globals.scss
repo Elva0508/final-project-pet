@@ -9,12 +9,12 @@ $form-select-focus-box-shadow: $box-shadow;
 $carousel-indicator-active-bg: #d7965b;
 $carousel-indicator-height: 5px;
 $breadcrumb-divider: quote(">");
+$offcanvas-horizontal-width:50%;
 
 // ↑↑↑  變數覆蓋(Variable overrides) 要寫在這行"上面"  ↑↑↑
 // 導入所有 bootstrap 樣式
 @import "~bootstrap/scss/bootstrap";
 // ↓↓↓  其它客製樣式要寫在這行的"下面" ↓↓↓
-
 // 客製化變數樣式
 @import "@/styles/_variable.scss";
 
@@ -57,7 +57,6 @@ a {
     border-bottom: 4px solid $hover;
   }
 }
-
 ul {
   list-style: none;
   padding: 0;
@@ -81,7 +80,6 @@ ul {
 @import "@/styles/components-style/_mission-card.scss";
 @import "@/styles/_find-mission.scss";
 @import "@/styles/components-style/_product-card.scss";
-
 @import "@/styles/_mission-detail.scss";
 @import "@/styles/components-style/_mission_helper_list.scss";
 
@@ -120,7 +118,6 @@ ul {
 @import "@/styles/components-style/home/_block-five.scss";
 @import "@/styles/components-style/home/_block-six.scss";
 
-
 //文章
 @import "@/styles/components-style/_article-list-card.scss";
 @import "@/styles/components-style/_article-catogory.scss";
@@ -128,4 +125,3 @@ ul {
 @import "@/styles/_article.scss";
 @import "@/styles/components-style/home/_block-three.scss";
 @import "@/styles/components-style/home/_block-six.scss";
-

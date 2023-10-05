@@ -1,6 +1,6 @@
 import React,{ useEffect, useState } from 'react'
 
-export default function Star({startRating = 0, onRatingChange = () => {} }) {
+export default function Star({startRating = 0,valid, onRatingChange = () => {} }) {
     const [rating, setRating] = useState(startRating)
     const [hoverRating, setHoverRating] = useState(0)
 
@@ -9,7 +9,8 @@ export default function Star({startRating = 0, onRatingChange = () => {} }) {
       }, [startRating])
   return (
     <>
-          <div className='star'>
+    {(valid==null )?(
+        <div className='star'>
         {/* 快速產生5個成員都是1陣列，表達式語法 */}
         {Array(5)
           .fill(1)
@@ -47,6 +48,37 @@ export default function Star({startRating = 0, onRatingChange = () => {} }) {
             )
           })}
       </div>
+    ):(
+      <div className='star'>
+      商品評分:
+        {/* 快速產生5個成員都是1陣列，表達式語法 */}
+        {Array(5)
+          .fill(1)
+          .map((v, i) => {
+            //每個星星的分數
+            const score = i + 1
+            return (
+              <button
+                className='star-btn'
+                key={i}
+              >
+                <span
+                  //判斷分數(score)如果小於等於目前的評分(rating)狀態，則套用亮起樣式
+                  className={
+                    score <= rating
+                      ? 'on'
+                      : 'off'
+                  }
+                >
+                  &#9733;
+                </span>
+              </button>
+            )
+          })}
+      </div>
+
+    )}
+
     </>
   )
 }

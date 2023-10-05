@@ -13,29 +13,28 @@ import OrderStatusFour from "@/components/member/order-status-four";
 
 export default function Order() {
   const [currentScreen, setCurrentScreen] = useState("1");
+  const [order, setOrder] = useState([])
+  const getOrder = async() => {
+    await axios.get("http://localhost:3005/api/member-order")
+      .then((response) => {
+        const data = response.data.result;
+        console.log(data);
+        setOrder(data)
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+    });
+  }
+
+useEffect(() => {
+    getOrder()
+  }, [])
 
   const handleButtonClick = (screenName) => {
     setCurrentScreen(screenName);
-    
   };
 
-  const [order, setOrder] = useState([])
 
-  const getOrder = async() => {
-      await axios.get("http://localhost:3005/api/member-order")
-        .then((response) => {
-          const data = response.data.result;
-          console.log(data);
-          setOrder(data)
-        })
-        .catch((error) => {
-          console.error("Error:", error);
-      });
-    }
-
-  useEffect(() => {
-      getOrder()
-    }, [])
 
   return (
     <>
@@ -87,37 +86,15 @@ export default function Order() {
                     已取消
                   </button>
 
-                  {currentScreen === "1" && (<OrderStatusOne />)}
-                  {currentScreen === "2" && (<OrderStatusTwo />)}
-                  {currentScreen === "3" && (<OrderStatusThree />)}
-                  {currentScreen === "4" && (<OrderStatusFour />)}
+                  {currentScreen === "1" && (<OrderStatusOne order={order}/>)}
+                  {currentScreen === "2" && (<OrderStatusTwo order={order}/>)}
+                  {currentScreen === "3" && (<OrderStatusThree order={order}/>)}
+                  {currentScreen === "4" && (<OrderStatusFour order={order}/>)}
                 </div>
 
-                {order.map((v,i)=>{
-                    return(
-                      <div key={i}>
-                        <p className='date my-3 size-7'>2023-08-26 訂單編號 : 134868</p>
-                        <div className='d-flex justify-content-between border-bottom'>
-                          <div>
-                            <p className='size-7'>狀態 : {v.status_id}</p>
-                            <p className='size-7'>付款方式 : 貨到付款</p>
-                            <p className='size-7'>寄送方式 : 宅配</p>
-                            <img src='https://cdn-front.mao-select.com.tw//upload_files/fonlego-rwd/prodpic/D_A1MKD200101(1).jpg' className='d-sm-none d-block' alt='产品图片'></img>
-                            <p className='size-6 price'>訂單金額 : NT${v.total_amount}</p>
-                          </div>
-                          <div className='d-flex align-self-end'>
-                            <img src='https://cdn-front.mao-select.com.tw//upload_files/fonlego-rwd/prodpic/D_A1MKD200101(1).jpg' className='d-sm-block d-none' alt='产品图片'></img>
-                            <div className='d-flex align-self-center'>
-                              <button className="btn btn-outline-confirm m-2 size-6">查看明細</button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      
-                    )
-                  })}
 
-                { screenName==="1" && <orderStatusOne />}
+
+
               </div>
             </div>
           </div>

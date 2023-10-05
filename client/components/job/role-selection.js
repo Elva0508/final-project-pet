@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import Link from "next/link";
 
-export default function RoleSelection() {
-  const [activeButton, setActiveButton] = useState('mission');
+export default function RoleSelection({ defaultActive }) {
+  const [activeButton, setActiveButton] = useState(defaultActive);
 
   const handleButtonClick = (buttonName) => {
     setActiveButton(buttonName);
@@ -16,7 +16,7 @@ export default function RoleSelection() {
           className={`btn ${activeButton === 'mission' ? 'active' : ''} border-0 size-6`}
           onClick={() => handleButtonClick('mission')}
         >
-          找任務
+          <Link href={`/work/find-mission`} >找任務</Link>
           {activeButton === 'mission' && <span className="underline"></span>}
         </button>
         <button
@@ -24,7 +24,7 @@ export default function RoleSelection() {
           className={`btn ${activeButton === 'helper' ? 'active' : ''} border-0 size-6`}
           onClick={() => handleButtonClick('helper')}
         >
-          找幫手
+          <Link href={`/work/find-helper`} >找幫手</Link>
           {activeButton === 'helper' && <span className="underline"></span>}
         </button>
       </div>
