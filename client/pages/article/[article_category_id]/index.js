@@ -11,10 +11,7 @@ export default function ArticleList() {
   const [selectedCategory, setSelectedCategory] = useState(1);
   const [currentPage, setCurrentPage] = useState(1); //目前頁碼
   const [totalPages, setTotalPages] = useState(1); // 總頁數，從data長度設定
-  const handlePageChange = (newPage) => {
-    setCurrentPage(newPage);
-    // 設定頁碼狀態
-  };
+
   const router = useRouter();
 
   useEffect(() => {
@@ -57,6 +54,11 @@ export default function ArticleList() {
       router.events.off("routeChangeComplete", handleRouteChange);
     };
   }, []);
+
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
+    // 設定頁碼狀態
+  };
 
   return (
     <>
