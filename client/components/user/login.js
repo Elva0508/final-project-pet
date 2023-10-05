@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useRouter } from "next/router"; // 使用next/router取代react-router-dom的useNavigate
+import { useRouter } from "next/router"; 
 
 import { useAuth } from "@/context/fakeAuthContext";
 
@@ -9,7 +9,7 @@ export default function Login() {
   const [password, setPassword] = useState("qwerty");
 
   const { login, isAuthenticated } = useAuth();
-  const router = useRouter(); // 使用next/router取代react-router-dom的useNavigate
+  const router = useRouter(); 
 
   // function handleSubmit(e) {
   //   e.preventDefault();
@@ -33,7 +33,8 @@ async function handleSubmit(e) {
       if (response.ok) {
         const { token } = await response.json();
         localStorage.setItem('token', token);
-        router.push('/home');
+        //console.log(token)
+         router.push('/user/userInfo');
       } else {
         throw new Error('Login failed');
       }
@@ -46,7 +47,7 @@ async function handleSubmit(e) {
 
   useEffect(
     function () {
-      if (isAuthenticated) router.replace("/home"); // 使用router.replace取代navigate
+      if (isAuthenticated) router.replace("/user/userInfo"); 
     },
     [isAuthenticated, router]
   );

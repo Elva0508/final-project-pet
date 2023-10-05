@@ -142,6 +142,7 @@ router.post("/checkLogin", checkToken,(req,res)=>{
 
 })
 
+//會員基本資料api
 router.post("/profile", checkToken,(req,res)=>{
   const currentId = req.decoded.user_id;
   db.query('SELECT * FROM userinfo WHERE user_id = ?',[currentId],(err,results)=>{
@@ -155,6 +156,23 @@ router.post("/profile", checkToken,(req,res)=>{
     }
   })
 })
+//會員基本資料修改api
+router.put("/profile", checkToken, (req, res) => {
+  const currentId = req.decoded.user_id;
+  const { name,phone, city, area, address, birthday, pet_number, gender } = req.body;
+  db.query(
+    "UPDATE userinfo SET name = ?, phone = ?, city = ?, area = ?, address = ?, birthday = ?, pet_number = ?, gender = ? WHERE user_id = ?",
+    [name,phone, city, area, address, birthday, pet_number, gender, currentId],
+    (err, results) => {
+      if (err) {
+        console.error("資料庫-查詢錯誤：", err);
+        res.status(500).json({ message: "資料庫查詢錯誤", code: "500" });
+      } else {
+        res.status(200).json({ message: "success", code: "200" });
+      }
+    }
+  );
+});
 
 // router.post("/register",  async(req, res) => {
 //   const { name, email, password, confPassword } = req.body;

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import useRWD from "@/hooks/useRWD";
+import {useFormik} from 'formik'
 
 import Image from "next/image";
 import myProfile from "@/assets/myProfile.svg";
@@ -8,9 +9,26 @@ import data from "@/data/taiwan.json";
 import { DatePicker, Space } from "antd";
 
 export default function userForm() {
+  //RWD
   const device = useRWD();
   const userRfs = device == "mobile" ? "m-size-6" : "size-6";
 
+  const formik = useFormik({
+    initialValues:{
+      name:"王小花",
+      gender:'男',
+      birthday:'2021-09-09',
+      phoneNum: '0912123456',
+      city:'台北市',
+      town:'中山區',
+      address:'中山北路一段',
+      petNum:2,
+    }
+  })
+  
+  console.log(formik.values)
+
+  //地址
   const [city, setCity] = useState(-1);
   const [area, setArea] = useState([]);
   const handleCityChange = (event) => {
@@ -28,6 +46,7 @@ export default function userForm() {
     }
   };
 
+  //生日  
   const onChange = (date, dateString) => {
     console.log(date, dateString);
   };
@@ -51,7 +70,11 @@ export default function userForm() {
           <div className="user-form-item">
             <label className={userRfs}>姓名：</label>
             <div>
-              <input className="form-input" type="text" placeholder="王小明" />
+              <input 
+              className="form-input" type="text" 
+              value={formik.values.name}
+                onChange={formik.handleChange}
+              />
             </div>
           </div>
           <div className="user-form-item">
@@ -71,6 +94,7 @@ export default function userForm() {
                 id="blankRadio1"
                 className={userRfs}
                 value="option1"
+                checked
                 aria-label="..."
               />
               男
@@ -89,7 +113,8 @@ export default function userForm() {
           <div className="user-form-item">
             <label className={userRfs}>生日：</label>
             <div>
-              <DatePicker onChange={onChange} />
+             {/* <DatePicker onChange={onChange} />  */}
+             <input type="date" value='2020-12-12'/> 
             </div>
           </div>
           <div className="user-form-item">
@@ -98,7 +123,7 @@ export default function userForm() {
               <input
                 className="form-input"
                 type="text"
-                placeholder="0912123456"
+                value="0912456786"
               />
             </div>
           </div>
@@ -116,7 +141,7 @@ export default function userForm() {
                 onChange={handleCityChange}
               >
                 <option selected value={-1}>
-                  選擇縣/市
+                {formik.values.city}
                 </option>
                 {data.map((v) => {
                   return (
@@ -128,7 +153,9 @@ export default function userForm() {
               </select>
 
               <select className="form-select">
-                <option selected>選擇鄉鎮市區</option>
+                <option selected>
+                {formik.values.town}
+                </option>
                 {area.map((v, i) => (
                   <option key={i} value={v}>
                     {v}
@@ -139,9 +166,13 @@ export default function userForm() {
           </div>
 
           <div className="user-form-item">
-           <label ></label>
+           <label >
+        
+           </label>
           <div>
-          <input type="text" className="form-control "></input>
+          <input type="text" className="form-control" value={formik.values.address}/>
+          
+        
           </div>
            
           </div>
@@ -149,7 +180,7 @@ export default function userForm() {
           <div className="user-form-item">
             <label className="size-6">毛孩數量：</label>
             <div>
-              <input className="form-input" type="number" placeholder="0" />
+              <input className="form-input" type="number" value={formik.values.petNum} />
             </div>
           </div>
       

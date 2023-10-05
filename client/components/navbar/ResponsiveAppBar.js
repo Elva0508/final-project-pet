@@ -17,6 +17,8 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import Image from "next/image";
 import Link from "next/link";
 
+import {useAuth} from "@/context/fakeAuthContext"
+
 //logo-icon
 import catLogo from "@/assets/catLogo.svg";
 import McatLogo from "@/assets/McatLogo.svg";
@@ -83,6 +85,9 @@ const settings = [
 ];
 
 function ResponsiveAppBar() {
+const {user, logout} = useAuth()
+
+
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
@@ -100,6 +105,10 @@ function ResponsiveAppBar() {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+
+  const handleLogout = () => {
+    logout()
+  }
 
   const { cart, setCart } = useCart();
 
@@ -225,13 +234,30 @@ function ResponsiveAppBar() {
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
               >
-                {settings.map((v) => (
-                  <Link href={v.path} key={v.id}>
+              {/* {user ? (
+                <MenuItem onClick={handleLogout}>
+                      <Typography textAlign="center">A</Typography>
+                    </MenuItem>
+              ) : (
+                <Link href="/login" >
                     <MenuItem onClick={handleCloseUserMenu}>
-                      <Typography textAlign="center">{v.name}</Typography>
+                      <Typography textAlign="center">u</Typography>
                     </MenuItem>
                   </Link>
-                ))}
+
+              )} */}
+                  {/* <Link href="/login" >
+                    <MenuItem onClick={handleCloseUserMenu}>
+                      <Typography textAlign="center">登入</Typography>
+                    </MenuItem>
+                  </Link>
+                  
+                  <Link href={v.path} key={v.id}>
+                    <MenuItem onClick={handleCloseUserMenu}>
+                      <Typography textAlign="center">登出</Typography>
+                    </MenuItem>
+                  </Link> */}
+             
               </Menu>
             </Box>
           </Toolbar>

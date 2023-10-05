@@ -42,7 +42,9 @@ async function login(email, password) {
 
         if (response.ok) {
             const user = await response.json();
+            //console.log(user)
             dispatch({ type: 'login', payload: user });
+
         } else {
             throw new Error('Login failed');
         }
