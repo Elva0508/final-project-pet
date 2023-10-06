@@ -693,7 +693,7 @@ const MyFilter = ({ missionType, setMissionType, missionCity, setMissionCity, mi
 
 // 排序
 const Sort = ({ missionType, setMissionType, missionCity, setMissionCity, missionArea, setMissionArea, updateDate, setUpdateDate, sortOrder, setSortOrder, sortBy, setSortBy }) => {
-  const [activeButton, setActiveButton] = useState(null);
+  const [activeButton, setActiveButton] = useState("post_date");
   const [iconDirection, setIconDirection] = useState({}); // 用於跟蹤圖標方向
 
   const toggleButton = (sortBy) => {
@@ -844,7 +844,9 @@ const MissionCard = ({ missionType, missionCity, missionArea, setMissionType, up
                 </div>
                 <div className='d-flex justify-content-between align-items-end price'>
                   <div  >單次<span className='size-6'> NT${v.price}</span></div>
-                  <button className='btn-confirm size-6'>應徵</button>
+                  <Link href={`/work/find-mission/${v.mission_id}`} >
+                    <button className='btn-confirm size-6'>應徵</button>
+                  </Link>
                 </div>
               </div>
             </div>
@@ -862,7 +864,7 @@ export default function MissionList() {
   const [missionCity, setMissionCity] = useState("");
   const [missionArea, setMissionArea] = useState(null);
   const [sortOrder, setSortOrder] = useState("asc");
-  const [sortBy, setSortBy] = useState(null);
+  const [sortBy, setSortBy] = useState('post_date');
 
 
   // 清除篩選條件
@@ -881,7 +883,7 @@ export default function MissionList() {
     setMissionCity(null);
     setMissionArea(null);
     setSortOrder('asc');
-    setSortBy(null);
+    setSortBy('post_date');
     // setSelectedCity(null); // 重置城市选择为 null 或默认值
     // setSelectedArea(null); // 重置地区选择为 null 或默认值
     console.log(`重載後是+http://localhost:3005/api/mission/all-missions?missionType=${missionType}&updateDate=${updateDate}&missionCity=${missionCity}&missionArea=${missionArea}&sortOrder=${sortOrder}&sortBy=${sortBy}`);

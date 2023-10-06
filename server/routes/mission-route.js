@@ -63,7 +63,7 @@ const commonQueryTemplate = `
 // 我現在要在排序裡面新增篩選
 router.get("/all-missions", (req, res) => {
   let sortOrder = req.query.sortOrder;
-  let orderBy = null;
+  let orderBy = req.query.sortBy;
 
   // 獲取任務類型篩選條件
   let filteredMissionType = req.query.missionType;
@@ -79,9 +79,9 @@ router.get("/all-missions", (req, res) => {
   let dateRangeEnd = null;
 
   // 獲取排序條件
-  if (req.query.sortBy === "post_date") {
+  if (orderBy === "post_date") {
     orderBy = "md.post_date";
-  } else if (req.query.sortBy === "price") {
+  } else if (orderBy === "price") {
     orderBy = "md.price";
   }
 
