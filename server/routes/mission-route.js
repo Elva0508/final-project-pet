@@ -66,7 +66,13 @@ router.get("/all-missions", (req, res) => {
   let orderBy = null;
 
   // 獲取任務類型篩選條件
-  let missionTypeFilter = req.query.missionType; 
+  let filteredMissionType = req.query.missionType; 
+  let missionTypeFilter; // 先聲明變量（很重要！否則當missionTypeFilter=null會沒資料 會無法清除篩選）
+
+
+  // 獲取城市和地區篩選條件
+  let cityFilter = req.query.city;
+  let areaFilter = req.query.area;
 
   // 獲取排序條件
   if (req.query.sortBy === "post_date") {
@@ -76,23 +82,46 @@ router.get("/all-missions", (req, res) => {
   }
 
   // 獲取篩選條件
-  if (req.query.missionType === "feed") {
+  if (filteredMissionType === "feed") {
     missionTypeFilter = 1;
-  } else if (req.query.missionType === "house") {
+  } else if (filteredMissionType === "house") {
     missionTypeFilter = 2;
-  }else if (req.query.missionType === "beauty") {
+  }else if (filteredMissionType === "beauty") {
     missionTypeFilter = 3;
-  }else if (req.query.missionType === "training") {
+  }else if (filteredMissionType === "training") {
     missionTypeFilter = 4;
-  }else if (req.query.missionType === "medical") {
+  }else if (filteredMissionType === "medical") {
     missionTypeFilter = 5;
   }
   
   let query = commonQueryTemplate;
 
   // 如果提供了任務類型篩選條件，將其包含在查詢中
+  // if (missionTypeFilter) {
+  //   query += ` WHERE md.mission_type = ${missionTypeFilter}`;
+  // }
+
+  // WHERE 子句
+  let whereClause = [];
+
+  // 如果提供了任務類型篩選條件，將其包含在 WHERE 子句中
   if (missionTypeFilter) {
-    query += ` WHERE md.mission_type = ${missionTypeFilter}`;
+    whereClause.push(`md.mission_type = ${missionTypeFilter}`);
+  }
+
+  // 如果提供了城市篩選條件，將其包含在 WHERE 子句中
+  if (cityFilter) {
+    whereClause.push(`md.city = '${cityFilter}'`);
+  }
+
+  // 如果提供了地區篩選條件，將其包含在 WHERE 子句中
+  if (areaFilter) {
+    whereClause.push(`md.area = '${areaFilter}'`);
+  }
+
+  // 如果有 WHERE 子句，將其加入查詢
+  if (whereClause.length > 0) {
+    query += ` WHERE ${whereClause.join(' AND ')}`;
   }
 
   if (orderBy) {

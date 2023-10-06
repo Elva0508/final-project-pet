@@ -422,7 +422,7 @@ const MobileFilter = ({ missionType, setMissionType, sortOrder, setSortOrder, se
 
 
 // 最終版篩選
-const MyFilter = ({ missionType, setMissionType, sortOrder, setSortOrder, setSortBy }) => {
+const MyFilter = ({ missionType, setMissionType, sortOrder, setSortOrder, setSortBy, clearFilters }) => {
   // 按鈕文字的狀態
   const [buttonText1, setButtonText1] = useState('任務類型');
   const [buttonText2, setButtonText2] = useState('更新日期');
@@ -456,19 +456,19 @@ const MyFilter = ({ missionType, setMissionType, sortOrder, setSortOrder, setSor
     { label: '一個月內', value: 'one_month' },
   ];
 
-  // 處理任務類型下拉選單項的點擊事件
-  const handleItemClick1 = (label,value) => {
+  // 一：處理任務類型下拉選單項的點擊事件
+  const handleItemClick1 = (label) => {
     // 獲取選項的value值
     const selectedValue = options1.find(option => option.label === label)?.value;
     // 更新按鈕文字
     setButtonText1(label);
     // 這裡可以使用selectedValue來執行其他操作
     console.log(`選中的值是: ${selectedValue}`);
-   
+
     setMissionType(selectedValue)
   };
 
-  // 處理更新日期下拉選單項的點擊事件
+  // 二：處理更新日期下拉選單項的點擊事件
   const handleItemClick2 = (label) => {
     const selectedValue = options2.find(option => option.label === label)?.value;
     setButtonText2(label);
@@ -477,92 +477,8 @@ const MyFilter = ({ missionType, setMissionType, sortOrder, setSortOrder, setSor
 
   return (
     <>
-      {/* 一：任務類型 */}
-      <div className="btn-group">
-        <button
-          className="btn dropdown-toggle"
-          type="button"
-          id="defaultDropdown1"
-          data-bs-toggle="dropdown"
-          data-bs-auto-close="true"
-          aria-expanded="false"
-        >
-          <div className="left-background"></div>
-          <img src="/job-icon/plus-service.svg" className="me-3" />
-          {buttonText1} {/* 按鈕文字狀態 */}
-          <BiSolidDownArrow className="ms-2" />
-        </button>
-        <ul className="dropdown-menu" aria-labelledby="defaultDropdown1">
-          {/* 使用map函數動態生成下拉選單項 */}
-          {options1.map((option) => (
-            <li
-              key={option.label}
-              className="dropdown-item text-center"
-              onClick={() => handleItemClick1(option.label)}
-            >
-              {option.label}
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      {/* 二：更新日期 */}
-      <div className="btn-group">
-        <button
-          className="btn dropdown-toggle"
-          type="button"
-          id="defaultDropdown2"
-          data-bs-toggle="dropdown"
-          data-bs-auto-close="true"
-          aria-expanded="false"
-        >
-          <div className="left-background"></div>
-          <img src="/job-icon/plus-service.svg" className="me-3" />
-          {buttonText2}
-          <BiSolidDownArrow className="ms-2" />
-        </button>
-        <ul className="dropdown-menu" aria-labelledby="defaultDropdown2">
-          {options2.map((option) => (
-            <li
-              key={option.label}
-              className="dropdown-item text-center"
-              onClick={() => handleItemClick2(option.label)}
-            >
-              {option.label}
-            </li>
-          ))}
-        </ul>
-      </div>
-      {/* 三：任務地區 */}
-      {/* 城市下拉選單 */}
-      <div className="btn-group">
-        <button
-          className="btn dropdown-toggle"
-          type="button"
-          id="defaultDropdown1"
-          data-bs-toggle="dropdown"
-          data-bs-auto-close="true"
-          aria-expanded="false"
-        >
-          <div className="left-background"></div>
-          <img src="/job-icon/plus-service.svg" className="me-3" />
-          {selectedCity ? selectedCity.CityName : '任務地區'}
-          <BiSolidDownArrow className="ms-2" />
-        </button>
-        <ul className="dropdown-menu" aria-labelledby="defaultDropdown1">
-          {cityData.map((city) => (
-            <li
-              key={city.CityName}
-              className="dropdown-item text-center"
-              onClick={() => handleCityChange(city)}
-            >
-              {city.CityName}
-            </li>
-          ))}
-        </ul>
-      </div>
-      {/* 地區下拉選單，有選city才會出現 */}
-      {selectedCity && (
+      <div className='filters d-flex justify-content-center align-items-center '>
+        {/* 一：任務類型 */}
         <div className="btn-group">
           <button
             className="btn dropdown-toggle"
@@ -572,22 +488,109 @@ const MyFilter = ({ missionType, setMissionType, sortOrder, setSortOrder, setSor
             data-bs-auto-close="true"
             aria-expanded="false"
           >
-            {selectedArea ? selectedArea.AreaName : '選擇地區'}
+            <div className="left-background"></div>
+            <img src="/job-icon/plus-service.svg" className="me-3" />
+            {buttonText1} {/* 按鈕文字狀態 */}
             <BiSolidDownArrow className="ms-2" />
           </button>
           <ul className="dropdown-menu" aria-labelledby="defaultDropdown1">
-            {selectedCity.AreaList.map((area) => (
+            {/* 使用map函數動態生成下拉選單項 */}
+            {options1.map((option) => (
               <li
-                key={area.ZipCode}
+                key={option.label}
                 className="dropdown-item text-center"
-                onClick={() => handleAreaChange(area)}
+                onClick={() => handleItemClick1(option.label)}
               >
-                {area.AreaName}
+                {option.label}
               </li>
             ))}
           </ul>
         </div>
-      )}
+
+        {/* 二：更新日期 */}
+        <div className="btn-group">
+          <button
+            className="btn dropdown-toggle"
+            type="button"
+            id="defaultDropdown2"
+            data-bs-toggle="dropdown"
+            data-bs-auto-close="true"
+            aria-expanded="false"
+          >
+            <div className="left-background"></div>
+            <img src="/job-icon/plus-service.svg" className="me-3" />
+            {buttonText2}
+            <BiSolidDownArrow className="ms-2" />
+          </button>
+          <ul className="dropdown-menu" aria-labelledby="defaultDropdown2">
+            {options2.map((option) => (
+              <li
+                key={option.label}
+                className="dropdown-item text-center"
+                onClick={() => handleItemClick2(option.label)}
+              >
+                {option.label}
+              </li>
+            ))}
+          </ul>
+        </div>
+        {/* 三：任務地區 */}
+        {/* 城市下拉選單 */}
+        <div className="btn-group">
+          <button
+            className="btn dropdown-toggle"
+            type="button"
+            id="defaultDropdown1"
+            data-bs-toggle="dropdown"
+            data-bs-auto-close="true"
+            aria-expanded="false"
+          >
+            <div className="left-background"></div>
+            <img src="/job-icon/plus-service.svg" className="me-3" />
+            {selectedCity ? selectedCity.CityName : '任務地區'}
+            <BiSolidDownArrow className="ms-2" />
+          </button>
+          <ul className="dropdown-menu" aria-labelledby="defaultDropdown1">
+            {cityData.map((city) => (
+              <li
+                key={city.CityName}
+                className="dropdown-item text-center"
+                onClick={() => handleCityChange(city)}
+              >
+                {city.CityName}
+              </li>
+            ))}
+          </ul>
+        </div>
+        {/* 地區下拉選單，有選city才會出現 */}
+        {selectedCity && (
+          <div className="btn-group">
+            <button
+              className="btn dropdown-toggle"
+              type="button"
+              id="defaultDropdown1"
+              data-bs-toggle="dropdown"
+              data-bs-auto-close="true"
+              aria-expanded="false"
+            >
+              {selectedArea ? selectedArea.AreaName : '選擇地區'}
+              <BiSolidDownArrow className="ms-2" />
+            </button>
+            <ul className="dropdown-menu" aria-labelledby="defaultDropdown1">
+              {selectedCity.AreaList.map((area) => (
+                <li
+                  key={area.ZipCode}
+                  className="dropdown-item text-center"
+                  onClick={() => handleAreaChange(area)}
+                >
+                  {area.AreaName}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+        <button className="btn-second ms-3 filter-button" onClick={clearFilters} >清除設定</button>
+      </div>
     </>
   );
 };
@@ -748,7 +751,7 @@ function ImageWithEqualDimensions({ file_path }) {
 }
 
 // 任務卡片
-const MissionCard = ({ missionType, sortOrder, sortBy }) => {
+const MissionCard = ({ missionType, setMissionType, sortOrder, setSortOrder, sortBy, setSortBy }) => {
   const [allMissions, setAllMissions] = useState([]);
 
   const getAllMissions = async () => {
@@ -825,36 +828,25 @@ export default function MissionList() {
   const [missionType, setMissionType] = useState(null);
   const [sortOrder, setSortOrder] = useState("asc");
   const [sortBy, setSortBy] = useState(null);
-  console.log(`http://localhost:3005/api/mission/all-missions?missionType=${missionType}&sortOrder=${sortOrder}&sortBy=${sortBy}`);
 
 
-  // 篩選按鈕
-  // const handleFilterClick = (selectedFilter) => {
-  //   let updatedMissionType = null; // 默认为 null，表示不筛选
+  // 清除篩選條件
+  const clearFilters = () => {
+    setMissionType(null); 
+    // 如果有其他筛选条件，也在这里添加相应的重置代码
+    console.log("現在的missionType是"+missionType);
+  };
 
-  //   switch (selectedFilter) {
-  //     case 'feed':
-  //       updatedMissionType = 1;
-  //       break;
-  //     case 'house':
-  //       updatedMissionType = 2;
-  //       break;
-  //     case 'beauty':
-  //       updatedMissionType = 3;
-  //       break;
-  //     case 'training':
-  //       updatedMissionType = 4;
-  //       break;
-  //     case 'medical':
-  //       updatedMissionType = 5;
-  //       break;
-  //     default:
-  //       // 默认情况下，不筛选
-  //       updatedMissionType = null;
-  //   }
+  // 在組件加載時重置篩選條件為默認值
+  useEffect(() => {
+    setMissionType(null); 
+    setSortOrder('asc'); 
+    setSortBy(null); 
+    // setSelectedCity(null); // 重置城市选择为 null 或默认值
+    // setSelectedArea(null); // 重置地区选择为 null 或默认值
+    console.log(`"重載後是"+http://localhost:3005/api/mission/all-missions?missionType=${missionType}&sortOrder=${sortOrder}&sortBy=${sortBy}`);
+  }, []);
 
-  //   setMissionType(updatedMissionType); // 更新 missionType 状态
-  // };
 
 
   return (
@@ -890,7 +882,10 @@ export default function MissionList() {
           <Sort missionType={missionType} setMissionType={setMissionType} sortOrder={sortOrder} setSortOrder={setSortOrder} sortBy={sortBy} setSortBy={setSortBy} />
         </div>
         {/* BS下拉式選單 */}
-        <MyFilter missionType={missionType} setMissionType={setMissionType} sortOrder={sortOrder} setSortOrder={setSortOrder} sortBy={sortBy} setSortBy={setSortBy}  />
+        
+          <MyFilter missionType={missionType} setMissionType={setMissionType} sortOrder={sortOrder} setSortOrder={setSortOrder} sortBy={sortBy} setSortBy={setSortBy} clearFilters={clearFilters} />
+
+        
 
 
         <section className='d-flex all-mission flex-column flex-lg-row mt-3'>
