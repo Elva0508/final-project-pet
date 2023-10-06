@@ -18,6 +18,9 @@ const router=useRouter()
 
   //登入註冊狀態切換
   const [isLogin, setIsLogin] = useState(true);
+  const toggleLoginRegister = () => {
+    setIsLogin(!isLogin);
+  };
 
   return (
     <>
@@ -78,13 +81,13 @@ const router=useRouter()
             </div>
 
           </form> */}
+
           <LoginF/>
           <div className="u-form-group">
             <a href="#" className="forgot-password">
               忘記密碼
             </a>
           </div>
-
 
           <hr className="hr-divider" />
           <div className="u-form-group">

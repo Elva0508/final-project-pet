@@ -64,7 +64,7 @@ export default function userForm() {
           <div className="user-form-item d-flex">
             <label className={userRfs}>Email：</label>
             <div>
-              <biv className="size-6">abc@test.com</biv>
+              <biv className={userRfs}>abc@test.com</biv>
             </div>
           </div>
           <div className="user-form-item">
@@ -118,7 +118,7 @@ export default function userForm() {
             </div>
           </div>
           <div className="user-form-item">
-            <label className="size-6">行動電話：</label>
+            <label className={userRfs}>行動電話：</label>
             <div>
               <input
                 className="form-input"
@@ -133,7 +133,7 @@ export default function userForm() {
           <input className="form-input" type="text" placeholder="地址" />
           </div> */}
 
-            <label className="size-6">地址：</label>
+            <label className={userRfs}>地址：</label>
             <div className="d-flex">
               <select
                 className="form-select"
@@ -178,7 +178,7 @@ export default function userForm() {
           </div>
 
           <div className="user-form-item">
-            <label className="size-6">毛孩數量：</label>
+            <label className={userRfs}>毛孩數量：</label>
             <div>
               <input className="form-input" type="number" value={formik.values.petNum} />
             </div>
@@ -190,7 +190,7 @@ export default function userForm() {
           </div>
         </form>
       </div>
-      <div className="container my-3"></div>
+    
     </>
   );
 }
