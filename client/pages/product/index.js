@@ -26,23 +26,22 @@ export default function ProductList() {
         });
     }, []);
 
+    //分頁
     const itemsPerPage = 18
     const [activePage, setActivePage] = useState(1);
     const startIndex = (activePage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
     const currentData = productData.slice(startIndex, endIndex);
 
-    
-    const total = productData.length
+    const total = productData
+    console.log(total)
 
     const [isUpIconVisible, setIsUpIconVisible] = useState(false);
     const [isPriceIconVisible, setIsPriceIconVisible] = useState(false);
-    const [isModalVisible, setIsModalVisible] = useState(false); // 控制模态框显示与隐藏的状态
-
-
+   
+    //排序
     const toggleUpIcon = () => {
         setIsUpIconVisible(!isUpIconVisible);
-
         // 如果價格按鈕已經是 $text-main，則切換價格按鈕回 $text-mark
         if (isPriceIconVisible) {
             setIsPriceIconVisible(false);
@@ -58,6 +57,7 @@ export default function ProductList() {
         }
     };
 
+    //讀出大類小類
     const [subcategoryData, setSubcategoryData] = useState({ result: [] });
     useEffect(() => {
         axios.get("http://localhost:3005/api/product/category").then((response) => {
@@ -175,9 +175,10 @@ export default function ProductList() {
                                     <ProductCard />
                                 </div> */}
                             </div>
-                            <Pagination itemsPerPage={itemsPerPage} total={total} activePage={activePage} setActivePage={setActivePage} />
+                            <Pagination itemsPerPage={itemsPerPage} total={total} activePage={activePage} setActivePage={setActivePage} /> 
                         </div>
-                    </section>     
+                    </section>    
+                   
                 </div>
             </div>
             

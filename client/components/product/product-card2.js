@@ -13,7 +13,6 @@ export default function ProductCard2({ productData, mainPic, setMainPic }) {
     setMainPic(newImageUrl);
   };
 
-
   // 初始化 isFavorites 並設置與產品數量相同的初始值（都是 false）
   const [isFavorites, setIsFavorites] = useState(() => (
     Array(productData.length).fill(false)
@@ -124,7 +123,6 @@ export default function ProductCard2({ productData, mainPic, setMainPic }) {
                               <div className="quantity-counter">
                                 <Counter />
                               </div>
-
                               <div className="add-to-cart">
                                 <button type="submit" className=" btn-confirm">
                                   加入購物車

@@ -3,6 +3,7 @@ import { GrFormPrevious } from 'react-icons/gr';
 import { GrFormNext } from 'react-icons/gr';
 
 export default function Pagination({itemsPerPage,total,activePage,setActivePage}) {
+    console.log(total)
       const totalPages = Math.ceil(total.length / itemsPerPage); 
       let startPage
       let endPage
@@ -10,18 +11,19 @@ export default function Pagination({itemsPerPage,total,activePage,setActivePage}
         startPage=1
         endPage=totalPages
       }else{
-        startPage = Math.max(1, activePage - 1);
-        endPage = Math.min(totalPages, activePage +1);
+        startPage = Math.max(1, activePage - 2);
+        endPage = Math.min(totalPages, activePage +2);
         // 如果起始頁小於 1，則調整結束頁
         if (startPage === 1) {
-          endPage = Math.min(totalPages, startPage + 2);
+          endPage = Math.min(totalPages, startPage + 4);
           startPage = 1;
         }
         // 如果結束頁大於總頁數，則調整起始頁
         if (endPage === totalPages) {
-          startPage = Math.max(1, endPage - 2);
+          startPage = Math.max(1, endPage - 4);
         }
       }
+    console.log(totalPages)
 
       const pageButtons = [];
       for (let i = startPage; i <= endPage; i++) {
