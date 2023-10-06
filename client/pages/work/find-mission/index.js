@@ -422,7 +422,7 @@ const MobileFilter = ({ missionType, setMissionType, sortOrder, setSortOrder, se
 
 
 // 最終版篩選
-const MyFilter = ({ missionType, setMissionType, missionCity, setMissionCity, missionArea, setMissionArea, sortOrder, setSortOrder, setSortBy, clearFilters }) => {
+const MyFilter = ({ missionType, setMissionType, missionCity, setMissionCity, missionArea, setMissionArea, sortOrder, setSortOrder, sortBy, setSortBy, clearFilters }) => {
   // 按鈕文字的狀態
   const [buttonText1, setButtonText1] = useState('任務類型');
   const [buttonText2, setButtonText2] = useState('更新日期');
@@ -438,11 +438,14 @@ const MyFilter = ({ missionType, setMissionType, missionCity, setMissionCity, mi
     // console.log(`選中的值是: ${selectedCity}`);
     console.log(`選中的城市是: ${city.CityName}`);
     setMissionCity(city.CityName);
+    setMissionArea(null); // 要重置area 第二次篩city才能正常
     // console.log(`選中的missionCity是: ${missionCity}`);
   };
+  
   // 立即更新missionCity的值 否則第一次點擊會是null(因為異步)
   useEffect(() => {
     console.log(`選中的missionCity是: ${missionCity}`);
+    console.log(`"現在是接"+http://localhost:3005/api/mission/all-missions?missionType=${missionType}&missionCity=${missionCity}&missionArea=${missionArea}&sortOrder=${sortOrder}&sortBy=${sortBy}`)
   }, [missionCity]);
 
   // 三：處理任務area下拉選單項的點擊事件
@@ -451,8 +454,10 @@ const MyFilter = ({ missionType, setMissionType, missionCity, setMissionCity, mi
     console.log(`選中的地區是: ${area.AreaName}`);
     setMissionArea(area.AreaName);
   };
+  
   useEffect(() => {
     console.log(`選中的missionArea是: ${missionArea}`);
+    console.log(`"現在是接"++http://localhost:3005/api/mission/all-missions?missionType=${missionType}&missionCity=${missionCity}&missionArea=${missionArea}&sortOrder=${sortOrder}&sortBy=${sortBy}`)
   }, [missionArea]);
 
   // 任務類型選項
@@ -494,7 +499,7 @@ const MyFilter = ({ missionType, setMissionType, missionCity, setMissionCity, mi
     <>
       <div className='filters d-flex justify-content-center align-items-center '>
         {/* 一：任務類型 */}
-        <div className="btn-group">
+        <div className="btn-group mx-2">
           <button
             className="btn dropdown-toggle"
             type="button"
@@ -523,7 +528,7 @@ const MyFilter = ({ missionType, setMissionType, missionCity, setMissionCity, mi
         </div>
 
         {/* 二：更新日期 */}
-        <div className="btn-group">
+        <div className="btn-group mx-2">
           <button
             className="btn dropdown-toggle"
             type="button"
@@ -533,7 +538,7 @@ const MyFilter = ({ missionType, setMissionType, missionCity, setMissionCity, mi
             aria-expanded="false"
           >
             <div className="left-background"></div>
-            <img src="/job-icon/plus-service.svg" className="me-3" />
+            <img src="/job-icon/Calendar.svg" className="me-3" />
             {buttonText2}
             <BiSolidDownArrow className="ms-2" />
           </button>
@@ -551,7 +556,7 @@ const MyFilter = ({ missionType, setMissionType, missionCity, setMissionCity, mi
         </div>
         {/* 三：任務地區 */}
         {/* 城市下拉選單 */}
-        <div className="btn-group">
+        <div className="btn-group ms-2">
           <button
             className="btn dropdown-toggle"
             type="button"
@@ -561,7 +566,7 @@ const MyFilter = ({ missionType, setMissionType, missionCity, setMissionCity, mi
             aria-expanded="false"
           >
             <div className="left-background"></div>
-            <img src="/job-icon/plus-service.svg" className="me-3" />
+            <img src="/job-icon/Discovery-date.svg" className="me-3" />
             {selectedCity ? selectedCity.CityName : '任務地區'}
             <BiSolidDownArrow className="ms-2" />
           </button>
@@ -604,7 +609,7 @@ const MyFilter = ({ missionType, setMissionType, missionCity, setMissionCity, mi
             </ul>
           </div>
         )}
-        <button className="btn-second ms-3 filter-button" onClick={clearFilters} >清除設定</button>
+        <button className="btn-second ms-4 filter-button" onClick={clearFilters} >清空條件</button>
       </div>
     </>
   );
@@ -685,7 +690,7 @@ const MyFilter = ({ missionType, setMissionType, missionCity, setMissionCity, mi
 
 
 // 排序
-const Sort = ({ missionType, setMissionType, sortOrder, setSortOrder, setSortBy }) => {
+const Sort = ({ missionType, setMissionType, missionCity, setMissionCity, missionArea, setMissionArea, sortOrder, setSortOrder, sortBy, setSortBy }) => {
   const [activeButton, setActiveButton] = useState(null);
   const [iconDirection, setIconDirection] = useState({}); // 用於跟蹤圖標方向
 
@@ -704,6 +709,7 @@ const Sort = ({ missionType, setMissionType, sortOrder, setSortOrder, setSortBy 
 
   useEffect(() => {
     console.log("現在是" + sortOrder);
+    console.log(`"現在是接"++http://localhost:3005/api/mission/all-missions?missionType=${missionType}&missionCity=${missionCity}&missionArea=${missionArea}&sortOrder=${sortOrder}&sortBy=${sortBy}`)
   }, [sortOrder]);
 
   return (
@@ -847,7 +853,7 @@ const MissionCard = ({ missionType, missionCity, missionArea, setMissionType, so
 
 export default function MissionList() {
   const [missionType, setMissionType] = useState(null);
-  const [missionCity, setMissionCity] = useState("");
+  const [missionCity, setMissionCity] = useState(null);
   const [missionArea, setMissionArea] = useState(null);
   const [sortOrder, setSortOrder] = useState("asc");
   const [sortBy, setSortBy] = useState(null);
@@ -856,18 +862,21 @@ export default function MissionList() {
   // 清除篩選條件
   const clearFilters = () => {
     setMissionType(null);
-    // 如果有其他筛选条件，也在这里添加相应的重置代码
-    console.log("現在的missionType是" + missionType);
+    setMissionCity(null);
+    setMissionArea(null);
+    console.log("現在的missionType是" + missionType+"現在的missionCity是" + missionCity+"現在的missionArea是" + missionArea);
   };
 
   // 在組件加載時重置篩選條件為默認值
   useEffect(() => {
     setMissionType(null);
+    setMissionCity(null);
+    setMissionArea(null);
     setSortOrder('asc');
     setSortBy(null);
     // setSelectedCity(null); // 重置城市选择为 null 或默认值
     // setSelectedArea(null); // 重置地区选择为 null 或默认值
-    console.log(`"重載後是"+http://localhost:3005/api/mission/all-missions?missionType=${missionType}&sortOrder=${sortOrder}&sortBy=${sortBy}`);
+    console.log(`"重載後是"+http://localhost:3005/api/mission/all-missions?missionType=${missionType}&missionCity=${missionCity}&missionArea=${missionArea}&sortOrder=${sortOrder}&sortBy=${sortBy}`);
   }, []);
 
 
