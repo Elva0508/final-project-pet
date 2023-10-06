@@ -1,5 +1,5 @@
 .find-mission {
-    nav a {
+    a {
         border-bottom: 0;
     }
 
@@ -9,20 +9,23 @@
         max-width: 1000px;
         margin: 0 auto;
         justify-content: space-around;
-        .filter-button{
+
+        .filter-button {
             border: 1px solid $hover;
             padding-top: 0.2rem;
             padding-bottom: 0.2rem;
             width: 6rem;
         }
     }
+
     // BS下拉式選單
-    .dropdown-toggle{
+    .dropdown-toggle {
         background-color: $cos-white;
         border: 0;
         color: $text-main;
         position: relative;
         padding-left: 0.5rem;
+
         .left-background {
             position: absolute;
             top: 0;
@@ -30,18 +33,22 @@
             width: 27%;
             height: 100%;
             background-color: $header-bg;
-          }
+        }
+
         img {
             position: relative;
-            z-index: 99; /* 使img位於背景色上方 */
-          }
+            z-index: 99;
+            /* 使img位於背景色上方 */
+        }
     }
-    .dropdown-menu{
+
+    .dropdown-menu {
         cursor: pointer;
     }
-      .dropdown-toggle::after {
+
+    .dropdown-toggle::after {
         display: none;
-      }
+    }
 
     .add-mission-btn-pc,
     .add-mission-btn-mobile {
@@ -107,8 +114,9 @@
         .mission-list {
             // width: 888px;
             width: 100%;
-            .row{
-                width: 100%;   // 篩選完一行小於3筆才能正常顯示
+
+            .row {
+                width: 100%; // 篩選完一行小於3筆才能正常顯示
             }
         }
     }
@@ -128,13 +136,15 @@
 }
 
 @media screen and (max-width: 575px) {
+
     // 這邊也必須用find-mission包住 否則權重不夠 gap的設定吃不到
     .find-mission {
         .filters {
-            .filter-button{
+            .filter-button {
                 width: 8rem;
             }
         }
+
         .all-mission {
             gap: 0;
 
@@ -144,4 +154,3 @@
         }
     }
 }
-
