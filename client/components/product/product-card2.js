@@ -6,20 +6,7 @@ import Link from "next/link";
 import Counter from '@/components/product/quantity-counter';
 
 
-export default function ProductCard2() {
-  // 讀取資料庫資料
-  const [productData, setProductData] = useState({ result: [] }); // 初始化為一個帶有 result 屬性的物件
-
-  useEffect(() => {
-    axios.get("http://localhost:3005/api/product").then((response) => {
-      setProductData({ result: response.data.result }); // 將伺服器端的 result 放入物件中
-      setMainPic(response.data.result[0].images_one)
-      console.log(response.data.result[0].images_one)
-    });
-  }, []);
-
-  //圖片抽換
-  const [mainPic, setMainPic] = useState(''); // 初始化為 v.images_one
+export default function ProductCard2({ productData, mainPic, setMainPic }) {
 
   // 點擊事件處理函數，更新主圖片的 URL
   const handleImageClick = (newImageUrl) => {
@@ -29,7 +16,7 @@ export default function ProductCard2() {
 
   // 初始化 isFavorites 並設置與產品數量相同的初始值（都是 false）
   const [isFavorites, setIsFavorites] = useState(() => (
-    Array(productData.result.length).fill(false)
+    Array(productData.length).fill(false)
   ));
 
   const toggleFavorite = (index) => {
@@ -57,7 +44,7 @@ export default function ProductCard2() {
 
   return (
     <>
-      {productData.result.map((v, i) => {
+      {productData.map((v, i) => {
         return (
           <div className="col-6 col-md-4 col-lg-6 col-xl-4">
             <div className="product-card2" key={v.product_id}>
@@ -100,7 +87,7 @@ export default function ProductCard2() {
                                 <img src={mainPic} alt="..."></img>
                               </figure>
                               <div className="other-pic mt-2 ">
-                                <div className='row g-2 d-flex justify-content-start '>
+                                <div className='row g-2 d-flex justify-content-center '>
                                   <img src={v.images_one} alt="..." onClick={() => handleImageClick(v.images_one)}></img>
                                   <img src={v.images_two} alt="..." onClick={() => handleImageClick(v.images_two)}></img>
                                 </div>

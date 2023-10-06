@@ -7,9 +7,33 @@ import ProductListOffcanvas from '@/components/product/product-list-offcanvas';
 import { useEffect } from 'react';
 import axios from 'axios';
 import Link from 'next/link';
+import Pagination from '@/components/pagination';
 
 
 export default function ProductList() {
+
+    // 讀取資料庫資料
+    const [productData, setProductData] = useState([]); // 初始化為一個帶有 result 屬性的物件
+    //圖片抽換
+    const [mainPic, setMainPic] = useState(''); // 初始化為 v.images_one
+
+    useEffect(() => {
+        axios.get("http://localhost:3005/api/product").then((response) => {
+            const data = response.data.result;
+            setProductData(data); // 將伺服器端的 result 放入物件中
+            setMainPic(data[0].images_one)
+            console.log(response.data.result[0].images_one)
+        });
+    }, []);
+
+    const itemsPerPage = 18
+    const [activePage, setActivePage] = useState(1);
+    const startIndex = (activePage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    const currentData = productData.slice(startIndex, endIndex);
+
+    
+    const total = productData.length
 
     const [isUpIconVisible, setIsUpIconVisible] = useState(false);
     const [isPriceIconVisible, setIsPriceIconVisible] = useState(false);
@@ -145,12 +169,13 @@ export default function ProductList() {
 
                         <div className='product d-lg-flex flex-column justify-content-center '>
                             <div className=" row d-flex mb-3 g-3 g-md-4 ">  
-                             <ProductCard2 /> 
+                                <ProductCard2 productData={currentData} mainPic={mainPic} setMainPic={setMainPic }/> 
                                 {/* 原本錯的 */}
                                 {/* <div className="col-lg-4 col-md-4 col-sm-6">
                                     <ProductCard />
                                 </div> */}
                             </div>
+                            <Pagination itemsPerPage={itemsPerPage} total={total} activePage={activePage} setActivePage={setActivePage} />
                         </div>
                     </section>     
                 </div>
