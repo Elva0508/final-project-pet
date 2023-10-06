@@ -75,6 +75,7 @@ export default function Cart() {
     }, [cart])
       //判斷該引入哪些優惠券
     useEffect(() => {
+        setCoupon([])
         getCoupon()
         setSale(0)
         setSelectedOption(["no",0,0])
@@ -263,27 +264,6 @@ export default function Cart() {
                                 )
 
                             })}
-                            <tr className='size-6'>
-                                <td className='text-center'><input type="checkbox" /></td>
-                                <td><img src='https://cdn-front.mao-select.com.tw//upload_files/fonlego-rwd/prodpic/D_M3PD150101-e-0.jpg' /></td>
-                                <td>
-                                    <p>單層開放式防濺貓砂盆</p>
-                                    <p className='size-7 type'>藍色</p>
-                                </td>
-                                <td className='text-center'>
-                                    <p className='price size-7 mb-0'>$500</p>
-                                    <p className='newprice'>$100</p> 
-                                </td>
-                                <td>
-                                    <div className="input-group ">
-                                        <button type="button" className="btn btn-outline-brown">-</button>
-                                        <input type="text" className="form-control  text-center  w-25"  value="12"/>
-                                        <button type="button" className="btn btn-outline-brown">+</button>
-                                    </div>
-                                </td>
-                                <td className='text-center'>$1500</td>
-                                <td className='text-center'><button className='delete'><RiDeleteBin5Fill /></button></td>
-                            </tr>
                         </tbody>
                     </table>
                     {/* 手機板 */}
@@ -334,25 +314,6 @@ export default function Cart() {
                             </tr>
                             )
                         })}
-
-                            <tr className='m-size-7'>
-                                <td className='text-center'><input type="checkbox"/></td>
-                                <td><img src='https://cdn-front.mao-select.com.tw//upload_files/fonlego-rwd/prodpic/D_M3PD150101-e-0.jpg'></img></td>
-                                <td className=''>
-                                    <p className='m-0'>單層開放式防濺貓砂盆</p>
-                                    <p className='m-size-7 type m-0'>藍色</p>
-                                    <p className='m-0'>NT$500</p>
-                                    
-                                </td>
-                                <td>
-                                    <div className="input-group input-group-sm ">
-                                        <button type="button" className="btn btn-outline-brown">-</button>
-                                        <input type="text" className="form-control  text-center  "  value="12"/>
-                                        <button type="button" className="btn btn-outline-brown">+</button>
-                                    </div>
-                                </td>
-                                <td className='text-center'><button className='delete'><RiDeleteBin5Fill /></button></td>
-                            </tr>
                         </tbody>
                     </table>
                 </div>

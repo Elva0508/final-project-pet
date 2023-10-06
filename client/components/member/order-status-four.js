@@ -1,30 +1,19 @@
 import React from 'react'
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { GrFormPrevious } from 'react-icons/gr';
-import { GrFormNext } from 'react-icons/gr';
 import Link from 'next/link'
+import Pagination from '@/components/pagination'
 
 export default function OrderStatusFour({order}) {
     const itemsPerPage = 5
-    const [currentPage, setCurrentPage] = useState(1)
-    const startIndex = (currentPage - 1) * itemsPerPage;
+    const [activePage, setActivePage] = useState(1);
+    const startIndex = (activePage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
     const type=order.filter((v)=>v.status_id==4)
     const currentData = type.slice(startIndex, endIndex);
 
-
-
-    const handlePageChange = (newPage) => {
-        setCurrentPage(newPage);
-      };
-
-
- 
     return (
         <>
-
-
         {currentData.map((v,i)=>{
                     return(
                       <div key={i}>
@@ -48,15 +37,7 @@ export default function OrderStatusFour({order}) {
                       
                     )
                   })}
-        <div className="pagination size-7 d-flex justify-content-center">
-            <button className='btn prev border-0'><GrFormPrevious /></button>
-            {Array.from({ length: Math.ceil(type.length / itemsPerPage) }).map((_, index) => (
-          <button key={index} onClick={() => handlePageChange(index + 1)} className='btn me-1 '>
-            {index + 1}
-          </button>
-        ))}
-            <button className='btn next border-0'><GrFormNext /></button>
-        </div>  
+          <Pagination  itemsPerPage={itemsPerPage} total={type} activePage={activePage} setActivePage={setActivePage}/>
 
         </>
     )

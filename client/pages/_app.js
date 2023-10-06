@@ -1,7 +1,9 @@
 import { useEffect } from "react";
 import Layout from "@/components/layout";
 import "@/styles/globals.scss";
+import { AuthProvider } from '@/context/fakeAuthContext'
 import {CartProvider} from '@/hooks/useCart' 
+
 
 export default function App({ Component, pageProps }) {
   useEffect(() => {
@@ -9,10 +11,12 @@ export default function App({ Component, pageProps }) {
     import("bootstrap/dist/js/bootstrap");
   }, []);
   return (
-    <CartProvider>
+<AuthProvider> 
+   <CartProvider>
       <Layout>
         <Component {...pageProps} />
       </Layout>
     </CartProvider>
+    </AuthProvider>
   );
 }
