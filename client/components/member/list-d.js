@@ -85,13 +85,13 @@ export default function ListD() {
             </Link>
           </li>
           <li>
-            <Link className="size-6" href="">
+            <Link className="size-6" href="http://localhost:3000/member/joblist">
               <LiaListAltSolid />
               任務清單
             </Link>
           </li>
           <li>
-            <Link className="size-6" href="">
+            <Link className="size-6" href="http://localhost:3000/member/history">
               <HiClipboardList />
               刊登紀錄
             </Link>

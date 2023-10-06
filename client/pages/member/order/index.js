@@ -3,15 +3,13 @@ import ListM from "@/components/member/list-m";
 import ListD from "@/components/member/list-d";
 import ListUserM from "@/components/member/list-user-m";
 import { RiFileList3Fill } from "react-icons/ri";
-import { useState, useEffect } from "react";
+import { useState, useEffect} from "react";
 import axios from "axios";
-import OrderStatusOne from "@/components/member/order-status-one";
-import OrderStatusTwo from "@/components/member/order-status-two";
-import OrderStatusThree from "@/components/member/order-status-three";
-import OrderStatusFour from "@/components/member/order-status-four";
+import OrderStatus from "@/components/member/order-status";
 
 
 export default function Order() {
+
   const [currentScreen, setCurrentScreen] = useState("1");
   const [order, setOrder] = useState([])
   const getOrder = async() => {
@@ -37,7 +35,6 @@ useEffect(() => {
 
 
   return (
-    <>
       <div className="my-3">
         <div className="d-flex justify-content-end me-3">
           <ListM />
@@ -86,10 +83,10 @@ useEffect(() => {
                     已取消
                   </button>
 
-                  {currentScreen === "1" && (<OrderStatusOne order={order}/>)}
-                  {currentScreen === "2" && (<OrderStatusTwo order={order}/>)}
-                  {currentScreen === "3" && (<OrderStatusThree order={order}/>)}
-                  {currentScreen === "4" && (<OrderStatusFour order={order}/>)}
+                 <OrderStatus order={order} currentScreen={currentScreen} />
+                 {/* <OrderStatus order={order} /> */}
+
+
                 </div>
 
 
@@ -100,6 +97,5 @@ useEffect(() => {
           </div>
         </div>
       </div>
-    </>
   );
 }
