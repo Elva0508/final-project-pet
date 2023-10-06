@@ -71,8 +71,8 @@ router.get("/all-missions", (req, res) => {
 
 
   // 獲取城市和地區篩選條件
-  let cityFilter = req.query.city;
-  let areaFilter = req.query.area;
+  let cityFilter = req.query.missionCity;
+  let areaFilter = req.query.missionArea;
 
   // 獲取排序條件
   if (req.query.sortBy === "post_date") {

@@ -107,6 +107,9 @@
         .mission-list {
             // width: 888px;
             width: 100%;
+            .row{
+                width: 100%;   // 篩選完一行小於3筆才能正常顯示
+            }
         }
     }
 }
