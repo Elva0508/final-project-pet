@@ -6,24 +6,33 @@ import Link from "next/link";
 import Counter from '@/components/product/quantity-counter';
 
 
-export default function ProductCard2() {
+export default function ProductCard3() {
   // 讀取資料庫資料
   const [productData, setProductData] = useState({ result: [] }); // 初始化為一個帶有 result 屬性的物件
 
   useEffect(() => {
-    axios.get("http://localhost:3005/api/product").then((response) => {
-      setProductData({ result: response.data.result }); // 將伺服器端的 result 放入物件中
-      setMainPic(response.data.result[0].images_one)
-      console.log(response.data.result[0].images_one)
+    axios.get("http://localhost:3005/api/product/recommend").then((response) => {
+      const products = response.data.result;
+      setProductData({ result: products });
+
+      // 创建一个对象，将每个 id 与相应的 images_one 关联
+      const mainPics = {};
+      products.forEach((product) => {
+        mainPics[product.id] = product.images_one;
+      });
+
+      // 将 mainPics 设置为组件的状态
+      setMainPics(mainPics);
     });
   }, []);
 
+
   //圖片抽換
-  const [mainPic, setMainPic] = useState(''); // 初始化為 v.images_one
+  const [mainPics, setMainPics] = useState(''); // 初始化為 v.images_one
 
   // 點擊事件處理函數，更新主圖片的 URL
   const handleImageClick = (newImageUrl) => {
-    setMainPic(newImageUrl);
+    setMainPics(newImageUrl);
   };
 
 
@@ -59,7 +68,7 @@ export default function ProductCard2() {
     <>
       {productData.result.map((v, i) => {
         return (
-          <div className="col-6 col-md-4 col-lg-6 col-xl-4">
+         <div className="d-flex col-6 col-lg-6 col-xl-3">
             <div className="product-card2" key={v.product_id}>
               <div className="card" >
                 <Link href={`/product/${v.product_id}`} >
@@ -78,7 +87,7 @@ export default function ProductCard2() {
                     <div className="product-sale-price d-flex align-items-center" href="#">
                       <div className="price fs-4  size-6 m-size-7 me-3">NT${v.specialoffer}</div>
                       <del>NT${v.price}</del>
-                    </div>
+                    </div> 
                   </Link>
                   {/* 彈跳視窗按鈕 */}
                   {/* data-bs-target={`#exampleModal${v.product_id}`} 要注意*/}
@@ -97,7 +106,7 @@ export default function ProductCard2() {
                           <section className="product-itembox row justify-content-center"  >
                             <div className="product-pic col-lg-6" >
                               <figure className="main-pic  ">
-                                <img src={mainPic} alt="..."></img>
+                                <img src={mainPics} alt="..."></img>
                               </figure>
                               <div className="other-pic mt-2 ">
                                 <div className='row g-2 d-flex justify-content-start '>

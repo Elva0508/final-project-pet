@@ -1,15 +1,14 @@
 import React, { useState } from 'react';
-import Footer from '@/components/footer';
 import Counter from '@/components/product/quantity-counter';
 import { AiFillStar } from 'react-icons/ai';
-import ProductCard2 from '@/components/product/product-card2';
 import { FaChevronRight, FaChevronLeft } from 'react-icons/fa';
-import EvaluationBar from '@/components/job/evaluation-bar';
 import ProductCard from '@/components/home/home-product-card';
 import axios from 'axios';
 import { useEffect } from "react";
 import { useRouter } from "next/router";
 import Link from 'next/link';
+import ProductCard3 from '@/components/product/product-card3';
+
 
 
 //next裡innerhtml語法
@@ -303,20 +302,14 @@ export default function ProductDetail() {
                         </div>
                         <div id="carouselExampleControls" className="carousel slide " data-bs-ride="carousel">
                             <div className="carousel-inner">
-                                <div className="carousel-item active ">
-                                    <div className="d-flex justify-content-around ">
-                                        <ProductCard />
-                                        <ProductCard />
-                                        <ProductCard />
-                                        <ProductCard />
+                                <div className="carousel-item active">
+                                    <div className="row d-lg-flex  justify-content-center ">
+                                        <ProductCard3 />
                                     </div>
                                 </div>
-                                <div className="carousel-item">
-                                    <div className="d-flex justify-content-around ">
-                                        <ProductCard />
-                                        <ProductCard />
-                                        <ProductCard />
-                                        <ProductCard />
+                                <div className="carousel-item active">
+                                    <div className="row d-lg-flex  justify-content-center ">
+                                            <ProductCard3 />
                                     </div>
                                 </div>
                             </div>
