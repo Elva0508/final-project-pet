@@ -3,6 +3,8 @@ import {RiDeleteBin5Fill} from 'react-icons/ri';
 import { useRouter } from 'next/router';
 import axios from "axios";
 import { useCart } from '@/hooks/useCart';
+import Swal from 'sweetalert2';
+
 // import moment from "moment";
 
 export default function Cart() {
@@ -178,7 +180,15 @@ export default function Cart() {
             localStorage.setItem('discount', discount);
             router.push('/product/cart/checkout');
         }else{
-            alert("請先勾選商品在進行結帳")
+            Swal.fire({
+                text: '請先勾選商品再進行結帳',
+                icon: 'info',
+                confirmButtonText: '確定',
+                confirmButtonColor: "#d7965b",
+                iconColor: "#ca526f",
+                color: "#512f10",
+                focusConfirm: false,
+              });
         }
 
     }  
@@ -328,7 +338,7 @@ export default function Cart() {
                             <option selected value={`no,${0},${0}`}>請選擇</option>
                             {coupon.map((v,i)=>{
                                 return(
-                                    <option key={`coupon${i}`} value={`${v.type},${v.amount},${v.id}`}>{v.title}</option>
+                                    <option key={`coupon${i}`} value={`${v.type},${v.amount},${v.coupon_id}`}>{v.title}</option>
                                 )
                             })}
                         </select>

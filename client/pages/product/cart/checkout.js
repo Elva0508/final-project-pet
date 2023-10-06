@@ -1,15 +1,40 @@
-import React,{ useState }  from 'react'
+import React,{ useState,useEffect }  from 'react'
 import data from '@/data/taiwan.json'
 import axios from "axios";
 import { useRouter } from 'next/router';
+import Swal from 'sweetalert2';
+import moment from "moment";
 
 export default function Checkout() {
     const router = useRouter();
    
-    const[city,setCity]=useState(0)
-    const[area,setArea]=useState([])
-    const[payment,setPayment]=useState(1)
-    const[shipment,setShipment]=useState(1)
+    const [city,setCity]=useState(0)
+    const [area,setArea]=useState([])
+    const [areaName,setAreaName]=useState(0)
+    const [payment,setPayment]=useState(1)
+    const [shipment,setShipment]=useState(1)
+    const [name, setName] = useState('');
+    const [phone, setPhone] = useState('');
+    const [address, setAddress] = useState('');
+   
+    //警告訊息
+    const showAlert = (text) => {
+        Swal.fire({
+          text: text,
+          icon: 'warning',
+          confirmButtonText: '確定',
+          confirmButtonColor: "#d7965b",
+          iconColor: "#ca526f",
+          color: "#512f10",
+          focusConfirm: false,
+        });
+      };
+
+    let cityName
+    if(city!==0){
+        cityName=data.find((v)=>v.number==city).name
+    }
+      
 
     // 從localStorage中獲取資料
     const cart = localStorage.getItem('cart');
@@ -28,27 +53,86 @@ export default function Checkout() {
     console.log('localStorage中沒有資料');
     }
 
-     //縣市
+
+    const totalPrice=allPrice-sale+freight 
+    const orderNumber = Date.now();
+    const createtTime=moment().format("YYYY/MM/DD  HH:mm:ss")
+
+
+
+     //縣市=>找鄉鎮市
     const handleCityChange = (event) => {
-        const cityValue = event.target.value;
+        const cityValue = parseInt(event.target.value);
         setCity(cityValue);
-        const cityNumber = parseInt(cityValue);
         for(let i=1;i<data.length+1;i++){
-            if (cityNumber ==i) {
+            if (cityValue ==i) {
                 const newArea=data[i-1].districts.map(district => district.name)
             return  setArea(newArea);
             }
         }
-        if (cityNumber ==0) {
+        if (cityValue ==0) {
             setArea([])
+            setAreaName(0)
         }
     };
+    //鄉鎮市
+    const handleAreaChange = (event) => {
+        setAreaName(event.target.value)
+    }
 
+    //上一步
     const goPrevious=()=>{
         // localStorage.setItem('cart',cart);
         router.push('/product/cart')
     }
-    
+
+    //結帳-->寫進資料庫
+    const checkout=async () => {    
+        const discountArray =discount.split(",")
+        const coupon = discountArray[discountArray.length - 1];
+        console.log(cityName);
+        let allAdress = "";
+        if(shipment===1){
+            allAdress=cityName+areaName+address
+        }else{
+            allAdress="小貓兩三隻門市"
+        }   
+        try {
+          const response = await axios.put(`http://localhost:3005/api/product/cart/checkout`,{ coupon,createtTime,totalPrice,orderNumber,allPrice ,sale,freight,payment,shipment,name,phone,allAdress});        
+        } catch (error) {
+          console.error("Error:", error);
+        }
+        for(let i=0;i<finalCart.length;i++){
+            const productId=finalCart[i].product_id
+            const productTypeId=finalCart[i].product_type_id
+            const quantity=finalCart[i].quantity
+            try {
+                const response = await axios.put(`http://localhost:3005/api/product/cart/checkout/detail`,{orderNumber,productId,productTypeId,quantity});        
+              } catch (error) {
+                console.error("Error:", error);
+              }
+
+        }
+    }
+
+    //結帳
+    const goCheckout=()=>{
+        if(name===""){
+            showAlert("請填寫收件人姓名")
+        }else if(phone==""){
+            showAlert("請填寫收件人連絡電話")
+        }else if(shipment===1 && (areaName==0 ||city==0||address=="")){
+            if(areaName==0 ||city==0){
+            showAlert("請選擇宅配區域")
+            }else if(address==""){
+            showAlert("請填寫完整宅配地址")
+            }
+        }else{
+            checkout();
+        }
+    }
+
+   
   return (
     <>
         <div className="checkout mt-5">
@@ -75,17 +159,19 @@ export default function Checkout() {
                         <div className='d-flex mb-3 col-sm-12 col-11 flex-wrap name'>
                             <div className='col-lg-3 col-5 me-3'>
                                 <label  className="form-label ">姓名</label>
-                                <input type="text" className="form-control " ></input>
+                                <input type="text" className="form-control " value={name} onChange={(e)=>{setName(e.target.value)}}></input>
                             </div>
                             <div className='col-lg-3 col-6 '>
                                 <label  className="form-label ">連絡電話</label>
-                                <input type="text" className="form-control " ></input>
+                                <input type="text" className="form-control " value={phone} onChange={(e)=>{setPhone(e.target.value)}}></input>
                             </div>
                         </div>
                         <div className='col-12'>
                             <div className="accordion size-7 form-check">
                                 <div>
-                                    <input type="radio" name="shipmentAccordion" id="section1" className='form-check-input mb-3' value={1}  checked={shipment === 1}/>
+                                    <input type="radio" name="shipmentAccordion" id="section1" className='form-check-input mb-3' value={1} checked={shipment==1} onChange={()=>{
+                                    setShipment(1)
+                                    }}/>
                                     <label for="section1">宅配</label>
                                     <div className="content">
                                         <div className='d-flex mb-3 size-7 col-sm-12 col-11'>
@@ -102,8 +188,8 @@ export default function Checkout() {
                                             </div>
                                             <div className='col-lg-2 col-6'>
                                                 <label>鄉鎮市區</label>
-                                                <select className="form-select" >
-                                                    <option selected >請選擇</option>
+                                                <select className="form-select" value={areaName} onChange={handleAreaChange}>
+                                                    <option selected value={0}>請選擇</option>
                                                     {area.map((v, i) => (
                                                         <option key={i} value={v}>
                                                             {v}
@@ -114,12 +200,14 @@ export default function Checkout() {
                                         </div>
                                         <div className='col-lg-6 col-11 mb-2'>
                                             <label  className="form-label ">街道地址</label>
-                                            <input type="text" className="form-control " ></input>
+                                            <input type="text" className="form-control " value={address} onChange={(e)=>{setAddress(e.target.value)}}></input>
                                         </div>
                                     </div>
                                 </div>
                                 <div>
-                                    <input type="radio" name="shipmentAccordion" id="section2" className='form-check-input mb-3' value={2} checked={shipment === 2}/>
+                                    <input type="radio" name="shipmentAccordion" id="section2" className='form-check-input mb-3' value={2} checked={shipment==2} onChange={()=>{
+                                    setShipment(2)
+                                    }}/>
                                     <label for="section2">門市取貨</label>
                                 </div>      
                             </div>
@@ -133,7 +221,9 @@ export default function Checkout() {
                 <div className='mb-4 col-sm-12 col-11'>
                     <div className="accordion size-7 form-check">
                         <div>
-                            <input type="radio" name="paymentAccordion" id="section3" className='form-check-input mb-3' value={1} checked={payment === 1}/>
+                            <input type="radio" name="paymentAccordion" id="section3" className='form-check-input mb-3' value={1} checked={payment==1} onChange={()=>{
+                                setPayment(1)
+                            }}/>
                             <label for="section3">信用卡</label>
                             <div className="content col-lg-5 col-12 m-0">
                                 <input type="text" placeholder="信用卡號碼" className="form-control mb-2" />
@@ -144,11 +234,15 @@ export default function Checkout() {
                             </div>
                         </div>
                         <div>
-                            <input type="radio" name="paymentAccordion" id="section4" className='form-check-input mb-3' value={2} checked={payment === 2}/>
+                            <input type="radio" name="paymentAccordion" id="section4" className='form-check-input mb-3' value={2} checked={payment==2} onChange={()=>{
+                                setPayment(2)
+                            }}/>
                             <label for="section4">Line Pay</label>
                         </div>
                         <div>
-                            <input type="radio" name="paymentAccordion" id="section5" className='form-check-input' value={3} checked={payment === 3}/>
+                            <input type="radio" name="paymentAccordion" id="section5" className='form-check-input' value={3} checked={payment==3} onChange={()=>{
+                                setPayment(3)
+                            }}/>
                             <label for="section5">貨到付款</label>
                         </div>       
                     </div>
@@ -253,8 +347,10 @@ export default function Checkout() {
             <div className='next py-2 size-7'>
                 <div className='container d-flex justify-content-between align-items-center'>
                     <button className='btn btn-brown me-auto' onClick={goPrevious}>上一步</button>
-                    <p className='m-0 pe-2'>總計NT${allPrice-sale+freight}</p>
-                    <button className='btn btn-price'>結帳</button>
+                    <p className='m-0 pe-2'>總計NT${totalPrice}</p>
+                    <button className='btn btn-price' onClick={()=>{
+                        goCheckout()
+                    }}>結帳</button>
                 </div> 
             </div>                          
                        

@@ -6,18 +6,18 @@ export default function Pagination({itemsPerPage,total,activePage,setActivePage}
       const totalPages = Math.ceil(total.length / itemsPerPage); 
       let startPage
       let endPage
-      if(totalPages<=5){
+      if(totalPages<=3){
         startPage=1
         endPage=totalPages
       }else{
         startPage = Math.max(1, activePage - 1);
         endPage = Math.min(totalPages, activePage +1);
-        // 如果起始頁小於 1，則調整結束頁
+        // 如果起始頁等於 1，則調整結束頁
         if (startPage === 1) {
           endPage = Math.min(totalPages, startPage + 2);
           startPage = 1;
         }
-        // 如果結束頁大於總頁數，則調整起始頁
+        // 如果結束頁等於總頁數，則調整起始頁
         if (endPage === totalPages) {
           startPage = Math.max(1, endPage - 2);
         }
