@@ -33,7 +33,7 @@ async function handleSubmit(e) {
       if (response.ok) {
         const { token } = await response.json();
         localStorage.setItem('token', token);
-        //console.log(token)
+        console.log(token)
          router.push('/user/userInfo');
       } else {
         throw new Error('Login failed');
