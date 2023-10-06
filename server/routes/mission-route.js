@@ -66,13 +66,17 @@ router.get("/all-missions", (req, res) => {
   let orderBy = null;
 
   // 獲取任務類型篩選條件
-  let filteredMissionType = req.query.missionType; 
+  let filteredMissionType = req.query.missionType;
   let missionTypeFilter; // 先聲明變量（很重要！否則當missionTypeFilter=null會沒資料 會無法清除篩選）
-
 
   // 獲取城市和地區篩選條件
   let cityFilter = req.query.missionCity;
   let areaFilter = req.query.missionArea;
+
+  // 獲取日期篩選條件
+  let updateFilter = req.query.updateDate;
+  let dateRangeStart = null;
+  let dateRangeEnd = null;
 
   // 獲取排序條件
   if (req.query.sortBy === "post_date") {
@@ -86,14 +90,38 @@ router.get("/all-missions", (req, res) => {
     missionTypeFilter = 1;
   } else if (filteredMissionType === "house") {
     missionTypeFilter = 2;
-  }else if (filteredMissionType === "beauty") {
+  } else if (filteredMissionType === "beauty") {
     missionTypeFilter = 3;
-  }else if (filteredMissionType === "training") {
+  } else if (filteredMissionType === "training") {
     missionTypeFilter = 4;
-  }else if (filteredMissionType === "medical") {
+  } else if (filteredMissionType === "medical") {
     missionTypeFilter = 5;
   }
-  
+
+  // 根據日期篩選條件計算日期範圍
+  if (updateFilter === "today") {
+    const today = new Date(); // 獲取今天的日期和時間
+    today.setHours(0, 0, 0, 0); // 將時間設為 00:00:00.000
+    const tomorrow = new Date(today); // 複製今天的日期
+    tomorrow.setDate(tomorrow.getDate() + 1); // 增加一天 到明天的00:00
+    dateRangeStart = today.toISOString();
+    dateRangeEnd = tomorrow.toISOString();
+  } else if (updateFilter === "one_week") {
+    const today = new Date(); 
+    today.setHours(0, 0, 0, 0); 
+    const oneWeekAgo = new Date(today); 
+    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+    dateRangeStart = oneWeekAgo.toISOString();
+    dateRangeEnd = today.toISOString();
+  } else if (updateFilter === "one_month") {
+    const today = new Date(); 
+    today.setHours(0, 0, 0, 0);
+    const oneMonthAgo = new Date(today); 
+    oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
+    dateRangeStart = oneMonthAgo.toISOString();
+    dateRangeEnd = today.toISOString();
+  }
+
   let query = commonQueryTemplate;
 
   // 如果提供了任務類型篩選條件，將其包含在查詢中
@@ -117,6 +145,11 @@ router.get("/all-missions", (req, res) => {
   // 如果提供了地區篩選條件，將其包含在 WHERE 子句中
   if (areaFilter) {
     whereClause.push(`md.area = '${areaFilter}'`);
+  }
+
+  // 如果提供了日期篩選條件，將其包含在 WHERE 子句中
+  if (dateRangeStart && dateRangeEnd) {
+    whereClause.push(`md.update_date BETWEEN '${dateRangeStart}' AND '${dateRangeEnd}'`);
   }
 
   // 如果有 WHERE 子句，將其加入查詢

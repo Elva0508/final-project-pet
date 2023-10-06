@@ -422,10 +422,10 @@ const MobileFilter = ({ missionType, setMissionType, sortOrder, setSortOrder, se
 
 
 // 最終版篩選
-const MyFilter = ({ missionType, setMissionType, missionCity, setMissionCity, missionArea, setMissionArea, sortOrder, setSortOrder, sortBy, setSortBy, clearFilters }) => {
+const MyFilter = ({ missionType, setMissionType, missionCity, setMissionCity, missionArea, setMissionArea, updateDate, setUpdateDate, sortOrder, setSortOrder, sortBy, setSortBy, clearFilters }) => {
   // 按鈕文字的狀態
   const [buttonText1, setButtonText1] = useState('任務類型');
-  const [buttonText2, setButtonText2] = useState('更新日期');
+  const [buttonText2, setButtonText2] = useState('更新時間');
 
   // 地區狀態
   const [selectedCity, setSelectedCity] = useState(null);
@@ -441,7 +441,7 @@ const MyFilter = ({ missionType, setMissionType, missionCity, setMissionCity, mi
     setMissionArea(null); // 要重置area 第二次篩city才能正常
     // console.log(`選中的missionCity是: ${missionCity}`);
   };
-  
+
   // 立即更新missionCity的值 否則第一次點擊會是null(因為異步)
   useEffect(() => {
     console.log(`選中的missionCity是: ${missionCity}`);
@@ -454,7 +454,7 @@ const MyFilter = ({ missionType, setMissionType, missionCity, setMissionCity, mi
     console.log(`選中的地區是: ${area.AreaName}`);
     setMissionArea(area.AreaName);
   };
-  
+
   useEffect(() => {
     console.log(`選中的missionArea是: ${missionArea}`);
     console.log(`"現在是接"++http://localhost:3005/api/mission/all-missions?missionType=${missionType}&missionCity=${missionCity}&missionArea=${missionArea}&sortOrder=${sortOrder}&sortBy=${sortBy}`)
@@ -493,6 +493,8 @@ const MyFilter = ({ missionType, setMissionType, missionCity, setMissionCity, mi
     const selectedValue = options2.find(option => option.label === label)?.value;
     setButtonText2(label);
     console.log(`選中的值是: ${selectedValue}`);
+
+    setUpdateDate(selectedValue);
   };
 
   return (
@@ -690,7 +692,7 @@ const MyFilter = ({ missionType, setMissionType, missionCity, setMissionCity, mi
 
 
 // 排序
-const Sort = ({ missionType, setMissionType, missionCity, setMissionCity, missionArea, setMissionArea, sortOrder, setSortOrder, sortBy, setSortBy }) => {
+const Sort = ({ missionType, setMissionType, missionCity, setMissionCity, missionArea, setMissionArea, updateDate, setUpdateDate, sortOrder, setSortOrder, sortBy, setSortBy }) => {
   const [activeButton, setActiveButton] = useState(null);
   const [iconDirection, setIconDirection] = useState({}); // 用於跟蹤圖標方向
 
@@ -709,7 +711,7 @@ const Sort = ({ missionType, setMissionType, missionCity, setMissionCity, missio
 
   useEffect(() => {
     console.log("現在是" + sortOrder);
-    console.log(`"現在是接"++http://localhost:3005/api/mission/all-missions?missionType=${missionType}&missionCity=${missionCity}&missionArea=${missionArea}&sortOrder=${sortOrder}&sortBy=${sortBy}`)
+    console.log(`排序現在是接+http://localhost:3005/api/mission/all-missions?missionType=${missionType}&updateDate=${updateDate}&missionCity=${missionCity}&missionArea=${missionArea}&sortOrder=${sortOrder}&sortBy=${sortBy}`)
   }, [sortOrder]);
 
   return (
@@ -771,8 +773,8 @@ function ImageWithEqualDimensions({ file_path }) {
   );
 }
 
-// 任務卡片
-const MissionCard = ({ missionType, missionCity, missionArea, setMissionType, sortOrder, setSortOrder, sortBy, setSortBy }) => {
+// 任務卡片（這邊的參數如果忘記設定會讓卡片出不來）
+const MissionCard = ({ missionType, missionCity, missionArea, setMissionType, updateDate, setUpdateDate, sortOrder, setSortOrder, sortBy, setSortBy }) => {
   const [allMissions, setAllMissions] = useState([]);
 
   const getAllMissions = async () => {
@@ -781,6 +783,9 @@ const MissionCard = ({ missionType, missionCity, missionArea, setMissionType, so
 
       if (missionType) {
         apiUrl += `&missionType=${missionType}`;
+      }
+      if (updateDate) {
+        apiUrl += `&updateDate=${updateDate}`;
       }
       if (missionCity) {
         apiUrl += `&missionCity=${missionCity}`;
@@ -799,7 +804,7 @@ const MissionCard = ({ missionType, missionCity, missionArea, setMissionType, so
 
   useEffect(() => {
     getAllMissions()
-  }, [missionType, missionCity, missionArea, sortOrder, sortBy]) // 當篩選方式、排序方式發生變化時重新獲取數據（非常重要要記得！）
+  }, [missionType, updateDate, missionCity, missionArea, sortOrder, sortBy]) // 當篩選方式、排序方式發生變化時重新獲取數據（非常重要要記得！忘記好幾次）
 
   // 格式化日期
   function formatDate(dateString) {
@@ -853,7 +858,8 @@ const MissionCard = ({ missionType, missionCity, missionArea, setMissionType, so
 
 export default function MissionList() {
   const [missionType, setMissionType] = useState(null);
-  const [missionCity, setMissionCity] = useState(null);
+  const [updateDate, setUpdateDate] = useState(null);
+  const [missionCity, setMissionCity] = useState("");
   const [missionArea, setMissionArea] = useState(null);
   const [sortOrder, setSortOrder] = useState("asc");
   const [sortBy, setSortBy] = useState(null);
@@ -862,21 +868,23 @@ export default function MissionList() {
   // 清除篩選條件
   const clearFilters = () => {
     setMissionType(null);
+    setUpdateDate(null);
     setMissionCity(null);
     setMissionArea(null);
-    console.log("現在的missionType是" + missionType+"現在的missionCity是" + missionCity+"現在的missionArea是" + missionArea);
+    console.log("現在的missionType是" + missionType + "現在的updateDate是" + updateDate + "現在的missionCity是" + missionCity + "現在的missionArea是" + missionArea);
   };
 
   // 在組件加載時重置篩選條件為默認值
   useEffect(() => {
     setMissionType(null);
+    setUpdateDate(null);
     setMissionCity(null);
     setMissionArea(null);
     setSortOrder('asc');
     setSortBy(null);
     // setSelectedCity(null); // 重置城市选择为 null 或默认值
     // setSelectedArea(null); // 重置地区选择为 null 或默认值
-    console.log(`"重載後是"+http://localhost:3005/api/mission/all-missions?missionType=${missionType}&missionCity=${missionCity}&missionArea=${missionArea}&sortOrder=${sortOrder}&sortBy=${sortBy}`);
+    console.log(`重載後是+http://localhost:3005/api/mission/all-missions?missionType=${missionType}&updateDate=${updateDate}&missionCity=${missionCity}&missionArea=${missionArea}&sortOrder=${sortOrder}&sortBy=${sortBy}`);
   }, []);
 
 
@@ -911,11 +919,13 @@ export default function MissionList() {
         </div>
 
         <div className='d-flex my-2'>
-          <Sort missionType={missionType} setMissionType={setMissionType} missionCity={missionCity} setMissionCity={setMissionCity} missionArea={missionArea} setMissionArea={setMissionArea} sortOrder={sortOrder} setSortOrder={setSortOrder} sortBy={sortBy} setSortBy={setSortBy} />
+          <Sort missionType={missionType} setMissionType={setMissionType} missionCity={missionCity} setMissionCity={setMissionCity} missionArea={missionArea} setMissionArea={setMissionArea}
+            updateDate={updateDate} setUpdateDate={setUpdateDate} sortOrder={sortOrder} setSortOrder={setSortOrder} sortBy={sortBy} setSortBy={setSortBy} />
         </div>
         {/* BS下拉式選單 */}
 
-        <MyFilter missionType={missionType} setMissionType={setMissionType} missionCity={missionCity} setMissionCity={setMissionCity} missionArea={missionArea} setMissionArea={setMissionArea} sortOrder={sortOrder} setSortOrder={setSortOrder} sortBy={sortBy} setSortBy={setSortBy} clearFilters={clearFilters} />
+        <MyFilter missionType={missionType} setMissionType={setMissionType} missionCity={missionCity} setMissionCity={setMissionCity} missionArea={missionArea} setMissionArea={setMissionArea}
+          updateDate={updateDate} setUpdateDate={setUpdateDate} sortOrder={sortOrder} setSortOrder={setSortOrder} sortBy={sortBy} setSortBy={setSortBy} clearFilters={clearFilters} />
 
 
 
@@ -936,7 +946,8 @@ export default function MissionList() {
             {/* 不能使用d-flex d-lg-block block會導致MissionCard垂直排列 */}
             <div className='row d-flex mb-3 g-3 g-md-4'>
               {/* 使用g-3 不用justify-content-between 預設是start 卡片就會照順序排列 */}
-              <MissionCard sortOrder={sortOrder} sortBy={sortBy} missionType={missionType} setMissionType={setMissionType} missionCity={missionCity} setMissionCity={setMissionCity} missionArea={missionArea} setMissionArea={setMissionArea} />
+              <MissionCard sortOrder={sortOrder} sortBy={sortBy} missionType={missionType} setMissionType={setMissionType} missionCity={missionCity} setMissionCity={setMissionCity} missionArea={missionArea} setMissionArea={setMissionArea}
+                updateDate={updateDate} setUpdateDate={setUpdateDate} />
             </div>
           </div>
         </section>
