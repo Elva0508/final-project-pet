@@ -422,7 +422,7 @@ const MobileFilter = ({ missionType, setMissionType, sortOrder, setSortOrder, se
 
 
 // 最終版篩選
-const MyFilter = ({ missionType, setMissionType, missionCity, setMissionCity, missionArea, setMissionArea, updateDate, setUpdateDate, sortOrder, setSortOrder, sortBy, setSortBy, clearFilters }) => {
+const MyFilter = ({ missionType, setMissionType, missionCity, setMissionCity, missionArea, setMissionArea, updateDate, setUpdateDate, sortOrder, setSortOrder, sortBy, setSortBy }) => {
   // 按鈕文字的狀態
   const [buttonText1, setButtonText1] = useState('任務類型');
   const [buttonText2, setButtonText2] = useState('更新時間');
@@ -495,6 +495,19 @@ const MyFilter = ({ missionType, setMissionType, missionCity, setMissionCity, mi
     console.log(`選中的值是: ${selectedValue}`);
 
     setUpdateDate(selectedValue);
+  };
+
+  // 清除篩選條件
+  const clearFilters = () => {
+    setMissionType(null);
+    setUpdateDate(null);
+    setMissionCity(null);
+    setMissionArea(null);
+    setButtonText1('任務類型');
+    setButtonText2('更新時間');
+    setSelectedCity(null);
+    setSelectedArea(null);
+    console.log("現在的missionType是" + missionType + "現在的updateDate是" + updateDate + "現在的missionCity是" + missionCity + "現在的missionArea是" + missionArea);
   };
 
   return (
@@ -845,7 +858,7 @@ const MissionCard = ({ missionType, missionCity, missionArea, setMissionType, up
                 <div className='d-flex justify-content-between align-items-end price'>
                   <div  >單次<span className='size-6'> NT${v.price}</span></div>
                   <Link href={`/work/find-mission/${v.mission_id}`} >
-                    <button className='btn-confirm size-6'>應徵</button>
+                  <button className='btn-confirm size-6'>應徵</button>
                   </Link>
                 </div>
               </div>
@@ -867,14 +880,6 @@ export default function MissionList() {
   const [sortBy, setSortBy] = useState('post_date');
 
 
-  // 清除篩選條件
-  const clearFilters = () => {
-    setMissionType(null);
-    setUpdateDate(null);
-    setMissionCity(null);
-    setMissionArea(null);
-    console.log("現在的missionType是" + missionType + "現在的updateDate是" + updateDate + "現在的missionCity是" + missionCity + "現在的missionArea是" + missionArea);
-  };
 
   // 在組件加載時重置篩選條件為默認值
   useEffect(() => {
@@ -927,7 +932,7 @@ export default function MissionList() {
         {/* BS下拉式選單 */}
 
         <MyFilter missionType={missionType} setMissionType={setMissionType} missionCity={missionCity} setMissionCity={setMissionCity} missionArea={missionArea} setMissionArea={setMissionArea}
-          updateDate={updateDate} setUpdateDate={setUpdateDate} sortOrder={sortOrder} setSortOrder={setSortOrder} sortBy={sortBy} setSortBy={setSortBy} clearFilters={clearFilters} />
+          updateDate={updateDate} setUpdateDate={setUpdateDate} sortOrder={sortOrder} setSortOrder={setSortOrder} sortBy={sortBy} setSortBy={setSortBy} />
 
 
 
