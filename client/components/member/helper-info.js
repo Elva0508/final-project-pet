@@ -48,7 +48,7 @@ const SwitchInput = ({
     }
   }, [status]);
   const handleSwitch = (e) => {
-    setStatus({ ...status, service: parseInt(e) });
+    setStatus({ ...status, service: e });
   };
   const handleInput = (e) => {
     setStatus({ ...status, price: parseInt(e.target.value) });
@@ -155,10 +155,9 @@ const Open = ({ open, setOpen, info, setInfo }) => {
   };
   const handleEdit = (e) => {
     e.preventDefault();
-    console.log(feedStatus, houseStatus, beautyStatus);
-    // const form = document.querySelector("#helper-form");
+    // console.log(feedStatus, houseStatus, beautyStatus);
     const formData = new FormData();
-    setInfo({
+    const result = {
       ...info,
       feed_service: feedStatus.service,
       house_service: houseStatus.service,
@@ -166,20 +165,16 @@ const Open = ({ open, setOpen, info, setInfo }) => {
       feed_price: feedStatus.price,
       house_price: houseStatus.price,
       beauty_price: beautyStatus.price,
-    });
-    for (const [key, value] of Object.entries(info)) {
+    };
+    for (const [key, value] of Object.entries(result)) {
       formData.append(key, value);
     }
-    // formData.append("feed_service", feedStatus.service);
-    // formData.append("house_service", houseStatus.service);
-    // formData.append("beauty_service", beautyStatus.service);
-    // formData.append("feed_price", feedStatus.price);
-    // formData.append("house_price", houseStatus.price);
-    // formData.append("beauty_price", beautyStatus.price);
+    setInfo(result);
+
     memberService
       .handleHelperEdit(formData)
       .then((response) => {
-        console.log(response);
+        // console.log(response);
         if (response?.data?.status === 200) {
           setInfo(response?.data?.info);
           editSuccess();
@@ -198,8 +193,21 @@ const Open = ({ open, setOpen, info, setInfo }) => {
       .getHelperInfo()
       .then((response) => {
         if (response?.data?.status === 200) {
+          const result = response?.data?.data[0];
           console.log(response.data);
-          setInfo(response?.data?.data[0]);
+          setInfo(result);
+          setFeedStatus({
+            service: result.feed_service,
+            price: result.feed_price,
+          });
+          setHouseStatus({
+            service: result.house_service,
+            price: result.house_price,
+          });
+          setBeautyStatus({
+            service: result.beauty_service,
+            price: result.beauty_price,
+          });
         }
       })
       .catch((e) => {
@@ -411,6 +419,9 @@ const HelperInfo = () => {
         console.log(e);
       });
   }, []);
+  if (process.client) {
+    console.log("運行在客戶端");
+  }
   return (
     <>
       <div className="col-12 col-sm-8 helper-info ">

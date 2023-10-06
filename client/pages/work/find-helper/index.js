@@ -30,6 +30,7 @@ const Search = ({
   onClick,
   search,
   setSearch,
+  setFilterType,
 }) => {
   const rippleBtnRef = useRef(null);
   const handleRipple = () => {
@@ -76,12 +77,10 @@ const MobileFilter = ({
 }) => {
   const [titleContent, setTitleContent] = useState("服務類型");
   const handleType = (value) => {
-    if (value === filterType) {
-      return;
-    }
+    // 改變filterType類型時，清除search值(如果有search值的話filter改變不會重新打API)、page值回到1，重設filter打API改變info
     setPage(1);
-    setFilterType(value);
     setCurrentSearch(null);
+    setFilterType(value);
   };
   const handleOrder = (value, parentValue) => {
     setPage(1);
@@ -130,6 +129,7 @@ const MobileFilter = ({
           src={"/job-icon/plus-service.svg"}
           onClick={handleType}
           order={order}
+          filterType={filterType}
         />
       </SwiperSlide>
       <SwiperSlide>
@@ -388,23 +388,25 @@ const MissionHelperList = () => {
   const [currentPage, setPage] = useState(1);
   const [totalRows, setTotalRows] = useState(18);
   useEffect(() => {
-    setPage(1);
-    WorkService.getAllHelpers(filterType, 1)
-      .then((res) => {
-        setAllHelpers(res.data.data);
-        setTotalRows(res?.data?.totalRows);
-      })
-      .catch((e) => {
-        console.log(e);
-      });
-    WorkService.getFamousHelper(filterType)
-      .then((res) => {
-        setFamous(res?.data.famous);
-        // console.log(res?.data.data);
-      })
-      .catch((e) => {
-        console.log(e);
-      });
+    if (!currentSearch) {
+      setPage(1);
+      WorkService.getAllHelpers(filterType, 1)
+        .then((res) => {
+          setAllHelpers(res.data.data);
+          setTotalRows(res?.data?.totalRows);
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+      WorkService.getFamousHelper(filterType)
+        .then((res) => {
+          setFamous(res?.data.famous);
+          // console.log(res?.data.data);
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    }
   }, [filterType]);
 
   useEffect(() => {
@@ -456,12 +458,15 @@ const MissionHelperList = () => {
   const handleSearch = () => {
     WorkService.getSearchHelper(search)
       .then((response) => {
-        console.log(response);
+        // 查詢時，清除各種state設定值
+        // console.log(response);
         setAllHelpers(response?.data.data);
         setPage(1);
         setTotalRows(response?.data?.totalRows);
         setCurrentSearch(search);
         setSearch("");
+        setFilterType("all");
+        setOrder(null);
       })
       .catch((e) => {
         console.log(e);
@@ -506,7 +511,7 @@ const MissionHelperList = () => {
       </nav>
 
       <div className="search d-flex flex-md-row flex-column justify-content-between align-items-center">
-        <RoleSelection />
+        <RoleSelection defaultActive="helper" />
         <Search
           placeholder={"搜尋小幫手"}
           handleSearch={handleSearch}
