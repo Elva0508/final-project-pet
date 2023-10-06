@@ -2,14 +2,11 @@ import { useState, useEffect } from "react";
 import BreadCrumb from "@/components/article/bread-crumb";
 import ArticleCatogory from "@/components/article/article-catogory";
 import ArticleListCard from "@/components/article/article-list-card";
-import Pagination from "@/components/article/article-pagination";
 import { useRouter } from "next/router";
 
 export default function ArticleList() {
   const [articlelist, setArticleList] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(1);
-  const [currentPage, setCurrentPage] = useState(1); //目前頁碼
-  const [totalPages, setTotalPages] = useState(1); // 總頁數，從data長度設定
 
   const router = useRouter();
 
@@ -20,14 +17,6 @@ export default function ArticleList() {
     );
 
     const data = await res.json();
-
-    // 設定總頁數
-    const totalItems = data.length;
-    const itemsPerPage = 12;
-    const totalPages = Math.ceil(totalItems / itemsPerPage);
-    console.log("totalPages:", totalPages);
-
-    setTotalPages(totalPages);
 
     // console.log(data);
     // 設定到狀態中 -> 會觸發重新渲染(re-render)
@@ -61,12 +50,6 @@ export default function ArticleList() {
     };
   }, []);
 
-  const handlePageChange = (newPage) => {
-    // 設定頁碼狀態
-    // router.push(`/article/${selectedCategory}/?page=${newPage}`);
-    setCurrentPage(newPage);
-  };
-
   return (
     <>
       <div className="container mt-5">
@@ -80,14 +63,6 @@ export default function ArticleList() {
 
         <div>
           <ArticleListCard category={selectedCategory} />
-        </div>
-
-        <div>
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={handlePageChange}
-          />
         </div>
       </div>
     </>
