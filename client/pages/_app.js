@@ -1,5 +1,5 @@
 import { useEffect,useContext } from "react";
-import Layout from "./layout";
+import Layout from "@/components/layout";
 import "@/styles/globals.scss";
 import { AuthProvider } from '@/context/fakeAuthContext'
 import {CartProvider} from '@/hooks/useCart' 
