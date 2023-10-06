@@ -234,7 +234,7 @@ const {user, logout} = useAuth()
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
               >
-              {/* {user ? (
+              {user ? (
                 <MenuItem onClick={handleLogout}>
                       <Typography textAlign="center">A</Typography>
                     </MenuItem>
@@ -245,7 +245,7 @@ const {user, logout} = useAuth()
                     </MenuItem>
                   </Link>
 
-              )} */}
+              )}
                   {/* <Link href="/login" >
                     <MenuItem onClick={handleCloseUserMenu}>
                       <Typography textAlign="center">登入</Typography>

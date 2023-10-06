@@ -34,7 +34,7 @@ async function handleSubmit(e) {
         const { token } = await response.json();
         localStorage.setItem('token', token);
         console.log(token)
-         router.push('/user/userInfo');
+        router.push('/member/profile');
       } else {
         throw new Error('Login failed');
       }
@@ -47,7 +47,7 @@ async function handleSubmit(e) {
 
   useEffect(
     function () {
-      if (isAuthenticated) router.replace("/user/userInfo"); 
+      if (isAuthenticated) router.replace("/member/profile"); 
     },
     [isAuthenticated, router]
   );
@@ -55,9 +55,10 @@ async function handleSubmit(e) {
   return (
   
    
-
       <form className="email-signup" onSubmit={handleSubmit}>
+
         <div className="u-form-group mb-3">
+
           <label htmlFor="email">帳號</label>
           <input
           className="form-input " 

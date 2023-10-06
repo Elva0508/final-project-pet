@@ -1,30 +1,4 @@
-// const router = require("express").Router();
-// const connection=require("../db");
 
-// router.get("/", (req, res) => {
-//   res.send("user-route測試成功");
-// });
-// router.get("/data", (req,res)=>{
-//     res.send("會員基本資料");
-// })
-
-// router.get("/user-coupon", (req, res) => {
-//   connection.execute(
-//     `SELECT md.*
-//       FROM mission_detail AS md 
-//       WHERE md.post_user_id = 1
-//       ORDER BY md.post_date DESC;`,
-//     (error, result) => {
-//       if (error) {
-//         console.error(error);
-//         res.status(500).json({ error: "資料庫查詢失敗" });
-//       } else {
-//         res.json({ result });
-//       }
-//     }
-//   );
-// });
-// module.exports = router;
 const router = require("express").Router();
 const connection = require("../db");
 
@@ -37,10 +11,8 @@ router.get("/user-coupon", (req,res)=>{
     `SELECT *
     FROM users_coupon
     LEFT JOIN coupon ON users_coupon.coupon_id = coupon.coupon_id
-    UNION
-    SELECT *
-    FROM users_coupon
-    RIGHT JOIN coupon ON users_coupon.coupon_id = coupon.coupon_id LIMIT 0,100;`
+    WHERE users_coupon.user_id = 1
+    LIMIT 0, 100;`
   ,(err,results)=>{
     if(err){
       console.error('資料庫-查詢錯誤：', err);

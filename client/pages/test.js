@@ -24,7 +24,7 @@ import { HomeVedio } from "@/pages/index";
 //佳瑜
 import LoginForm from "@/components/user/loginForm";
 import UserForm from "@/components/user/userForm";
-import UserCoupon from "@/components/user-coupon/user-coupon";
+import UserCoupon from "@/components/user-coupon/userCoupon";
 import ResetPassword from "@/components/user/resetPassword";
 
 //家綺

@@ -1,18 +1,30 @@
 import { createContext, useContext, useReducer } from "react";
+import jwt from "jwt-decode";
+const appKey = "secretkey";
 
 const AuthContext = createContext();
 
 const initialState = {
   user: null,
   isAuthenticated: false,
+  token: null
 };
 
 function reducer(state, action) {
   switch (action.type) {
     case "login":
-      return { ...state, user: action.payload, isAuthenticated: true };
+      localStorage.setItem("user", JSON.stringify(action.payload.user));
+      localStorage.setItem("token", JSON.stringify(action.payload.token));
+
+      return { ...state, 
+        user: action.payload,
+        token: action.payload.token, isAuthenticated: true };
     case "logout":
-      return { ...state, user: null, isAuthenticated: false };
+      localStorage.removeItem("user");
+      localStorage.removeItem("token");
+      return { ...state, 
+        user: null, 
+        isAuthenticated: false };
     default:
       throw new Error("Unknown action");
   }
@@ -26,7 +38,7 @@ function reducer(state, action) {
 // };
 
 function AuthProvider({ children }) {
-  const [{ user, isAuthenticated }, dispatch] = useReducer(
+  const [{ user, isAuthenticated,token }, dispatch] = useReducer(
     reducer,
     initialState
   );
@@ -41,7 +53,11 @@ async function login(email, password) {
         });
 
         if (response.ok) {
-            const user = await response.json();
+          const data = await response.json();
+          setToken(data.token);
+          const u = jwt(data.token);
+          dispatch({ type: 'login', payload: { user: u, token: data.token } }); // 传递用户信息和 token
+          localStorage.setItem(appKey, data.token);
             //console.log(user)
             dispatch({ type: 'login', payload: user });
 
@@ -52,10 +68,7 @@ async function login(email, password) {
         console.error(error);
     }
 }
-//   function login(email, password) {
-//     if (email === FAKE_USER.email && password === FAKE_USER.password)
-//       dispatch({ type: "login", payload: FAKE_USER });
-//   }
+
 
   function logout() {
     dispatch({ type: "logout" });
