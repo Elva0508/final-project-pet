@@ -8,7 +8,7 @@ export default function ArticleListCard() {
   const [articleListCard, setArticleListCard] = useState([]);
   const [activePage, setActivePage] = useState(1);
 
-  // 向伺服器要求資料，設定到狀態中
+  // // 向伺服器要求資料，設定到狀態中
   const getArticleListCard = async (article_category_id) => {
     const res = await fetch(
       "http://localhost:3005/api/article/" + article_category_id
@@ -21,7 +21,7 @@ export default function ArticleListCard() {
     if (Array.isArray(data)) setArticleListCard(data);
   };
 
-  // didMount 初次渲染"後", 向伺服器要求資料，設定到狀態中
+  // // didMount 初次渲染"後", 向伺服器要求資料，設定到狀態中
   useEffect(() => {
     if (router.isReady) {
       // 確保能得到router.query有值

@@ -46,7 +46,7 @@ export function HomeVedio() {
                   repeatCount="indefinite"
                   fill="#ffffff"
                   attributeName="d"
-                  dur="8s"
+                  dur="15s"
                   attributeType="XML"
                   values="
                 M0 77 
