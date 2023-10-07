@@ -67,4 +67,17 @@ router.put("/addwishlist",(req,res)=>{
   )
 })
 
+
+//刪除收藏清單
+router.delete("/deletewishlist",(req,res)=>{
+  console.log(req);
+  const deleteId=req.body.id
+  connection.execute(
+      `DELETE FROM product_collections WHERE product_collections.product_id=?`,
+      [deleteId]
+      ,(error,result)=>{
+        res.json({result})
+    }  ) 
+})
+
 module.exports = router;
