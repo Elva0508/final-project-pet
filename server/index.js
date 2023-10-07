@@ -17,7 +17,7 @@ const memberHistoryRouter = require("./routes/member-history-route");
 const cartRouter = require("./routes/cart-route");
 const articleRouter = require("./routes/article-route");
 const articleCategoryRouter = require("./routes/article-category");
-
+const chatListRouter = require("./routes/chatlist-route");
 
 app.use(bodyParser.json()); // 解析 JSON 请求体
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -37,6 +37,7 @@ app.use("/api/member-history", memberHistoryRouter);
 app.use("/api/product/cart", cartRouter);
 app.use("/api/article", articleRouter);
 app.use("/api/article-category", articleCategoryRouter);
+app.use("/api/chatlist", chatListRouter);
 
 //------------------------------------------佳瑜
 // //jwt路由使用
@@ -44,30 +45,26 @@ const authJWTRouter = require("./routes/auth-jwt");
 const userRouter = require("./routes/user-route");
 
 // // // 掛載 auth-jwt 路由
-app.use('/api/auth-jwt', authJWTRouter);
-app.use('/api/user', userRouter);
-
+app.use("/api/auth-jwt", authJWTRouter);
+app.use("/api/user", userRouter);
 
 //跨網域資源共用、設置白名單
 app.use(
   cors({
-    origin: [ "http://127.0.0.1:3005",
-    "http://localhost:3005",
-    "http://127.0.0.1:3000",
-    "http://localhost:3000",],
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    origin: [
+      "http://127.0.0.1:3005",
+      "http://localhost:3005",
+      "http://127.0.0.1:3000",
+      "http://localhost:3000",
+    ],
+    methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
-)
+);
 
-
-app.get("/login", (req,res)=>{
-  res.send("登入頁面測試")
-})
-
-
-
-
+app.get("/login", (req, res) => {
+  res.send("登入頁面測試");
+});
 
 app.listen(3005, () => {
   console.log("server is running");
@@ -107,7 +104,7 @@ wss.on("connection", (connection) => {
 
     if (parseMessage.type === "message") {
       const targetUserId = parseMessage.targetUserId;
-      const fromID = targetUserId.fromID;
+      const fromID = parseMessage.fromID;
       const chatmsg = parseMessage.message;
       if (targetUserId) {
         let targetClient = clients[targetUserId];
