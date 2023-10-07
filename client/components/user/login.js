@@ -31,9 +31,10 @@ async function handleSubmit(e) {
       });
 
       if (response.ok) {
-        const { token } = await response.json();
-         localStorage.setItem('token000', token);
-       console.log(token)
+      //   const { token } = await response.json();
+      //    localStorage.setItem('token000', token);
+      //  console.log(token)
+      const token = '12323'
         login(token);
         //router.push('/member/profile');
       } else {

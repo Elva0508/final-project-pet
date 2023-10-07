@@ -86,7 +86,7 @@ router.post("/login", upload.none(), async (req, res) => {
           avatar: user.cover_photo
           },
           secretKey,
-          { expiresIn: '30m' }
+          { expiresIn: '1d' }
         );
          return res.status(200).json({ message: 'success login', code: '200', token: token })
         
@@ -146,19 +146,19 @@ router.post("/checkLogin", checkToken,(req,res)=>{
 })
 
 //會員基本資料api
-router.post("/profile", checkToken,(req,res)=>{
-  const currentId = req.decoded.user_id;
-  db.query('SELECT * FROM userinfo WHERE user_id = ?',[currentId],(err,results)=>{
-    if(err){
-      console.error('資料庫-查詢錯誤：', err);
-      res.status(500).json({message: '資料庫查詢錯誤', code: '500'});
-    }else{
-      if(results.length>0){
-        res.status(200).json({message:'success',code:'200',results:results})
+router.get("/profile", checkToken, (req, res) => {
+  const currentUser = req.decoded.email;
+  db.query("SELECT * FROM userinfo WHERE email = ?", [currentUser], (err, results) => {
+    if (err) {
+      console.error("資料庫-查詢錯誤：", err);
+      res.status(500).json({ message: "資料庫查詢錯誤", code: "500" });
+    } else {
+      if (results.length > 0) {
+        res.status(200).json({ message: "success", code: "200", results: results });
       }
     }
-  })
-})
+  });
+});
 //會員基本資料修改api
 router.put("/profile", checkToken, (req, res) => {
   const currentId = req.decoded.user_id;

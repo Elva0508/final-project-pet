@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import useRWD from "@/hooks/useRWD";
-import {useFormik} from 'formik'
+
 
 import Image from "next/image";
 import myProfile from "@/assets/myProfile.svg";
@@ -13,20 +13,51 @@ export default function userForm() {
   const device = useRWD();
   const userRfs = device == "mobile" ? "m-size-6" : "size-6";
 
-  const formik = useFormik({
-    initialValues:{
-      name:"王小花",
-      gender:'男',
-      birthday:'2021-09-09',
-      phoneNum: '0912123456',
-      city:'台北市',
-      town:'中山區',
-      address:'中山北路一段',
-      petNum:2,
-    }
-  })
   
-  console.log(formik.values)
+  useEffect(()=>{
+    fetch('http://localhost:3005/api/auth-jwt/profile')
+    .then((res) => res.json())
+    .then((data) => {
+      console.log(data)
+      setMemberData(data)
+    })
+  },[])
+
+  //表單狀態
+  const [memberData, setMemberData] = useState({
+    name: "",
+    password: "",
+    birthday: "",
+    phone: "",
+    address: "",
+    petNum: "",
+    city: "",
+    town: "",
+  });
+
+  const handleInputChange = (e)=>{
+    const {name,value} = e.target
+    setMemberData({
+      ...memberData,
+      [name]:value
+    })
+  }
+
+  const handleSubmit = (e)=>{
+    e.preventDefault()
+    fetch('http://localhost:3005/api/auth-jwt/profileChange',{
+      method:'PUT',
+      headers:{
+        'Content-Type':'application/json'
+      },
+      body:JSON.stringify(memberData)
+    })
+    .then((res) => res.json())
+    .then((data) => {
+      console.log(data)
+    })
+  }
+
 
   //地址
   const [city, setCity] = useState(-1);
@@ -53,6 +84,8 @@ export default function userForm() {
 
   return (
     <>
+ 
+ 
       <div className="user-profile ">
         <div className="title">
           <p className=" size-4">
@@ -72,8 +105,8 @@ export default function userForm() {
             <div>
               <input 
               className="form-input" type="text" 
-              value={formik.values.name}
-                onChange={formik.handleChange}
+              value={memberData.name}
+              
               />
             </div>
           </div>
@@ -137,11 +170,11 @@ export default function userForm() {
             <div className="d-flex">
               <select
                 className="form-select"
-                value={city}
+                value="taipai"
                 onChange={handleCityChange}
               >
                 <option selected value={-1}>
-                {formik.values.city}
+               citttty
                 </option>
                 {data.map((v) => {
                   return (
@@ -154,7 +187,7 @@ export default function userForm() {
 
               <select className="form-select">
                 <option selected>
-                {formik.values.town}
+               townn
                 </option>
                 {area.map((v, i) => (
                   <option key={i} value={v}>
@@ -170,7 +203,7 @@ export default function userForm() {
         
            </label>
           <div>
-          <input type="text" className="form-control" value={formik.values.address}/>
+          <input type="text" className="form-control" value="dcsklcl"/>
           
         
           </div>
@@ -180,7 +213,7 @@ export default function userForm() {
           <div className="user-form-item">
             <label className={userRfs}>毛孩數量：</label>
             <div>
-              <input className="form-input" type="number" value={formik.values.petNum} />
+              <input className="form-input" type="number" value="1" />
             </div>
           </div>
       
@@ -194,3 +227,4 @@ export default function userForm() {
     </>
   );
 }
+
