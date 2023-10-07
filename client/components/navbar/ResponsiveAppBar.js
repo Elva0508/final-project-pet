@@ -16,6 +16,7 @@ import Badge from "@mui/material/Badge";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/router"; 
 
 import {useAuth} from "@/context/fakeAuthContext"
 
@@ -85,7 +86,8 @@ const settings = [
 ];
 
 function ResponsiveAppBar() {
-const {user, logout} = useAuth()
+  //會員狀態
+  const { Token, isAuthenticated, login, logout } = useAuth();
 
 
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -106,9 +108,14 @@ const {user, logout} = useAuth()
     setAnchorElUser(null);
   };
 
+  const router = useRouter(); 
+
+  //登入登出
   const handleLogout = () => {
     logout()
+    router.push('/');
   }
+
 
   const { cart, setCart } = useCart();
 
@@ -234,14 +241,21 @@ const {user, logout} = useAuth()
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
               >
-              {user ? (
+              {isAuthenticated  ? (
+                <>
                 <MenuItem onClick={handleLogout}>
-                      <Typography textAlign="center">A</Typography>
+                      <Typography textAlign="center">登出</Typography>
                     </MenuItem>
+                    <Link href="/article" >
+                    <MenuItem >
+                      <Typography textAlign="center">來聊聊</Typography>
+                    </MenuItem>
+                  </Link>
+                  </>
               ) : (
-                <Link href="/login" >
-                    <MenuItem onClick={handleCloseUserMenu}>
-                      <Typography textAlign="center">u</Typography>
+                <Link href="member/login" >
+                    <MenuItem >
+                      <Typography textAlign="center">登入</Typography>
                     </MenuItem>
                   </Link>
 

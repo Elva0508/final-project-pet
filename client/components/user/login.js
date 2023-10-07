@@ -32,9 +32,10 @@ async function handleSubmit(e) {
 
       if (response.ok) {
         const { token } = await response.json();
-        localStorage.setItem('token', token);
-        console.log(token)
-        router.push('/member/profile');
+         localStorage.setItem('token000', token);
+       console.log(token)
+        login(token);
+        //router.push('/member/profile');
       } else {
         throw new Error('Login failed');
       }

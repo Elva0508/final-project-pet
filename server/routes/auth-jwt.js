@@ -57,7 +57,7 @@ router.post("/login", upload.none(), async (req, res) => {
     try {
       const results = await new Promise((resolve, reject) => {
         // 使用email和password進行登入驗證
-        db.query('SELECT * FROM users WHERE email = ? AND password = ?', [email, password], (err, results) => {
+        db.query('SELECT * FROM userinfo WHERE email = ? AND password = ?', [email, password], (err, results) => {
           if (err) {
             console.error('資料庫-查詢錯誤：', err);
             reject(err);
@@ -80,9 +80,10 @@ router.post("/login", upload.none(), async (req, res) => {
         const user = results;
         const token = jwt.sign(
           {
-            user_id: user.user_id, // 使用者的唯一識別符
-          username: user.username, // 使用者的名稱
-          email: user.email // 使用者的電子郵件
+            name: user.name, // 使用者的唯一識別符
+          email: user.email, // 使用者的名稱
+          password: user.password,// 使用者的電子郵件
+          avatar: user.cover_photo
           },
           secretKey,
           { expiresIn: '30m' }
@@ -121,9 +122,10 @@ router.post("/checkLogin", checkToken,(req,res)=>{
   const currentUser = req.decoded;
   const token=jwt.sign(
     {
-      user_id: currentUser.user_id,
-      username: currentUser.username,
-      email: currentUser.email
+      name: currentUser .name, // 使用者的唯一識別符
+          email: currentUser .email, // 使用者的名稱
+          password: currentUser .password,// 使用者的電子郵件
+          avatar: currentUser .cover_photo
     },
     secretKey,
     { expiresIn: '1d' }
@@ -133,9 +135,10 @@ router.post("/checkLogin", checkToken,(req,res)=>{
     message:"用戶已登入",
     code:"200",
     user:{
-      user_id: currentUser.user_id,
-      username: currentUser.username,
-      email: currentUser.email
+      name: currentUser.name,
+      email: currentUser.email,
+      password: currentUser.password,
+      avatar: currentUser.cover_photo,
     },
     token:token
   })
@@ -173,62 +176,150 @@ router.put("/profile", checkToken, (req, res) => {
     }
   );
 });
-//會員密碼修改
-router.put("/change-password", checkToken, (req, res) => {
-  const currentId = req.decoded.user_id;
-  const { oldPassword, newPassword } = req.body;
 
-  db.query(
-    "SELECT password FROM userinfo WHERE user_id = ?",
-    [currentId],
-    (err, results) => {
-      if (err) {
-        console.error("数据库查询错误：", err);
-        res.status(500).json({ message: "数据库查询错误", code: "500" });
-      } else if (results.length === 0) {
-        res.status(404).json({ message: "用户不存在", code: "404" });
-      } else {
-        const hashedPassword = results[0].password;
+// router.post("/register",  async(req, res) => {
+//   const { name, email, password, confPassword } = req.body;
+//   if (password !== confPassword)
+//     return res.status(400).json({ msg: "密碼不一致" });
+//   const salt = await bcrypt.genSalt(10);
+//   const hashPassword = await bcrypt.hash(password, salt);
+//   const checkUserQuery = "SELECT * FROM users WHERE email = ?";
+//   db.query(checkUserQuery, [email], async (error, results) => {
+//     if (error) {
+//       console.error(error);
+//       return res.status(500).json({ error: "已經有這個email" });
+//     }
+//     if (results.length > 0) {
+//       return res.status(400).json({ msg: "Email 已存在" });
+//     }
+//     // 如果email不存在於數據庫中，則創建新用戶記錄
+//     const createUserQuery = "INSERT INTO users (username, email, password) VALUES (?, ?, ?)";
+//     db.query(createUserQuery, [name, email, hashPassword], (insertError) => {
+//       if (insertError) {
+//         console.error(insertError);
+//         return res.status(500).json({ error: "資料庫輸入有問題" });
+//       }
+//       res.json({ msg: "Register Success" });
+//       // 關閉連接
+//       db.end();
+//     });
+//   });
+//   // try {
+//   //   const results = await new Promise((resolve, reject) => {
+//   //     // 使用email和password進行登入驗證
+//   //     db.query('SELECT * FROM users WHERE email = ?', [email, password], (err, results) => {
+//   //       if (err) {
+//   //         console.error('資料庫-查詢錯誤：', err);
+//   //         reject(err);
+//   //         return
+//   //       }
+//   //       if (results.length === 0) {
+//   //         reject('帳號或密碼錯誤');
+//   //         return
+//   //       } else {
+//   //         resolve(results[0]);
+//   //       }
+//   //     });
+//   //   });
 
-        // 使用bcrypt比较旧密码
-        bcrypt.compare(oldPassword, hashedPassword, (bcryptErr, isMatch) => {
-          if (bcryptErr) {
-            console.error("比较密码错误：", bcryptErr);
-            res.status(500).json({ message: "比较密码错误", code: "500" });
-          } else if (!isMatch) {
-            res.status(400).json({ message: "旧密码不匹配", code: "400" });
-          } else {
-            // 生成新的加密密码
-            bcrypt.hash(newPassword, 10, (hashErr, hashedNewPassword) => {
-              if (hashErr) {
-                console.error("密码加密错误：", hashErr);
-                res.status(500).json({ message: "密码加密错误", code: "500" });
-              } else {
-                // 更新用户密码
-                db.query(
-                  "UPDATE userinfo SET password = ? WHERE user_id = ?",
-                  [hashedNewPassword, currentId],
-                  (updateErr, updateResults) => {
-                    if (updateErr) {
-                      console.error("数据库更新错误：", updateErr);
-                      res.status(500).json({ message: "数据库更新错误", code: "500" });
-                    } else {
-                      res.status(200).json({ message: "密码修改成功", code: "200" });
-                    }
-                  }
-                );
-              }
-            });
-          }
-        });
-      }
-    }
-  );
-});
+//   //   if (results.length === 0) {
+//   //     res.status(401).json({ message: '帳號或密碼錯誤', code: '401' });
+//   //     return;
+//   //   } else {
+//   //     // 登入成功，執行你的JWT發送邏輯
+//   //     const user = results;
+//   //     const token = jwt.sign(
+//   //       {
+//   //         user_id: user.user_id, // 使用者的唯一識別符
+//   //       username: user.username, // 使用者的名稱
+//   //       email: user.email // 使用者的電子郵件
+//   //       },
+//   //       secretKey,
+//   //       { expiresIn: '30m' }
+//   //     );
+//   //      return res.status(200).json({ message: 'success login', code: '200', token: token })
+      
+//   //   }
+//   // } catch (err) {
+//   //   console.error('捕獲到異常：', err);
+//   //   return res.status(500).json({ message: '資料庫查詢錯誤', code: '500' });
+//   // }
+// });
 
 
 
-//-------------註冊--------------------------------
+// router.get('/private', authenticate, (req, res) => {
+//     const user = req.user
+//     return res.json({ message: 'authorized', user })
+// })
+// 檢查登入狀態用
+// router.get('/check-login', authenticate, async (req, res) => {
+//   const user = req.user
+//   return res.json({ message: 'authorized', user })
+// })
+// router.post('/login', async (req, res) => {
+//   console.log(req.body);
+//   // 從要求的req.body獲取username與password
+//   const { username, password } = req.body;
+
+//   // 先查詢資料庫是否有同username/password的資料
+//   const isMember = await verifyUser({
+//     username,
+//     password,
+//   });
+
+//   console.log(isMember);
+
+//   if (!isMember) {
+//     return res.json({ message: 'fail', code: '400' });
+//   }
+
+//   // 會員存在，將會員的資料取出
+//   const member = await getUser({
+//     username,
+//     password,
+//   });
+
+//   console.log(member);
+
+//   // 如果沒必要，member的password資料不應該，也不需要回應給瀏覽器
+//   delete member.password;
+
+//   // 產生存取令牌(access token)，其中包含會員資料
+//   const accessToken = jsonwebtoken.sign({ ...member }, accessTokenSecret, {
+//     expiresIn: '24h',
+//   });
+
+//   // 使用httpOnly cookie來讓瀏覽器端儲存access token
+//   res.cookie('accessToken', accessToken, { httpOnly: true });
+
+//   // 傳送access token回應(react可以儲存在state中使用)
+//   res.json({
+//     message: 'success',
+//     code: '200',
+//     accessToken,
+//   });
+// });
+
+// router.post('/logout', authenticate, (req, res) => {
+//   // 清除cookie
+//   res.clearCookie('accessToken', { httpOnly: true });
+
+//   res.json({ message: 'success', code: '200' });
+// });
+
+// router.post('/logout-ssl-proxy', authenticate, (req, res) => {
+//   // 清除cookie
+//   res.clearCookie('accessToken', {
+//     httpOnly: true,
+//     sameSite: 'none',
+//     secure: true,
+//   });
+
+//   res.json({ message: 'success', code: '200' });
+// });
+
+//---------------------------------------------
 const Register = async (req, res) => {
   
   const { name, email, password, confPassword } = req.body;
@@ -259,7 +350,7 @@ const Register = async (req, res) => {
     }
 
     // 如果email不存在於數據庫中，則創建新用戶記錄
-    const createUserQuery = "INSERT INTO users (username, email, password) VALUES (?, ?, ?)";
+    const createUserQuery = "INSERT INTO users (username, email, password,) VALUES (?, ?, ?)";
     connection.query(createUserQuery, [name, email, password], (insertError) => {
       if (insertError) {
         console.error(insertError);
@@ -275,7 +366,6 @@ const Register = async (req, res) => {
 
 router.post("/register", Register);
 
-//-------------middleware--------------------------------
 function checkToken(req,res,next){
 const token = req.headers.authorization;
 if(token){
