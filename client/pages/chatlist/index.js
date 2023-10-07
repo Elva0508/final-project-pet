@@ -8,20 +8,17 @@ export default function ChatList() {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-
-    // 沒有令牌
+    // 沒有token
     if (!token) {
-      console.log("用户未登录");
+      console.log("user沒登入");
       return;
     }
-
     const decodedToken = decodeToken(token);
 
-    // 解碼後
+    // 解token後，拿到user_id
     getChatList(decodedToken.user_id);
   }, []);
 
-  // 解碼獲得user
   const decodeToken = (token) => {
     try {
       const decoded = jwt_decode(token);
@@ -31,7 +28,8 @@ export default function ChatList() {
       return false;
     }
   };
-  // 向伺服器要求資料，使用 Token 進行身分驗證，並設定到狀態中
+
+  // 利用解碼後的user_id向伺服器要求資料並設定到狀態中
   const getChatList = async (user_id) => {
     console.log(user_id);
     const res = await fetch("http://localhost:3005/api/chatlist/" + user_id);
@@ -46,7 +44,6 @@ export default function ChatList() {
   // WebSocket連接+資料
   useEffect(() => {
     //之後userId要改成登入者的userID
-    const userId = "aaa";
     const newWs = new WebSocket("ws://localhost:8080");
 
     // 設置WebSocket連接
@@ -54,7 +51,7 @@ export default function ChatList() {
       console.log("WebSocket連接已打開");
       let params = {
         type: "register",
-        userId,
+        user_id,
       };
       newWs.send(JSON.stringify(params));
       setWs(newWs);
@@ -85,7 +82,7 @@ export default function ChatList() {
               return (
                 <div className="list" key={v.user_id}>
                   <Link
-                    href={`/chatlist/${v.chatlist_id}`}
+                    href={`/chatlist/${v.chatlist_id}?name=${v.name}`}
                     className="list-group-item list-group-item-action"
                   >
                     <div className="d-flex align-items-center">

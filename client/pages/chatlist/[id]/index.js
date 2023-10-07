@@ -1,10 +1,54 @@
 import { useState, useEffect } from "react";
-import Link from "next/link";
+import jwt_decode from "jwt-decode";
+import { useRouter } from "next/router";
 
 export default function Chatroom() {
   const [chatContent, setChatContent] = useState([]); //內容設置的狀態
   const [ws, setWs] = useState(null); // WebSocket連接的狀態
   const [msgInputValue, setMsgInputValue] = useState(""); // 輸入框的值
+  const router = useRouter();
+  const { chatlist_id, name } = router.query;
+
+  // 驗證有無登入
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    // 沒有token
+    if (!token) {
+      console.log("user沒登入");
+      return;
+    }
+    const decodedToken = decodeToken(token);
+
+    // 使用 router.isReady 判斷
+    if (router.isReady) {
+      // 解 token 拿到 user_id 和 chatlist_id
+      getChatContent(decodedToken.user_id, chatlist_id);
+    }
+  }, [router.isReady, chatlist_id]); // chatlist_id當參數
+
+  const decodeToken = (token) => {
+    try {
+      const decoded = jwt_decode(token);
+      return decoded;
+    } catch (error) {
+      console.error("失敗：", error);
+      return false;
+    }
+  };
+
+  // 利用解碼後的user_id向伺服器要求資料並設定到狀態中
+  const getChatContent = async (chatlist_id) => {
+    console.log(chatlist_id);
+    const res = await fetch(
+      "http://localhost:3005/api/chatroom/" + chatlist_id
+    );
+
+    const data = await res.json();
+
+    console.log(data);
+    // 設定到狀態中 -> 會觸發重新渲染(re-render)
+    if (Array.isArray(data)) setChatContent(data);
+  };
 
   //之後userId要改成登入者的userID
   const userId = "aaa";
@@ -88,7 +132,7 @@ export default function Chatroom() {
                   />
                 </div>
                 <div className="mx-3 size-5 m-size-5">
-                  <span>客服小幫手</span>
+                  <span>{name}</span>
                 </div>
               </div>
             </div>
@@ -112,19 +156,23 @@ export default function Chatroom() {
               </div>
             </div>
             {/* 自己 */}
-            <div className="user p-3">
-              <div className="d-flex align-items-center justify-content-end my-1 chat-box">
-                <div className="size-7 m-size-7 rounded-pill content py-1 px-2">
-                  沒有
+            {chatContent.map((v, i) => {
+              return (
+                <div className="user p-3">
+                  <div className="d-flex align-items-center justify-content-end my-1 chat-box">
+                    <div className="size-7 m-size-7 rounded-pill content py-1 px-2">
+                      {v.chat_contentchat}
+                    </div>
+                    <div className="avatar rounded-circle mr-3 overflow-hidden rounded-circle ms-2">
+                      <img
+                        src={v.cover_photo}
+                        className="img-fluid object-fit-cover"
+                      />
+                    </div>
+                  </div>
                 </div>
-                <div className="avatar rounded-circle mr-3 overflow-hidden rounded-circle ms-2">
-                  <img
-                    src="https://cdn.theatlantic.com/thumbor/vDZCdxF7pRXmZIc5vpB4pFrWHKs=/559x0:2259x1700/1080x1080/media/img/mt/2017/06/shutterstock_319985324/original.jpg"
-                    className="img-fluid object-fit-cover"
-                  />
-                </div>
-              </div>
-            </div>
+              );
+            })}
           </div>
           <div className="input-group mb-3">
             <input

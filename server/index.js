@@ -18,6 +18,7 @@ const cartRouter = require("./routes/cart-route");
 const articleRouter = require("./routes/article-route");
 const articleCategoryRouter = require("./routes/article-category");
 const chatListRouter = require("./routes/chatlist-route");
+const chatRoomRouter = require("./routes/chatroom-route");
 
 app.use(bodyParser.json()); // 解析 JSON 请求体
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -38,6 +39,7 @@ app.use("/api/product/cart", cartRouter);
 app.use("/api/article", articleRouter);
 app.use("/api/article-category", articleCategoryRouter);
 app.use("/api/chatlist", chatListRouter);
+app.use("/api/chatroom", chatRoomRouter);
 
 //------------------------------------------佳瑜
 // //jwt路由使用
