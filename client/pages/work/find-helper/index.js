@@ -13,7 +13,6 @@ import WorkService from "@/services/work-service";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import { Rate } from "antd";
 import Rating from "@mui/material/Rating";
 import StarIcon from "@mui/icons-material/Star";
 import { Pagination } from "antd";
@@ -390,14 +389,31 @@ const MissionHelperList = () => {
   useEffect(() => {
     if (!currentSearch) {
       setPage(1);
-      WorkService.getAllHelpers(filterType, 1)
-        .then((res) => {
-          setAllHelpers(res.data.data);
-          setTotalRows(res?.data?.totalRows);
-        })
-        .catch((e) => {
-          console.log(e);
-        });
+      if (order) {
+        WorkService.getOrderHelper(
+          filterType,
+          order.parentValue,
+          order.value,
+          currentPage
+        )
+          .then((response) => {
+            console.log(response);
+            setAllHelpers(response?.data?.data);
+            setTotalRows(response?.data?.totalRows);
+          })
+          .catch((e) => {
+            console.log(e);
+          });
+      } else {
+        WorkService.getAllHelpers(filterType, 1)
+          .then((res) => {
+            setAllHelpers(res.data.data);
+            setTotalRows(res?.data?.totalRows);
+          })
+          .catch((e) => {
+            console.log(e);
+          });
+      }
       WorkService.getFamousHelper(filterType)
         .then((res) => {
           setFamous(res?.data.famous);
@@ -410,7 +426,6 @@ const MissionHelperList = () => {
   }, [filterType]);
 
   useEffect(() => {
-    console.log(currentPage);
     if (order) {
       WorkService.getOrderHelper(
         filterType,

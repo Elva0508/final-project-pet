@@ -343,9 +343,59 @@ router.get("/reserve", (req, res) => {
     }
   );
 });
-router.get("/reserve/detail/:pid", (req, res) => {
+router.get("/reserve/review", (req, res) => {
+  const { pid } = req.query;
+  conn.execute(
+    `SELECT r.*,u.cover_photo,u.name ,COUNT(*) AS review_count FROM mission_helper_reviews r LEFT JOIN userinfo u ON u.user_id = r.user_id WHERE request_id = ?`,
+    [pid],
+    (err, result) => {
+      if (err) {
+        console.log(err);
+        return res.status(500).send("資料庫查詢錯誤");
+      }
+      result = result.map((item) => {
+        return { ...item, review_date: transferDate(item.review_date) };
+      });
+      return res.send({ status: 200, data: result[0] });
+    }
+  );
+});
+router.post("/reserve/review", (req, res) => {
+  const { pid, user_id, helper_id, review_content, star_rating } = req.body;
+  console.log(req.body);
+  conn.execute(
+    "INSERT INTO `mission_helper_reviews` (`review_id`, request_id,`user_id`, `helper_id`, `review_content`, `star_rating`, `review_date`) VALUES (NULL,?, ?, ?, ?, ?, current_timestamp())",
+    [pid, user_id, helper_id, review_content, star_rating],
+    (err, results) => {
+      if (err) {
+        console.log(err);
+        return res.status(500).send("資料庫寫入錯誤");
+      }
+      console.log(results);
+      return res.send({ status: 200, data: results });
+    }
+  );
+});
+router.patch("/request/detail/status", (req, res) => {
+  const { pid, status } = req.body;
+  console.log(pid, status);
+
+  conn.execute(
+    "UPDATE `mission_req_orders` SET `status` = ? WHERE `mission_req_orders`.`oid` = ?",
+    [status, pid],
+    (err, results) => {
+      if (err) {
+        console.log(err);
+        return res.status(500).send("資料庫修改失敗");
+      }
+      console.log(results);
+      return res.send({ status: 200, affectedRows: results.affectedRows });
+    }
+  );
+});
+router.get("/request/detail/:pid", (req, res) => {
   const { pid } = req.params;
-  console.log(pid);
+  // console.log(pid);
   conn.execute(
     `SELECT q.*,p.* FROM mission_req_orders q LEFT JOIN users_pet_info p ON q.pet_info_id = p.pet_id WHERE q.oid = ?`,
     [pid],
@@ -364,6 +414,7 @@ router.get("/reserve/detail/:pid", (req, res) => {
     }
   );
 });
+
 router.get("/selling", (req, res) => {
   const { user_id, status } = req.query;
   conn.execute(
@@ -385,27 +436,27 @@ router.get("/selling", (req, res) => {
     }
   );
 });
-router.get("/selling/detail/:pid", (req, res) => {
-  const { pid } = req.params;
-  console.log(pid);
-  conn.execute(
-    `SELECT q.*,p.* FROM mission_req_orders q LEFT JOIN users_pet_info p ON q.pet_info_id = p.pet_id WHERE q.oid = ?`,
-    [pid],
-    (err, results) => {
-      if (err) {
-        console.log(err);
-        return res.status(500).send({ status: 500, error: "資料查詢錯誤" });
-      }
-      results = results.map((item) => {
-        const start_day = transferDate(item.start_day);
-        const end_day = transferDate(item.end_day);
-        const created_at = transferDate(item.created_at);
-        return { ...item, start_day, end_day, created_at };
-      });
-      return res.send({ status: 200, data: results[0] });
-    }
-  );
-});
+// router.get("/selling/detail/:pid", (req, res) => {
+//   const { pid } = req.params;
+//   console.log(pid);
+//   conn.execute(
+//     `SELECT q.*,p.* FROM mission_req_orders q LEFT JOIN users_pet_info p ON q.pet_info_id = p.pet_id WHERE q.oid = ?`,
+//     [pid],
+//     (err, results) => {
+//       if (err) {
+//         console.log(err);
+//         return res.status(500).send({ status: 500, error: "資料查詢錯誤" });
+//       }
+//       results = results.map((item) => {
+//         const start_day = transferDate(item.start_day);
+//         const end_day = transferDate(item.end_day);
+//         const created_at = transferDate(item.created_at);
+//         return { ...item, start_day, end_day, created_at };
+//       });
+//       return res.send({ status: 200, data: results[0] });
+//     }
+//   );
+// });
 module.exports = router;
 
 function generateOrderNumber() {

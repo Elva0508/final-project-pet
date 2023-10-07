@@ -41,6 +41,7 @@ const MemberSelling = () => {
         {/* mobile版的左側tab */}
         <ListM />
       </div>
+      <ListUserM />
       <div className="d-flex container-fluid flex-column justify-content-around flex-md-row my-3">
         {/* <ListUserM /> */}
         <ListD />

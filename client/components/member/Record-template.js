@@ -104,7 +104,7 @@ export const RecordTemplate = ({
             image={
               <IllustrationNoContent style={{ width: 300, height: 300 }} />
             }
-            title="暫無銷售數據"
+            title="尚未有銷售紀錄"
           ></Empty>
         ) : (
           <>
@@ -118,7 +118,7 @@ export const RecordTemplate = ({
                     {item.end_day}
                   </p>
                   <div className="d-flex flex-column justify-content-center align-items-center">
-                    <p className="mb-1 size-6">NT$ {item.total_price}</p>
+                    <p className="mb-1 size-6 price">NT$ {item.total_price}</p>
                     <button
                       className="btn-outline-confirm"
                       onClick={() => {
@@ -142,7 +142,7 @@ export const RecordTemplate = ({
       {info.length === 0 ? (
         <Empty
           image={<IllustrationNoContent style={{ width: 300, height: 300 }} />}
-          title="暫無銷售數據"
+          title="尚未有銷售紀錄"
           className="d-flex d-sm-none"
         ></Empty>
       ) : (
@@ -167,13 +167,16 @@ export const RecordTemplate = ({
                 <div>
                   <p>服務總價</p>
                   <div className="d-flex align-items-center justify-content-center">
-                    <p className="size-6 me-2 fw-bold">
-                      NT$ {item.total_price}
-                    </p>
+                    <p className="size-6 me-2 price">NT$ {item.total_price}</p>
                     <button
                       className="btn-outline-confirm"
                       onClick={() => {
-                        router.push(`/member/reserve/${item.oid}`);
+                        if (title === "銷售紀錄") {
+                          router.push(`/member/selling/${item.oid}`);
+                        }
+                        if (title === "預約紀錄") {
+                          router.push(`/member/reserve/${item.oid}`);
+                        }
                       }}
                     >
                       查看明細
@@ -275,7 +278,7 @@ export const RecordDetailTemplate = ({ icon, title, detail, setDetail }) => {
         <div className="divider"></div>
         <div className="d-flex justify-content-between">
           <p>總金額</p>
-          <p>
+          <p className="price">
             NT$<span>{detail.total_price}</span>
           </p>
         </div>

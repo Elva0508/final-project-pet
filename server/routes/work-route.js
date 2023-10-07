@@ -235,7 +235,6 @@ router.get("/helpers/search", async (req, res) => {
   } catch (e) {
     console.log(e);
   }
-
   conn.execute(
     `SELECT h.*, u.cover_photo,u.cat_helper, r.review_count, r.average_star
     FROM mission_helper_info h
@@ -253,7 +252,6 @@ router.get("/helpers/search", async (req, res) => {
         console.log(err);
         return false;
       }
-
       return res.send({ status: 200, data: result, totalRows });
     }
   );
@@ -418,10 +416,11 @@ router.post("/helpers/request", (req, res) => {
     subtotal,
   } = req.body;
   const total = subtotal * days * time * frequency;
-
+  const oid = generateOrderNumber();
   conn.execute(
-    "INSERT INTO `mission_req_orders` (`case_id`, `customer_userId`, `start_day`, `end_day`, `pet_info_id`, `helper_userId`, `service_type`, `service_time`, `frequency`, `note`,`location`, `subtotal_price`, `total_price`, `status`) VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, '1')",
+    "INSERT INTO `mission_req_orders` (`case_id`,oid, `customer_userId`, `start_day`, `end_day`, `pet_info_id`, `helper_userId`, `service_type`, `service_time`, `frequency`, `note`,`location`, `subtotal_price`, `total_price`, `status`) VALUES (NULL,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, '1')",
     [
+      oid,
       customer_id,
       startDay,
       endDay,
@@ -639,3 +638,18 @@ const transferDate = (date) => {
   const newFormat = `${year}年${month}月${day}日`;
   return newFormat;
 };
+function generateOrderNumber() {
+  const timestamp = Date.now().toString().slice(-7); // 取得時間戳記的後六位數
+  const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  let randomLetters = "";
+
+  // 生成隨機的三個英文字母
+  for (let i = 0; i < 3; i++) {
+    const randomIndex = Math.floor(Math.random() * letters.length);
+    randomLetters += letters.charAt(randomIndex);
+  }
+
+  // 組合訂單編號
+  const orderNumber = randomLetters + timestamp;
+  return orderNumber;
+}

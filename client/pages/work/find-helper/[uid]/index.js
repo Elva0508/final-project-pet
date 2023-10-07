@@ -147,7 +147,8 @@ export const HelperDetailSticky = () => {
   return (
     <section className="get-price d-flex justify-content-around align-items-center">
       <p className="get-price-number size-4 m-0">
-        NT$<span>500</span>/次
+        <span>NT$</span>
+        <span>500</span>/次
       </p>
       <Quotation />
     </section>
@@ -169,7 +170,7 @@ const Quotation = () => {
   const handleSubmit = () => {
     setVisible(false);
     const user = 1;
-    const requestDate = {
+    const requestData = {
       customer_id: user,
       startDay,
       endDay,
@@ -184,7 +185,7 @@ const Quotation = () => {
       subtotal: serviceType.price,
     };
     workService
-      .createReqOrder(requestDate)
+      .createReqOrder(requestData)
       .then((response) => {
         console.log(response.data);
         if (response.data.status === 200) {
@@ -691,34 +692,34 @@ const HelperDetail = () => {
         </header>
         <section className="description">
           <div className="item">
-            <div className="item-title size-4">相片/影片：</div>
+            <div className="item-title size-5">相片/影片：</div>
             <div className="item-image item-content">
               <ImageSwiper images={images} setImages={setImages} />
             </div>
           </div>
           <div className="item">
-            <div className="item-title size-4">小幫手介紹：</div>
+            <div className="item-title size-5">小幫手介紹：</div>
             <p className="item-content size-6">{profile.job_description}</p>
           </div>
           <div className="item">
-            <div className="item-title size-4 ">可服務時間：</div>
-            <span className="size-4 item-content">
+            <div className="item-title size-5 ">可服務時間：</div>
+            <span className="size-6 item-content">
               日、一、二、三、四、五、六
             </span>
           </div>
           <div className="item">
-            <div className="item-title size-4">可服務地區：</div>
-            <span className="size-4 item-content">
+            <div className="item-title size-5">可服務地區：</div>
+            <span className="size-6 item-content">
               {profile.service_county}
             </span>
           </div>
           <div className="item">
-            <div className="item-title size-4">連絡電話：</div>
-            <span className="size-4 item-content">{profile.phone}</span>
+            <div className="item-title size-5">連絡電話：</div>
+            <span className="size-6 item-content">{profile.phone}</span>
           </div>
           <div className="item">
-            <div className="item-title size-4">電子信箱</div>
-            <span className="size-4 item-content">{profile.email}</span>
+            <div className="item-title size-5">電子信箱</div>
+            <span className="size-6 item-content">{profile.email}</span>
           </div>
         </section>
         <section className="">

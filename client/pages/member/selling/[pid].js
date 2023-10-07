@@ -11,14 +11,16 @@ import { MdHomeRepairService } from "react-icons/md";
 import { RecordDetailTemplate } from "@/components/member/Record-template";
 const SellingDetailPage = () => {
   const router = useRouter();
+  const [status, setStatus] = useState(1);
   const [detail, setDetail] = useState({});
   const { pid } = router.query;
   useEffect(() => {
     memberService
-      .getReserveDetail(pid)
+      .getRequestDetail(pid)
       .then((response) => {
         const info = response.data.data;
         if (response?.data?.status === 200) {
+          setStatus(info.status);
           switch (info.status) {
             case 1:
               setDetail({ ...info, status: "待處理" });
@@ -39,6 +41,35 @@ const SellingDetailPage = () => {
         console.log(e);
       });
   }, [pid]);
+
+  const handleReject = () => {
+    memberService
+      .setRequestStatus(pid, 4)
+      .then((response) => {
+        const result = response.data;
+        console.log(response.data);
+        if (result.status === 200 && result.affectedRows === 1) {
+          router.push("/member/selling");
+        }
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  };
+  const handleResolve = () => {
+    memberService
+      .setRequestStatus(pid, status + 1)
+      .then((response) => {
+        const result = response.data;
+        // console.log(response.data);
+        if (result.status === 200 && result.affectedRows === 1) {
+          router.push("/member/selling");
+        }
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  };
   return (
     <>
       <nav className="breadcrumb-wrapper" aria-label="breadcrumb">
@@ -57,12 +88,13 @@ const SellingDetailPage = () => {
           </li>
         </ol>
       </nav>
+
       <div className="d-flex justify-content-end">
         {/* mobile版的左側tab */}
         <ListM />
       </div>
+      <ListUserM />
       <div className="d-flex container-fluid flex-column justify-content-around flex-md-row my-3">
-        {/* <ListUserM /> */}
         <ListD />
         <div className="col-12 col-sm-8 sales-record-detail">
           <RecordDetailTemplate
@@ -71,10 +103,19 @@ const SellingDetailPage = () => {
             detail={detail}
             setDetail={setDetail}
           />
-          <div className="d-flex justify-content-end mb-5">
-            <button className="btn-outline-confirm m-2">婉拒預約</button>
-            <button className="btn-confirm m-2">接受預約</button>
-          </div>
+          {status && status !== 3 && status !== 4 && (
+            <div className="d-flex justify-content-end mb-5">
+              <button
+                className="btn-outline-confirm m-2"
+                onClick={handleReject}
+              >
+                {status === 1 ? "婉拒預約" : "取消服務"}
+              </button>
+              <button className="btn-confirm m-2" onClick={handleResolve}>
+                {status === 1 ? "接受預約" : "完成服務"}
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </>
