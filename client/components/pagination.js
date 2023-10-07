@@ -6,7 +6,7 @@ export default function Pagination({itemsPerPage,total,activePage,setActivePage}
       const totalPages = Math.ceil(total.length / itemsPerPage); 
       let startPage
       let endPage
-      if(totalPages<=5){
+      if(totalPages<=3){
         startPage=1
         endPage=totalPages
       }else{
