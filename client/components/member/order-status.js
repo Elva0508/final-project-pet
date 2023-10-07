@@ -4,16 +4,20 @@ import axios from "axios";
 import Link from 'next/link'
 import Pagination from '@/components/pagination'
 
-export default function OrderStatusOne({order}) {
+
+
+export default function OrderStatusOne({order ,currentScreen}) {
+
     const itemsPerPage = 5
     const [activePage, setActivePage] = useState(1);
     const startIndex = (activePage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
-    const type=order.filter((v)=>v.status_id==1)
+    const type=order.filter((v)=>v.status_id==currentScreen)
     const currentData = type.slice(startIndex, endIndex);
-   
+    
     return (
         <>
+      
         {currentData.map((v,i)=>{
                     return(
                       <div key={i}>
@@ -30,6 +34,7 @@ export default function OrderStatusOne({order}) {
                             <img src={v.image} className='d-sm-block d-none' alt='產品圖片'></img>
                             <div className='d-flex align-self-center'>
                             <Link className="btn btn-outline-confirm m-2 size-6" href={`/member/order/${v.oid}`}>查看明細</Link>
+
                             </div>
                           </div>
                         </div>
@@ -39,8 +44,6 @@ export default function OrderStatusOne({order}) {
                   })}
 
             <Pagination  itemsPerPage={itemsPerPage} total={type} activePage={activePage} setActivePage={setActivePage}/>
-
-
         </>
     )
 }

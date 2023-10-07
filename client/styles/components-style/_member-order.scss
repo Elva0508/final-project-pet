@@ -7,7 +7,7 @@
     }
     .date{
 
-            background: #fff;
+            background:  #fbf5ef;;
 
     }
     .nav-link{
@@ -29,5 +29,8 @@
 
     button.pressed{
         border-bottom: 5px solid $hover;
+    }
+    .title{
+        background: $star;
     }
 }

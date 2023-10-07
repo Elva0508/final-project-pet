@@ -9,13 +9,14 @@ import axios from "axios";
 // import moment from "moment"
 
 export default function Orderdetail() {
+
+
   const [showCommentForm, setShowCommentForm] = useState(false);
   const [currentProductId, setCurrentProductId] = useState(null);
   const [comments, setComments] = useState({});
   const [value, setValue] = useState(0);
   const [detail, setDetail] = useState([{}]);
   const router = useRouter();
-
 
   const handleSaveComment = async(productId,orderId) => {
         try {
@@ -77,6 +78,11 @@ export default function Orderdetail() {
     }
     // eslint-disable-next-line
   }, [router.query]);
+
+
+const back =(id)=>{
+  router.push('http://localhost:3000/member/order')
+}
 
   return (
     <>
@@ -253,6 +259,7 @@ export default function Orderdetail() {
                   </thead>
                 </table>
               </div>
+
             </div>
           </div>
         </div>

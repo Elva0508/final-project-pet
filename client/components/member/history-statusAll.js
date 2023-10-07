@@ -2,16 +2,23 @@ import React, { useState } from "react";
 import { GrFormPrevious } from "react-icons/gr";
 import { GrFormNext } from "react-icons/gr";
 import dayjs from "dayjs";
-export default function HistoryStatusOne({ history }) {
+import axios from "axios";
+import Pagination from '@/components/pagination'
+
+export default function HistoryStatusOne({ history ,getHistory }) {
+
+  const [activePage, setActivePage] = useState(1)
+
+
   const itemsPerPage = 5;
-  const [currentPage, setCurrentPage] = useState(1);
-  const startIndex = (currentPage - 1) * itemsPerPage;
+
+  const startIndex = (activePage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentData = history.slice(startIndex, endIndex);
 
-  const handlePageChange = (newPage) => {
-    setCurrentPage(newPage);
-  };
+
+
+
 
   function CustomHTMLRenderer({ htmlContent }) {
     return (
@@ -28,6 +35,20 @@ export default function HistoryStatusOne({ history }) {
     const newDay = dayjs(date).format("YYYY-MM-DD");
     return newDay;
   };
+
+  const removetype = async (id) => {
+    console.log(id);
+    try {
+      const response = await axios.put(
+        `http://localhost:3005/api/member-history/updatetype`,
+      {id}
+      );
+    } catch (error) {
+      console.error("Error:", error);
+    }
+    getHistory()
+  };
+
 
 
   return (
@@ -56,7 +77,9 @@ export default function HistoryStatusOne({ history }) {
               </div>
               <div className="col-3">
                 {v.mission_status === 1 ? (
-                  <button className=" btn-confirm m-2 size-6">刊登中</button>
+                  <button className=" btn-confirm m-2 size-6" 
+                  onClick={() =>{removetype(v.mission_id)}}
+                  >下架</button>
                 ) : (
                   <button className=" btn-outline-confirm m-2 size-6">
                     已下架
@@ -68,25 +91,9 @@ export default function HistoryStatusOne({ history }) {
         );
       })}
 
-      <div className="pagination size-7 d-flex justify-content-center">
-        <button className="btn prev border-0">
-          <GrFormPrevious />
-        </button>
-        {Array.from({ length: Math.ceil(history.length / itemsPerPage) }).map(
-          (_, index) => (
-            <button
-              key={index}
-              onClick={() => handlePageChange(index + 1)}
-              className="btn me-1 "
-            >
-              {index + 1}
-            </button>
-          )
-        )}
-        <button className="btn next border-0">
-          <GrFormNext />
-        </button>
-      </div>
+
+      <Pagination  itemsPerPage={itemsPerPage} total={history} activePage={activePage} setActivePage={setActivePage}/>
+
     </>
   );
 }
