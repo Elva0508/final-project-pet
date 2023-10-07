@@ -43,12 +43,16 @@ useEffect(() => {
         <div className="">
           <div className="d-flex justify-content-around py-2">
             <ListD />
-            <div className="row col-lg-8 col-md-8 col-12 order p-3">
-              <div>
+            <div className="row col-lg-8 col-md-8 col-12 order">
+              <div className="title p-3">
                 <h5 className="size-5">
                   <RiFileList3Fill />
                   我的訂單
                 </h5>
+              </div>
+              <div className="p-3">
+              <div>
+
                 <div className="mt-3">
                   <button
                     className={`mx-3 size-7 listbutton ${currentScreen === "1" ? 'pressed' : ''}`}
@@ -88,12 +92,10 @@ useEffect(() => {
 
 
                 </div>
-
-
-
-
               </div>
             </div>
+            </div>
+
           </div>
         </div>
       </div>
