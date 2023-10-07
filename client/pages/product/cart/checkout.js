@@ -4,10 +4,12 @@ import axios from "axios";
 import { useRouter } from 'next/router';
 import Swal from 'sweetalert2';
 import moment from "moment";
+import { useCart } from '@/hooks/useCart';
+import Pagination from '@/components/pagination'
 
 export default function Checkout() {
     const router = useRouter();
-   
+    const {setCart} = useCart();
     const [city,setCity]=useState(0)
     const [area,setArea]=useState([])
     const [areaName,setAreaName]=useState(0)
@@ -16,7 +18,11 @@ export default function Checkout() {
     const [name, setName] = useState('');
     const [phone, setPhone] = useState('');
     const [address, setAddress] = useState('');
-   
+    const itemsPerPage = 4
+    const [activePage, setActivePage] = useState(1);
+    const startIndex = (activePage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+  
     //警告訊息
     const showAlert = (text) => {
         Swal.fire({
@@ -28,37 +34,45 @@ export default function Checkout() {
           color: "#512f10",
           focusConfirm: false,
         });
-      };
+    };
 
-    let cityName
-    if(city!==0){
-        cityName=data.find((v)=>v.number==city).name
-    }
-      
+    const [allPrice,setAllPrice]=useState(0)
+    const [freight,setFreight]=useState(0)
+    const [sale,setSale]=useState(0)
+    const [discount,setDiscount]=useState([])
+    const [finalCart,setFinalCart]=useState([])
+    const [nobuyCart,setNobuyCart]=useState([])
+    const [currentCart,setCurrentCart]=useState([])
 
-    // 從localStorage中獲取資料
-    const cart = localStorage.getItem('cart');
-    const allPrice = parseInt(localStorage.getItem('allPrice'));
-    const freight = parseInt(localStorage.getItem('freight'));
-    const sale = parseInt(localStorage.getItem('sale'));
-    const discount = localStorage.getItem('discount');
-    let finalCart
+    let localCart
 
-    // 檢查是否有資料
-    if (cart) {
-    // 如果有資料，將其轉換為JavaScript對象或陣列
-    const cartData = JSON.parse(cart);
-    finalCart=cartData.filter((v)=>v.buy===true)
-    } else {
-    console.log('localStorage中沒有資料');
-    }
+    useEffect(() => {
+            localCart = localStorage.getItem('cart');
+            setAllPrice(parseInt(localStorage.getItem('allPrice')))
+            setFreight(parseInt(localStorage.getItem('freight')))
+            setSale(parseInt(localStorage.getItem('sale')))
+            setDiscount(localStorage.getItem('discount'))
 
+            const cartData = JSON.parse(localCart);
+            setFinalCart(cartData.filter((v)=>v.buy===true))
+            setNobuyCart(cartData.filter((v)=>v.buy===false))
+    }, [router.isReady]);
+
+    useEffect(() => {
+        setCurrentCart(finalCart.slice(startIndex, endIndex)) 
+    }, [finalCart,activePage]);
+
+    
 
     const totalPrice=allPrice-sale+freight 
     const orderNumber = Date.now();
     const createtTime=moment().format("YYYY/MM/DD  HH:mm:ss")
 
-
+    //縣市名字
+    let cityName
+    if(city!==0){
+        cityName=data.find((v)=>v.number==city).name
+    }
 
      //縣市=>找鄉鎮市
     const handleCityChange = (event) => {
@@ -82,7 +96,6 @@ export default function Checkout() {
 
     //上一步
     const goPrevious=()=>{
-        // localStorage.setItem('cart',cart);
         router.push('/product/cart')
     }
 
@@ -113,6 +126,17 @@ export default function Checkout() {
               }
 
         }
+        for(let i=0;i<nobuyCart.length;i++){
+            const id=nobuyCart[i].cart_id            
+            try {
+                const response = await axios.delete(`http://localhost:3005/api/product/cart/${id}`);         
+            } catch (error) {
+                console.error("Error:", error);
+            }
+
+        }
+        setCart(nobuyCart)
+
     }
 
     //結帳
@@ -265,7 +289,7 @@ export default function Checkout() {
                             </tr>
                         </thead>
                         <tbody>
-                            {finalCart.map((v,i)=>{
+                            {currentCart.map((v,i)=>{
                                 return(
                                 <tr className='size-7' key={i}>
                                     <td><img src={v.images} /></td>
@@ -287,7 +311,7 @@ export default function Checkout() {
                     {/* 手機板 */}
                     <table className='d-sm-none d-block cart-m-content col-11'>
                         <tbody>
-                        {finalCart.map((v,i)=>{
+                        {currentCart.map((v,i)=>{
                             return(
                                 <tr className='m-size-7' key={i}>
                                     <td><img src={v.images}></img></td>
@@ -304,6 +328,11 @@ export default function Checkout() {
                         </tbody>
                     </table>
                 </div>
+                {finalCart.length>=5?(
+                    <Pagination  itemsPerPage={itemsPerPage} total={finalCart} activePage={activePage} setActivePage={setActivePage}/>
+                ):(
+                    ""
+                )}
                     {/* 優惠碼+明細 */}
                 {/* <div className='d-flex justify-content-sm-end justify-content-center  mb-4 col-lg-10 col-sm-11'>      */}
                 <div className='d-flex justify-content-sm-end justify-content-center mb-5'>     
@@ -344,7 +373,7 @@ export default function Checkout() {
                 </div>
             </div>
             {/* 結帳 */}
-            <div className='next py-2 size-7'>
+            <div className='nextStep py-2 size-7'>
                 <div className='container d-flex justify-content-between align-items-center'>
                     <button className='btn btn-brown me-auto' onClick={goPrevious}>上一步</button>
                     <p className='m-0 pe-2'>總計NT${totalPrice}</p>

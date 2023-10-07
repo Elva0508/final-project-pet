@@ -85,4 +85,5 @@ router.put("/checkout/detail",(req,res)=>{
             res.json({ result });
           }})
 })
+
 module.exports = router;

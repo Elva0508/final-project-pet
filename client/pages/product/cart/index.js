@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import axios from "axios";
 import { useCart } from '@/hooks/useCart';
 import Swal from 'sweetalert2';
+import Link from 'next/link';
 
 // import moment from "moment";
 
@@ -196,7 +197,27 @@ export default function Cart() {
 
   return (
     <>
-        <div className="cart mt-5">
+        {cart.length==0?
+        (<div className="cart mt-5">
+            <div className='container'>
+                {/* 步驟 */}
+                <div className='d-flex justify-content-center step text-center  '>
+                    <div className='col-lg-2 col-sm-4 col-5 size-6 step1 '>
+                        購物車
+                    </div>
+                    <div className='col-lg-2 col-sm-4 col-5 size-6  step2'>
+                        運送&付款
+                    </div>
+                </div>
+                <div className=' text-center zero d-flex flex-column justify-content-center align-items-center'>
+                    <p className='size-3'>購物車空空的</p>
+                    <Link href="/product" className='size-2  mt-4 btn btn-outline-brown col-lg-6 col-9'>快去小貓商城逛逛吧</Link>
+
+                </div>
+            </div>
+        </div>)
+        :      
+        (<div className="cart mt-5">
             <div className='container'>
             {/* 步驟 */}
                 <div className='d-flex justify-content-center step text-center  mb-4'>
@@ -391,6 +412,7 @@ export default function Cart() {
                 </div> 
             </div>           
         </div>
+        )}
 
     </>
   )
