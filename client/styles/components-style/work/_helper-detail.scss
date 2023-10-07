@@ -10,7 +10,7 @@
   }
 }
 
-$detail-block-width: 12px; //標題左側直槓槓
+$detail-block-width: 9px; //標題左側直槓槓
 .helper-detail {
   width: calc(100% - 80px);
   margin: auto;
@@ -67,8 +67,8 @@ $detail-block-width: 12px; //標題左側直槓槓
         display: inline-block;
         background-color: $hover;
         width: $detail-block-width;
-        height: 40px;
-        margin-right: 0.3rem;
+        height: 32px;
+        margin-right: 0.4rem;
       }
     }
     &-content {
@@ -265,15 +265,17 @@ $detail-block-width: 12px; //標題左側直槓槓
     }
   }
 }
-
 .get-price {
   height: 80px;
   background-color: $main-bg;
   position: sticky;
   bottom: 0;
   z-index: 100;
-  // overflow-x: hidden;
   box-shadow: 1px 0px 5px rgba(0, 0, 0, 0.25);
+  span {
+    color: $price;
+    font-weight: bold;
+  }
   &-number {
     color: $price;
   }
@@ -281,6 +283,7 @@ $detail-block-width: 12px; //標題左側直槓槓
     @extend %helper-button-style;
   }
 }
+
 @media screen and (max-width: 768px) {
   .evaluation-bar {
     flex-direction: column;
@@ -298,7 +301,7 @@ $detail-block-width: 12px; //標題左側直槓槓
   }
 }
 @media screen and (max-width: 576px) {
-  $detail-block-width: 8px;
+  // $detail-block-width: 8px;
   .helper-detail {
     width: 100%;
     header,
@@ -317,20 +320,13 @@ $detail-block-width: 12px; //標題左側直槓槓
       width: 100%;
       .username {
         order: -1;
-        // display: inline-block;
       }
-      // img {
-      //   width: 28px;
-      //   height: 28px;
-      //   // margin-right: 0.1rem;
-      // }
+
       .intro {
         margin: 0 0 1rem 0;
       }
       .review {
         order: -1;
-
-        // display: inline-block;
       }
 
       .btn-message {
@@ -344,7 +340,7 @@ $detail-block-width: 12px; //標題左側直槓槓
       &-title {
         &::before {
           width: $detail-block-width;
-          height: 33px;
+          height: 30px;
         }
       }
       &-content {

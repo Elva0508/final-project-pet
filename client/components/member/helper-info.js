@@ -28,11 +28,16 @@ const countyOption = [
   "金門縣",
   "連江縣",
 ];
-const Context = React.createContext({
-  name: "Default",
-});
 
-const SwitchInput = ({ label, status, price, type, setStatus }) => {
+const SwitchInput = ({
+  label,
+  status,
+  price,
+  type,
+  setStatus,
+  info,
+  setInfo,
+}) => {
   const [switchStatus, setSwitchStatus] = useState(false);
   useEffect(() => {
     if (status === 0) {
@@ -43,21 +48,24 @@ const SwitchInput = ({ label, status, price, type, setStatus }) => {
     }
   }, [status]);
   const handleSwitch = (e) => {
-    setStatus(e);
+    setStatus({ ...status, service: e });
+  };
+  const handleInput = (e) => {
+    setStatus({ ...status, price: parseInt(e.target.value) });
   };
   return (
     <div className={`switch-info ${status && "mb-5"}`}>
       <label className="size-6 m-size-7 ">{label}：</label>
       <div className="switch-info-price col-auto">
-        <Switch onChange={handleSwitch} checked={status} />
+        <Switch onChange={handleSwitch} checked={status.service} />
 
         <input
           type="number"
-          id=""
           placeholder="服務價格"
-          defaultValue={price && price}
+          value={status?.price}
           className={`form-input m-form-input ${!status && "d-none"}`}
           name={type + "price"}
+          onChange={handleInput}
         />
       </div>
     </div>
@@ -91,16 +99,26 @@ const Close = ({ open, setOpen }) => {
 };
 
 const Open = ({ open, setOpen, info, setInfo }) => {
-  const { register, handleSubmit, watch } = useForm({
-    defaultValues: {
-      name: info?.name,
-    },
+  const [feedStatus, setFeedStatus] = useState({
+    service: info?.feed_service,
+    price: info?.feed_price,
   });
-  const [feedStatus, setFeedStatus] = useState(info?.feed_service);
-  const [houseStatus, setHouseStatus] = useState(info?.house_service);
-  const [beautyStatus, setBeautyStatus] = useState(info?.beauty_service);
+  const [houseStatus, setHouseStatus] = useState({
+    service: info?.house_service,
+    price: info?.house_price,
+  });
+  const [beautyStatus, setBeautyStatus] = useState({
+    service: info?.beauty_service,
+    price: info?.beauty_price,
+  });
   const [messageApi, contextHolder] = message.useMessage();
-  const [name] = watch(["name"]);
+
+  // const { register, handleSubmit, watch } = useForm({
+  //   values: {
+  //     name: info?.name,
+  //   },
+  // });
+
   const editSuccess = () => {
     messageApi.open({
       type: "success",
@@ -137,16 +155,26 @@ const Open = ({ open, setOpen, info, setInfo }) => {
   };
   const handleEdit = (e) => {
     e.preventDefault();
-    const form = document.querySelector("#helper-form");
-    const formData = new FormData(form);
-    formData.append("user_id", 30);
-    formData.append("feed_service", feedStatus);
-    formData.append("house_service", houseStatus);
-    formData.append("beauty_service", beautyStatus);
+    // console.log(feedStatus, houseStatus, beautyStatus);
+    const formData = new FormData();
+    const result = {
+      ...info,
+      feed_service: feedStatus.service,
+      house_service: houseStatus.service,
+      beauty_service: beautyStatus.service,
+      feed_price: feedStatus.price,
+      house_price: houseStatus.price,
+      beauty_price: beautyStatus.price,
+    };
+    for (const [key, value] of Object.entries(result)) {
+      formData.append(key, value);
+    }
+    setInfo(result);
+
     memberService
       .handleHelperEdit(formData)
       .then((response) => {
-        console.log(response);
+        // console.log(response);
         if (response?.data?.status === 200) {
           setInfo(response?.data?.info);
           editSuccess();
@@ -165,8 +193,21 @@ const Open = ({ open, setOpen, info, setInfo }) => {
       .getHelperInfo()
       .then((response) => {
         if (response?.data?.status === 200) {
+          const result = response?.data?.data[0];
           console.log(response.data);
-          setInfo(response?.data?.data[0]);
+          setInfo(result);
+          setFeedStatus({
+            service: result.feed_service,
+            price: result.feed_price,
+          });
+          setHouseStatus({
+            service: result.house_service,
+            price: result.house_price,
+          });
+          setBeautyStatus({
+            service: result.beauty_service,
+            price: result.beauty_price,
+          });
         }
       })
       .catch((e) => {
@@ -180,7 +221,7 @@ const Open = ({ open, setOpen, info, setInfo }) => {
         className=""
         id="helper-form"
         name="helper-form"
-        onSubmit={handleSubmit((data) => console.log(data))}
+        onSubmit={handleEdit}
       >
         <div className="form-item">
           <label className="size-6 m-size-7">姓名：</label>
@@ -188,8 +229,11 @@ const Open = ({ open, setOpen, info, setInfo }) => {
             className="form-input m-form-input"
             type="text"
             placeholder="請輸入名稱"
-            name="name"
-            {...register("name")}
+            value={info?.name}
+            onChange={(e) => {
+              const value = e.target.value;
+              setInfo({ ...info, name: value });
+            }}
           />
         </div>
         <div className="form-item">
@@ -198,8 +242,11 @@ const Open = ({ open, setOpen, info, setInfo }) => {
             className="form-input m-form-input"
             type="text"
             placeholder="請簡單輸入自我介紹"
-            defaultValue={info?.Introduction}
-            name="introduction"
+            value={info?.Introduction}
+            onChange={(e) => {
+              const value = e.target.value;
+              setInfo({ ...info, Introduction: value });
+            }}
           />
         </div>
 
@@ -209,8 +256,11 @@ const Open = ({ open, setOpen, info, setInfo }) => {
             className="form-input m-form-input"
             type="text"
             placeholder="請輸入Email"
-            defaultValue={info?.email}
-            name="email"
+            value={info?.email}
+            onChange={(e) => {
+              const value = e.target.value;
+              setInfo({ ...info, email: value });
+            }}
           />
         </div>
         <div className="form-item">
@@ -219,8 +269,11 @@ const Open = ({ open, setOpen, info, setInfo }) => {
             className="form-input m-form-input"
             type="text"
             placeholder="請輸入聯絡電話"
-            defaultValue={info?.phone}
-            name="phone"
+            value={info?.phone}
+            onChange={(e) => {
+              const value = e.target.value;
+              setInfo({ ...info, phone: value });
+            }}
           />
         </div>
         <div className="form-item">
@@ -247,8 +300,11 @@ const Open = ({ open, setOpen, info, setInfo }) => {
             className="form-input m-form-input"
             type="text"
             placeholder="請輸入服務介紹"
-            defaultValue={info?.job_description}
-            name="job_description"
+            value={info?.job_description}
+            onChange={(e) => {
+              const value = e.target.value;
+              setInfo({ ...info, job_description: value });
+            }}
           />
         </div>
         <div className="form-item">
@@ -269,6 +325,8 @@ const Open = ({ open, setOpen, info, setInfo }) => {
               price={info?.feed_price}
               type="feed"
               setStatus={setFeedStatus}
+              info={info}
+              setInfo={setInfo}
             />
             <SwitchInput
               label="安親寄宿"
@@ -276,6 +334,8 @@ const Open = ({ open, setOpen, info, setInfo }) => {
               price={info?.house_price}
               type="house"
               setStatus={setHouseStatus}
+              info={info}
+              setInfo={setInfo}
             />
             <SwitchInput
               label="到府美容"
@@ -283,13 +343,22 @@ const Open = ({ open, setOpen, info, setInfo }) => {
               price={info?.beauty_price}
               type="beauty"
               setStatus={setBeautyStatus}
+              info={info}
+              setInfo={setInfo}
             />
           </div>
         </div>
         <div className="form-item">
           <label className="size-6 m-size-7">可服務地區：</label>
           <div>
-            <select className="form-select" name="service_county">
+            <select
+              className="form-select"
+              name="service_county"
+              onChange={(e) => {
+                const value = e.target.value;
+                setInfo({ ...info, service_county: value });
+              }}
+            >
               {countyOption.map((county) => {
                 if (info.service_county === county) {
                   return (
@@ -332,30 +401,37 @@ const Open = ({ open, setOpen, info, setInfo }) => {
 const HelperInfo = () => {
   const [open, setOpen] = useState(false);
   const [info, setInfo] = useState({});
-
+  let defaultInfo;
   useEffect(() => {
     memberService
       .getHelperInfo()
       .then((response) => {
-        if (response?.data?.data?.length > 0) {
+        const result = response?.data?.data[0];
+        console.log(response?.data?.data);
+
+        setInfo(result);
+        defaultInfo = result;
+        if (result.cat_helper) {
           setOpen(true);
-          setInfo(response?.data?.data[0]);
         }
       })
       .catch((e) => {
         console.log(e);
       });
   }, []);
+  if (process.client) {
+    console.log("運行在客戶端");
+  }
   return (
     <>
-      <div className="helper-info ">
+      <div className="col-12 col-sm-8 helper-info ">
         <div className="title">
           <p className="size-4 m-size-5">
             <img src="/member-icon/helper-info.svg" />
             小幫手資料
             {open && (
               <Link
-                href={`/work/find-helper/30`}
+                href={`/work/find-helper/1`}
                 // 修改為user_id
                 className="to-detail size-7 m-size-7"
               >
