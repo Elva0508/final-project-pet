@@ -83,7 +83,8 @@ router.post("/login", upload.none(), async (req, res) => {
             name: user.name, // 使用者的唯一識別符
           email: user.email, // 使用者的名稱
           password: user.password,// 使用者的電子郵件
-          avatar: user.cover_photo
+          avatar: user.cover_photo,
+          id: user.user_id
           },
           secretKey,
           { expiresIn: '1d' }
@@ -125,7 +126,8 @@ router.post("/checkLogin", checkToken,(req,res)=>{
       name: currentUser .name, // 使用者的唯一識別符
           email: currentUser .email, // 使用者的名稱
           password: currentUser .password,// 使用者的電子郵件
-          avatar: currentUser .cover_photo
+          avatar: currentUser .cover_photo,
+          id: user.user_id
     },
     secretKey,
     { expiresIn: '1d' }
@@ -139,6 +141,7 @@ router.post("/checkLogin", checkToken,(req,res)=>{
       email: currentUser.email,
       password: currentUser.password,
       avatar: currentUser.cover_photo,
+      id: currentUser.user_id,
     },
     token:token
   })

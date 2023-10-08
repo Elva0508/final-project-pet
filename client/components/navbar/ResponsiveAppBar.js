@@ -253,7 +253,7 @@ function ResponsiveAppBar() {
                   </Link>
                   </>
               ) : (
-                <Link href="member/login" >
+                <Link href="http://localhost:3000/member/login" >
                     <MenuItem >
                       <Typography textAlign="center">登入</Typography>
                     </MenuItem>

@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router"; 
 
+import jwtDecode from "jwt-decode";
+
 import { useAuth } from "@/context/fakeAuthContext";
 
 export default function Login() {
@@ -31,10 +33,46 @@ async function handleSubmit(e) {
       });
 
       if (response.ok) {
-      //   const { token } = await response.json();
-      //    localStorage.setItem('token000', token);
-      //  console.log(token)
-      const token = '12323'
+        const { token } = await response.json();
+         localStorage.setItem('token000', token);
+
+         const decodedToken = jwtDecode(token);
+         const u = decodedToken.id;
+         localStorage.setItem('data',  JSON.stringify(decodedToken));
+
+        
+        localStorage.setItem('id', u);
+         async function handleSubmit(e) {
+  e.preventDefault();
+
+  if (email && password) {
+    try {
+      const response = await fetch('http://localhost:3005/api/auth-jwt/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email, password })
+      });
+
+      if (response.ok) {
+        const { token } = await response.json();
+         localStorage.setItem('token', token);
+         localStorage.setItem('email', email);
+       //console.log(token)
+    
+        login(token);
+        //router.push('/member/profile');
+      } else {
+        throw new Error('Login failed');
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+}
+       //console.log(token)
+    
         login(token);
         //router.push('/member/profile');
       } else {

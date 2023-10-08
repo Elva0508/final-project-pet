@@ -1,63 +1,17 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import useRWD from "@/hooks/useRWD";
-
-
 import Image from "next/image";
 import myProfile from "@/assets/myProfile.svg";
-
 import data from "@/data/taiwan.json";
 import { DatePicker, Space } from "antd";
+
+
+
 
 export default function userForm() {
   //RWD
   const device = useRWD();
   const userRfs = device == "mobile" ? "m-size-6" : "size-6";
-
-  
-  useEffect(()=>{
-    fetch('http://localhost:3005/api/auth-jwt/profile')
-    .then((res) => res.json())
-    .then((data) => {
-      console.log(data)
-      setMemberData(data)
-    })
-  },[])
-
-  //表單狀態
-  const [memberData, setMemberData] = useState({
-    name: "",
-    password: "",
-    birthday: "",
-    phone: "",
-    address: "",
-    petNum: "",
-    city: "",
-    town: "",
-  });
-
-  const handleInputChange = (e)=>{
-    const {name,value} = e.target
-    setMemberData({
-      ...memberData,
-      [name]:value
-    })
-  }
-
-  const handleSubmit = (e)=>{
-    e.preventDefault()
-    fetch('http://localhost:3005/api/auth-jwt/profileChange',{
-      method:'PUT',
-      headers:{
-        'Content-Type':'application/json'
-      },
-      body:JSON.stringify(memberData)
-    })
-    .then((res) => res.json())
-    .then((data) => {
-      console.log(data)
-    })
-  }
-
 
   //地址
   const [city, setCity] = useState(-1);
@@ -76,28 +30,36 @@ export default function userForm() {
       setArea([]);
     }
   };
-
   //生日  
   const onChange = (date, dateString) => {
     console.log(date, dateString);
   };
+  
+  const userId =1;
+//const [userId, setUserId] = useState(1); // 初始化為空字符串，或者你可以設定一個初始的使用者ID
+const [userData, setUserData] = useState(null);
+  useEffect(() => {
+    const apiURL = `http://localhost:3005/api/user-info?${userId}`;
+    fetch(apiURL)
+      .then((res) => res.json())
+      .then((data) => setUserData(data));
+  }, []);
+  console.log(userData)
 
   return (
     <>
- 
- 
       <div className="user-profile ">
         <div className="title">
           <p className=" size-4">
             <Image src={myProfile} alt="myProfile-logo" />
-            我的資料
+            我的資料 
           </p>
         </div>
         <form className="user-form">
           <div className="user-form-item d-flex">
             <label className={userRfs}>Email：</label>
             <div>
-              <biv className={userRfs}>abc@test.com</biv>
+              <biv className={userRfs}>{userData ? userData.email : ""}</biv>
             </div>
           </div>
           <div className="user-form-item">
@@ -105,8 +67,7 @@ export default function userForm() {
             <div>
               <input 
               className="form-input" type="text" 
-              value={memberData.name}
-              
+
               />
             </div>
           </div>
@@ -161,10 +122,6 @@ export default function userForm() {
             </div>
           </div>
           <div className="user-form-item">
-            {/* <label className="size-6">地址：</label>
-          <div>
-          <input className="form-input" type="text" placeholder="地址" />
-          </div> */}
 
             <label className={userRfs}>地址：</label>
             <div className="d-flex">
@@ -227,4 +184,3 @@ export default function userForm() {
     </>
   );
 }
-
