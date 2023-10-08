@@ -19,7 +19,7 @@ const UserCouponPage = () => {
       console.error('Error fetching data:', error);
     });
   }, []);
-  console.log(setCoupons);
+  //console.log(setCoupons);
 
   const handleFilter = (event) => {
     const filter = event.target.value;

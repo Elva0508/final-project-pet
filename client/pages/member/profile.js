@@ -66,6 +66,35 @@ const ProfilePage = () => {
       .catch((err) => console.log(err));
   }, []);
 
+  const handleSave = (event) => {
+    event.preventDefault();
+    const updatedUserData = {
+      email,
+      name,
+      gender,
+      birthday,
+      phone,
+      city: addressCity,
+      area: addressTown,
+      address: detailAddress,
+      pet_number: petCount,
+    };
+    axios
+      .put("http://localhost:3005/api/user/update-user-data", updatedUserData)
+      .then((res) => {
+        setUserData(res.data.results[0]);
+        setEmail(res.data.results[0].email);
+        setName(res.data.results[0].name);
+        setGender(res.data.results[0].gender);
+        setBirthday(res.data.results[0].birthday);
+        setPhone(res.data.results[0].phone);
+        setAddressCity(res.data.results[0].city);
+        setAddressTown(res.data.results[0].area);
+        setDetailAddress(res.data.results[0].address);
+        setPetCount(res.data.results[0].pet_number);
+      })
+      .catch((err) => console.log(err));
+  };
   return (
     <div className="d-flex container-fluid flex-column flex-md-row my-3">
       <div className="d-flex justify-content-end">
@@ -80,10 +109,10 @@ const ProfilePage = () => {
         <div className="title">
           <p className=" size-4">
             <Image src={myProfile} alt="myProfile-logo" />
-            我的資料 
+            我的資料
           </p>
         </div>
-        <form className="user-form">
+        <div className="user-form">
           <div className="user-form-item d-flex">
             <label className={userRfs}>Email：</label>
             <div>
@@ -117,7 +146,6 @@ const ProfilePage = () => {
             <label className={userRfs}>性別：</label>
             <div>
               <input
-           
                 type="radio"
                 name="gender"
                 id="male"
@@ -129,7 +157,6 @@ const ProfilePage = () => {
               />
               男
               <input
-           
                 type="radio"
                 name="gender"
                 id="female"
@@ -169,11 +196,8 @@ const ProfilePage = () => {
               <select
                 className="form-select"
                 value={addressCity}
-                onChange={(e) => setAddressCity(e.target.value)}
-              >
-                <option selected value={-1}>
-               
-                </option>
+                onChange={(e) => setAddressCity(e.target.value)}>
+                <option value={-1}></option>
                 {data.map((v) => {
                   return (
                     <option key={v.name} value={v.number}>
@@ -186,14 +210,15 @@ const ProfilePage = () => {
               <select
                 className="form-select"
                 value={addressTown}
-                onChange={(e) => setAddressTown(e.target.value)}
-              >
-                <option selected>townn</option>
-                {area.map((v, i) => (
-                  <option key={i} value={v}>
-                    {v}
-                  </option>
-                ))}
+                onChange={(e) => setAddressTown(e.target.value)}>
+                <option value={-1}></option>
+                {data.map((v, i) => {
+                  return (
+                    <option key={v.name} value={v.number}>
+                      {v.name}
+                    </option>
+                  );
+                })}
               </select>
             </div>
           </div>
@@ -201,10 +226,12 @@ const ProfilePage = () => {
           <div className="user-form-item">
             <label></label>
             <div>
-              <input type="text" 
-              className="form-control" 
-              value={detailAddress}
-              onChange={(e) => setDetailAddress(e.target.value)} />
+              <input
+                type="text"
+                className="form-control"
+                value={detailAddress}
+                onChange={(e) => setDetailAddress(e.target.value)}
+              />
             </div>
           </div>
 
@@ -222,9 +249,11 @@ const ProfilePage = () => {
 
           <div className="user-form-item d-flex justify-content-center">
             <button className="btn-outline-confirm">取消</button>
-            <button className="btn-confirm">儲存</button>
+            <button id="save" className="btn-confirm" onClick={handleSave}>
+              儲存
+            </button>
           </div>
-        </form>
+        </div>
       </div>
     </div>
   );

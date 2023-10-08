@@ -45,7 +45,23 @@ router.get("/user-coupon", (req,res)=>{
 //   });
 // });
 
+router.put('/update-user-data', (req, res) => {
+  const { name, phone, city, area, address, birthday, pet_number } = req.body;
+  const userId = 1; // replace with the actual user ID
 
+  connection.query(
+    'UPDATE userinfo SET name = ?, phone = ?, city = ?, area = ?, address = ?, birthday = ?, pet_number = ? WHERE user_id = ?',
+    [name, phone, city, area, address, birthday, pet_number, userId],
+    (err, results) => {
+      if (err) {
+        console.error('資料庫-更新錯誤：', err);
+        res.status(500).json({ message: '資料庫更新錯誤', code: '500' });
+      } else {
+        res.status(200).json({ message: 'success', code: '200' });
+      }
+    }
+  );
+});
 router.get('/user-info', (req, res) => {
   //const userId = req.body.user_id;
   
@@ -62,7 +78,18 @@ connection.query('SELECT * FROM userinfo WHERE user_id = 1', (err,results)=>{
   }
 })
 })
-
+router.put('/change-password', (req, res) => {
+  //const { user_id, new_password } = req.body;
+  const { newPassword } = req.body;
+  connection.query('UPDATE userinfo SET password = ? WHERE user_id = ?', [newPassword, 1], (err, results) => {
+    if (err) {
+      console.error('資料庫-更新錯誤：', err);
+      res.status(500).json({ message: '資料庫更新錯誤', code: '500' });
+    } else {
+      res.status(200).json({ message: 'success', code: '200' });
+    }
+  });
+});
 
 
 module.exports = router;
