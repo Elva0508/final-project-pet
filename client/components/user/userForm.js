@@ -131,7 +131,7 @@ const [userData, setUserData] = useState(null);
                 onChange={handleCityChange}
               >
                 <option selected value={-1}>
-               citttty
+                選擇縣/市
                 </option>
                 {data.map((v) => {
                   return (
@@ -142,15 +142,16 @@ const [userData, setUserData] = useState(null);
                 })}
               </select>
 
-              <select className="form-select">
+              <select className="form-select"  value={-1}>
                 <option selected>
-               townn
+                選擇鄉鎮市區
                 </option>
-                {area.map((v, i) => (
+                {area.map((v, i) => {
+                return(
                   <option key={i} value={v}>
                     {v}
                   </option>
-                ))}
+                )})}
               </select>
             </div>
           </div>

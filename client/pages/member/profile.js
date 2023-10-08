@@ -95,6 +95,20 @@ const ProfilePage = () => {
       })
       .catch((err) => console.log(err));
   };
+
+  const handleCancel = () => {
+    setUserData(userData);
+        setEmail(userData.email);
+        setName(userData.name);
+        setGender(userData.gender);
+        setBirthday(userData.birthday);
+        setPhone(userData.phone);
+        setAddressCity(userData.city);
+        setAddressTown(userData.area);
+        setDetailAddress(userData.address);
+        setPetCount(userData.pet_number);
+
+  }
   return (
     <div className="d-flex container-fluid flex-column flex-md-row my-3">
       <div className="d-flex justify-content-end">
@@ -212,10 +226,10 @@ const ProfilePage = () => {
                 value={addressTown}
                 onChange={(e) => setAddressTown(e.target.value)}>
                 <option value={-1}></option>
-                {data.map((v, i) => {
+                {area.map((u, i) => {
                   return (
-                    <option key={v.name} value={v.number}>
-                      {v.name}
+                    <option key={i} value={u}>
+                      {u}
                     </option>
                   );
                 })}
@@ -248,7 +262,9 @@ const ProfilePage = () => {
           </div>
 
           <div className="user-form-item d-flex justify-content-center">
-            <button className="btn-outline-confirm">取消</button>
+      
+            <button className="btn-outline-confirm" onClick={handleCancel}>取消</button>
+            
             <button id="save" className="btn-confirm" onClick={handleSave}>
               儲存
             </button>
