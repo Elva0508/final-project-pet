@@ -5,9 +5,11 @@ import { useRouter } from "next/router";
 export default function Chatroom() {
   const [chatContent, setChatContent] = useState([]); //內容設置的狀態
   const [ws, setWs] = useState(null); // WebSocket連接的狀態
+  const [decodedToken, setDecodedToken] = useState(null); // 新增 decodedToken 狀態
   const [msgInputValue, setMsgInputValue] = useState(""); // 輸入框的值
   const router = useRouter();
-  const { chatlist_id, name } = router.query;
+  const { chatlist_id } = router.query;
+  const { name, cover_photo } = router.query;
 
   // 驗證有無登入
   useEffect(() => {
@@ -22,7 +24,8 @@ export default function Chatroom() {
     // 使用 router.isReady 判斷
     if (router.isReady) {
       // 解 token 拿到 user_id 和 chatlist_id
-      getChatContent(decodedToken.user_id, chatlist_id);
+
+      setDecodedToken(decodedToken);
     }
   }, [router.isReady, chatlist_id]); // chatlist_id當參數
 
@@ -55,27 +58,30 @@ export default function Chatroom() {
 
   // WebSocket連接
   useEffect(() => {
-    const newWs = new WebSocket("ws://localhost:8080");
+    // 有decodedToken再執行
+    if (decodedToken) {
+      const newWs = new WebSocket("ws://localhost:8080");
 
-    // 設置WebSocket連接
-    newWs.addEventListener("open", () => {
-      console.log("WebSocket連接已打開");
-      let params = {
-        type: "register",
-        userId,
+      // 設置WebSocket連接
+      newWs.addEventListener("open", () => {
+        console.log("WebSocket連接已打開");
+        let params = {
+          type: "register",
+          user_id: decodedToken.user_id,
+        };
+        newWs.send(JSON.stringify(params));
+        setWs(newWs);
+      });
+
+      // 處理WebSocket消息
+      newWs.addEventListener("message", (event) => {
+        handleTextsend(event);
+      });
+
+      return () => {
+        newWs.close(); //關掉處理WebSocket消息
       };
-      newWs.send(JSON.stringify(params));
-      setWs(newWs);
-    });
-
-    // 處理WebSocket消息
-    newWs.addEventListener("message", (event) => {
-      handleTextsend(event);
-    });
-
-    return () => {
-      newWs.close(); //關掉處理WebSocket消息
-    };
+    }
   }, []);
 
   // 處理送出事件
@@ -127,7 +133,7 @@ export default function Chatroom() {
               <div className="d-flex align-items-center">
                 <div className="avatar rounded-circle mr-3 overflow-hidden rounded-circle">
                   <img
-                    src="https://upload.wikimedia.org/wikipedia/commons/b/b1/VAN_CAT.png"
+                    src={cover_photo}
                     className="img-fluid object-fit-cover"
                   />
                 </div>

@@ -1,10 +1,13 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import jwt_decode from "jwt-decode";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 export default function ChatList() {
   const [chatList, setChatList] = useState([]); //聊天列表設置的狀態
   const [ws, setWs] = useState(null); // WebSocket連接的狀態
+  const [decodedToken, setDecodedToken] = useState(null); // 新增 decodedToken 狀態
+  const router = useRouter();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -14,6 +17,7 @@ export default function ChatList() {
       return;
     }
     const decodedToken = decodeToken(token);
+    setDecodedToken(decodedToken);
 
     // 解token後，拿到user_id
     getChatList(decodedToken.user_id);
@@ -43,26 +47,28 @@ export default function ChatList() {
 
   // WebSocket連接+資料
   useEffect(() => {
-    //之後userId要改成登入者的userID
-    const newWs = new WebSocket("ws://localhost:8080");
+    // 有decodedToken再執行
+    if (decodedToken) {
+      const newWs = new WebSocket("ws://localhost:8080");
 
-    // 設置WebSocket連接
-    newWs.addEventListener("open", () => {
-      console.log("WebSocket連接已打開");
-      let params = {
-        type: "register",
-        user_id,
+      // 設置WebSocket連接
+      newWs.addEventListener("open", () => {
+        console.log("WebSocket連接已打開");
+        let params = {
+          type: "register",
+          user_id: decodedToken.user_id,
+        };
+        newWs.send(JSON.stringify(params));
+        setWs(newWs);
+      });
+
+      // 處理WebSocket消息
+      newWs.addEventListener("message", (event) => {});
+
+      return () => {
+        newWs.close(); //關掉處理WebSocket消息
       };
-      newWs.send(JSON.stringify(params));
-      setWs(newWs);
-    });
-
-    // 處理WebSocket消息
-    newWs.addEventListener("message", (event) => {});
-
-    return () => {
-      newWs.close(); //關掉處理WebSocket消息
-    };
+    }
   }, []);
   return (
     <>
@@ -83,6 +89,17 @@ export default function ChatList() {
                 <div className="list" key={v.user_id}>
                   <Link
                     href={`/chatlist/${v.chatlist_id}?name=${v.name}`}
+                    onClick={(e) => {
+                      e.preventDefault(); //
+                      router.push(
+                        {
+                          pathname: `/chatlist/${v.chatlist_id}`,
+                          query: { name: v.name, cover_photo: v.cover_photo },
+                        },
+                        undefined,
+                        { shallow: true }
+                      );
+                    }}
                     className="list-group-item list-group-item-action"
                   >
                     <div className="d-flex align-items-center">
