@@ -12,19 +12,27 @@ import { RiFileList3Fill } from "react-icons/ri";
 import Link from "next/link";
 
 export default function ListD() {
+
+  const userData = localStorage.getItem("data");
+  const parseData = JSON.parse(userData);
+
+  //console.log(parseData);
+  const userName = parseData.name;
+  const avatar = parseData.avatar;
   return (
     <>
       <div className="list-d col-3 d-md-block d-none">
         <div className="user">
           <div className="d-flex justify-content-center">
             <img
-              src="https://cdn-front.mao-select.com.tw//upload_files/fonlego-rwd/prodpic/D_A1VK080502.jpg"
+              // src="https://cdn-front.mao-select.com.tw//upload_files/fonlego-rwd/prodpic/D_A1VK080502.jpg"
+              src={avatar}
               className="m-3"
             ></img>
             <div className="d-flex flex-column justify-content-around mt-3">
               <div>
                 <h6 className="size-6">Hi,</h6>
-                <h6 className="size-6">使用者</h6>
+                <h6 className="size-6">{userName}</h6>
               </div>
               <button className="size-7 level">幼貓</button>
             </div>
