@@ -31,16 +31,18 @@ const router=useRouter()
 
             <div className="size-5 mx-2 my-3">
               <Link
-                href="/login"
+                href="http://localhost:3000/member/login"
                 className="login-lg"
+                onClick={()=>setIsLogin(true)}
               >
                 登入
               </Link>
             </div>
             <div className="size-5 mx-2 my-3">
               <Link
-                href="/login"
+                href="http://localhost:3000/member/login"
                 className="login-lg "
+                onClick={()=>setIsLogin(false)}
               >
                 註冊
               </Link>

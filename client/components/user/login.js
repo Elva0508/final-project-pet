@@ -1,89 +1,29 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useRouter } from "next/router"; 
-
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
 import jwtDecode from "jwt-decode";
+// import {Icon} from 'react-icons-kit';
+// import {eyeOff} from 'react-icons-kit/feather/eyeOff';
+// import {eye} from 'react-icons-kit/feather/eye'
 
 import { useAuth } from "@/context/fakeAuthContext";
 
 export default function Login() {
-  
-  const [email, setEmail] = useState("jack@example.com");
-  const [password, setPassword] = useState("qwerty");
 
+ // const [icon, setIcon] = useState(eyeOff);
+  
   const { login, isAuthenticated } = useAuth();
   const router = useRouter(); 
 
-  // function handleSubmit(e) {
-  //   e.preventDefault();
-
-  //  if (email && password) login(email, password);
-   
+  // const handleToggleEye=()=>{
+  //   if(type === "password"){
+  //     setIcon(eye)
+  //     setType("text")
+  // }else{
+  //     setIcon(eyeOff)
+  //     setType("password")
   // }
-async function handleSubmit(e) {
-  e.preventDefault();
-
-  if (email && password) {
-    try {
-      const response = await fetch('http://localhost:3005/api/auth-jwt/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ email, password })
-      });
-
-      if (response.ok) {
-        const { token } = await response.json();
-         localStorage.setItem('token000', token);
-
-         const decodedToken = jwtDecode(token);
-         const u = decodedToken.id;
-         localStorage.setItem('data',  JSON.stringify(decodedToken));
-
-        
-        localStorage.setItem('id', u);
-         async function handleSubmit(e) {
-  e.preventDefault();
-
-  if (email && password) {
-    try {
-      const response = await fetch('http://localhost:3005/api/auth-jwt/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ email, password })
-      });
-
-      if (response.ok) {
-        const { token } = await response.json();
-         localStorage.setItem('token', token);
-         localStorage.setItem('email', email);
-       //console.log(token)
-    
-        login(token);
-        //router.push('/member/profile');
-      } else {
-        throw new Error('Login failed');
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  }
-}
-       //console.log(token)
-    
-        login(token);
-        //router.push('/member/profile');
-      } else {
-        throw new Error('Login failed');
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  }
-}
-
 
   useEffect(
     function () {
@@ -92,40 +32,92 @@ async function handleSubmit(e) {
     [isAuthenticated, router]
   );
 
+
+  const initialValues = {
+    email: "",
+    password: ""
+  };
+
+  const validationSchema = Yup.object({
+    email: Yup.string().email("email格式不正確").required("帳號不能為空"),
+    password: Yup.string().required("密碼不能為空")
+  });
+
+  const onSubmit = async (values, { setSubmitting }) => {
+    try {
+      const response = await fetch('http://localhost:3005/api/auth-jwt/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(values)
+      });
+
+      if (response.ok) {
+        const { token } = await response.json();
+        localStorage.setItem('token', token);
+
+        const decodedToken = jwtDecode(token);
+        const u = decodedToken.id;
+        localStorage.setItem('data',  JSON.stringify(decodedToken));
+        localStorage.setItem('id', u);
+
+        login(token);
+        //router.push('/member/profile');
+      } else {
+        throw new Error('Login failed');
+      }
+    } catch (error) {
+      console.error(error);
+    }
+    setSubmitting(false);
+  };
+
   return (
-  
-   
-      <form className="email-signup" onSubmit={handleSubmit}>
+    <Formik
+      initialValues={initialValues}
+      validationSchema={validationSchema}
+      onSubmit={onSubmit}
+    >
+      {({ isSubmitting }) => (
+        <Form className="email-signup">
+          <div className="u-form-group mb-3">
+            <label htmlFor="email">帳號</label>
+            <Field
+              className="form-input"
+              type="email"
+              id="email"
+              name="email"
+            />
+            <ErrorMessage name="email" component="div" className="error" />
+          </div>
 
-        <div className="u-form-group mb-3">
+          <div className="u-form-group mb-3">
+            <label htmlFor="password">密碼</label>
+            <Field
+              className="form-input"
+              type="password"
+              id="password"
+              name="password"
+            />
+            <ErrorMessage
+              name="password"
+              component="div"
+              className="error"
+            />
+          </div>
 
-          <label htmlFor="email">帳號</label>
-          <input
-          className="form-input " 
-            type="email"
-            id="email"
-            onChange={(e) => setEmail(e.target.value)}
-            value={email}
-          />
-        </div>
-
-        <div className="u-form-group mb-3">
-          <label htmlFor="password">密碼</label>
-          <input
-          className="form-input " 
-            type="password"
-            id="password"
-            onChange={(e) => setPassword(e.target.value)}
-            value={password}
-          />
-        </div>
-
-        <div className="u-form-group">
-        
-        <button type="submit" className="btn-brown">登入</button>
-   
-        </div>
-      </form>
-
+          <div className="u-form-group">
+            <button
+              type="submit"
+              className="btn-brown"
+              disabled={isSubmitting}
+            >
+              登入
+            </button>
+          </div>
+        </Form>
+      )}
+    </Formik>
   );
 }
