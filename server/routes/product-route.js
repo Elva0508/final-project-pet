@@ -97,24 +97,128 @@ router.get("/product-detail/:product_id/reviews", (req, res) => {
 router.get("/recommend", (req, res) => {
     connection.execute(
         ` SELECT
-    products.*,
-    category.category_name AS category_name,
-    subcategory.subcategory_name AS subcategory_name,
-    GROUP_CONCAT(product_type.type_name SEPARATOR ', ') AS type_names
-    FROM products
-    JOIN category ON category.category_id = products.category_id
-    JOIN subcategory ON subcategory.subcategory_id = products.subcategory_id
-    LEFT JOIN product_type ON product_type.product_id = products.product_id
-    GROUP BY products.product_id, category_name, subcategory_name
-    ORDER BY RAND()
-    LIMIT 4;
-;
+        products.*,
+        category.category_name AS category_name,
+        subcategory.subcategory_name AS subcategory_name,
+        GROUP_CONCAT(product_type.type_name SEPARATOR ', ') AS type_names
+        FROM products
+        JOIN category ON category.category_id = products.category_id
+        JOIN subcategory ON subcategory.subcategory_id = products.subcategory_id
+        LEFT JOIN product_type ON product_type.product_id = products.product_id
+        GROUP BY products.product_id, category_name, subcategory_name
+        ORDER BY RAND()
+        LIMIT 4;
+        ;
         `,
         (error, result) => {
             res.json({ result });
         }
     );
 });
+
+//用來新增購物車裡沒有的商品
+router.put("/cart", (req, res) => {
+    const { id, type, quantity } = req.body; // 從請求主體中獲取 quantity 參數
+    connection.execute(
+        `INSERT INTO cart(user_id, product_id, product_type_id, quantity) VALUES (1, ?, ?, ?);`,
+        [id, type, quantity], // 將 quantity 參數傳遞到 SQL 查詢中
+        (error, result) => {
+            if (error) {
+                console.error("Error inserting into cart:", error);
+                res.status(500).json({ error: "Internal Server Error" });
+            } else {
+                res.json({ result });
+            }
+        }
+    );
+});
+
+
+//用來修改購物車裡已經有的商品數量
+router.put("/cartplus", (req, res) => {
+    console.log(req);
+    const { id, newQuantity, type } = req.body
+    connection.execute(
+        `UPDATE cart SET quantity=? WHERE user_id=1 AND product_id=? AND product_type_id=?`,
+        [newQuantity, id, type]
+        , (error, result) => {
+            res.json({ result })
+        }
+    )
+})
+
+//產品列表頁大類小類篩選＋價格篩選＋上架時間與價格排序
+router.get("/filter_sort", (req, res) => {
+    const { vendor, subcategory, category, minPrice, maxPrice, sortBy } = req.query;
+
+    // 創建查詢參數數組，將參數添加到數組中
+    const queryParams = [];
+
+    // 初始化 SQL 查詢字符串
+    let sqlQuery = `
+        SELECT p.*
+        FROM products AS p
+        JOIN subcategory AS s ON p.subcategory_id = s.subcategory_id
+        JOIN category AS c ON p.category_id = c.category_id
+        WHERE 1 = 1 
+    `;
+
+    // AND c.category_name = ? AND s.subcategory_name = ?
+    // AND vendor LIKE ?
+
+    if (category != null) {
+        sqlQuery += 'AND c.category_name = ? ';
+        queryParams.push(category);
+    } 
+    if (subcategory != null){
+        sqlQuery += 'AND s.subcategory_name = ? ';
+        queryParams.push(subcategory);
+    } 
+    if (vendor != null){
+        sqlQuery += 'AND vendor LIKE ? ';
+        queryParams.push(`%${vendor}%`);
+    }
+
+    // 如果指定了最小價格和最大價格，將價格篩選條件添加到 SQL 查詢中
+    if (minPrice && maxPrice) {
+        sqlQuery += `AND p.specialoffer BETWEEN ? AND ? `;
+        queryParams.push(minPrice, maxPrice);
+    }
+
+    // 根據 sortBy 條件添加不同的排序方式
+    if (sortBy === 'created_at_asc') {
+        sqlQuery += `ORDER BY p.created_at ASC;`;
+    } else if (sortBy === 'price_asc') {
+        sqlQuery += `ORDER BY p.specialoffer ASC;`;
+    } else {
+        // 添加默認排序方式，如果未提供 sortBy 條件
+        sqlQuery += `ORDER BY p.created_at DESC, p.specialoffer ASC;`;
+    }
+
+    console.log(category)
+    console.log(subcategory)
+    console.log(vendor)
+    console.log(`%${vendor}%`)
+    console.log('qqqqqq')
+    console.log(sqlQuery)
+    console.log('qqqqqqaa')
+
+    // 執行 SQL 查詢
+    connection.execute(
+        sqlQuery,
+        queryParams,
+        (error, result) => {
+            if (error) {
+                console.error("Database error:", error);
+                res.status(500).json({ error: "Internal server error" });
+            } else {
+                res.json({ result });
+            }
+        }
+    );
+});
+
+
 
 
 
