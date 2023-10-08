@@ -29,10 +29,10 @@ const ResetUserPassword = () => {
         }),
       });
       const data = await response.json();
-      //alert(data.message);
-      // setPassword("");
-      // setNewPassword("");
-      // setNewPasswordCheck("");
+      alert(data.message);
+      setPassword("");
+      setNewPassword("");
+      setNewPasswordCheck("");
     } catch (error) {
       console.error(error);
       //alert("修改密碼失敗");
