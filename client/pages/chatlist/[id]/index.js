@@ -3,13 +3,16 @@ import jwt_decode from "jwt-decode";
 import { useRouter } from "next/router";
 
 export default function Chatroom() {
+  const router = useRouter();
+  const { id } = router.query;
+  const chatlist_id = id;
+  // console.log("chatlist_id=" + chatlist_id);
   const [chatContent, setChatContent] = useState([]); //內容設置的狀態
+  const [chatTitle, setChatTitle] = useState([]); //聊天室標題設置的狀態
+  const [userId, setUserId] = useState(""); //儲存userID
   const [ws, setWs] = useState(null); // WebSocket連接的狀態
   const [decodedToken, setDecodedToken] = useState(null); // 新增 decodedToken 狀態
   const [msgInputValue, setMsgInputValue] = useState(""); // 輸入框的值
-  const router = useRouter();
-  const { chatlist_id } = router.query;
-  const { name, cover_photo } = router.query;
 
   // 驗證有無登入
   useEffect(() => {
@@ -23,11 +26,19 @@ export default function Chatroom() {
 
     // 使用 router.isReady 判斷
     if (router.isReady) {
-      // 解 token 拿到 user_id 和 chatlist_id
-
+      // 解 token 拿到 user_id
       setDecodedToken(decodedToken);
+      // 儲存user_id
+      setUserId(decodedToken.user_id);
     }
-  }, [router.isReady, chatlist_id]); // chatlist_id當參數
+    // 如果 chatlist_id 存在，則調用 getChatContent
+    if (chatlist_id) {
+      getChatContent(chatlist_id);
+    }
+    if (chatlist_id && userId) {
+      getChatTitle(chatlist_id, userId);
+    }
+  }, [router.isReady, chatlist_id, userId]);
 
   const decodeToken = (token) => {
     try {
@@ -39,22 +50,31 @@ export default function Chatroom() {
     }
   };
 
-  // 利用解碼後的user_id向伺服器要求資料並設定到狀態中
+  // 利用網址傳來的chatlist_id向伺服器要求資料並設定到狀態中
   const getChatContent = async (chatlist_id) => {
-    console.log(chatlist_id);
     const res = await fetch(
       "http://localhost:3005/api/chatroom/" + chatlist_id
     );
 
-    const data = await res.json();
+    const ChatContentData = await res.json();
 
-    console.log(data);
+    console.log(ChatContentData);
     // 設定到狀態中 -> 會觸發重新渲染(re-render)
-    if (Array.isArray(data)) setChatContent(data);
+    if (Array.isArray(ChatContentData)) setChatContent(ChatContentData);
   };
 
-  //之後userId要改成登入者的userID
-  const userId = "aaa";
+  // 利用網址傳來的chatlist_id + Token解出來的user_id向伺服器要求聊天室標題資料並設定到狀態中
+  const getChatTitle = async (chatlist_id, userId) => {
+    const res = await fetch(
+      "http://localhost:3005/api/chatlist/" + userId + "/" + chatlist_id
+    );
+
+    const ChatTitleData = await res.json();
+
+    console.log(ChatTitleData);
+    // 設定到狀態中 -> 會觸發重新渲染(re-render)
+    if (Array.isArray(ChatTitleData)) setChatTitle(ChatTitleData);
+  };
 
   // WebSocket連接
   useEffect(() => {
@@ -132,13 +152,18 @@ export default function Chatroom() {
             <div className="target-user">
               <div className="d-flex align-items-center">
                 <div className="avatar rounded-circle mr-3 overflow-hidden rounded-circle">
-                  <img
-                    src={cover_photo}
-                    className="img-fluid object-fit-cover"
-                  />
+                  {chatTitle.map((v, i) => (
+                    <img
+                      key={v.chatlist_id}
+                      src={v.cover_photo}
+                      className="img-fluid object-fit-cover"
+                    />
+                  ))}
                 </div>
                 <div className="mx-3 size-5 m-size-5">
-                  <span>{name}</span>
+                  {chatTitle.map((v, i) => (
+                    <span key={v.chatlist_id}>{v.name}</span>
+                  ))}
                 </div>
               </div>
             </div>

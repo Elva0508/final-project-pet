@@ -88,18 +88,7 @@ export default function ChatList() {
               return (
                 <div className="list" key={v.user_id}>
                   <Link
-                    href={`/chatlist/${v.chatlist_id}?name=${v.name}`}
-                    onClick={(e) => {
-                      e.preventDefault(); //
-                      router.push(
-                        {
-                          pathname: `/chatlist/${v.chatlist_id}`,
-                          query: { name: v.name, cover_photo: v.cover_photo },
-                        },
-                        undefined,
-                        { shallow: true }
-                      );
-                    }}
+                    href={`/chatlist/${v.chatlist_id}`}
                     className="list-group-item list-group-item-action"
                   >
                     <div className="d-flex align-items-center">
