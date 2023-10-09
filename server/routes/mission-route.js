@@ -60,7 +60,7 @@ const commonQueryTemplate = `
 //   }
 // });
 
-// 我現在要在排序裡面新增篩選
+// 任務列表：排序＋篩選＋搜尋
 router.get("/all-missions", (req, res) => {
   let sortOrder = req.query.sortOrder;
   let orderBy = req.query.sortBy;
@@ -163,7 +163,7 @@ router.get("/all-missions", (req, res) => {
   if (searchQuery) {
     whereClause.push(`md.title LIKE '%${searchQuery}%'`);
   }
-  
+
   // 如果有 WHERE 子句，將其加入查詢
   if (whereClause.length > 0) {
     query += ` WHERE ${whereClause.join(' AND ')}`;
@@ -185,8 +185,7 @@ router.get("/all-missions", (req, res) => {
   });
 });
 
-
-
+// 最新任務
 router.get("/latest-missions", (req, res) => {
   conn.execute(
     `${commonQueryTemplate}
@@ -198,6 +197,54 @@ router.get("/latest-missions", (req, res) => {
         return;
       }
       res.send({ status: 200, data: result });
+    }
+  );
+});
+
+//先取得收藏的任務有哪些
+router.get("/fav", (req, res) => {
+  conn.execute(
+    `SELECT mf.*,md.mission_id AS mission_id
+    FROM mission_fav AS mf
+    JOIN mission_detail AS md ON mf.mission_id = md.mission_id 
+    WHERE mf.user_id = 1;`,
+    (error, result) => {
+      res.json({ result });
+    }
+  );
+});
+
+// 任務加入收藏
+router.put("/add-fav", (req, res) => {
+  const { missionId } = req.body; // 從請求體中獲取任務的 missionId  
+  console.log("req.body:", req.body);
+  conn.execute(
+    `INSERT INTO mission_fav(mission_id, user_id) VALUES (?,1)`,
+    [missionId], // 使用參數化查詢來防止 SQL 注入攻擊
+    (error, result) => {
+      if (error) {
+        console.error(error);
+        res.status(500).json({ error: '加到收藏出錯' });
+      } else {
+        res.json({ result });
+      }
+    }
+  );
+});
+
+// 任務取消收藏
+router.delete("/delete-fav", (req, res) => {
+  const { missionId } = req.body;
+  conn.execute(
+    "DELETE FROM mission_fav WHERE mission_id = ? AND user_id = 1;",
+    [missionId],
+    (error, result) => {
+      if (error) {
+        console.error(error);
+        res.status(500).json({ error: '移除收藏出錯' });
+      } else {
+        res.json({ result });
+      }
     }
   );
 });

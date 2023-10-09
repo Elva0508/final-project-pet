@@ -858,13 +858,50 @@ const MissionCard = ({ missionType, missionCity, missionArea, setMissionType, up
     return `${year}/${month}/${day}`;
   }
 
-  // 為每個卡片創建獨立的isFavorite狀態數組
-  const [isFavorites, setIsFavorites] = useState(currentData.map(() => false));
+  const [isFavorites, setIsFavorites] = useState([]);
 
-  const toggleFavorite = (index) => {
-    const newFavorites = [...isFavorites];
-    newFavorites[index] = !newFavorites[index];
-    setIsFavorites(newFavorites);
+  useEffect(() => {
+    // 在組件加載時從後端獲取已收藏的任務
+    const fetchFavoriteMissions = async () => {
+      try {
+        const response = await axios.get('http://localhost:3005/api/mission/fav');
+        const favoriteMissionIds = response.data.result.map((fav) => fav.mission_id);
+
+        // 根據已收藏的任務和當前任務列表來初始化 isFavorites 數組
+        const initialFavorites = currentData.map((mission) =>
+          favoriteMissionIds.includes(mission.mission_id)
+        );
+        setIsFavorites(initialFavorites);
+      } catch (error) {
+        console.error('前端請求錯誤：', error);
+      }
+    };
+
+    fetchFavoriteMissions();
+  }, [currentData]);
+
+  const toggleFavorite = async (index) => {
+    try {
+      const newFavorites = [...isFavorites];
+      newFavorites[index] = !newFavorites[index];
+      setIsFavorites(newFavorites); // 立即更新圖標狀態
+  
+      const missionId = currentData[index].mission_id;
+      console.log(missionId)
+
+        if (!isFavorites[index]) {
+          // 如果任務未被收藏，發送加入收藏的請求
+          await axios.put('http://localhost:3005/api/mission/add-fav', { missionId });
+          console.log('已加入收藏');
+        } else {
+          // 如果任務已被收藏，發送取消收藏的請求
+          await axios.delete('http://localhost:3005/api/mission/delete-fav', { data: { missionId } });
+          console.log('已取消收藏');
+        }
+
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
