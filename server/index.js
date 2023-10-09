@@ -108,9 +108,12 @@ wss.on("connection", (connection) => {
       const targetUserId = parseMessage.targetUserId;
       const fromID = parseMessage.fromID;
       const chatmsg = parseMessage.message;
+      console.log(parseMessage);
       if (targetUserId) {
+        console.log("沒有送到訊息但有跑進來");
         let targetClient = clients[targetUserId];
         if (targetClient.readyState === WebSocket.OPEN) {
+          console.log("有送到訊息");
           targetClient.send(
             JSON.stringify({
               type: "message",

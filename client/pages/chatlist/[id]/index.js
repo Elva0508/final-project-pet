@@ -10,6 +10,7 @@ export default function Chatroom() {
   const [chatContent, setChatContent] = useState([]); //內容設置的狀態
   const [chatTitle, setChatTitle] = useState([]); //聊天室標題設置的狀態
   const [userId, setUserId] = useState(""); //儲存userID
+  const [userInfo, setUserInfo] = useState(""); //儲存userInfo
   const [ws, setWs] = useState(null); // WebSocket連接的狀態
   const [decodedToken, setDecodedToken] = useState(null); // 新增 decodedToken 狀態
   const [msgInputValue, setMsgInputValue] = useState(""); // 輸入框的值
@@ -37,6 +38,9 @@ export default function Chatroom() {
     }
     if (chatlist_id && userId) {
       getChatTitle(chatlist_id, userId);
+    }
+    if (userId) {
+      getUserInfo(userId);
     }
   }, [router.isReady, chatlist_id, userId]);
 
@@ -74,7 +78,69 @@ export default function Chatroom() {
     console.log(ChatTitleData);
     // 設定到狀態中 -> 會觸發重新渲染(re-render)
     if (Array.isArray(ChatTitleData)) setChatTitle(ChatTitleData);
+
+    const TargetObject = ChatTitleData[0];
+
+    if (TargetObject) {
+      const TargetUserId = TargetObject.user_id;
+      const TargetUserCoverPhoto = TargetObject.cover_photo;
+      const TargetUserName = TargetObject.name;
+    } else {
+      // 如果陣列為空（沒有找到匹配的資料），可以在這裡處理
+      console.log("未找到相應的使用者資訊");
+    }
   };
+
+  // 利用token解出的userId + 向伺服器要求目前正在登入狀態的userInfo
+  const getUserInfo = async (userId) => {
+    const res = await fetch(
+      "http://localhost:3005/api/chatroom/userinfo/" + userId
+    );
+
+    const UserInfoData = await res.json();
+
+    console.log(UserInfoData);
+    // 設定到狀態中 -> 會觸發重新渲染(re-render)
+    if (Array.isArray(UserInfoData)) setUserInfo(UserInfoData);
+
+    const firstObject = UserInfoData[0];
+
+    if (firstObject) {
+      const UserCoverPhoto = firstObject.cover_photo;
+    } else {
+      // 如果陣列為空（沒有找到匹配的資料），可以在這裡處理
+      console.log("未找到相應的使用者資訊");
+    }
+  };
+
+  // WebSocket連接
+  useEffect(() => {
+    // 有decodedToken再執行
+    if (decodedToken) {
+      const newWs = new WebSocket("ws://localhost:8080");
+
+      // 設置WebSocket連接
+      newWs.addEventListener("open", () => {
+        console.log("WebSocket連接已打開");
+        let params = {
+          type: "register",
+          user_id: decodedToken.user_id,
+        };
+        newWs.send(JSON.stringify(params));
+        setWs(newWs);
+      });
+
+      // // 處理WebSocket消息
+      // newWs.addEventListener("message", (event) => {
+      //   console.log("message有被監聽到");
+      //   handleTextsend(event);
+      // });
+
+      return () => {
+        newWs.close(); //關掉處理WebSocket消息
+      };
+    }
+  }, [decodedToken]);
 
   // WebSocket連接
   useEffect(() => {
@@ -95,39 +161,81 @@ export default function Chatroom() {
 
       // 處理WebSocket消息
       newWs.addEventListener("message", (event) => {
+        console.log("message有被監聽到");
         handleTextsend(event);
       });
 
       return () => {
+        console.log("關掉WebSocket");
         newWs.close(); //關掉處理WebSocket消息
       };
     }
-  }, []);
+  }, [decodedToken]);
 
-  // 處理送出事件
+  // 處理訊息送出事件
   const handleSendClick = () => {
     if (ws) {
-      ws.send(msgInputValue);
+      let message = msgInputValue;
+
+      let params = {
+        type: "message",
+        message,
+        fromID: userId,
+      };
+      ws.send(JSON.stringify(params));
+      // ws.send(msgInputValue);
+      // console.log(msgInputValue);
       setMsgInputValue(""); // 清空输入框的值
     }
   };
 
   // 處理WebSocket消息
   const handleTextsend = async (event) => {
+    console.log("我要執行handleTextsend囉");
     let result = JSON.parse(event.data);
     let clientList;
     if (result.type === "registered") {
+      console.log("執行處理聊天室註冊");
+      // 處理聊天室註冊
       clientList = result.otherClients;
       setClients();
       return false;
     }
     if (result.type === "message") {
+      console.log("訊息傳送");
+      // 處理送出的消息
+      let sendMassage = result.message;
+      console.log(result.message);
+      let fromID = result.fromID;
+      if (fromID === userId) {
+        // 創建新的聊天消息物件
+        const newMessage = `
+          <div className="user p-3">
+            <div className="d-flex align-items-center justify-content-end my-1 chat-box">
+              <div className="size-7 m-size-7 rounded-pill content py-1 px-2">
+                ${sendMassage}
+              </div>
+              <div className="avatar rounded-circle mr-3 overflow-hidden rounded-circle ms-2">
+                <img
+                  src=${UserCoverPhoto}
+                  className="img-fluid object-fit-cover"
+                  alt="User"
+                />
+              </div>
+            </div>
+          </div>`;
+        // 更新聊天內容
+        setChatContent((prevContent) => [...prevContent, newMessage]);
+      }
+      // const newMessage = template;
+
       return false;
     }
     if (result.type === "disconnected") {
       return false;
     }
 
+    // 把目前登入的userID當作自己
     function setClients() {
       console.log(clientList);
       let DOMS = "";
@@ -136,9 +244,6 @@ export default function Chatroom() {
         DOMS += `<div className='${myself}'>${client}<div>`;
       });
     }
-
-    // 新增一塊聊天框框
-    const newMessage = {};
 
     //更新聊天內容
     setChatContent((prevContent) => [...prevContent, newMessage]);
@@ -170,7 +275,7 @@ export default function Chatroom() {
           </div>
           <div className="chat-content">
             {/* 聊天對象 */}
-            <div className="chat-content-target-user p-3">
+            {/* <div className="chat-content-target-user p-3">
               <div className="d-flex align-items-center">
                 <div className="avatar rounded-circle mr-3 overflow-hidden rounded-circle">
                   <img
@@ -185,7 +290,7 @@ export default function Chatroom() {
                   您好，請問有什麼需要為您服務的嗎？
                 </div>
               </div>
-            </div>
+            </div> */}
             {/* 自己 */}
             {chatContent.map((v, i) => {
               return (
