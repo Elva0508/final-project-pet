@@ -1008,13 +1008,17 @@ export default function MissionList() {
             <MyFilter missionType={missionType} setMissionType={setMissionType} missionCity={missionCity} setMissionCity={setMissionCity} missionArea={missionArea} setMissionArea={setMissionArea}
               updateDate={updateDate} setUpdateDate={setUpdateDate} sortOrder={sortOrder} setSortOrder={setSortOrder} sortBy={sortBy} setSortBy={setSortBy} />
           </div>
-          <button className="add-mission-btn-pc  d-none d-lg-block position-absolute">
-            <img src="/add-mission.svg" className="me-2" />
-            新增任務
-          </button>
-          <button className="add-mission-btn-mobile size-6 d-bolck d-lg-none">
-            <img src="/add-mission.svg" className="" />
-          </button>
+          <Link href="/work/create-mission" className="position-absolute add-mission-btn-pc-link">
+            <button className="add-mission-btn-pc  d-none d-lg-block btn-confirm ">
+              <img src="/add-mission.svg" className="me-2" />
+              新增任務
+            </button>
+          </Link>
+          <Link href="/work/create-mission">
+            <button className="add-mission-btn-mobile size-6 d-bolck d-lg-none">
+              <img src="/add-mission.svg" className="" />
+            </button>
+          </Link>
         </div>
 
         <div className='d-flex my-2'>
