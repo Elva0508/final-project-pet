@@ -53,13 +53,13 @@ export default function ProductCard2({ productData, mainPic, setMainPic }) {
                 </Link>
                 <div className="card-body p-0" >
                   <div className="d-flex justify-content-between align-items-center">
+                    <div className="card-text-vendor size-7 m-size-7">{v.vendor}</div>
                     {/* 類別按鈕顏色已建好 btn-color-1 一直到btn-color-7 再依需求調整className即可 */}
                     {/* 顏色設定如果需要再調整，可以到以下檔案調整 \final-project-pet\client\styles\components-style\_product-card.scss */}
                     <div className={`btn ${getButtonColorClass(v.category_name)} d-flex align-items-center `}>{v.category_name}</div>
                     <img className="card-herat" src={isFavorites[i] ? "/heart-clicked.svg" : "/heart.svg"} alt={isFavorites[i] ? "已收藏" : "未收藏"} onClick={() => toggleFavorite(i)} />
                   </div>
                   <Link href={`/product/${v.product_id}`} >
-                    <div className="card-text-vendor size-7 m-size-7">{v.vendor}</div>
                     <div className="card-text size-6 m-size-7">{v.product_name}</div>
                     <div className="product-sale-price d-flex align-items-center" href="#">
                       <div className="price fs-4  size-6 m-size-7 me-3">NT${v.specialoffer}</div>
@@ -68,9 +68,9 @@ export default function ProductCard2({ productData, mainPic, setMainPic }) {
                   </Link>
                   {/* 彈跳視窗按鈕 */}
                   {/* data-bs-target={`#exampleModal${v.product_id}`} 要注意*/}
-                  <button type="button" className=" btn-confirm" data-bs-toggle="modal" data-bs-target={`#exampleModal${v.product_id}`}>
+                  {/* <button type="button" className=" btn-confirm" data-bs-toggle="modal" data-bs-target={`#exampleModal${v.product_id}`}>
                     <BiSolidCart />
-                  </button>
+                  </button> */}
                   {/* 彈跳視窗 */}
                   {/* id={`exampleModal${v.product_id}`} 要注意*/}
                   <div class="modal fade product-itembox" id={`exampleModal${v.product_id}`} tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -106,17 +106,17 @@ export default function ProductCard2({ productData, mainPic, setMainPic }) {
                               </div>
                               <div className="type d-flex flex-column">
                                 <div className="type-chinese">規格</div>
-                                <div className="type-btn d-flex mt-1">
+                                {/* <div className="type-btn d-flex mt-1">
                                   {v.type_names.split(',').map((typeName, i) => (
                                     <button
                                       key={i}
                                       type="button"
                                       className="btn-outline-brown me-4"
                                     >
-                                      {typeName.trim()} {/* 移除可能的前後空格 */}
+                                      {typeName.trim()} 
                                     </button>
                                   ))}
-                                </div>
+                                </div> */}
                                 <div className="type-btn d-flex ">
                                 </div>
                               </div>
@@ -143,7 +143,16 @@ export default function ProductCard2({ productData, mainPic, setMainPic }) {
                   </div>
                 </div>
               </div>
+
+
+
+
             </div>
+
+
+
+
+
           </div>
 
         )

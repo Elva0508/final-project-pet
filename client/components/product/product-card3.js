@@ -91,9 +91,9 @@ export default function ProductCard3() {
                   </Link>
                   {/* 彈跳視窗按鈕 */}
                   {/* data-bs-target={`#exampleModal${v.product_id}`} 要注意*/}
-                  <button type="button" className=" btn-confirm" data-bs-toggle="modal" data-bs-target={`#exampleModal${v.product_id}`}>
+                  {/* <button type="button" className=" btn-confirm" data-bs-toggle="modal" data-bs-target={`#exampleModal${v.product_id}`}>
                     <BiSolidCart />
-                  </button>
+                  </button> */}
                   {/* 彈跳視窗 */}
                   {/* id={`exampleModal${v.product_id}`} 要注意*/}
                   <div class="modal fade product-itembox" id={`exampleModal${v.product_id}`} tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">

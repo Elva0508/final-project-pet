@@ -3,7 +3,7 @@ import { FiPlus } from 'react-icons/fi';
 import { FiMinus } from 'react-icons/fi';
 
 export default function Counter() {
-    const [count, setCount] = useState(0);
+    const [count, setCount] = useState(1);
 
     const handleDecrement = () => {
         if (count > 0) {

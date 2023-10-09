@@ -116,6 +116,24 @@ router.get("/recommend", (req, res) => {
     );
 });
 
+//查看購物車內有甚麼商品
+router.get("/cart", (req, res) => {
+    connection.execute(
+        `SELECT cart.*, 
+        p.product_name AS name,
+        pt.type_name AS type,
+        p.images_one AS image,
+        p.specialoffer AS price
+        FROM cart 
+        JOIN products AS p ON cart.product_id=p.product_id 
+        JOIN product_type AS pt ON cart.product_type_id=pt.type_id AND p.product_id=pt.product_id
+        WHERE user_id=1;`
+        , (error, result) => {
+            res.json({ result })
+        }
+    )
+})
+
 //用來新增購物車裡沒有的商品
 router.put("/cart", (req, res) => {
     const { id, type, quantity } = req.body; // 從請求主體中獲取 quantity 參數
@@ -163,9 +181,6 @@ router.get("/filter_sort", (req, res) => {
         WHERE 1 = 1 
     `;
 
-    // AND c.category_name = ? AND s.subcategory_name = ?
-    // AND vendor LIKE ?
-
     if (category != null) {
         sqlQuery += 'AND c.category_name = ? ';
         queryParams.push(category);
@@ -173,6 +188,7 @@ router.get("/filter_sort", (req, res) => {
     if (subcategory != null){
         sqlQuery += 'AND s.subcategory_name = ? ';
         queryParams.push(subcategory);
+        console.log(subcategory)
     } 
     if (vendor != null){
         sqlQuery += 'AND vendor LIKE ? ';
@@ -195,10 +211,10 @@ router.get("/filter_sort", (req, res) => {
         sqlQuery += `ORDER BY p.created_at DESC, p.specialoffer ASC;`;
     }
 
-    console.log(category)
-    console.log(subcategory)
-    console.log(vendor)
-    console.log(`%${vendor}%`)
+    console.log('category:' + category)
+    console.log('subcategory:'+ subcategory)
+    console.log('vendor:' + vendor)
+    // console.log('vendor:' +`%${vendor}%`)
     console.log('qqqqqq')
     console.log(sqlQuery)
     console.log('qqqqqqaa')
