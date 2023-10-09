@@ -198,7 +198,7 @@ export default function Cart() {
   return (
     <>
         {cart.length==0?
-        (<div className="cart mt-5">
+        (<div className="cart my-3">
             <div className='container'>
                 {/* 步驟 */}
                 <div className='d-flex justify-content-center step text-center  '>
@@ -217,7 +217,7 @@ export default function Cart() {
             </div>
         </div>)
         :      
-        (<div className="cart mt-5">
+        (<div className="cart mt-4">
             <div className='container'>
             {/* 步驟 */}
                 <div className='d-flex justify-content-center step text-center  mb-4'>
