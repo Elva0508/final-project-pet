@@ -6,6 +6,8 @@ import { FaAddressCard } from "react-icons/fa";
 import { FaPencilAlt } from "react-icons/fa";
 import { FaAward } from "react-icons/fa6";
 import { BiSolidShoppingBag } from "react-icons/bi";
+import { BsCalendarDateFill } from "react-icons/bs";
+import { MdHomeRepairService } from "react-icons/md";
 import { MdDiscount } from "react-icons/md";
 import { FaList } from "react-icons/fa";
 import { RiFileList3Fill } from "react-icons/ri";
@@ -29,7 +31,6 @@ export default function ListD() {
               <button className="size-7 level">幼貓</button>
             </div>
           </div>
-
         </div>
 
         <ul className="text-center mt-5">
@@ -58,13 +59,19 @@ export default function ListD() {
             </Link>
           </li>
           <li>
-            <Link className="size-6" href="http://localhost:3000/member/purchast">
+            <Link
+              className="size-6"
+              href="http://localhost:3000/member/purchast"
+            >
               <BiSolidShoppingBag />
               購買紀錄
             </Link>
           </li>
           <li>
-            <Link className="size-6" href="http://localhost:3000/member/wishlist">
+            <Link
+              className="size-6"
+              href="http://localhost:3000/member/wishlist"
+            >
               <FaList />
               追蹤清單
             </Link>
@@ -79,33 +86,39 @@ export default function ListD() {
             <h6 className="size-6">小貓上工</h6>
           </li>
           <li>
-            <Link className="size-6" href="">
+            <Link className="size-6" href="/member/helper">
               <FaPencilAlt />
               小幫手資料
             </Link>
           </li>
           <li>
-            <Link className="size-6" href="http://localhost:3000/member/joblist">
+            <Link
+              className="size-6"
+              href="http://localhost:3000/member/joblist"
+            >
               <LiaListAltSolid />
               任務清單
             </Link>
           </li>
           <li>
-            <Link className="size-6" href="http://localhost:3000/member/history">
+            <Link
+              className="size-6"
+              href="http://localhost:3000/member/history"
+            >
               <HiClipboardList />
               刊登紀錄
             </Link>
           </li>
           <li>
-            <Link className="size-6" href="">
-              <HiClipboardList />
-              銷售紀錄
+            <Link className="size-6" href="/member/selling">
+              <MdHomeRepairService />
+              銷售服務
             </Link>
           </li>
           <li>
-            <Link className="size-6" href="">
-              <HiClipboardList />
-              預約紀錄
+            <Link className="size-6" href="/member/reserve">
+              <BsCalendarDateFill />
+              我的預約
             </Link>
           </li>
         </ul>

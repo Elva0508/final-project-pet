@@ -8,7 +8,7 @@ import useRWD from "@/hooks/useRWD";
 import { register } from "swiper/element/bundle";
 import { Carousel } from "@trendyol-js/react-carousel";
 import { AiOutlineLeftCircle, AiOutlineRightCircle } from "react-icons/ai";
-import { BsArrowBarRight } from "react-icons/bs";
+import { BsArrowBarRight, BsFillHeartFill, BsHeart } from "react-icons/bs";
 import WorkService from "@/services/work-service";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
@@ -17,10 +17,12 @@ import Rating from "@mui/material/Rating";
 import StarIcon from "@mui/icons-material/Star";
 import { Pagination } from "antd";
 import { BiSearchAlt } from "react-icons/bi";
+import "animate.css";
 register();
 // Import Swiper styles
 import "swiper/css";
 import "swiper/css/navigation";
+import { Tune } from "@mui/icons-material";
 
 const Search = ({
   handleSearch,
@@ -181,22 +183,39 @@ const MobileFilter = ({
 };
 const FamousHelperCard = ({ ...helper }) => {
   const [isFavorite, setIsFavorite] = useState(false); // 初始狀態為未收藏
+  const [isFavHovered, setIsFavHovered] = useState(false);
   const service = [
     { label: "到府代餵", value: parseInt(helper.feed_service) },
     { label: "安親寄宿", value: parseInt(helper.house_service) },
     { label: "到府美容", value: parseInt(helper.beauty_service) },
   ];
-  const toggleFavorite = () => {
-    setIsFavorite(!isFavorite); // 切換收藏狀態
+  const handleFav = (e) => {
+    if (!isFavorite) {
+      e.currentTarget.classList.add("animate__animated", "animate__heartBeat");
+      setIsFavorite(true);
+    } else {
+      e.currentTarget.classList.remove(
+        "animate__animated",
+        "animate__heartBeat"
+      );
+      setIsFavorite(false);
+    }
   };
   return (
     <>
-      <div className="famous-helper-card d-flex align-items-center">
-        <img
-          className="famous-helper-card-img"
-          src={helper?.cover_photo}
-          alt="任務"
-        />
+      <div
+        className={`famous-helper-card d-flex align-items-center ${
+          isFavorite ? "" : "active-fav-in-fam-card"
+        }`}
+      >
+        <div className="img-wrapper">
+          <img
+            className="famous-helper-card-img"
+            src={helper?.cover_photo}
+            alt="任務"
+          />
+        </div>
+
         <div className="helper-content ms-2">
           <div className="title size-6">{helper?.name}</div>
           <div className="ranking d-flex">
@@ -228,17 +247,36 @@ const FamousHelperCard = ({ ...helper }) => {
                 服務時間：<span>周一至周日</span>
               </p>
             </div>
-            <img
-              src={isFavorite ? "/heart-clicked.svg" : "/heart.svg"}
-              alt={isFavorite ? "已收藏" : "未收藏"}
-              onClick={toggleFavorite}
-            />
+            <div className="fav-icon">
+              {isFavHovered || isFavorite ? (
+                <BsFillHeartFill
+                  className="fav-icon-fill"
+                  onClick={handleFav}
+                  onMouseEnter={() => {
+                    setIsFavHovered(true);
+                  }}
+                  onMouseLeave={() => {
+                    setIsFavHovered(false);
+                  }}
+                />
+              ) : (
+                <BsHeart
+                  className="fav-icon-hollow"
+                  onMouseEnter={() => {
+                    setIsFavHovered(true);
+                  }}
+                  onMouseLeave={() => {
+                    setIsFavHovered(false);
+                  }}
+                />
+              )}
+            </div>
           </div>
           <div className="d-flex justify-content-between align-items-end price">
             <div>
               單次<span className="size-6"> NT$140</span>
             </div>
-            <button className="size-6 btn-confirm">
+            <button className="size-6 animate-button-one">
               <Link href={`/work/find-helper/${helper.user_id}`}>洽詢</Link>
             </button>
           </div>
@@ -303,20 +341,34 @@ const MobileFamousHelper = ({ famous, setFamous }) => {
 
 const SingleHelperCard = ({ ...helper }) => {
   const [isFavorite, setIsFavorite] = useState(false); // 初始狀態為未收藏
-  const toggleFavorite = () => {
-    setIsFavorite(!isFavorite); // 切換收藏狀態
-  };
+  const [isFavHovered, setIsFavHovered] = useState(false);
 
   const service = [
     { label: "到府代餵", value: parseInt(helper.feed_service) },
     { label: "安親寄宿", value: parseInt(helper.house_service) },
     { label: "到府美容", value: parseInt(helper.beauty_service) },
   ];
+  const handleFav = (e) => {
+    if (!isFavorite) {
+      e.currentTarget.classList.add("animate__animated", "animate__heartBeat");
+      setIsFavorite(true);
+    } else {
+      e.currentTarget.classList.remove(
+        "animate__animated",
+        "animate__heartBeat"
+      );
+      setIsFavorite(false);
+    }
+  };
   const servicePrice = [];
   console.log(service);
   return (
     <>
-      <div className="single-card d-flex flex-column align-items-center">
+      <div
+        className={`single-card d-flex flex-column align-items-center ${
+          isFavorite ? "" : "active-fav-in-card"
+        }`}
+      >
         <img
           className="single-card-img"
           src={helper.cover_photo}
@@ -356,18 +408,38 @@ const SingleHelperCard = ({ ...helper }) => {
                 服務時間：<span>周一至周日</span>
               </p>
             </div>
-            <img
-              src={isFavorite ? "/heart-clicked.svg" : "/heart.svg"}
-              alt={isFavorite ? "已收藏" : "未收藏"}
-              onClick={toggleFavorite}
-            />
+
+            <div className="fav-icon">
+              {isFavHovered || isFavorite ? (
+                <BsFillHeartFill
+                  className="fav-icon-fill"
+                  onClick={handleFav}
+                  onMouseEnter={() => {
+                    setIsFavHovered(true);
+                  }}
+                  onMouseLeave={() => {
+                    setIsFavHovered(false);
+                  }}
+                />
+              ) : (
+                <BsHeart
+                  className="fav-icon-hollow"
+                  onMouseEnter={() => {
+                    setIsFavHovered(true);
+                  }}
+                  onMouseLeave={() => {
+                    setIsFavHovered(false);
+                  }}
+                />
+              )}
+            </div>
           </div>
 
           <div className="d-flex justify-content-between align-items-end price">
             <div>
               單次<span className="size-6"> NT$140</span>
             </div>
-            <button className="size-6 btn-confirm">
+            <button className="size-6 animate-button-one">
               <Link href={`/work/find-helper/${helper.user_id}`}>洽詢</Link>
             </button>
           </div>
@@ -493,10 +565,16 @@ const MissionHelperList = () => {
       <nav className="breadcrumb-wrapper" aria-label="breadcrumb">
         <ol class="breadcrumb">
           <li class="breadcrumb-item">
-            <Link href="#">首頁</Link>
+            <Link href="/" className="active-hover">
+              首頁
+            </Link>
           </li>
           <li class="breadcrumb-item" aria-current="page">
-            <Link href="" onClick={handleBack}>
+            <Link
+              href="/work/find-helper"
+              onClick={handleBack}
+              className="active-hover"
+            >
               小幫手總覽
             </Link>
           </li>

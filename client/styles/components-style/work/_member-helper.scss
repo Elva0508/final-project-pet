@@ -24,32 +24,20 @@
   .form-item {
     display: flex;
     align-items: center;
-    margin-bottom: 2.5rem;
+    // justify-content: center;
+    margin: 0 0 2.5rem 1.25rem;
     & > :first-child {
-      width: 25%;
+      width: 20%;
       min-width: 160px;
     }
-    & > :last-child {
-      width: 70%;
-      max-width: 400px;
+    & > :last-child:not(.semi-upload) {
+      width: 50%;
     }
-    .upload {
-      button {
-        display: flex;
-        border: 1px solid rgba(0, 0, 0, 0.1);
-        width: 130px;
-        height: 35px;
-        background-color: $cos-white;
-
-        justify-content: center;
-        align-items: center;
-        label {
-          cursor: pointer;
-        }
-        .icon {
-          margin-right: 0.2rem;
-        }
-      }
+    .semi-upload {
+      width: 100% - 25%;
+    }
+    .semi-upload-file-list {
+      width: 100%;
     }
   }
 
@@ -85,6 +73,7 @@
       // }
     }
   }
+
   .btn-groups > * {
     width: 80px;
     margin-right: 1rem;
@@ -95,6 +84,90 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+  }
+}
+.service-check-group {
+  // .semi-checkbox {
+  //   display: flex;
+  //   justify-content: center;
+  // }
+  .semi-checkbox-checked {
+    overflow: hidden;
+    background-color: $cos-white;
+    border: 2px solid $header-bg;
+  }
+  .semi-checkbox-inner-display:hover {
+    // 修改checkbox預設藍外框
+    box-shadow: none;
+  }
+  .check-icon {
+    font-size: 24px;
+    margin-right: 0.2rem;
+  }
+  .icon-fill {
+    color: $hover;
+  }
+  .icon-hollow {
+    color: $text-mark;
+  }
+  .check-title {
+    color: lighten($text-dark, 20%);
+  }
+  .input-wrapper {
+    width: 100%;
+    .number-input {
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: textfield;
+      /* 添加自定义样式 */
+      width: 80px; /* 控制输入框宽度 */
+      padding: 0; /* 控制内边距 */
+      margin-left: 66px;
+      font-size: 1.4rem;
+      text-align: center;
+      &::placeholder {
+        font-size: 1rem;
+      }
+      border: none;
+      background-color: transparent;
+      transition: all 0.3s ease-in;
+      &::-webkit-inner-spin-button,
+      &::-webkit-outer-spin-button {
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        margin: 0; /* 移除上下按钮的边距 */
+      }
+    }
+    &::after {
+      content: "";
+      display: block;
+      background: url("/icons8-cat-footprint-64.png") center center no-repeat;
+      width: 64px;
+      height: 64px;
+      /* 设置伪元素的位置 */
+      position: absolute;
+      top: 68px;
+      // 60px
+      left: 15px;
+      transition: all 0.3s ease-in;
+    }
+  }
+  .input-wrapper-active {
+    .number-input {
+      margin-left: -3px;
+    }
+    &::after {
+      top: 130px;
+    }
+    &:hover {
+      .number-input {
+        margin-left: 66px;
+      }
+      &::after {
+        top: 68px;
+      }
+    }
   }
 }
 @media screen and (max-width: 768px) {
@@ -132,6 +205,26 @@
     }
     .open-helper {
       font-size: 22px;
+    }
+  }
+}
+@media screen and (max-width: 576px) {
+  .helper-info {
+    .image-item {
+      flex-direction: column;
+      align-items: start;
+      gap: 10px;
+      .semi-upload.semi-upload-picture {
+        width: 100%;
+      }
+    }
+    .form-item.service-intro-item {
+      flex-direction: column;
+      align-items: start;
+      gap: 10px;
+      & :last-child {
+        width: 100%;
+      }
     }
   }
 }

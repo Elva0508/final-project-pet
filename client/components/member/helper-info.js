@@ -1,10 +1,14 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { BiUpload } from "react-icons/bi";
+import { PiPawPrintFill, PiPawPrint } from "react-icons/pi";
 import { Switch, message } from "antd";
 import memberService from "@/services/member-service";
 import { useForm } from "react-hook-form";
+import { Upload } from "@douyinfe/semi-ui";
+import { IconPlus } from "@douyinfe/semi-icons";
+import { CheckboxGroup, Checkbox } from "@douyinfe/semi-ui";
 const countyOption = [
   "台北市",
   "新北市",
@@ -29,46 +33,152 @@ const countyOption = [
   "連江縣",
 ];
 
-const SwitchInput = ({
-  label,
-  status,
-  price,
-  type,
-  setStatus,
+const CheckboxInput = ({
+  feedStatus,
+  setFeedStatus,
+  houseStatus,
+  setHouseStatus,
+  beautyStatus,
+  setBeautyStatus,
   info,
   setInfo,
 }) => {
-  const [switchStatus, setSwitchStatus] = useState(false);
+  const [checked, setChecked] = useState([]);
+  const inputWrapperRef = useRef();
+  const feedCheckRef = useRef();
   useEffect(() => {
-    if (status === 0) {
-      setStatus(false);
+    // info清除時重置回預設值
+    setChecked([]);
+    if (feedStatus.service) {
+      setChecked((prevChecked) => [...prevChecked, "feed"]);
     }
-    if (status === 1) {
-      setStatus(true);
+    if (houseStatus.service) {
+      setChecked((prevChecked) => [...prevChecked, "house"]);
     }
-  }, [status]);
+    if (beautyStatus.service) {
+      setChecked((prevChecked) => [...prevChecked, "beauty"]);
+    }
+  }, [feedStatus]);
+  useEffect(() => {
+    const checkBoxes = document.querySelectorAll('input[type="checkbox"]');
+    console.log(checkBoxes);
+    const inputs = document.querySelectorAll(".number-input");
+    inputs.forEach((input) => {
+      console.log(input.value);
+      // if()
+    });
+    console.log(inputs);
+    console.log(feedCheckRef.current.props.value);
+  }, [checked]);
+  console.log(checked);
   const handleSwitch = (e) => {
-    setStatus({ ...status, service: e });
+    console.log(e.target.checked);
+    setStatus({ ...status, service: e.target.checked });
   };
   const handleInput = (e) => {
     setStatus({ ...status, price: parseInt(e.target.value) });
   };
-  return (
-    <div className={`switch-info ${status && "mb-5"}`}>
-      <label className="size-6 m-size-7 ">{label}：</label>
-      <div className="switch-info-price col-auto">
-        <Switch onChange={handleSwitch} checked={status.service} />
 
-        <input
-          type="number"
-          placeholder="服務價格"
-          value={status?.price}
-          className={`form-input m-form-input ${!status && "d-none"}`}
-          name={type + "price"}
-          onChange={handleInput}
-        />
-      </div>
-    </div>
+  return (
+    // <div className={`switch-info ${status && "mb-5"}`}>
+    //   <label className="size-6 m-size-7 ">{label}：</label>
+    //   <div className="switch-info-price col-auto">
+    //     <Switch onChange={handleSwitch} checked={status.service} />
+
+    //     <input
+    //       type="number"
+    //       placeholder="服務價格"
+    //       value={status?.price}
+    //       className={`form-input m-form-input ${!status.price && "d-none"}`}
+    //       name={type + "price"}
+    //       onChange={handleInput}
+    //     />
+    //   </div>
+    // </div>
+
+    <CheckboxGroup
+      type="pureCard"
+      value={checked}
+      direction="vertical"
+      aria-label="CheckboxGroup 示例"
+      onChange={(checkedValue) => {
+        setChecked(checkedValue);
+      }}
+    >
+      <>
+        <Checkbox
+          value={"feed"}
+          ref={feedCheckRef}
+          extra={
+            <>
+              {checked.some((item) => item === "feed") && (
+                <>
+                  <p>請輸入您提供該項服務的收費</p>
+                  <div
+                    className="input-wrapper input-wrapper-active"
+                    ref={inputWrapperRef}
+                  >
+                    <input
+                      type="number"
+                      placeholder="輸入金額"
+                      value={feedStatus.price}
+                      className="form-input number-input"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                      }}
+                      onFocus={() => {
+                        inputWrapperRef.current.classList.remove(
+                          "input-wrapper-active"
+                        );
+                      }}
+                      onBlur={(e) => {
+                        if (e.target.value !== "") {
+                          inputWrapperRef.current.classList.remove(
+                            "input-wrapper-active"
+                          );
+                        } else {
+                          inputWrapperRef.current.classList.add(
+                            "input-wrapper-active"
+                          );
+                        }
+                      }}
+                      onChange={(e) => {
+                        console.log(e.target.value);
+                        setFeedStatus({ ...feedStatus, price: e.target.value });
+                      }}
+                    />
+                    <span className="ms-1">/ 次</span>
+                  </div>
+                </>
+              )}
+            </>
+          }
+          style={{ width: 220 }}
+        >
+          {checked.some((item) => item === "feed") ? (
+            <PiPawPrintFill className="check-icon icon-fill" />
+          ) : (
+            <PiPawPrint className="check-icon icon-hollow" />
+          )}
+
+          <span className="size-7 check-title">到府代餵</span>
+        </Checkbox>
+        <Checkbox
+          value={"house"}
+          extra="Semi Design 是由互娱社区前端团队与 UED 团队共同设计开发并维护的设计系统"
+          style={{ width: 280 }}
+        >
+          安親寄宿
+        </Checkbox>
+        <Checkbox
+          value={"beauty"}
+          extra="Semi Design 是由互娱社区前端团队与 UED 团队共同设计开发并维护的设计系统"
+          style={{ width: 280 }}
+        >
+          到府美容
+        </Checkbox>
+      </>
+    </CheckboxGroup>
   );
 };
 
@@ -98,7 +208,7 @@ const Close = ({ open, setOpen }) => {
   );
 };
 
-const Open = ({ open, setOpen, info, setInfo }) => {
+const Open = ({ open, setOpen, info, setInfo, images, setImages }) => {
   const [feedStatus, setFeedStatus] = useState({
     service: info?.feed_service,
     price: info?.feed_price,
@@ -113,12 +223,15 @@ const Open = ({ open, setOpen, info, setInfo }) => {
   });
   const [messageApi, contextHolder] = message.useMessage();
 
-  // const { register, handleSubmit, watch } = useForm({
-  //   values: {
-  //     name: info?.name,
-  //   },
-  // });
+  let action = "https://api.semi.design/upload";
 
+  const handleImage = ({ fileList, currentFile, event }) => {
+    console.log("onChange");
+    console.log(fileList);
+    console.log(currentFile);
+    let newFileList = [...fileList]; // spread to get new array
+    setImages(newFileList);
+  };
   const editSuccess = () => {
     messageApi.open({
       type: "success",
@@ -170,7 +283,15 @@ const Open = ({ open, setOpen, info, setInfo }) => {
       formData.append(key, value);
     }
     setInfo(result);
-
+    images.forEach((image) => {
+      if (!image.status) {
+        // 舊的相片
+        formData.append("oldImages", image.url);
+      } else {
+        // 新的相片
+        formData.append("newImages", image.fileInstance);
+      }
+    });
     memberService
       .handleHelperEdit(formData)
       .then((response) => {
@@ -193,20 +314,26 @@ const Open = ({ open, setOpen, info, setInfo }) => {
       .getHelperInfo()
       .then((response) => {
         if (response?.data?.status === 200) {
-          const result = response?.data?.data[0];
-          console.log(response.data);
-          setInfo(result);
+          const profile = response?.data?.profile[0];
+          setInfo(profile);
           setFeedStatus({
-            service: result.feed_service,
-            price: result.feed_price,
+            service: profile.feed_service,
+            price: profile.feed_price,
           });
           setHouseStatus({
-            service: result.house_service,
-            price: result.house_price,
+            service: profile.house_service,
+            price: profile.house_price,
           });
           setBeautyStatus({
-            service: result.beauty_service,
-            price: result.beauty_price,
+            service: profile.beauty_service,
+            price: profile.beauty_price,
+          });
+
+          const tempImages = response?.data?.images;
+          setImages(() => {
+            return tempImages.map((image) => {
+              return { uid: image.image_id, url: image.file_path };
+            });
           });
         }
       })
@@ -276,25 +403,20 @@ const Open = ({ open, setOpen, info, setInfo }) => {
             }}
           />
         </div>
-        <div className="form-item">
-          <label className="size-6 m-size-7">上傳相片/影片：</label>
-          <div className="upload">
-            <button className="" type="button">
-              <input
-                className="d-none"
-                type="file"
-                id="upload-input"
-                name="helper-image"
-              />
-              {/* 使用label關聯被隱藏的file input */}
-              <BiUpload className="icon" />
-              <label className="" htmlFor="upload-input">
-                上傳檔案
-              </label>
-            </button>
-          </div>
+        <div className="form-item image-item">
+          <label className="size-6 m-size-7">相片/影片：</label>
+          <Upload
+            action={action}
+            listType="picture"
+            onChange={handleImage}
+            fileList={images}
+            accept="image/*"
+            multiple
+          >
+            <IconPlus size="extra-large" />
+          </Upload>
         </div>
-        <div className="form-item">
+        <div className="service-intro-item form-item">
           <label className="size-6 m-size-7">服務介紹：</label>
           <textarea
             className="form-input m-form-input"
@@ -318,31 +440,14 @@ const Open = ({ open, setOpen, info, setInfo }) => {
         </div>
         <div className="form-item">
           <label className="size-6 m-size-7 service-type">可服務類型：</label>
-          <div className="service-switch">
-            <SwitchInput
-              label="到府照顧"
-              status={feedStatus}
-              price={info?.feed_price}
-              type="feed"
-              setStatus={setFeedStatus}
-              info={info}
-              setInfo={setInfo}
-            />
-            <SwitchInput
-              label="安親寄宿"
-              status={houseStatus}
-              price={info?.house_price}
-              type="house"
-              setStatus={setHouseStatus}
-              info={info}
-              setInfo={setInfo}
-            />
-            <SwitchInput
-              label="到府美容"
-              status={beautyStatus}
-              price={info?.beauty_price}
-              type="beauty"
-              setStatus={setBeautyStatus}
+          <div className="service-check-group">
+            <CheckboxInput
+              feedStatus={feedStatus}
+              setFeedStatus={setFeedStatus}
+              houseStatus={houseStatus}
+              setHouseStatus={setHouseStatus}
+              beautyStatus={beautyStatus}
+              setBeautyStatus={setBeautyStatus}
               info={info}
               setInfo={setInfo}
             />
@@ -401,19 +506,26 @@ const Open = ({ open, setOpen, info, setInfo }) => {
 const HelperInfo = () => {
   const [open, setOpen] = useState(false);
   const [info, setInfo] = useState({});
-  let defaultInfo;
+  const [images, setImages] = useState([]);
+  let defaultInfo, defaultImages;
   useEffect(() => {
     memberService
       .getHelperInfo()
       .then((response) => {
-        const result = response?.data?.data[0];
-        console.log(response?.data?.data);
-
-        setInfo(result);
-        defaultInfo = result;
-        if (result.cat_helper) {
+        console.log(response);
+        const profile = response?.data?.profile[0];
+        setInfo(profile);
+        defaultInfo = profile;
+        if (profile.cat_helper) {
           setOpen(true);
         }
+        const tempImages = response?.data?.images;
+        setImages(() => {
+          return tempImages.map((image) => {
+            return { uid: image.image_id, url: image.file_path };
+          });
+        });
+        defaultImages = images;
       })
       .catch((e) => {
         console.log(e);
@@ -441,7 +553,14 @@ const HelperInfo = () => {
           </p>
         </div>
         {open ? (
-          <Open open={open} setOpen={setOpen} info={info} setInfo={setInfo} />
+          <Open
+            open={open}
+            setOpen={setOpen}
+            info={info}
+            setInfo={setInfo}
+            images={images}
+            setImages={setImages}
+          />
         ) : (
           <Close open={open} setOpen={setOpen} />
         )}

@@ -24,9 +24,8 @@ import McatLogo from "@/assets/McatLogo.svg";
 import ShoppingCart from "@/assets/shoppingCart.svg";
 
 //cart
-import { useCart } from '@/hooks/useCart';
-import { useRouter } from 'next/router';
-
+import { useCart } from "@/hooks/useCart";
+import { useRouter } from "next/router";
 
 const theme = createTheme({
   // 自定義色調
@@ -105,9 +104,9 @@ function ResponsiveAppBar() {
 
   const { cart, setCart } = useCart();
   const router = useRouter();
-  const goCart=()=>{
-    router.push('/product/cart')
-  }
+  const goCart = () => {
+    router.push("/product/cart");
+  };
 
   return (
     <ThemeProvider theme={theme}>

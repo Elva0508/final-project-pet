@@ -320,8 +320,9 @@ const Quotation = () => {
 
       <Modal
         title="預約細節"
-        fullScreen
         visible={visible}
+        closable={false}
+        maskClosable={false}
         onOk={handleSubmit}
         afterClose={handleAfterClose} //>=1.16.0
         onCancel={handleCancel}
@@ -509,6 +510,7 @@ const PetInfo = ({ petsValue, setPetsValue, petsName, setPetsName }) => {
   const router = useRouter();
   const { uid } = router.query;
   const [pets, setPets] = useState([]);
+  const [isCreate, setIsCreate] = useState(false);
   let tempValue, tempName;
 
   useEffect(() => {
@@ -533,6 +535,8 @@ const PetInfo = ({ petsValue, setPetsValue, petsName, setPetsName }) => {
   };
   const handleCancel = () => {
     setVisible(false);
+    setPetsValue(null);
+    setPetsName(null);
   };
   const handleAfterClose = () => {
     console.log("After Close callback executed");
@@ -555,49 +559,90 @@ const PetInfo = ({ petsValue, setPetsValue, petsName, setPetsName }) => {
         footer={
           <div className="pet-info-modal-footer">
             <Button type="tertiary" onClick={handleCancel}>
-              取消
+              清除
             </Button>
             <button className="btn-confirm" onClick={handleOk}>
-              確認
+              選擇
             </button>
+            {/* <button
+              className="btn btn-info"
+              onClick={() => {
+                setIsCreate(true);
+              }}
+            >
+              新增寵物
+            </button> */}
           </div>
         }
       >
-        {pets.length === 0 ? (
-          <Empty
-            image={
-              <IllustrationConstruction style={{ width: 150, height: 150 }} />
-            }
-            darkModeImage={
-              <IllustrationConstructionDark
-                style={{ width: 150, height: 150 }}
-              />
-            }
-            title={"暫無內容"}
-            description="請添加您的寵物資訊。"
-          />
+        {isCreate ? (
+          <>
+            <div className="d-flex flex-column">
+              <p>毛小孩名字</p>
+              <input type="text" />
+            </div>
+            <div className="d-flex flex-column">
+              <p>健康狀況描述</p>
+              <input type="text" />
+            </div>
+            <div className="d-flex flex-column">
+              <p>出生年</p>
+              <input type="number" />
+            </div>
+            <div className="d-flex flex-column">
+              <p>性別</p>
+              <input type="radio" />
+            </div>
+            <div className="d-flex flex-column">
+              <p>是否結紮</p>
+              <input type="radio" />
+            </div>
+            <div className="d-flex flex-column">
+              <p>是否規律施打疫苗</p>
+              <input type="radio" />
+            </div>
+          </>
         ) : (
-          <RadioGroup
-            type="pureCard"
-            direction="horizontal"
-            aria-label="選擇寵物"
-            defaultValue={petsValue}
-            onChange={(e) => {
-              console.log(e.target);
-              tempValue = e.target.value;
-              tempName = e.target.children[1].props.children;
-            }}
-          >
-            {pets.map((pet) => (
-              <Radio
-                value={pet.pet_id}
-                // extra="Semi Design 是由互娱社区前端团队与 UED 团队共同设计开发并维护的设计系统"
+          <>
+            {pets.length === 0 ? (
+              <Empty
+                image={
+                  <IllustrationConstruction
+                    style={{ width: 150, height: 150 }}
+                  />
+                }
+                darkModeImage={
+                  <IllustrationConstructionDark
+                    style={{ width: 150, height: 150 }}
+                  />
+                }
+                title={"暫無內容"}
+                description="請添加您的寵物資訊。"
+              />
+            ) : (
+              <RadioGroup
+                type="pureCard"
+                direction="horizontal"
+                aria-label="選擇寵物"
+                defaultValue={petsValue}
+                onChange={(e) => {
+                  console.log(e.target);
+                  tempValue = e.target.value;
+                  tempName = e.target.children[1].props.children;
+                }}
               >
-                <img className="pet-photo" src={pet.image}></img>
-                <p className="size-6">{pet.name}</p>
-              </Radio>
-            ))}
-          </RadioGroup>
+                {pets.map((pet) => (
+                  <Radio
+                    value={pet.pet_id}
+                    // extra="Semi Design 是由互娱社区前端团队与 UED 团队共同设计开发并维护的设计系统"
+                  >
+                    <img className="pet-photo" src={pet.image}></img>
+                    <p className="size-6">{pet.name}</p>
+                  </Radio>
+                ))}
+              </RadioGroup>
+            )}
+          </>
         )}
       </Modal>
     </>

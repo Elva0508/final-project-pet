@@ -6,6 +6,8 @@ import { FaAddressCard } from "react-icons/fa";
 import { FaPencilAlt } from "react-icons/fa";
 import { FaAward } from "react-icons/fa6";
 import { BiSolidShoppingBag } from "react-icons/bi";
+import { BsCalendarDateFill } from "react-icons/bs";
+import { MdHomeRepairService } from "react-icons/md";
 import { MdDiscount } from "react-icons/md";
 import { FaList } from "react-icons/fa";
 import { RiFileList3Fill } from "react-icons/ri";
@@ -69,7 +71,7 @@ export default function ListM() {
             <h6 className="dropdown-header m-size-6">小貓上工</h6>
           </li>
           <li>
-            <a className="dropdown-item " href="#">
+            <a className="dropdown-item " href="/member/helper">
               <FaPencilAlt />
               小幫手資料
             </a>
@@ -84,6 +86,18 @@ export default function ListM() {
             <a className="dropdown-item " href="#">
               <HiClipboardList />
               刊登紀錄
+            </a>
+          </li>
+          <li>
+            <a className="dropdown-item " href="/member/selling">
+              <MdHomeRepairService />
+              銷售服務
+            </a>
+          </li>
+          <li>
+            <a className="dropdown-item " href="/member/reserve">
+              <BsCalendarDateFill />
+              我的預約
             </a>
           </li>
         </ul>

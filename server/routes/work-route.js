@@ -446,6 +446,7 @@ router.post("/helpers/request", (req, res) => {
 router.post("/mission", upload.array("missionImage"), async (req, res) => {
   // const { formData } = req.body;
   const {
+    user_id,
     title,
     location_detail,
     mission_type,
@@ -456,10 +457,26 @@ router.post("/mission", upload.array("missionImage"), async (req, res) => {
     endDay,
     city,
     area,
+    missionImage,
   } = req.body;
-  const taskId = uuidv4();
+  console.log(
+    user_id,
+    title,
+    location_detail,
+    mission_type,
+    description,
+    price,
+    payment,
+    startDay,
+    endDay,
+    city,
+    area,
+    missionImage
+  );
+  console.log(req.files);
+  const taskId = generateOrderNumber();
   conn.execute(
-    "INSERT INTO `mission_detail` (`mission_id`, `pid`, `title`, `price`, `start_date`, `end_date`, `city`, `area`, `location_detail`, `description`, `mission_type`, `payment_type`) VALUES (NULL, ?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?)",
+    "INSERT INTO `mission_detail` (`mission_id`, `pid`, `title`, `price`, `start_date`, `end_date`, `city`, `area`, `location_detail`, `description`, `mission_type`, `payment_type`,`post_user_id`) VALUES (NULL, ?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?,?)",
     [
       taskId,
       title,
@@ -472,6 +489,7 @@ router.post("/mission", upload.array("missionImage"), async (req, res) => {
       description,
       mission_type,
       payment,
+      user_id,
     ],
     async (err, results) => {
       if (err) {
@@ -483,42 +501,42 @@ router.post("/mission", upload.array("missionImage"), async (req, res) => {
         await req.files.map((file) => {
           conn.execute(
             "INSERT INTO `image_mission` (`image_id`, `mission_id`, `file_path`) VALUES (NULL, ?, ?)",
-            [insertId, file.filename]
+            [insertId, `http://localhost:3005/mission-image/${file.filename}`]
           );
         });
-        const mission_detail_promise = new Promise((resolve, reject) => {
-          return conn.execute(
-            `SELECT * FROM mission_detail WHERE mission_id = ?`,
-            [insertId],
-            (err, results) => {
-              if (err) {
-                reject(
-                  res.status(500).send({ status: 500, error: "查詢錯誤" })
-                );
-              }
-              resolve(results);
-            }
-          );
-        });
-        const mission_image_promise = new Promise((resolve, reject) => {
-          return conn.execute(
-            `SELECT file_path FROM image_mission WHERE mission_id = ?`,
-            [insertId],
-            (err, results) => {
-              if (err) {
-                reject(
-                  res.status(500).send({ status: 500, error: "查詢錯誤" })
-                );
-              }
-              resolve(results);
-            }
-          );
-        });
-        let [detail, image] = await Promise.all([
-          mission_detail_promise,
-          mission_image_promise,
-        ]);
-        res.send({ status: 200, detail, image });
+        // const mission_detail_promise = new Promise((resolve, reject) => {
+        //   return conn.execute(
+        //     `SELECT * FROM mission_detail WHERE mission_id = ?`,
+        //     [insertId],
+        //     (err, results) => {
+        //       if (err) {
+        //         reject(
+        //           res.status(500).send({ status: 500, error: "查詢錯誤" })
+        //         );
+        //       }
+        //       resolve(results);
+        //     }
+        //   );
+        // });
+        // const mission_image_promise = new Promise((resolve, reject) => {
+        //   return conn.execute(
+        //     `SELECT file_path FROM image_mission WHERE mission_id = ?`,
+        //     [insertId],
+        //     (err, results) => {
+        //       if (err) {
+        //         reject(
+        //           res.status(500).send({ status: 500, error: "查詢錯誤" })
+        //         );
+        //       }
+        //       resolve(results);
+        //     }
+        //   );
+        // });
+        // let [detail, image] = await Promise.all([
+        //   mission_detail_promise,
+        //   mission_image_promise,
+        // ]);
+        res.send({ status: 200, insertId });
       } catch (err) {
         console.log(err);
         return res.status(500).send({ status: 500, error: "寫入錯誤" });
@@ -526,6 +544,17 @@ router.post("/mission", upload.array("missionImage"), async (req, res) => {
     }
   );
 });
+router.post(
+  "/mission/image",
+  upload.array("missionImage"),
+  async (req, res) => {
+    // const { formData } = req.body;
+    console.log(req.files);
+    console.log("觸發一次route");
+    conn.execute();
+    res.send("照片上傳route");
+  }
+);
 module.exports = router;
 
 async function orders(
