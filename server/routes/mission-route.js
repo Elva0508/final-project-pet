@@ -67,7 +67,7 @@ router.get("/all-missions", (req, res) => {
 
   // 獲取任務類型篩選條件
   let filteredMissionType = req.query.missionType;
-  let missionTypeFilter; // 先聲明變量（很重要！否則當missionTypeFilter=null會沒資料 會無法清除篩選）
+  let missionTypeFilter = null; // 先聲明變量（很重要！否則當missionTypeFilter=null會沒資料 會無法清除篩選）
 
   // 獲取城市和地區篩選條件
   let cityFilter = req.query.missionCity;
@@ -107,16 +107,16 @@ router.get("/all-missions", (req, res) => {
     dateRangeStart = today.toISOString();
     dateRangeEnd = tomorrow.toISOString();
   } else if (updateFilter === "one_week") {
-    const today = new Date(); 
-    today.setHours(0, 0, 0, 0); 
-    const oneWeekAgo = new Date(today); 
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const oneWeekAgo = new Date(today);
     oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
     dateRangeStart = oneWeekAgo.toISOString();
     dateRangeEnd = today.toISOString();
   } else if (updateFilter === "one_month") {
-    const today = new Date(); 
+    const today = new Date();
     today.setHours(0, 0, 0, 0);
-    const oneMonthAgo = new Date(today); 
+    const oneMonthAgo = new Date(today);
     oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
     dateRangeStart = oneMonthAgo.toISOString();
     dateRangeEnd = today.toISOString();
