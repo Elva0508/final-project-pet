@@ -7,6 +7,7 @@ import moment from "moment";
 import { useCart } from '@/hooks/useCart';
 import Pagination from '@/components/pagination'
 
+
 export default function Checkout() {
     const router = useRouter();
     const {setCart} = useCart();
@@ -68,6 +69,8 @@ export default function Checkout() {
     const orderNumber = Date.now();
     const createtTime=moment().format("YYYY/MM/DD  HH:mm:ss")
 
+
+
     //縣市名字
     let cityName
     if(city!==0){
@@ -99,6 +102,8 @@ export default function Checkout() {
         router.push('/product/cart')
     }
 
+
+
     //結帳-->寫進資料庫
     const checkout=async () => {    
         const discountArray =discount.split(",")
@@ -115,6 +120,7 @@ export default function Checkout() {
         } catch (error) {
           console.error("Error:", error);
         }
+        //訂單明細
         for(let i=0;i<finalCart.length;i++){
             const productId=finalCart[i].product_id
             const productTypeId=finalCart[i].product_type_id
@@ -126,6 +132,7 @@ export default function Checkout() {
               }
 
         }
+        //刪減購物車
         for(let i=0;i<nobuyCart.length;i++){
             const id=nobuyCart[i].cart_id            
             try {
@@ -136,8 +143,89 @@ export default function Checkout() {
 
         }
         setCart(nobuyCart)
+        localStorage.removeItem("discount");
+        localStorage.removeItem("sale");
+        localStorage.removeItem("allPrice");
+        localStorage.removeItem("cart");
 
     }
+
+    const createOrder = async() => {
+        const products = finalCart.map((item) => {
+            return {
+              id: item.product_id,
+              name: item.product_name,
+              quantity: item.quantity,
+              price: item.newprice
+            };
+          });
+        //   console.log(products);
+
+          const discountArray =discount.split(",")
+          const coupon = discountArray[discountArray.length - 1];
+          let allAdress = "";
+          if(shipment===1){
+              allAdress=cityName+areaName+address
+          }else{
+              allAdress="小貓兩三隻門市"
+          }  
+
+        // 送至server建立訂單，packages與order id由server產生
+        // products將會組合在packages屬性之下
+
+        const response = await axios.post(
+          `http://localhost:3005/api/pay/create-order`,
+          {
+            amount: totalPrice,
+            coupon_id:coupon,
+            user_id:1,
+            oid:orderNumber,
+            created_at:createtTime,
+            order_price:allPrice,
+            sale:sale,
+            freight:freight,
+            order_payment:payment,
+            order_shipment:shipment,
+            buyer_name:name,
+            buyer_phone:phone,
+            buyer_address:allAdress,
+            products: products,
+          }
+        )
+
+        //訂單明細
+        for(let i=0;i<finalCart.length;i++){
+            const productId=finalCart[i].product_id
+            const productTypeId=finalCart[i].product_type_id
+            const quantity=finalCart[i].quantity
+            try {
+                const response = await axios.put(`http://localhost:3005/api/product/cart/checkout/detail`,{orderNumber,productId,productTypeId,quantity});        
+              } catch (error) {
+                console.error("Error:", error);
+              }
+
+        }
+        //刪減購物車
+        for(let i=0;i<finalCart.length;i++){
+            const id=finalCart[i].cart_id  
+            console.log(id);          
+            try {
+                const response = await axios.delete(`http://localhost:3005/api/product/cart/${id}`);         
+            } catch (error) {
+                console.error("Error:", error);
+            }
+
+        }
+        setCart(nobuyCart)
+        localStorage.setItem('orderNumber', orderNumber);
+        localStorage.setItem('totalPrice',totalPrice );
+        localStorage.removeItem("discount");
+        localStorage.removeItem("sale");
+        localStorage.removeItem("allPrice");
+        localStorage.removeItem("cart");
+
+      }
+      
 
     //結帳
     const goCheckout=()=>{
@@ -151,7 +239,10 @@ export default function Checkout() {
             }else if(address==""){
             showAlert("請填寫完整宅配地址")
             }
-        }else{
+        }else if(payment==2){
+            createOrder()
+            router.push('/product/cart/checkout/pay')
+        }else if(payment==3){
             checkout();
         }
     }

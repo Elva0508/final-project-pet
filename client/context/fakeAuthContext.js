@@ -1,18 +1,30 @@
-import { createContext, useContext, useReducer } from "react";
+import { createContext, useContext,  useReducer } from "react";
+// import jwt from "jwt-decode";
+// const appKey = "secretkey";
 
 const AuthContext = createContext();
 
 const initialState = {
-  user: null,
+  Token: null,
   isAuthenticated: false,
+  
 };
 
 function reducer(state, action) {
   switch (action.type) {
     case "login":
-      return { ...state, user: action.payload, isAuthenticated: true };
+      // localStorage.setItem("user", JSON.stringify(action.payload.user));
+      // localStorage.setItem("token", JSON.stringify(action.payload.token));
+
+      return { ...state, 
+       
+        Token: action.payload, 
+        isAuthenticated: true };
     case "logout":
-      return { ...state, user: null, isAuthenticated: false };
+  
+      return { ...state, 
+        Token: null, 
+        isAuthenticated: false };
     default:
       throw new Error("Unknown action");
   }
@@ -26,41 +38,24 @@ function reducer(state, action) {
 // };
 
 function AuthProvider({ children }) {
-  const [{ user, isAuthenticated }, dispatch] = useReducer(
+  const [{ Token, isAuthenticated}, dispatch] = useReducer(
     reducer,
     initialState
   );
-async function login(email, password) {
-    try {
-        const response = await fetch('http://localhost:3005/api/auth-jwt/login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ email, password })
-        });
 
-        if (response.ok) {
-            const user = await response.json();
-            dispatch({ type: 'login', payload: user });
-        } else {
-            throw new Error('Login failed');
-        }
-    } catch (error) {
-        console.error(error);
-    }
+
+function login(token) {
+  dispatch({ type: "login", payload: token });
+  
 }
-//   function login(email, password) {
-//     if (email === FAKE_USER.email && password === FAKE_USER.password)
-//       dispatch({ type: "login", payload: FAKE_USER });
-//   }
+function logout() {
+  dispatch({ type: "logout" });
+}
 
-  function logout() {
-    dispatch({ type: "logout" });
-  }
+
 
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated, login, logout }}>
+    <AuthContext.Provider value={{ Token, isAuthenticated, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
