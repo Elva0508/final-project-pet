@@ -14,7 +14,7 @@ router.get("/",(req,res)=>{
 )})
 
 router.get("/coupon",(req,res)=>{
-  console.log(req);
+  // console.log(req);
   const allPrice= req.query.allPrice; 
     connection.execute(
          `
@@ -43,6 +43,7 @@ router.put("/",(req,res)=>{
             }})
 })
 
+
 router.delete("/:id",(req,res)=>{
     const cartIdToDelete = req.params.id;
     connection.execute(
@@ -57,4 +58,32 @@ router.delete("/:id",(req,res)=>{
             }})
   
 })
+
+router.put("/checkout",(req,res)=>{
+    const { coupon,createtTime,totalPrice,orderNumber,allPrice ,sale,freight,payment,shipment,name,phone,allAdress } = req.body; 
+    connection.execute(
+        `INSERT INTO orders( coupon_id, user_id, status_id, created_at, total_amount, oid, order_price, sale, freight, order_payment, order_shipment, buyer_name, buyer_phone, buyer_address) VALUES (?,1,1,?,?,?,?,?,?,?,?,?,?,?)`,
+        [coupon,createtTime,totalPrice,orderNumber,allPrice ,sale,freight,payment,shipment,name,phone,allAdress]
+        ,(error, result) => {
+            if (error) {
+              console.error("Error:", error);
+              res.status(500).json({ error: "An error occurred" });
+            } else {
+              res.json({ result });
+            }})
+})
+router.put("/checkout/detail",(req,res)=>{
+  const {orderNumber,productId,productTypeId,quantity} = req.body; 
+  connection.execute(
+      `INSERT INTO order_details(order_id, product_id, product_type, quantity) VALUES (?,?,?,?)`,
+      [orderNumber,productId,productTypeId,quantity]
+      ,(error, result) => {
+          if (error) {
+            console.error("Error:", error);
+            res.status(500).json({ error: "An error occurred" });
+          } else {
+            res.json({ result });
+          }})
+})
+
 module.exports = router;

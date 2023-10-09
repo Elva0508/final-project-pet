@@ -59,7 +59,7 @@ export default function UserCoupon() {
         })}
           
         </tbody>
-        <tfoot>-----pagination------</tfoot>
+       
         </table>
         </div>
     </>

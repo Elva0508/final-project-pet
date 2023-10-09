@@ -13,9 +13,7 @@
     border-bottom: 4px solid $hover;
   }
   background: $content-bg;
-  // color: $text-main;
   padding: 1rem;
-  width: 70%;
   p {
     margin: 0;
   }
@@ -56,6 +54,10 @@
       width: 25%;
       text-align: center;
     }
+    .price {
+      color: $price;
+      font-weight: bold;
+    }
   }
   .record-info-mobile {
     box-shadow: 1px 0px 5px rgba(0, 0, 0, 0.1);
@@ -79,6 +81,16 @@
         text-align: center;
       }
     }
+    .price {
+      color: $price;
+      font-weight: bold;
+    }
+  }
+  .semi-empty {
+    height: 650px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 }
 
@@ -132,6 +144,30 @@
     width: 100px;
     height: 40px;
     font-size: 18px;
+  }
+}
+
+.reserve-review-modal {
+  .semi-modal-content {
+    border-radius: 2px;
+  }
+  .reserve-review-footer {
+    width: 100%;
+    display: flex;
+    justify-content: end;
+    padding-right: 1rem;
+    gap: 30px;
+    button {
+      width: 80px;
+      height: 40px;
+      font-size: 1.25rem;
+      border-radius: 2px;
+    }
+  }
+  .review-card-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
   }
 }
 

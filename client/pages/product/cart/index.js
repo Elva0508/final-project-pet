@@ -3,6 +3,9 @@ import {RiDeleteBin5Fill} from 'react-icons/ri';
 import { useRouter } from 'next/router';
 import axios from "axios";
 import { useCart } from '@/hooks/useCart';
+import Swal from 'sweetalert2';
+import Link from 'next/link';
+
 // import moment from "moment";
 
 export default function Cart() {
@@ -178,7 +181,15 @@ export default function Cart() {
             localStorage.setItem('discount', discount);
             router.push('/product/cart/checkout');
         }else{
-            alert("請先勾選商品在進行結帳")
+            Swal.fire({
+                text: '請先勾選商品再進行結帳',
+                icon: 'info',
+                confirmButtonText: '確定',
+                confirmButtonColor: "#d7965b",
+                iconColor: "#ca526f",
+                color: "#512f10",
+                focusConfirm: false,
+              });
         }
 
     }  
@@ -186,7 +197,27 @@ export default function Cart() {
 
   return (
     <>
-        <div className="cart mt-5">
+        {cart.length==0?
+        (<div className="cart my-3">
+            <div className='container'>
+                {/* 步驟 */}
+                <div className='d-flex justify-content-center step text-center  '>
+                    <div className='col-lg-2 col-sm-4 col-5 size-6 step1 '>
+                        購物車
+                    </div>
+                    <div className='col-lg-2 col-sm-4 col-5 size-6  step2'>
+                        運送&付款
+                    </div>
+                </div>
+                <div className=' text-center zero d-flex flex-column justify-content-center align-items-center'>
+                    <p className='size-3'>購物車空空的</p>
+                    <Link href="/product" className='size-2  mt-4 btn btn-outline-brown col-lg-6 col-9'>快去小貓商城逛逛吧</Link>
+
+                </div>
+            </div>
+        </div>)
+        :      
+        (<div className="cart mt-4">
             <div className='container'>
             {/* 步驟 */}
                 <div className='d-flex justify-content-center step text-center  mb-4'>
@@ -328,7 +359,7 @@ export default function Cart() {
                             <option selected value={`no,${0},${0}`}>請選擇</option>
                             {coupon.map((v,i)=>{
                                 return(
-                                    <option key={`coupon${i}`} value={`${v.type},${v.amount},${v.id}`}>{v.title}</option>
+                                    <option key={`coupon${i}`} value={`${v.type},${v.amount},${v.coupon_id}`}>{v.title}</option>
                                 )
                             })}
                         </select>
@@ -381,6 +412,7 @@ export default function Cart() {
                 </div> 
             </div>           
         </div>
+        )}
 
     </>
   )
