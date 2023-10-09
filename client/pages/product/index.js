@@ -42,6 +42,9 @@ export default function ProductList() {
     const [isUpIconVisible, setIsUpIconVisible] = useState(false);
     const [isPriceIconVisible, setIsPriceIconVisible] = useState(false);
 
+    // 手風琴剛開始只有第一格打開
+    const [activeKey, setActiveKey] = useState(0); // 初始值为0，表示第一个格子展开
+
     //排序按鈕切換
     const toggleUpIcon = () => {
         setIsUpIconVisible(!isUpIconVisible);
@@ -77,10 +80,10 @@ export default function ProductList() {
     const [minPrice, setMinPrice] = useState(null);
     const [maxPrice, setMaxPrice] = useState(null);
     const [sortBy, setSortBy] = useState(null);
-    // 手風琴剛開始只有第一格打開
-    const [activeKey, setActiveKey] = useState(0); // 初始值为0，表示第一个格子展开
     const [isLoading, setIsLoading] = useState(false); // 加載畫面
-    
+    // 定義一個狀態用於存儲排序方式，預設為空字串
+    const [selectedSort, setSelectedSort] = useState('');
+
     // 根據篩選條件發送請求到後端 API
     useEffect(() => {
         setIsLoading(true);
@@ -91,7 +94,7 @@ export default function ProductList() {
                 vendor,
                 minPrice,
                 maxPrice,
-                sortBy,
+                sortBy: selectedSort, // 使用選擇的排序方式
             },
         })
             .then(response => {
@@ -103,7 +106,7 @@ export default function ProductList() {
                 console.error('Error:', error);
                 setIsLoading(false);
             });
-    }, [category, subcategory, vendor, minPrice, maxPrice, sortBy]);
+    }, [category, subcategory, vendor, minPrice, maxPrice, selectedSort]);
 
     // 當選擇不同的篩選條件時，更新相應的狀態
     // 透過 event.target.value 來找到用戶輸入的值
@@ -121,7 +124,6 @@ export default function ProductList() {
         console.log(trimmedSubcategory)
     };
 
-
     const handleVendorChange = (event) => {
         setVendor(event.target.value)
     }
@@ -138,11 +140,41 @@ export default function ProductList() {
         setSortBy(event.target.value);
     };
 
+    // 處理排序選擇的變化
+    const handleSortChange = (event) => {
+        const selectedValue = event.target.value;
+        setSelectedSort(selectedValue); // 更新選擇的排序方式
+        console.log(selectedValue)
+    };
+
+
+   //廠商與價錢篩選
+    const handleFilterSubmit = () => {
+        // 在事件處理程序中構建請求資料
+        const requestData = {
+            vendor: vendor,
+            minPrice: minPrice,
+            maxPrice: maxPrice
+        };
+
+        // 使用 Axios 或其他方式將資料送到後端
+        axios.post('http://localhost:3005/api/product/filter', requestData)
+            .then(response => {
+                // 處理後端返回的資料
+                console.log('後端回應:', response.data);
+                // 更新產品資料或其他操作
+                setProductData(response.data.result);
+            })
+            .catch(error => {
+                console.error('錯誤:', error);
+            });
+    };
+
     //篩選重複的廠商
     const [vendorData, setVendorData] = useState({ result: [] });
     useEffect(() => {
         axios.get("http://localhost:3005/api/product/vendor").then((response) => {
-            console.log(response.data.result); 
+            console.log(response.data.result);
             setVendorData({ result: response.data.result });
         });
     }, []);
@@ -152,7 +184,7 @@ export default function ProductList() {
 
     return (
         <>
-           
+
             <div className='product-list'>
                 <div className='container'>
                     <nav className="breadcrumb-wrapper" aria-label="breadcrumb">
@@ -172,12 +204,25 @@ export default function ProductList() {
                         {/* created_at和specialoffer排序 */}
                         <div className='sort ' >
                             <div className='sort-btn d-flex   justify-content-center text-align-center'>
-                                <button className={`size-7 m-1 p-1 ${isUpIconVisible ? 'active' : ''}`} onClick={toggleUpIcon}>
+                                {/* <button className={`size-7 m-1 p-1 ${isUpIconVisible ? 'active' : ''}`} onClick={toggleUpIcon}>
                                     上架時間 {isUpIconVisible ? <FaCaretUp /> : <FaCaretDown />}
                                 </button>
                                 <button className={`size-7 m-1 p-1 ${isPriceIconVisible ? 'active' : ''}`} onClick={togglePriceIcon}>
                                     價格 {isPriceIconVisible ? <FaCaretUp /> : <FaCaretDown />}
-                                </button>
+                                </button> */}
+                                <div className="col-12 mt-2">
+                                    <label htmlFor="specialoffer-sort" className="form-label">排序依據</label>
+                                    <select
+                                        id="specialoffer-sort"
+                                        className="form-select"
+                                        onChange={handleSortChange} // 選項改變時觸發事件處理程序
+                                        value={selectedSort} // 設定選擇的值
+                                    >
+                                        <option value="">請選擇</option>
+                                        <option value="price_desc">價格由高到低</option>
+                                        <option value="price_asc">價格由低到高</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -332,15 +377,27 @@ export default function ProductList() {
                                             <label for="inputprice size-6" className="form-label">價格區間</label>
                                             <div className="row col-md">
                                                 <div className="col-md-5">
-                                                    <input type="number" className="form-control" id="price" placeholder="$最低價">
-                                                    </input>
+                                                    <input
+                                                        type="number"
+                                                        className="form-control"
+                                                        id="price"
+                                                        placeholder="$最低價"
+                                                        value={minPrice}
+                                                        onChange={handleMinPriceChange}
+                                                    />
                                                 </div>
                                                 <div class="col-md dash">
                                                     ~
                                                 </div>
                                                 <div className="col-md-5">
-                                                    <input type="number" className="form-control" id="price" placeholder="$最高價">
-                                                    </input>
+                                                    <input
+                                                        type="number"
+                                                        className="form-control"
+                                                        id="price"
+                                                        placeholder="$最高價"
+                                                        value={maxPrice}
+                                                        onChange={handleMaxPriceChange}
+                                                    />
                                                 </div>
                                             </div>
                                         </div>
@@ -349,14 +406,24 @@ export default function ProductList() {
                                             <label for="brand size-6" className="form-label">品牌</label>
                                             {/* <input type="text" className="form-control" id="brand" placeholder="請輸入品牌關鍵字">
                                             </input> */}
-                                            <select id="inputsubCategory" className="form-select" name="subcategory_name">
-                                                <option selected>請選擇</option>
+                                            <select
+                                                id="inputsubCategory"
+                                                className="form-select"
+                                                name="subcategory_name"
+                                                value={vendor}
+                                                onChange={handleVendorChange}
+                                            >
+                                                <option value="">請選擇</option>
                                                 {vendorData.result.map((vendor, index) => (
                                                     <option key={index} value={vendor.vendor}>{vendor.vendor}</option>
                                                 ))}
                                             </select>
                                         </div>
-                                        <button type="submit" className="btn btn-brown col-12 mt-3">
+                                        <button
+                                            type="button"
+                                            className="btn btn-brown col-12 mt-3"
+                                            onClick={handleFilterSubmit} // 點擊按鈕時觸發事件處理程序
+                                        >
                                             確定
                                         </button>
                                     </div>

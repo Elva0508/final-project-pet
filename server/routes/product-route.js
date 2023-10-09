@@ -201,11 +201,21 @@ router.get("/filter_sort", (req, res) => {
         queryParams.push(minPrice, maxPrice);
     }
 
-    // 根據 sortBy 條件添加不同的排序方式
-    if (sortBy === 'created_at_asc') {
-        sqlQuery += `ORDER BY p.created_at ASC;`;
-    } else if (sortBy === 'price_asc') {
+    // // 根據 sortBy 條件添加不同的排序方式
+    // if (sortBy === 'created_at_asc') {
+    //     sqlQuery += `ORDER BY p.created_at ASC;`;
+    // } else if (sortBy === 'price_asc') {
+    //     sqlQuery += `ORDER BY p.specialoffer ASC;`;
+    // } else {
+    //     // 添加默認排序方式，如果未提供 sortBy 條件
+    //     sqlQuery += `ORDER BY p.created_at DESC, p.specialoffer ASC;`;
+    // }
+
+    // 根據 sortBy 條件添加升序或降序排序方式
+    if (sortBy === 'price_asc') {
         sqlQuery += `ORDER BY p.specialoffer ASC;`;
+    } else if (sortBy === 'price_desc') {
+        sqlQuery += `ORDER BY p.specialoffer DESC;`;
     } else {
         // 添加默認排序方式，如果未提供 sortBy 條件
         sqlQuery += `ORDER BY p.created_at DESC, p.specialoffer ASC;`;
