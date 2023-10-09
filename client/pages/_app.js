@@ -1,4 +1,4 @@
-import { useEffect,useContext } from "react";
+import { useEffect, useContext } from "react";
 import Layout from "@/components/layout";
 import "@/styles/globals.scss";
 import { AuthProvider } from '@/context/fakeAuthContext'

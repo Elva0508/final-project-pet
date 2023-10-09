@@ -57,7 +57,7 @@ router.post("/login", upload.none(), async (req, res) => {
     try {
       const results = await new Promise((resolve, reject) => {
         // 使用email和password進行登入驗證
-        db.query('SELECT * FROM users WHERE email = ? AND password = ?', [email, password], (err, results) => {
+        db.query('SELECT * FROM userinfo WHERE email = ? AND password = ?', [email, password], (err, results) => {
           if (err) {
             console.error('資料庫-查詢錯誤：', err);
             reject(err);
@@ -80,12 +80,14 @@ router.post("/login", upload.none(), async (req, res) => {
         const user = results;
         const token = jwt.sign(
           {
-            user_id: user.user_id, // 使用者的唯一識別符
-          username: user.username, // 使用者的名稱
-          email: user.email // 使用者的電子郵件
+            name: user.name, // 使用者的唯一識別符
+          email: user.email, // 使用者的名稱
+          password: user.password,// 使用者的電子郵件
+          avatar: user.cover_photo,
+          id: user.user_id
           },
           secretKey,
-          { expiresIn: '30m' }
+          { expiresIn: '1d' }
         );
          return res.status(200).json({ message: 'success login', code: '200', token: token })
         
@@ -121,9 +123,11 @@ router.post("/checkLogin", checkToken,(req,res)=>{
   const currentUser = req.decoded;
   const token=jwt.sign(
     {
-      user_id: currentUser.user_id,
-      username: currentUser.username,
-      email: currentUser.email
+      name: currentUser .name, // 使用者的唯一識別符
+          email: currentUser .email, // 使用者的名稱
+          password: currentUser .password,// 使用者的電子郵件
+          avatar: currentUser .cover_photo,
+          id: user.user_id
     },
     secretKey,
     { expiresIn: '1d' }
@@ -133,28 +137,48 @@ router.post("/checkLogin", checkToken,(req,res)=>{
     message:"用戶已登入",
     code:"200",
     user:{
-      user_id: currentUser.user_id,
-      username: currentUser.username,
-      email: currentUser.email
+      name: currentUser.name,
+      email: currentUser.email,
+      password: currentUser.password,
+      avatar: currentUser.cover_photo,
+      id: currentUser.user_id,
     },
     token:token
   })
 
 })
 
-router.post("/profile", checkToken,(req,res)=>{
-  const currentId = req.decoded.user_id;
-  db.query('SELECT * FROM userinfo WHERE user_id = ?',[currentId],(err,results)=>{
-    if(err){
-      console.error('資料庫-查詢錯誤：', err);
-      res.status(500).json({message: '資料庫查詢錯誤', code: '500'});
-    }else{
-      if(results.length>0){
-        res.status(200).json({message:'success',code:'200',results:results})
+//會員基本資料api
+router.get("/profile", checkToken, (req, res) => {
+  const currentUser = req.decoded.email;
+  db.query("SELECT * FROM userinfo WHERE email = ?", [currentUser], (err, results) => {
+    if (err) {
+      console.error("資料庫-查詢錯誤：", err);
+      res.status(500).json({ message: "資料庫查詢錯誤", code: "500" });
+    } else {
+      if (results.length > 0) {
+        res.status(200).json({ message: "success", code: "200", results: results });
       }
     }
-  })
-})
+  });
+});
+//會員基本資料修改api
+router.put("/profile", checkToken, (req, res) => {
+  const currentId = req.decoded.user_id;
+  const { name,phone, city, area, address, birthday, pet_number, gender } = req.body;
+  db.query(
+    "UPDATE userinfo SET name = ?, phone = ?, city = ?, area = ?, address = ?, birthday = ?, pet_number = ?, gender = ? WHERE user_id = ?",
+    [name,phone, city, area, address, birthday, pet_number, gender, currentId],
+    (err, results) => {
+      if (err) {
+        console.error("資料庫-查詢錯誤：", err);
+        res.status(500).json({ message: "資料庫查詢錯誤", code: "500" });
+      } else {
+        res.status(200).json({ message: "success", code: "200" });
+      }
+    }
+  );
+});
 
 // router.post("/register",  async(req, res) => {
 //   const { name, email, password, confPassword } = req.body;
@@ -329,7 +353,7 @@ const Register = async (req, res) => {
     }
 
     // 如果email不存在於數據庫中，則創建新用戶記錄
-    const createUserQuery = "INSERT INTO users (username, email, password) VALUES (?, ?, ?)";
+    const createUserQuery = "INSERT INTO users (username, email, password,) VALUES (?, ?, ?)";
     connection.query(createUserQuery, [name, email, password], (insertError) => {
       if (insertError) {
         console.error(insertError);
