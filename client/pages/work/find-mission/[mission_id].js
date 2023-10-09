@@ -126,10 +126,17 @@ export default function MissionDetail() {
     // };
 
     const router = useRouter();
+
     const { mission_id } = router.query;
 
     const [missionDetail, setMissionDetail] = useState([])
     const [missionImages, setMissionImages] = useState([])
+
+    // 彈跳視窗
+    const [selectedMissionId, setSelectedMissionId] = useState(null);
+    const [recommendation, setRecommendation] = useState('');
+    const [autoSend, setAutoSend] = useState(false);
+    // const [showModal, setShowModal] = useState(false);
 
     const getMissionDetail = async (mission_id) => {  // 接受 mission_id 作為參數
         try {
@@ -163,6 +170,40 @@ export default function MissionDetail() {
         }
     }, [mission_id]);
 
+    // 彈跳視窗(確認送出)
+    const handleConfirmSubmit = async () => {
+        setSelectedMissionId(mission_id)
+        try {
+            // // 使用 selectedMissionId 作为 missionId
+            const requestData = {
+                missionId: selectedMissionId,
+                recommendation,
+                autoSend,
+            };
+
+            // 发送 POST 请求将数据发送到后端 API
+            const response = await axios.post('http://localhost:3005/api/mission/add-record', requestData);
+
+            // 处理成功响应，可以根据需要执行相关操作
+            console.log('成功添加到應徵紀錄', response.data);
+
+            // 关闭模态框
+            // setShowModal(false);
+
+            // 延迟2秒后跳转到/chatlist
+            setTimeout(() => {
+                router.push('/chatlist');
+            }, 2000); // 2000毫秒等于2秒
+        } catch (error) {
+            console.error('添加到應徵紀錄出錯', error);
+        }
+    };
+
+    // 第一次點擊送出就加入應徵紀錄 而非第二次才加
+    useEffect(() => {
+        handleConfirmSubmit();
+    }, [mission_id]);
+
     // 格式化日期
     function formatDate(dateString) {
         const date = new Date(dateString);
@@ -172,11 +213,15 @@ export default function MissionDetail() {
         return `${year}/${month}/${day}`;
     }
 
+    useEffect(()=>{
+        console.log("現在的showModal是"+showModal)
+    },[showModal])
+
     return (
         <>
             {/* Modal */}
-            <div className="modal fade apply-modal" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div className="modal-dialog">
+            <div className={`modal fade apply-modal ${showModal ? 'show' : ''}`} id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div className="modal-dialog modal-dialog-centered">
                     <div className="modal-content">
                         <div className="modal-header">
                             <h5 className="modal-title size-4" id="exampleModalLabel">立即應徵</h5>
@@ -199,10 +244,10 @@ export default function MissionDetail() {
                             </div>
                             <div className='recommend mt-4'>
                                 <div className='size-5 mb-2'>自我推薦</div>
-                                <textarea className='recommend-content'></textarea>
+                                <textarea className='recommend-content' value={recommendation} onChange={(e) => setRecommendation(e.target.value)} ></textarea>
 
                                 <div className='auto-send d-flex my-4 align-items-center'>
-                                    <input type="checkbox" className='checkbox' />
+                                    <input type="checkbox" className='checkbox' checked={autoSend} onChange={() => setAutoSend(!autoSend)} />
                                     <div className='size-6 ms-2'>自動發送小幫手履歷<span className='size-7' >（需開啟小幫手資料）</span></div>
                                 </div>
                             </div>
@@ -210,7 +255,7 @@ export default function MissionDetail() {
 
                         <div className="modal-footer justify-content-center py-4">
                             <button type="button" className=" btn-outline-confirm" data-bs-dismiss="modal">取消</button>
-                            <button type="button" className=" btn-second">確認送出</button>
+                            <button type="button" className=" btn-second" onClick={handleConfirmSubmit}>確認送出</button>
                         </div>
                     </div>
                 </div>

@@ -247,5 +247,28 @@ router.get("/mission-details-img/:mission_id", (req, res) => {
   );
 })
 
+// 應徵紀錄
+router.post("/add-record", (req, res) => {
+  const { missionId } = req.body; // 從請求體中獲取任務的 missionId  
+  const today = new Date();
+  today.setHours(0, 0, 0, 0); // 將時間設為 00:00:00.000
+  const tomorrow = new Date(today); // 複製今天的日期
+  tomorrow.setDate(tomorrow.getDate() + 1); // 增加一天 到明天的00:00
+  const formattedDate = tomorrow.toISOString().split('T')[0]; // 格式化成 YYYY-MM-DD 格式的日期字符串
+  console.log("req.body:", req.body);
+  conn.execute(
+    `INSERT INTO mission_record(user_id, mission_id, job_date) VALUES (1,?,?)`,
+    [missionId, formattedDate],
+    (error, result) => {
+      if (error) {
+        console.error(error);
+        res.status(500).json({ error: '加到應徵紀錄出錯' });
+      } else {
+        res.json({ result });
+      }
+    }
+  );
+});
+
 
 module.exports = router;
