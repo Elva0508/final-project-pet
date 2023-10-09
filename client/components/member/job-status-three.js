@@ -110,16 +110,11 @@ export default function JobStatusTwo({record}) {
                 </div>
               </div>
               {/* 2 */}
-              <div className="d-flex flex-column justify-content-between">
-                <div className="d-flex flex-column align-items-center">
-                  <button className="btn btn-confirm m-2 size-6 ">應徵</button>
-                </div>
-
-                <div className="d-flex flex-column">
-                  <p className="size-7 text-center apply">2023-08-22</p>
+                <div className="d-flex flex-column justify-content-center">
+                  <p className="size-7 text-center apply">{transferDate(v.job_date)}</p>
                   <p className="size-7 text-center apply">已應徵</p>
                 </div>
-              </div>
+
             </div>
             
           </>
