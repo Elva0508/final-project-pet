@@ -3,6 +3,9 @@ import {RiDeleteBin5Fill} from 'react-icons/ri';
 import { useRouter } from 'next/router';
 import axios from "axios";
 import { useCart } from '@/hooks/useCart';
+import Swal from 'sweetalert2';
+import Link from 'next/link';
+
 // import moment from "moment";
 
 export default function Cart() {
@@ -75,6 +78,7 @@ export default function Cart() {
     }, [cart])
       //判斷該引入哪些優惠券
     useEffect(() => {
+        setCoupon([])
         getCoupon()
         setSale(0)
         setSelectedOption(["no",0,0])
@@ -177,7 +181,15 @@ export default function Cart() {
             localStorage.setItem('discount', discount);
             router.push('/product/cart/checkout');
         }else{
-            alert("請先勾選商品在進行結帳")
+            Swal.fire({
+                text: '請先勾選商品再進行結帳',
+                icon: 'info',
+                confirmButtonText: '確定',
+                confirmButtonColor: "#d7965b",
+                iconColor: "#ca526f",
+                color: "#512f10",
+                focusConfirm: false,
+              });
         }
 
     }  
@@ -185,7 +197,27 @@ export default function Cart() {
 
   return (
     <>
-        <div className="cart mt-5">
+        {cart.length==0?
+        (<div className="cart mt-5">
+            <div className='container'>
+                {/* 步驟 */}
+                <div className='d-flex justify-content-center step text-center  '>
+                    <div className='col-lg-2 col-sm-4 col-5 size-6 step1 '>
+                        購物車
+                    </div>
+                    <div className='col-lg-2 col-sm-4 col-5 size-6  step2'>
+                        運送&付款
+                    </div>
+                </div>
+                <div className=' text-center zero d-flex flex-column justify-content-center align-items-center'>
+                    <p className='size-3'>購物車空空的</p>
+                    <Link href="/product" className='size-2  mt-4 btn btn-outline-brown col-lg-6 col-9'>快去小貓商城逛逛吧</Link>
+
+                </div>
+            </div>
+        </div>)
+        :      
+        (<div className="cart mt-5">
             <div className='container'>
             {/* 步驟 */}
                 <div className='d-flex justify-content-center step text-center  mb-4'>
@@ -263,27 +295,6 @@ export default function Cart() {
                                 )
 
                             })}
-                            <tr className='size-6'>
-                                <td className='text-center'><input type="checkbox" /></td>
-                                <td><img src='https://cdn-front.mao-select.com.tw//upload_files/fonlego-rwd/prodpic/D_M3PD150101-e-0.jpg' /></td>
-                                <td>
-                                    <p>單層開放式防濺貓砂盆</p>
-                                    <p className='size-7 type'>藍色</p>
-                                </td>
-                                <td className='text-center'>
-                                    <p className='price size-7 mb-0'>$500</p>
-                                    <p className='newprice'>$100</p> 
-                                </td>
-                                <td>
-                                    <div className="input-group ">
-                                        <button type="button" className="btn btn-outline-brown">-</button>
-                                        <input type="text" className="form-control  text-center  w-25"  value="12"/>
-                                        <button type="button" className="btn btn-outline-brown">+</button>
-                                    </div>
-                                </td>
-                                <td className='text-center'>$1500</td>
-                                <td className='text-center'><button className='delete'><RiDeleteBin5Fill /></button></td>
-                            </tr>
                         </tbody>
                     </table>
                     {/* 手機板 */}
@@ -334,25 +345,6 @@ export default function Cart() {
                             </tr>
                             )
                         })}
-
-                            <tr className='m-size-7'>
-                                <td className='text-center'><input type="checkbox"/></td>
-                                <td><img src='https://cdn-front.mao-select.com.tw//upload_files/fonlego-rwd/prodpic/D_M3PD150101-e-0.jpg'></img></td>
-                                <td className=''>
-                                    <p className='m-0'>單層開放式防濺貓砂盆</p>
-                                    <p className='m-size-7 type m-0'>藍色</p>
-                                    <p className='m-0'>NT$500</p>
-                                    
-                                </td>
-                                <td>
-                                    <div className="input-group input-group-sm ">
-                                        <button type="button" className="btn btn-outline-brown">-</button>
-                                        <input type="text" className="form-control  text-center  "  value="12"/>
-                                        <button type="button" className="btn btn-outline-brown">+</button>
-                                    </div>
-                                </td>
-                                <td className='text-center'><button className='delete'><RiDeleteBin5Fill /></button></td>
-                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -367,7 +359,7 @@ export default function Cart() {
                             <option selected value={`no,${0},${0}`}>請選擇</option>
                             {coupon.map((v,i)=>{
                                 return(
-                                    <option key={`coupon${i}`} value={`${v.type},${v.amount},${v.id}`}>{v.title}</option>
+                                    <option key={`coupon${i}`} value={`${v.type},${v.amount},${v.coupon_id}`}>{v.title}</option>
                                 )
                             })}
                         </select>
@@ -420,6 +412,7 @@ export default function Cart() {
                 </div> 
             </div>           
         </div>
+        )}
 
     </>
   )
