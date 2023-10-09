@@ -28,7 +28,7 @@ import { Cascader } from "antd";
 import cityData from "@/data/CityCountyData.json";
 
 // 搜尋
-const Search = ({ placeholder, color, onClick, search, setSearch, setIsSearchTriggered }) => {
+const Search = ({ placeholder, color, onClick, search, setSearch, setIsSearchTriggered, setActivePage }) => {
   const rippleBtnRef = useRef(null);
   const inputRef = useRef(null);
   const handleRipple = () => {
@@ -43,6 +43,7 @@ const Search = ({ placeholder, color, onClick, search, setSearch, setIsSearchTri
     setSearch(search)
     console.log("按了搜尋按鈕的search是" + search)
     setIsSearchTriggered(true);
+    setActivePage(1);
   };
 
   return (
@@ -470,7 +471,7 @@ const MobileFilter = ({ missionType, setMissionType, sortOrder, setSortOrder, se
 
 
 // 最終版篩選
-const MyFilter = ({ missionType, setMissionType, missionCity, setMissionCity, missionArea, setMissionArea, updateDate, setUpdateDate, sortOrder, setSortOrder, sortBy, setSortBy }) => {
+const MyFilter = ({ missionType, setMissionType, missionCity, setMissionCity, missionArea, setMissionArea, updateDate, setUpdateDate, sortOrder, setSortOrder, sortBy, setSortBy, setActivePage }) => {
   // 按鈕文字的狀態
   const [buttonText1, setButtonText1] = useState('任務類型');
   const [buttonText2, setButtonText2] = useState('更新時間');
@@ -488,6 +489,7 @@ const MyFilter = ({ missionType, setMissionType, missionCity, setMissionCity, mi
     setMissionCity(city.CityName);
     setMissionArea(null); // 要重置area 第二次篩city才能正常
     // console.log(`選中的missionCity是: ${missionCity}`);
+    setActivePage(1);
   };
 
   // 立即更新missionCity的值 否則第一次點擊會是null(因為異步)
@@ -501,6 +503,7 @@ const MyFilter = ({ missionType, setMissionType, missionCity, setMissionCity, mi
     setSelectedArea(area);
     console.log(`選中的地區是: ${area.AreaName}`);
     setMissionArea(area.AreaName);
+    setActivePage(1);
   };
 
   useEffect(() => {
@@ -534,6 +537,7 @@ const MyFilter = ({ missionType, setMissionType, missionCity, setMissionCity, mi
     console.log(`選中的值是: ${selectedValue}`);
 
     setMissionType(selectedValue);
+    setActivePage(1);
   };
 
   // 二：處理更新日期下拉選單項的點擊事件
@@ -543,6 +547,7 @@ const MyFilter = ({ missionType, setMissionType, missionCity, setMissionCity, mi
     console.log(`選中的值是: ${selectedValue}`);
 
     setUpdateDate(selectedValue);
+    setActivePage(1);
   };
 
   // 清除篩選條件
@@ -1000,13 +1005,13 @@ export default function MissionList() {
 
         <div className="d-flex flex-column flex-md-row justify-content-between mt-3">
           <RoleSelection defaultActive="mission" />
-          <Search placeholder="搜尋任務" search={search} setSearch={setSearch} setIsSearchTriggered={setIsSearchTriggered} />
+          <Search placeholder="搜尋任務" search={search} setSearch={setSearch} setIsSearchTriggered={setIsSearchTriggered} setActivePage={setActivePage} />
         </div>
         <div className='d-flex justify-content-between align-items-center mt-md-3 mb-md-4 position-relative'>
           <div className='filters d-flex justify-content-center align-items-center '>
             {/* <MobileFilter missionType={missionType} /> */}
             <MyFilter missionType={missionType} setMissionType={setMissionType} missionCity={missionCity} setMissionCity={setMissionCity} missionArea={missionArea} setMissionArea={setMissionArea}
-              updateDate={updateDate} setUpdateDate={setUpdateDate} sortOrder={sortOrder} setSortOrder={setSortOrder} sortBy={sortBy} setSortBy={setSortBy} />
+              updateDate={updateDate} setUpdateDate={setUpdateDate} sortOrder={sortOrder} setSortOrder={setSortOrder} sortBy={sortBy} setSortBy={setSortBy} setActivePage={setActivePage} />
           </div>
           <Link href="/work/create-mission" className="position-absolute add-mission-btn-pc-link">
             <button className="add-mission-btn-pc  d-none d-lg-block btn-confirm ">
