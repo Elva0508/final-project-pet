@@ -78,6 +78,9 @@ router.get("/all-missions", (req, res) => {
   let dateRangeStart = null;
   let dateRangeEnd = null;
 
+  // 搜尋
+  let searchQuery = req.query.missionSearch;
+
   // 獲取排序條件
   if (orderBy === "post_date") {
     orderBy = "md.post_date";
@@ -156,6 +159,11 @@ router.get("/all-missions", (req, res) => {
     whereClause.push(`md.update_date BETWEEN '${dateRangeStart}' AND '${dateRangeEnd}'`);
   }
 
+  // 搜尋
+  if (searchQuery) {
+    whereClause.push(`md.title LIKE '%${searchQuery}%'`);
+  }
+  
   // 如果有 WHERE 子句，將其加入查詢
   if (whereClause.length > 0) {
     query += ` WHERE ${whereClause.join(' AND ')}`;

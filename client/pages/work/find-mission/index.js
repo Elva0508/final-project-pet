@@ -7,13 +7,14 @@ import RoleSelection from "@/components/job/role-selection";
 import LatestMission, {
   MobileLatestMission,
 } from "@/components/job/latest-mission";
-import Search from "@/components/job/search";
+// import Search from "@/components/job/search";
 // import Filter from '@/components/job/filter'
 // import MissionCard from '@/components/job/mission-card'
 import Pagination from "@/components/pagination";
 // react-icons
 import { FaCaretUp, FaCaretDown } from "react-icons/fa";
 import { BiSolidDownArrow, BiSolidUpArrow } from "react-icons/bi";
+import { BiSearchAlt } from "react-icons/bi";
 // Swiper
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
@@ -25,6 +26,55 @@ import MenuItem from "@mui/material/MenuItem";
 // import { Cascader } from '@douyinfe/semi-ui';
 import { Cascader } from "antd";
 import cityData from "@/data/CityCountyData.json";
+
+// 搜尋
+const Search = ({ placeholder, color, onClick, search, setSearch, setIsSearchTriggered }) => {
+  const rippleBtnRef = useRef(null);
+  const inputRef = useRef(null);
+  const handleRipple = () => {
+    const btn = rippleBtnRef.current;
+    btn.classList.add("ripple");
+    setTimeout(() => {
+      btn.classList.remove("ripple");
+    }, 500); //動畫持續時間結束後移除動畫效果，讓動畫可以重複使用
+  };
+
+  const handleSearch = () => {
+    setSearch(search)
+    console.log("按了搜尋按鈕的search是" + search)
+    setIsSearchTriggered(true);
+  };
+
+  return (
+    <div className="job-search">
+      <input
+        id="search-input"
+        type="text"
+        placeholder={placeholder || ""}
+        ref={inputRef}
+        value={search}
+        onChange={(e) => {
+          console.log(e.target.value);
+          // 不在這裡觸發搜尋，而是更新 search 狀態
+          setSearch(e.target.value);
+          console.log("輸入時的search是" + search)
+        }}
+      />
+      <button
+        onClick={() => {
+          handleRipple();
+          handleSearch();
+          if (onClick) {
+            onClick(inputRef.current.value);
+          }
+        }}
+        ref={rippleBtnRef}
+      >
+        <BiSearchAlt className="job-search-icon" />
+      </button>
+    </div>
+  );
+};
 
 
 // 篩選-共用
@@ -703,7 +753,7 @@ const MyFilter = ({ missionType, setMissionType, missionCity, setMissionCity, mi
 
 
 // 排序
-const Sort = ({ missionType, setMissionType, missionCity, setMissionCity, missionArea, setMissionArea, updateDate, setUpdateDate, sortOrder, setSortOrder, sortBy, setSortBy }) => {
+const Sort = ({ missionType, setMissionType, missionCity, setMissionCity, missionArea, setMissionArea, updateDate, setUpdateDate, sortOrder, setSortOrder, sortBy, setSortBy, search }) => {
   const [activeButton, setActiveButton] = useState("post_date");
   const [iconDirection, setIconDirection] = useState({}); // 用於跟蹤圖標方向
 
@@ -722,7 +772,7 @@ const Sort = ({ missionType, setMissionType, missionCity, setMissionCity, missio
 
   useEffect(() => {
     console.log("現在是" + sortOrder);
-    console.log(`排序現在是接+http://localhost:3005/api/mission/all-missions?missionType=${missionType}&updateDate=${updateDate}&missionCity=${missionCity}&missionArea=${missionArea}&sortOrder=${sortOrder}&sortBy=${sortBy}`)
+    console.log(`排序現在是接+http://localhost:3005/api/mission/all-missions?missionType=${missionType}&updateDate=${updateDate}&missionCity=${missionCity}&missionArea=${missionArea}&sortOrder=${sortOrder}&sortBy=${sortBy}&missionSearch=${search}`)
   }, [sortOrder]);
 
   return (
@@ -860,6 +910,9 @@ export default function MissionList() {
   const [missionArea, setMissionArea] = useState(null);
   const [sortOrder, setSortOrder] = useState("asc");
   const [sortBy, setSortBy] = useState('post_date');
+  const [search, setSearch] = useState("");
+  const [isSearchTriggered, setIsSearchTriggered] = useState(false);
+
 
 
   const [allMissions, setAllMissions] = useState([]);
@@ -880,18 +933,24 @@ export default function MissionList() {
       if (missionArea) {
         apiUrl += `&missionArea=${missionArea}`;
       }
+      if (search) {
+        apiUrl += `&missionSearch=${search}`;
+      }
       const response = await axios.get(apiUrl);
       const data = response.data.data;
       console.log(data);
       setAllMissions(data);
     } catch (error) {
       console.error("Error:", error);
+    } finally {
+      setIsSearchTriggered(false); // 無論搜尋成功或失敗，按下搜尋鈕後都將其設置為 false
     }
   };
 
   useEffect(() => {
     getAllMissions()
-  }, [missionType, updateDate, missionCity, missionArea, sortOrder, sortBy]) // 當篩選方式、排序方式發生變化時重新獲取數據（非常重要要記得！忘記好幾次）
+  }, [missionType, updateDate, missionCity, missionArea, sortOrder, sortBy, isSearchTriggered]) // 當篩選方式、排序方式發生變化時重新獲取數據（非常重要要記得！忘記好幾次）
+  // 這邊不添加 search 否則在input輸入時就直接即時搜尋
 
   useEffect(() => {
     // 在allMissions狀態更新後輸出內容
@@ -917,6 +976,8 @@ export default function MissionList() {
     setMissionArea(null);
     setSortOrder('asc');
     setSortBy('post_date');
+    setSearch("");
+    setIsSearchTriggered(false);
     // setSelectedCity(null); // 重置城市选择为 null 或默认值
     // setSelectedArea(null); // 重置地区选择为 null 或默认值
     console.log(`重載後是+http://localhost:3005/api/mission/all-missions?missionType=${missionType}&updateDate=${updateDate}&missionCity=${missionCity}&missionArea=${missionArea}&sortOrder=${sortOrder}&sortBy=${sortBy}`);
@@ -939,7 +1000,7 @@ export default function MissionList() {
 
         <div className="d-flex flex-column flex-md-row justify-content-between mt-3">
           <RoleSelection defaultActive="mission" />
-          <Search placeholder="搜尋任務" />
+          <Search placeholder="搜尋任務" search={search} setSearch={setSearch} setIsSearchTriggered={setIsSearchTriggered} />
         </div>
         <div className='d-flex justify-content-between align-items-center mt-md-3 mb-md-4 position-relative'>
           <div className='filters d-flex justify-content-center align-items-center '>
