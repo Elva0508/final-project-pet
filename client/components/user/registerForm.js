@@ -90,8 +90,19 @@ export default function RegisterForm() {
           {error && <div className="form-alert">{error}</div>}
         </div>
         <div className="u-form-group mb-3">
-          
-        </div>
+          <input
+            type="checkbox"
+            id="confirm"
+            name="confirm"
+            value="confirm"
+          />
+          <label htmlFor="confirm" className="ml-2">
+            我已閱讀並同意
+            <a href="#" className="forgot-password">
+              服務條款
+            </a>
+          </label>
+                  </div>
         <div className="u-form-group">
           <button type="submit" className="btn-brown ">
             註冊

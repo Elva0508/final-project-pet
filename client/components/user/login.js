@@ -82,35 +82,35 @@ export default function Login() {
       {({ isSubmitting }) => (
         <Form className="email-signup">
           <div className="u-form-group mb-3">
-            <label htmlFor="email">帳號</label>
             <Field
-              className="form-input"
+              className="form-input center-input"
               type="email"
               id="email"
               name="email"
+              placeholder="請輸入email"
             />
-            <ErrorMessage name="email" component="div" className="error" />
+            <ErrorMessage name="email" component="div" className="error form-alert" />
           </div>
 
           <div className="u-form-group mb-3">
-            <label htmlFor="password">密碼</label>
             <Field
-              className="form-input"
+              className="form-input center-input"
               type="password"
               id="password"
               name="password"
+              placeholder="請輸入密碼"
             />
             <ErrorMessage
               name="password"
               component="div"
-              className="error"
+              className="error form-alert"
             />
           </div>
 
           <div className="u-form-group">
             <button
               type="submit"
-              className="btn-brown"
+              className="btn-brown py-2 mt-4"
               disabled={isSubmitting}
             >
               登入
