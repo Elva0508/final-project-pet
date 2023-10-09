@@ -48,9 +48,8 @@ const Filter = ({ items, src, onClick, order }) => {
         onClick={handleClick}
       >
         <div
-          className={`drop-down-filter-btn-icon ${
-            anchorEl ? "drop-down-active" : ""
-          }`}
+          className={`drop-down-filter-btn-icon ${anchorEl ? "drop-down-active" : ""
+            }`}
         >
           <img src={src} />
         </div>
@@ -731,9 +730,8 @@ const Sort = ({ missionType, setMissionType, missionCity, setMissionCity, missio
       <div className="sort ">
         <div className="sort-btn d-flex justify-content-center text-align-center">
           <button
-            className={`size-7 m-1 p-1 ${
-              activeButton === "post_date" ? "active" : ""
-            }`}
+            className={`size-7 m-1 p-1 ${activeButton === "post_date" ? "active" : ""
+              }`}
             onClick={() => toggleButton("post_date")}
           >
             刊登時間{" "}
@@ -744,9 +742,8 @@ const Sort = ({ missionType, setMissionType, missionCity, setMissionCity, missio
             )}
           </button>
           <button
-            className={`size-7 m-1 p-1 ${
-              activeButton === "price" ? "active" : ""
-            }`}
+            className={`size-7 m-1 p-1 ${activeButton === "price" ? "active" : ""
+              }`}
             onClick={() => toggleButton("price")}
           >
             薪資{" "}
@@ -795,37 +792,7 @@ function ImageWithEqualDimensions({ file_path }) {
 }
 
 // 任務卡片（這邊的參數如果忘記設定會讓卡片出不來）
-const MissionCard = ({ missionType, missionCity, missionArea, setMissionType, updateDate, setUpdateDate, sortOrder, setSortOrder, sortBy, setSortBy }) => {
-  const [allMissions, setAllMissions] = useState([]);
-
-  const getAllMissions = async () => {
-    try {
-      let apiUrl = `http://localhost:3005/api/mission/all-missions?sortOrder=${sortOrder}&sortBy=${sortBy}`;
-
-      if (missionType) {
-        apiUrl += `&missionType=${missionType}`;
-      }
-      if (updateDate) {
-        apiUrl += `&updateDate=${updateDate}`;
-      }
-      if (missionCity) {
-        apiUrl += `&missionCity=${missionCity}`;
-      }
-      if (missionArea) {
-        apiUrl += `&missionArea=${missionArea}`;
-      }
-      const response = await axios.get(apiUrl);
-      const data = response.data.data;
-      console.log(data);
-      setAllMissions(data);
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  };
-
-  useEffect(() => {
-    getAllMissions()
-  }, [missionType, updateDate, missionCity, missionArea, sortOrder, sortBy]) // 當篩選方式、排序方式發生變化時重新獲取數據（非常重要要記得！忘記好幾次）
+const MissionCard = ({ missionType, missionCity, missionArea, setMissionType, updateDate, setUpdateDate, sortOrder, setSortOrder, sortBy, setSortBy, allMissions, currentData }) => {
 
   // 格式化日期
   function formatDate(dateString) {
@@ -837,7 +804,7 @@ const MissionCard = ({ missionType, missionCity, missionArea, setMissionType, up
   }
 
   // 為每個卡片創建獨立的isFavorite狀態數組
-  const [isFavorites, setIsFavorites] = useState(allMissions.map(() => false));
+  const [isFavorites, setIsFavorites] = useState(currentData.map(() => false));
 
   const toggleFavorite = (index) => {
     const newFavorites = [...isFavorites];
@@ -847,7 +814,7 @@ const MissionCard = ({ missionType, missionCity, missionArea, setMissionType, up
 
   return (
     <>
-      {allMissions.map((v, i) => {
+      {currentData.map((v, i) => {
         return (
           <div className="col-6 col-md-4 col-lg-6 col-xl-4" key={v.mission_id}>
             <div className="mission-list-card ">
@@ -894,6 +861,52 @@ export default function MissionList() {
   const [sortOrder, setSortOrder] = useState("asc");
   const [sortBy, setSortBy] = useState('post_date');
 
+
+  const [allMissions, setAllMissions] = useState([]);
+
+  const getAllMissions = async () => {
+    try {
+      let apiUrl = `http://localhost:3005/api/mission/all-missions?sortOrder=${sortOrder}&sortBy=${sortBy}`;
+
+      if (missionType) {
+        apiUrl += `&missionType=${missionType}`;
+      }
+      if (updateDate) {
+        apiUrl += `&updateDate=${updateDate}`;
+      }
+      if (missionCity) {
+        apiUrl += `&missionCity=${missionCity}`;
+      }
+      if (missionArea) {
+        apiUrl += `&missionArea=${missionArea}`;
+      }
+      const response = await axios.get(apiUrl);
+      const data = response.data.data;
+      console.log(data);
+      setAllMissions(data);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  useEffect(() => {
+    getAllMissions()
+  }, [missionType, updateDate, missionCity, missionArea, sortOrder, sortBy]) // 當篩選方式、排序方式發生變化時重新獲取數據（非常重要要記得！忘記好幾次）
+
+  useEffect(() => {
+    // 在allMissions狀態更新後輸出內容
+    console.log("allMissions是", allMissions);
+  }, [allMissions]);
+
+  // 分頁
+  const itemsPerPage = 18;
+  const [activePage, setActivePage] = useState(1);
+  const startIndex = (activePage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentData = allMissions.slice(startIndex, endIndex);
+  useEffect(() => {
+    console.log("currentData這頁的資料是", currentData);
+  }, [currentData]);
 
 
   // 在組件加載時重置篩選條件為默認值
@@ -965,11 +978,11 @@ export default function MissionList() {
             <div className="row d-flex mb-3 g-3 g-md-4">
               {/* 使用g-3 不用justify-content-between 預設是start 卡片就會照順序排列 */}
               <MissionCard sortOrder={sortOrder} sortBy={sortBy} missionType={missionType} setMissionType={setMissionType} missionCity={missionCity} setMissionCity={setMissionCity} missionArea={missionArea} setMissionArea={setMissionArea}
-                updateDate={updateDate} setUpdateDate={setUpdateDate} />
+                updateDate={updateDate} setUpdateDate={setUpdateDate} allMissions={allMissions} currentData={currentData} />
             </div>
           </div>
         </section>
-        {/* <Pagination /> */}
+        <Pagination itemsPerPage={itemsPerPage} total={allMissions} activePage={activePage} setActivePage={setActivePage} />
       </div>
     </>
   );

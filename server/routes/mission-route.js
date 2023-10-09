@@ -183,7 +183,7 @@ router.get("/latest-missions", (req, res) => {
   conn.execute(
     `${commonQueryTemplate}
     ORDER BY md.post_date DESC
-    LIMIT 8;`,
+    LIMIT 11;`,
     (err, result) => {
       if (err) {
         console.log(err);
