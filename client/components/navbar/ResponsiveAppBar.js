@@ -28,7 +28,7 @@ import ShoppingCart from "@/assets/shoppingCart.svg";
 
 //cart
 import { useCart } from '@/hooks/useCart';
-import { useRouter } from 'next/router';
+
 
 
 const theme = createTheme({
@@ -110,7 +110,7 @@ function ResponsiveAppBar() {
     setAnchorElUser(null);
   };
 
-  const router = useRouter(); 
+ 
 
   //登入登出
   const handleLogout = () => {
