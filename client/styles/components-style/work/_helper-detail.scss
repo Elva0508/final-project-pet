@@ -96,11 +96,12 @@ $detail-block-width: 9px; //標題左側直槓槓
     .review-card {
       cursor: grab;
       $avatar-width: 70px;
-      background-color: $light-gray;
+      background-color: $cos-white;
       padding: 15px 25px;
-      margin: 20px 20px 40px 20px;
-      width: 350px;
+      margin: 20px 0;
+      width: 340px !important;
       border-radius: 2px;
+      box-shadow: 3px 2px 8px rgba(128, 128, 128, 0.145);
       &-avatar {
         width: $avatar-width;
         height: $avatar-width;
@@ -123,15 +124,59 @@ $detail-block-width: 9px; //標題左側直槓槓
         min-height: 120px;
       }
     }
-    .swiper-slide {
-      width: 350px;
+    .slick-slider {
+      width: 92%;
+      margin: auto;
+      position: relative;
     }
-    .swiper-scrollbar {
-      height: 15px;
-      border-radius: 2px;
-      &-drag {
-        border-radius: 2px;
+    .slick-slide {
+      display: flex;
+      justify-content: center;
+    }
+    .slick-track {
+      // margin-right: 20px;
+      gap: 10px;
+    }
+    .slick-prev,
+    .slick-next {
+      position: absolute;
+      background-color: $cos-white;
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      z-index: 999;
+      box-shadow: 0 0 9px rgba(0, 0, 0, 0.299);
+      // left: -55px;
+      &::before {
+        content: "";
+        background: url("/caret-left.svg") center center no-repeat;
+        background-size: cover;
+        width: 22px;
+        height: 40px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
       }
+    }
+    .slick-prev {
+      left: -53px;
+    }
+    .slick-next {
+      right: -53px;
+      &::before {
+        content: "";
+        background: url("/caret-right.svg") center center no-repeat;
+      }
+    }
+    .slick-dots > * {
+      width: 15px;
+      height: 15px;
+      bottom: 10px;
+      opacity: 0.6;
+    }
+    .slick-dots li.slick-active button:before {
+      color: $hover;
     }
   }
 }
@@ -270,7 +315,8 @@ $detail-block-width: 9px; //標題左側直槓槓
   }
 }
 .get-price {
-  height: 80px;
+  overflow-x: hidden;
+  height: 100px;
   background-color: $main-bg;
   position: sticky;
   bottom: 0;
@@ -355,7 +401,7 @@ $detail-block-width: 9px; //標題左側直槓槓
       .review-card {
         $avatar-width: 60px;
         padding: 8px 15px;
-        width: 300px;
+        // width: 80% !important;
         &-avatar {
           width: $avatar-width;
           height: $avatar-width;
@@ -368,8 +414,31 @@ $detail-block-width: 9px; //標題左側直槓槓
           }
         }
       }
-      .swiper-slide {
-        width: 300px;
+      .slick-slider {
+        width: 92%;
+        margin: auto;
+        position: relative;
+      }
+
+      .slick-prev,
+      .slick-next {
+        width: 35px;
+        height: 35px;
+        &::before {
+          width: 18px;
+          height: 35px;
+        }
+      }
+      .slick-prev {
+        left: -25px;
+      }
+      .slick-next {
+        right: -25px;
+      }
+      .slick-dots * {
+        width: 8px;
+        height: 8px;
+        bottom: 15px;
       }
     }
   }

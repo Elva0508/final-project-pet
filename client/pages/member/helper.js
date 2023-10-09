@@ -8,7 +8,7 @@ import Link from "next/link";
 const HelperInfoPage = () => {
   return (
     <>
-      <nav className="breadcrumb-wrapper" aria-label="breadcrumb">
+      {/* <nav className="breadcrumb-wrapper" aria-label="breadcrumb">
         <ol className="breadcrumb">
           <li className="breadcrumb-item">
             <Link href="/" className="active-hover">
@@ -24,7 +24,7 @@ const HelperInfoPage = () => {
             小幫手資料
           </li>
         </ol>
-      </nav>
+      </nav> */}
       <div className="d-flex justify-content-end">
         {/* mobile版的左側tab */}
         <ListM />

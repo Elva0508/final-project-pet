@@ -3,16 +3,20 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import { FiSend } from "react-icons/fi";
 import { BiMessageRounded } from "react-icons/bi";
+import { FaRegHeart, FaHeart } from "react-icons/fa";
 import { CiCircleChevLeft, CiCircleChevRight } from "react-icons/ci";
 import Footer from "@/components/footer";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Scrollbar, Navigation } from "swiper/modules";
+import { Swiper, SwiperSlide, useSwiper } from "swiper/react";
+import { Scrollbar, Navigation, Pagination } from "swiper/modules";
 // import function to register Swiper custom elements
 import { register } from "swiper/element/bundle";
 import workService from "@/services/work-service";
 import { GoStarFill } from "react-icons/go";
 import Rating from "@mui/material/Rating";
 import StarIcon from "@mui/icons-material/Star";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 // import { Button, Modal } from "antd";
 import {
   DatePicker,
@@ -31,12 +35,6 @@ import {
 import dayjs from "dayjs";
 // register Swiper custom elements
 register();
-
-// Import Swiper styles
-import "swiper/css";
-import "swiper/css/scrollbar";
-import "swiper/css/navigation";
-import { TextArea } from "@douyinfe/semi-ui";
 const ImageSwiper = ({ images }) => {
   const swiperRef = useRef(null);
   useEffect(() => {
@@ -98,22 +96,96 @@ const ImageSwiper = ({ images }) => {
     </>
   );
 };
+
 const ReviewSwiper = ({ reviews }) => {
   const [transReview, setTransReview] = useState(reviews);
-
+  const settings = {
+    dots: true,
+    infinite: false,
+    speed: 500,
+    slidesToShow: 3,
+    slidesToScroll: 3,
+    // nextArrow: <img src="/caret-right.svg" className="next-arrow" />,
+    // prevArrow: <img src="/caret-left.svg" className="prev-arrow" />,
+    responsive: [
+      {
+        breakpoint: 1280,
+        settings: {
+          slidesToShow: 2.5,
+          slidesToScroll: 2,
+          infinite: true,
+          dots: true,
+        },
+      },
+      {
+        breakpoint: 1048,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 2,
+          initialSlide: 2,
+        },
+      },
+      {
+        breakpoint: 876,
+        settings: {
+          slidesToShow: 1.5,
+          slidesToScroll: 1,
+        },
+      },
+      {
+        breakpoint: 694,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+        },
+      },
+    ],
+  };
   return (
-    <Swiper
-      modules={[Scrollbar]}
-      spaceBetween={20}
-      slidesPerView="auto"
-      scrollbar={{
-        draggable: true,
-        dragSize: "150px",
-      }}
-    >
-      {reviews.map((review) => (
-        <SwiperSlide key={review.review_id}>
-          <div className="review-card">
+    <>
+      {/* <Swiper
+        modules={[Pagination, Navigation]}
+        spaceBetween={20}
+        slidesPerView="3"
+        navigation
+        pagination={{ clickable: true }}
+        // pagination
+      >
+        {reviews.map((review) => (
+          <SwiperSlide key={review.review_id}>
+            <div className="review-card">
+              <div className="review-card-head d-flex justify-content-center align-items-center">
+                <img
+                  className="review-card-avatar"
+                  src={`${review.cover_photo}`}
+                />
+                <div className="review-card-info d-flex flex-column justify-content-between ps-2">
+                  <div className="d-flex justify-content-between">
+                    <div className="username size-6">{review.name}</div>
+                    <div className="date size-6">{review.review_date}</div>
+                  </div>
+                  <div className="ranking mb-2">
+                    <Rating
+                      name="half-rating-read"
+                      value={review.star_rating}
+                      readOnly
+                      precision={0.5}
+                      emptyIcon={<StarIcon style={{ opacity: 0.35 }} />}
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="review-card-body mt-3">
+                {review.review_content}
+              </div>
+            </div>
+          </SwiperSlide>
+        ))}
+      </Swiper> */}
+
+      <Slider {...settings}>
+        {reviews.map((review) => (
+          <div className="review-card" style={{ width: "350px" }}>
             <div className="review-card-head d-flex justify-content-center align-items-center">
               <img
                 className="review-card-avatar"
@@ -122,7 +194,7 @@ const ReviewSwiper = ({ reviews }) => {
               <div className="review-card-info d-flex flex-column justify-content-between ps-2">
                 <div className="d-flex justify-content-between">
                   <div className="username size-6">{review.name}</div>
-                  <div className="date size-6">{review.review_date}</div>
+                  <div className="date size-7">{review.review_date}</div>
                 </div>
                 <div className="ranking mb-2">
                   <Rating
@@ -137,20 +209,68 @@ const ReviewSwiper = ({ reviews }) => {
             </div>
             <div className="review-card-body mt-3">{review.review_content}</div>
           </div>
-        </SwiperSlide>
-      ))}
-    </Swiper>
+        ))}
+      </Slider>
+    </>
   );
 };
-
+const ReviewCard = ({ review }) => {
+  return (
+    <>
+      <div className="review-card">
+        <div className="review-card-head d-flex justify-content-center align-items-center">
+          <img className="review-card-avatar" src={`${review.cover_photo}`} />
+          <div className="review-card-info d-flex flex-column justify-content-between ps-2">
+            <div className="d-flex justify-content-between">
+              <div className="username size-6">{review.name}</div>
+              <div className="date size-6">{review.review_date}</div>
+            </div>
+            <div className="ranking mb-2">
+              <Rating
+                name="half-rating-read"
+                value={review.star_rating}
+                readOnly
+                precision={0.5}
+                emptyIcon={<StarIcon style={{ opacity: 0.35 }} />}
+              />
+            </div>
+          </div>
+        </div>
+        <div className="review-card-body mt-3">{review.review_content}</div>
+      </div>
+    </>
+  );
+};
 export const HelperDetailSticky = () => {
+  const [isFavorite, setIsFavorite] = useState(false); // 初始狀態為未收藏
+  const toggleFavorite = () => {
+    setIsFavorite(!isFavorite); // 切換收藏狀態
+  };
   return (
     <section className="get-price d-flex justify-content-around align-items-center">
-      <p className="get-price-number size-4 m-0">
-        <span>NT$</span>
-        <span>500</span>/次
-      </p>
-      <Quotation />
+      <div
+        className="fav d-flex justify-content-center align-items-center"
+        onClick={toggleFavorite}
+      >
+        {isFavorite ? (
+          <div className="d-flex flex-column justify-content-end align-items-start ms-2">
+            <FaHeart className="size-4 heart-icon" />
+            <span>取消</span>
+          </div>
+        ) : (
+          <div className="d-flex flex-column justify-content-end align-items-start ms-2">
+            <FaRegHeart className="size-4 heart-icon" />
+            <span>收藏</span>
+          </div>
+        )}
+      </div>
+      <div className="d-flex justify-content-around align-items-center">
+        <p className="get-price-number size-4 me-2">
+          <span>NT$</span>
+          <span>500</span>/次
+        </p>
+        <Quotation />
+      </div>
     </section>
   );
 };
@@ -696,7 +816,7 @@ const HelperDetail = () => {
   return (
     <>
       <div className="helper-detail container-fluid">
-        <nav className="breadcrumb-wrapper" aria-label="breadcrumb">
+        {/* <nav className="breadcrumb-wrapper" aria-label="breadcrumb">
           <ol className="breadcrumb">
             <li className="breadcrumb-item">
               <Link href="/">首頁</Link>
@@ -708,13 +828,13 @@ const HelperDetail = () => {
               {uid}
             </li>
           </ol>
-        </nav>
+        </nav> */}
         <header className="d-flex flex-md-row flex-column justify-content-center align-items-center">
           <div className="avatar">
             <img src={profile.cover_photo} />
           </div>
           <div className="profile row justify-content-center justify-content-md-start">
-            <div className="size-2 m-size-3 username col-4 col-md-12 text-end text-sm-start">
+            <div className="size-2 m-size-4 username col-4 col-md-12 text-end text-sm-start">
               {profile.name}
             </div>
             <p className="intro size-6 col-12">{profile.Introduction}</p>
@@ -839,7 +959,7 @@ const HelperDetail = () => {
               </div>
             </div>
           </div>
-          <div className="review-card-group d-flex">
+          <div className="review-card-group">
             <ReviewSwiper reviews={reviews} />
           </div>
         </section>

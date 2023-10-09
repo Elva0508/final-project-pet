@@ -286,58 +286,74 @@ const FamousHelperCard = ({ ...helper }) => {
   );
 };
 const MobileFamousHelper = ({ famous, setFamous }) => {
-  const settings = {
-    // dots: true,
-    infinite: false,
-    speed: 500,
-    slidesToShow: 1.5,
-    slidesToScroll: 1,
-    nextArrow: <AiOutlineRightCircle />,
-    prevArrow: <AiOutlineLeftCircle />,
-    responsive: [
-      {
-        breakpoint: 569,
-        settings: {
-          slidesToShow: 1.2,
-        },
-      },
-      {
-        breakpoint: 425,
-        settings: {
-          slidesToShow: 1,
-        },
-      },
-    ],
-  };
+  const swiperRef = useRef(null);
+  useEffect(() => {
+    const swiperContainer = swiperRef.current;
+    const params = {
+      navigation: true,
+      injectStyles: [
+        `
+          .swiper-button-next,
+          .swiper-button-prev {
+            background-color: #FFFDFB;
+            width:32px;
+            height:32px;
+            border-radius: 50%;
+            color: #F8CB9F;
+            box-shadow: 0 0 9px rgba(0, 0, 0, 0.5);
+            background-position: center;
+            background-size: 18px;
+            background-repeat: no-repeat; 
+            // opacity:0.5;          
+          }
+          
+          .swiper-button-prev {
+            background-image: url("/caret-left.svg");
+
+          }
+          .swiper-button-next {
+            background-image: url("/caret-right.svg");    
+          }
+          .swiper-button-next svg,
+          .swiper-button-prev svg {
+            color: transparent;
+          }
+      `,
+      ],
+    };
+
+    Object.assign(swiperContainer, params);
+    swiperContainer.initialize();
+  }, []);
   return (
     <>
-      {/* <Carousel
-        show={1.5}
-        slide={1}
-        transition={0.5}
-        leftArrow={<AiOutlineLeftCircle />}
-        rightArrow={<AiOutlineRightCircle />}
-        className="famous-carousel"
-
-        // // responsive={true}
-      >
-        {famous.map((helper) => (
-          <FamousHelperCard {...helper} />
-        ))}
-        <FamousHelperCard />
-        <FamousHelperCard />
-        <FamousHelperCard />
-      </Carousel> */}
-      <div>
-        <Slider {...settings}>
+      {/* <Slider {...settings}>
           {famous.map((helper) => (
             <FamousHelperCard {...helper} />
           ))}
-        </Slider>
-      </div>
+        </Slider> */}
+      <>
+        <swiper-container
+          ref={swiperRef}
+          navigation="true"
+          space-between="20"
+          slides-per-view="auto"
+          next-el=".custom-next-button"
+          prev-el=".custom-prev-button"
+          init="false"
+        >
+          {famous.map((helper) => (
+            <swiper-slide>
+              <FamousHelperCard {...helper} />
+            </swiper-slide>
+          ))}
+        </swiper-container>
+      </>
     </>
   );
 };
+
+export const MobileLatestMission = () => {};
 
 const SingleHelperCard = ({ ...helper }) => {
   const [isFavorite, setIsFavorite] = useState(false); // 初始狀態為未收藏
@@ -561,8 +577,8 @@ const MissionHelperList = () => {
   };
 
   return (
-    <div className="mission-helper-list">
-      <nav className="breadcrumb-wrapper" aria-label="breadcrumb">
+    <div className="mission-helper-list container">
+      <nav className="breadcrumb-wrapper my-4 " aria-label="breadcrumb">
         <ol class="breadcrumb">
           <li class="breadcrumb-item">
             <Link href="/" className="active-hover">
@@ -575,7 +591,7 @@ const MissionHelperList = () => {
               onClick={handleBack}
               className="active-hover"
             >
-              小幫手總覽
+              小貓上工(找幫手)
             </Link>
           </li>
           {currentSearch ? (
@@ -603,7 +619,7 @@ const MissionHelperList = () => {
         </ol>
       </nav>
 
-      <div className="search d-flex flex-md-row flex-column justify-content-between align-items-center">
+      <div className="search d-flex flex-md-row flex-column justify-content-between align-items-center ">
         <RoleSelection defaultActive="helper" />
         <Search
           placeholder={"搜尋小幫手"}
@@ -665,15 +681,15 @@ const MissionHelperList = () => {
         </p>
       </div>
 
-      <div className="d-flex flex-md-row flex-column align-items-start justify-content-center">
+      <div className="d-flex flex-lg-row flex-column align-items-start justify-content-between gap-4">
         <section className="famous-helper">
           <p className="famous-helper-title size-5">熱門小幫手</p>
-          <div className="famous-helper-pc d-md-block d-none">
+          <div className="famous-helper-pc d-lg-block d-none">
             {famous.map((helper) => (
               <FamousHelperCard {...helper} />
             ))}
           </div>
-          <div className="famous-helper-mobile d-block d-md-none">
+          <div className="famous-helper-mobile d-block d-lg-none">
             <MobileFamousHelper famous={famous} setFamous={setFamous} />
           </div>
         </section>

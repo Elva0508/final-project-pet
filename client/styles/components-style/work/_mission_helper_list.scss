@@ -1,8 +1,5 @@
 .mission-helper-list {
-  max-width: 1440px;
-  padding: 0 20px;
-  margin: auto;
-
+  // margin: auto;
   .breadcrumb-wrapper {
     margin: 10px 0 20px 0;
     .breadcrumb {
@@ -31,10 +28,10 @@
     }
     display: flex;
     flex-direction: column;
-    width: calc(100% - 65%);
-    min-width: 355px;
+    min-width: 360px;
     background-color: $content-bg;
     padding: 15px;
+    border-radius: 2px;
 
     &-title {
       font-weight: bold;
@@ -43,6 +40,7 @@
     &-card {
       $img-size: 120px;
       margin-bottom: 3rem;
+      max-width: 380px;
       min-width: 325px;
       cursor: pointer;
       position: relative;
@@ -151,18 +149,21 @@
     }
   }
   .helper-list {
-    width: 65%;
+    width: calc(100% - 360px);
+    // justify-content: space-evenly;
+    gap: 25px;
   }
   .single-card {
     a,
     a:hover {
       border: none;
     }
-    width: calc((100% - 30px) / 3);
+    width: calc((100% - 50px) / 3);
     height: 410px;
-    margin: 0 0 20px 10px;
+    // margin: 0 0 20px 10px;
     min-width: 220px;
     background-color: $cos-white;
+    border-radius: 2px;
     padding: 0.6rem;
     box-shadow: 0px 0px 5px rgba(40, 39, 39, 0.1);
     position: relative;
@@ -256,12 +257,13 @@
       align-items: center;
       svg {
         color: $text-main;
-        font-size: 30px;
+        font-size: 35px;
         cursor: pointer;
       }
     }
   }
 }
+
 .mobile-filter {
   margin: 1.2rem 0;
   // height: 100px;
@@ -279,41 +281,31 @@
     width: 130px;
   }
 }
-@media screen and (max-width: 1200px) {
+@media screen and (max-width: 1400px) {
+  .mission-helper-list {
+    .helper-list {
+      width: 100%;
+    }
+  }
+}
+@media screen and (max-width: 1199px) {
   .mission-helper-list {
     .helper-list {
       .single-card {
-        width: calc((100% - 30px) / 2);
+        width: calc((100% - 25px) / 2);
       }
     }
   }
 }
-@media screen and (max-width: 900px) {
+@media screen and (max-width: 991px) {
   .mission-helper-list {
-    .famous-helper {
-      //   padding: 1rem;
-      width: 65%;
-    }
-    .helper-list {
-      justify-content: center;
-      .single-card {
-        width: calc((100% - 30px));
-        max-width: 350px;
-      }
-    }
-  }
-}
-
-@media screen and (max-width: 768px) {
-  .mission-helper-list {
-    padding: 0 5px;
+    // padding: 0 5px;
 
     .job-search {
       width: 100%;
-      margin-top: 19px;
     }
     .filters {
-      margin: 0rem auto;
+      margin: 2rem auto;
     }
     .famous-helper {
       width: 100%;
@@ -324,31 +316,32 @@
       }
       &-card {
         padding: 0 10px;
-        $img-size: 100px;
-        margin-bottom: 0.4rem;
-        &-img {
-          width: $img-size;
-          height: $img-size;
-        }
+        width: 80%;
+        max-width: 100%;
+        margin: 0.4rem auto;
+        gap: 20px;
+      }
+      .img-wrapper {
+        $img-size: 160px;
+        width: $img-size;
+        height: $img-size;
+        // img {
+        //   width: $img-size;
+        //   height: $img-size;
+        // }
+      }
+      .helper-content {
+        width: calc(100% - 200px);
       }
     }
-    .famous-carousel {
-      & > :first-child,
-      & > :last-child {
-        svg {
-          font-size: 22px;
-        }
-      }
-    }
+
     .helper-list {
-      width: 100%;
+      // width: 100%;
       justify-content: start;
-      margin: 10px auto;
-      gap: 10px;
 
       .single-card {
-        width: calc((100% - 20px) / 3);
-        // height: 400px;
+        width: calc((100% - 50px) / 3);
+        height: 370px;
         margin-bottom: 10px;
         margin-left: 0;
         min-width: 175px;
@@ -361,6 +354,25 @@
         &-content {
           height: calc(100% - $img-size);
         }
+
+        .animate-button-one {
+          width: 80px;
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .mission-helper-list {
+    .helper-list {
+      // width: 100%;
+      // justify-content: start;
+      // margin: 10px auto;
+      gap: 25px;
+
+      .single-card {
+        width: calc((100% - 25px) / 2);
       }
     }
   }
@@ -368,10 +380,25 @@
 
 @media screen and (max-width: 576px) {
   .mission-helper-list {
+    .famous-helper {
+      &-card {
+        width: 100%;
+      }
+      .helper-content {
+        width: calc(100% - 100px);
+      }
+      .img-wrapper {
+        $img-size: 100px;
+        width: $img-size;
+        height: $img-size;
+      }
+    }
     .helper-list {
+      gap: 15px;
       .single-card {
-        width: calc((100% - 10px) / 2);
-        min-width: 175px;
+        min-width: 0;
+        width: calc((100% - 15px) / 2);
+        height: 360px;
       }
     }
   }
