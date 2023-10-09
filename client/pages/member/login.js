@@ -41,7 +41,7 @@ const router=useRouter()
                 登入
               </Link>
             </div>
-            <div className="size-5 mx-2 my-3">
+            <div className="size-5 mx-3 my-2">
               <Link
                 className={ `login-lg mx-3 ${!isLogin ? "active" : ""}`}
                 href="http://localhost:3000/member/login"

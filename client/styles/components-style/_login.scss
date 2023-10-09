@@ -1,10 +1,15 @@
 .login-box{
     max-width: 37.5rem;
     background: #f4ece4;
-    padding: 3rem 0;
+    padding: 6rem 0;
+    margin: 7rem 0;
 }
 .login-header{
     position: relative;
+}
+.active{
+  color: $text-main;
+  font-weight: bold;
 }
 .email-login,
 .email-signup{
@@ -53,6 +58,14 @@
 
   .form-alert{
     color: red;
+    padding-top: 5px;
+  }
+
+  .center-input::placeholder{
+text-align: center;
+  }
+  .pwd-icon{
+    cousor: pointer;
   }
 
   

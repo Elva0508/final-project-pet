@@ -1,29 +1,24 @@
-import { useEffect } from "react";
+import { useEffect,useState } from "react";
 import { useRouter } from "next/router"; 
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import jwtDecode from "jwt-decode";
-// import {Icon} from 'react-icons-kit';
-// import {eyeOff} from 'react-icons-kit/feather/eyeOff';
-// import {eye} from 'react-icons-kit/feather/eye'
+ import Image from "next/image";
+import showPwdImg from "@/assets/showPwd.svg";
+import hidePwdImg from "@/assets/hidePwd.svg";
+
 
 import { useAuth } from "@/context/fakeAuthContext";
 
 export default function Login() {
 
- // const [icon, setIcon] = useState(eyeOff);
+const [pwd, setPwd]=useState('')
+const [viewPwd,SetViewPwd]=useState(false)
+
   
   const { login, isAuthenticated } = useAuth();
   const router = useRouter(); 
 
-  // const handleToggleEye=()=>{
-  //   if(type === "password"){
-  //     setIcon(eye)
-  //     setType("text")
-  // }else{
-  //     setIcon(eyeOff)
-  //     setType("password")
-  // }
 
   useEffect(
     function () {
@@ -39,8 +34,8 @@ export default function Login() {
   };
 
   const validationSchema = Yup.object({
-    email: Yup.string().email("email格式不正確").required("帳號不能為空"),
-    password: Yup.string().required("密碼不能為空")
+    email: Yup.string().email("email格式不正確").required("請輸入帳號"),
+    password: Yup.string().required("請輸入密碼")
   });
 
   const onSubmit = async (values, { setSubmitting }) => {
@@ -95,10 +90,18 @@ export default function Login() {
           <div className="u-form-group mb-3">
             <Field
               className="form-input center-input"
-              type="password"
+              type={viewPwd ? 'text':'password'}
               id="password"
               name="password"
               placeholder="請輸入密碼"
+              value={pwd}
+              onChange={e => setPwd(e.target.value)}
+            />
+            <Image
+          style={{ cursor: 'pointer',position: 'absolute',right: '105px',top: '63px'}}
+              title={viewPwd ? 'Hide password' : 'Show password'}
+              src={!viewPwd ? hidePwdImg : showPwdImg}
+              onClick={()=> SetViewPwd(prevState => !prevState)}
             />
             <ErrorMessage
               name="password"

@@ -1,114 +1,125 @@
-import React, { useState } from "react";
+import React from "react";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
 
-export default function RegisterForm() {
-  const [userName, setUserName] = useState();
-  const [signupEmail, setSignupEmail] = useState();
-  const [signupPassword, setSignPassword] = useState();
-  const [rePassword, setRepassword] = useState();
-  const [error, setError] = useState(null);
+const RegisterForm = () => {
+  const initialValues = {
+    userName: "",
+    signupEmail: "",
+    signupPassword: "",
+    rePassword: "",
+    confirm: false,
+  };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const validationSchema = Yup.object().shape({
+    userName: Yup.string().required("請輸入姓名"),
+    signupEmail: Yup.string()
+      .email("請輸入有效的電子信箱")
+      .required("請輸入電子信箱"),
+    signupPassword: Yup.string()
+      .min(6, "密碼至少需要 6 個字元")
+      .required("請輸入密碼"),
+    rePassword: Yup.string()
+      .oneOf([Yup.ref("signupPassword"), null], "密碼不一致")
+      .required("請再次輸入密碼"),
+    confirm: Yup.boolean().oneOf([true], "請閱讀並同意使用規範"),
+  });
 
-    if (signupPassword !== rePassword) {
-      setError("密碼不一致");
-      return;
-    }
-
-    try {
-      const response = await fetch(
-        "http://localhost:3005/api/auth-jwt/register",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email: signupEmail,
-            password: signupPassword,
-          }),
-        }
-      );
-
-      if (!response.ok) {
-        const data = await response.json();
-        setError(data.message);
-        return;
-      }
-
-      // Registration successful, redirect to login page
-      window.location.href = "/login";
-    } catch (error) {
-      setError("註冊失敗");
-    }
+  const onSubmit = (values) => {
+    console.log(values);
   };
 
   return (
-    <>
-      <form className="email-signup">
-        <div className="u-form-group mb-3">
-          <label htmlFor="">姓名</label>
-          <input
-            className="form-input "
-            type="text"
-            value={userName}
-            onChange={(e) => setUserName(e.target.value)}
-          />
-          {error && <div className="form-alert">{error}</div>}
-        </div>
-        <div className="u-form-group mb-3">
-          <label htmlFor="">帳號</label>
-          <input
-            className="form-input "
-            type="email"
-            placeholder="請輸入電子信箱"
-            value={signupEmail}
-            onChange={(e) => setSignupEmail(e.target.value)}
-          />
-          {error && <div className="form-alert">{error}</div>}
-        </div>
-        <div className="u-form-group mb-3">
-          <label htmlFor="">密碼</label>
-          <input
-            className="form-input "
-            type="password"
-            placeholder="請輸入密碼"
-            value={signupPassword}
-            onChange={(e) => setSignPassword(e.target.value)}
-          />
-          {error && <div className="form-alert">{error}</div>}
-        </div>
-        <div className="u-form-group mb-3">
-          <label htmlFor="">確認密碼</label>
-          <input
-            className="form-input "
-            type="password"
-            placeholder="請再次輸入密碼"
-            value={rePassword}
-            onChange={(e) => setRepassword(e.target.value)}
-          />
-          {error && <div className="form-alert">{error}</div>}
-        </div>
-        <div className="u-form-group mb-3">
-          <input
-            type="checkbox"
-            id="confirm"
-            name="confirm"
-            value="confirm"
-          />
-          <label htmlFor="confirm" className="ml-2">
-            我已閱讀並同意
-            <a href="#" className="forgot-password">
-              服務條款
-            </a>
-          </label>
-                  </div>
-        <div className="u-form-group">
-          <button type="submit" className="btn-brown ">
-            註冊
-          </button>
-        </div>
-      </form>
-    </>
+    <Formik
+      initialValues={initialValues}
+      validationSchema={validationSchema}
+      onSubmit={onSubmit}
+    >
+      {({ errors, touched }) => (
+        <Form className="email-signup">
+          <div className="u-form-group mb-3">
+          
+            <Field
+              className="form-input"
+              type="text"
+              name="userName"
+              id="userName"
+              placeholder="請輸入姓名"
+            />
+            <ErrorMessage
+              className="form-alert"
+              name="userName"
+              component="div"
+            />
+          </div>
+          <div className="u-form-group mb-3">
+        
+            <Field
+              className="form-input"
+              type="email"
+              name="signupEmail"
+              id="signupEmail"
+              placeholder="請輸入信箱"
+            />
+            <ErrorMessage
+              className="form-alert"
+              name="signupEmail"
+              component="div"
+            />
+          </div>
+          <div className="u-form-group mb-3">
+    
+            <Field
+              className="form-input"
+              type="password"
+              name="signupPassword"
+              id="signupPassword"
+              placeholder="請輸入密碼"
+            />
+            <ErrorMessage
+              className="form-alert"
+              name="signupPassword"
+              component="div"
+            />
+          </div>
+          <div className="u-form-group mb-3">
+      
+            <Field
+              className="form-input"
+              type="password"
+              name="rePassword"
+              id="rePassword"
+              placeholder="請再次輸入密碼"
+            />
+            <ErrorMessage
+              className="form-alert"
+              name="rePassword"
+              component="div"
+            />
+          </div>
+          <div className="u-form-group mb-3">
+            <Field
+              className="form-input"
+              type="checkbox"
+              name="confirm"
+              id="confirm"
+            />
+            <label htmlFor="confirm">已閱讀使用規範</label>
+            <ErrorMessage
+              className="form-alert"
+              name="confirm"
+              component="div"
+            />
+          </div>
+          <div className="u-form-group">
+            <button type="submit" className="btn-brown">
+              註冊
+            </button>
+          </div>
+        </Form>
+      )}
+    </Formik>
   );
-}
+};
+
+export default RegisterForm;
