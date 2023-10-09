@@ -858,7 +858,7 @@ const MissionCard = ({ missionType, missionCity, missionArea, setMissionType, up
                 <div className='d-flex justify-content-between align-items-end price'>
                   <div  >單次<span className='size-6'> NT${v.price}</span></div>
                   <Link href={`/work/find-mission/${v.mission_id}`} >
-                  <button className='btn-confirm size-6'>應徵</button>
+                    <button className='btn-confirm size-6'>應徵</button>
                   </Link>
                 </div>
               </div>
@@ -916,10 +916,11 @@ export default function MissionList() {
           <RoleSelection defaultActive="mission" />
           <Search placeholder="搜尋任務" />
         </div>
-        <div className='d-flex justify-content-between align-items-center my-md-3 position-relative'>
+        <div className='d-flex justify-content-between align-items-center mt-md-3 mb-md-4 position-relative'>
           <div className='filters d-flex justify-content-center align-items-center '>
-            <MobileFilter missionType={missionType} />
-            {/* <button className="btn-second ms-3 filter-button" onClick={handleFilterClick}>篩選</button> */}
+            {/* <MobileFilter missionType={missionType} /> */}
+            <MyFilter missionType={missionType} setMissionType={setMissionType} missionCity={missionCity} setMissionCity={setMissionCity} missionArea={missionArea} setMissionArea={setMissionArea}
+              updateDate={updateDate} setUpdateDate={setUpdateDate} sortOrder={sortOrder} setSortOrder={setSortOrder} sortBy={sortBy} setSortBy={setSortBy} />
           </div>
           <button className='add-mission-btn-pc  d-none d-lg-block position-absolute'><img src='/add-mission.svg' className='me-2' />新增任務</button>
           <button className='add-mission-btn-mobile size-6 d-bolck d-lg-none'><img src='/add-mission.svg' className='' /></button>
@@ -929,13 +930,6 @@ export default function MissionList() {
           <Sort missionType={missionType} setMissionType={setMissionType} missionCity={missionCity} setMissionCity={setMissionCity} missionArea={missionArea} setMissionArea={setMissionArea}
             updateDate={updateDate} setUpdateDate={setUpdateDate} sortOrder={sortOrder} setSortOrder={setSortOrder} sortBy={sortBy} setSortBy={setSortBy} />
         </div>
-        {/* BS下拉式選單 */}
-
-        <MyFilter missionType={missionType} setMissionType={setMissionType} missionCity={missionCity} setMissionCity={setMissionCity} missionArea={missionArea} setMissionArea={setMissionArea}
-          updateDate={updateDate} setUpdateDate={setUpdateDate} sortOrder={sortOrder} setSortOrder={setSortOrder} sortBy={sortBy} setSortBy={setSortBy} />
-
-
-
 
         <section className='d-flex all-mission flex-column flex-lg-row mt-3'>
           {/* 最新任務桌機 */}
