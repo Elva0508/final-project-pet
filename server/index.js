@@ -17,6 +17,9 @@ const memberHistoryRouter = require("./routes/member-history-route");
 const cartRouter = require("./routes/cart-route");
 const articleRouter = require("./routes/article-route");
 const articleCategoryRouter = require("./routes/article-category");
+const breadCrumbRouter= require("./routes/breadCrumb");
+const payRouter= require("./routes/pay-route");
+
 
 
 app.use(bodyParser.json()); // 解析 JSON 请求体
@@ -37,6 +40,8 @@ app.use("/api/member-history", memberHistoryRouter);
 app.use("/api/product/cart", cartRouter);
 app.use("/api/article", articleRouter);
 app.use("/api/article-category", articleCategoryRouter);
+app.use("/api/breadcrumb", breadCrumbRouter);
+app.use("/api/pay",payRouter );
 
 //------------------------------------------佳瑜
 // //jwt路由使用
