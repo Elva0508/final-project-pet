@@ -28,7 +28,6 @@ import ShoppingCart from "@/assets/shoppingCart.svg";
 
 //cart
 import { useCart } from '@/hooks/useCart';
-import { useRouter } from 'next/router';
 
 
 const theme = createTheme({
@@ -120,7 +119,6 @@ function ResponsiveAppBar() {
 
 
   const { cart, setCart } = useCart();
-  const router = useRouter();
   const goCart=()=>{
     router.push('/product/cart')
   }
