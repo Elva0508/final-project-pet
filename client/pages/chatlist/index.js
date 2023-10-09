@@ -5,10 +5,10 @@ import { useRouter } from "next/router";
 
 export default function ChatList() {
   const [chatList, setChatList] = useState([]); //聊天列表設置的狀態
-  const [ws, setWs] = useState(null); // WebSocket連接的狀態
   const [decodedToken, setDecodedToken] = useState(null); // 新增 decodedToken 狀態
   const router = useRouter();
 
+  // 驗證登入
   useEffect(() => {
     const token = localStorage.getItem("token");
     // 沒有token
@@ -45,31 +45,6 @@ export default function ChatList() {
     if (Array.isArray(data)) setChatList(data);
   };
 
-  // WebSocket連接+資料
-  useEffect(() => {
-    // 有decodedToken再執行
-    if (decodedToken) {
-      const newWs = new WebSocket("ws://localhost:8080");
-
-      // 設置WebSocket連接
-      newWs.addEventListener("open", () => {
-        console.log("WebSocket連接已打開");
-        let params = {
-          type: "register",
-          user_id: decodedToken.user_id,
-        };
-        newWs.send(JSON.stringify(params));
-        setWs(newWs);
-      });
-
-      // 處理WebSocket消息
-      newWs.addEventListener("message", (event) => {});
-
-      return () => {
-        newWs.close(); //關掉處理WebSocket消息
-      };
-    }
-  }, []);
   return (
     <>
       <div className="chatlist">

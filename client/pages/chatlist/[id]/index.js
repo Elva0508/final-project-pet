@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import jwt_decode from "jwt-decode";
 import { useRouter } from "next/router";
+import useInterval from "use-interval";
 
 export default function Chatroom() {
   const router = useRouter();
@@ -11,9 +12,13 @@ export default function Chatroom() {
   const [chatTitle, setChatTitle] = useState([]); //聊天室標題設置的狀態
   const [userId, setUserId] = useState(""); //儲存userID
   const [userInfo, setUserInfo] = useState(""); //儲存userInfo
-  const [ws, setWs] = useState(null); // WebSocket連接的狀態
   const [decodedToken, setDecodedToken] = useState(null); // 新增 decodedToken 狀態
   const [msgInputValue, setMsgInputValue] = useState(""); // 輸入框的值
+
+  // 使用 useInterval 定時刷新 chatContent
+  useInterval(() => {
+    getChatContent(chatlist_id);
+  }, 50); // 0.05秒刷新一次
 
   // 驗證有無登入
   useEffect(() => {
@@ -113,145 +118,48 @@ export default function Chatroom() {
     }
   };
 
-  // WebSocket連接
-  useEffect(() => {
-    // 有decodedToken再執行
-    if (decodedToken) {
-      const newWs = new WebSocket("ws://localhost:8080");
-
-      // 設置WebSocket連接
-      newWs.addEventListener("open", () => {
-        console.log("WebSocket連接已打開");
-        let params = {
-          type: "register",
-          user_id: decodedToken.user_id,
-        };
-        newWs.send(JSON.stringify(params));
-        setWs(newWs);
-      });
-
-      // // 處理WebSocket消息
-      // newWs.addEventListener("message", (event) => {
-      //   console.log("message有被監聽到");
-      //   handleTextsend(event);
-      // });
-
-      return () => {
-        newWs.close(); //關掉處理WebSocket消息
-      };
-    }
-  }, [decodedToken]);
-
-  // WebSocket連接
-  useEffect(() => {
-    // 有decodedToken再執行
-    if (decodedToken) {
-      const newWs = new WebSocket("ws://localhost:8080");
-
-      // 設置WebSocket連接
-      newWs.addEventListener("open", () => {
-        console.log("WebSocket連接已打開");
-        let params = {
-          type: "register",
-          user_id: decodedToken.user_id,
-        };
-        newWs.send(JSON.stringify(params));
-        setWs(newWs);
-      });
-
-      // 處理WebSocket消息
-      newWs.addEventListener("message", (event) => {
-        console.log("message有被監聽到");
-        handleTextsend(event);
-      });
-
-      return () => {
-        console.log("關掉WebSocket");
-        newWs.close(); //關掉處理WebSocket消息
-      };
-    }
-  }, [decodedToken]);
-
   // 處理訊息送出事件
-  const handleSendClick = () => {
-    if (ws) {
-      let message = msgInputValue;
-
-      let params = {
-        type: "message",
-        message,
-        fromID: userId,
-      };
-      ws.send(JSON.stringify(params));
-      // ws.send(msgInputValue);
-      // console.log(msgInputValue);
-      setMsgInputValue(""); // 清空输入框的值
+  const handleSendClick = async () => {
+    // 先檢查消息是否為空
+    if (!msgInputValue) {
+      return;
     }
-  };
-
-  // 處理WebSocket消息
-  const handleTextsend = async (event) => {
-    console.log("我要執行handleTextsend囉");
-    let result = JSON.parse(event.data);
-    let clientList;
-    if (result.type === "registered") {
-      console.log("執行處理聊天室註冊");
-      // 處理聊天室註冊
-      clientList = result.otherClients;
-      setClients();
-      return false;
-    }
-    if (result.type === "message") {
-      console.log("訊息傳送");
-      // 處理送出的消息
-      let sendMassage = result.message;
-      console.log(result.message);
-      let fromID = result.fromID;
-      if (fromID === userId) {
-        // 創建新的聊天消息物件
-        const newMessage = `
-          <div className="user p-3">
-            <div className="d-flex align-items-center justify-content-end my-1 chat-box">
-              <div className="size-7 m-size-7 rounded-pill content py-1 px-2">
-                ${sendMassage}
-              </div>
-              <div className="avatar rounded-circle mr-3 overflow-hidden rounded-circle ms-2">
-                <img
-                  src=${UserCoverPhoto}
-                  className="img-fluid object-fit-cover"
-                  alt="User"
-                />
-              </div>
-            </div>
-          </div>`;
-        // 更新聊天內容
-        setChatContent((prevContent) => [...prevContent, newMessage]);
+    try {
+      // 發送消息到後端
+      const response = await fetch(
+        "http://localhost:3005/api/chatroom/sendchat",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            chatlist_id,
+            talk_userId: userId, // 使用前端頁面登入的 userId
+            chat_content: msgInputValue,
+          }),
+        }
+      );
+      if (response.ok) {
+        // 清空輸入框的值
+        setMsgInputValue("");
+        // 把發送的消息set進狀態裡更新
+        const newMessage = {
+          chat_content: msgInputValue,
+          cover_photo: userInfo.cover_photo,
+        };
+        setChatContent((prevChatContent) => [...prevChatContent, newMessage]);
+      } else {
+        console.error("發送消息時出錯");
       }
-      // const newMessage = template;
-
-      return false;
+    } catch (error) {
+      console.error("發送消息時出錯", error);
     }
-    if (result.type === "disconnected") {
-      return false;
-    }
-
-    // 把目前登入的userID當作自己
-    function setClients() {
-      console.log(clientList);
-      let DOMS = "";
-      clientList.forEach((client) => {
-        let myself = client === userId ? "myself" : "";
-        DOMS += `<div className='${myself}'>${client}<div>`;
-      });
-    }
-
-    //更新聊天內容
-    setChatContent((prevContent) => [...prevContent, newMessage]);
   };
 
   return (
     <>
-      <div className="chatroom">
+      <div className="chatroom vh-100">
         <div className="container shadow bg-body-tertiary rounded p-0">
           <div className="size-3 sticky-top size-3 m-size-5 p-3">
             <div className="target-user">
@@ -273,7 +181,7 @@ export default function Chatroom() {
               </div>
             </div>
           </div>
-          <div className="chat-content">
+          <div className="chat-content d-flex flex-column flex-grow-1 overflow-auto">
             {/* 聊天對象 */}
             {/* <div className="chat-content-target-user p-3">
               <div className="d-flex align-items-center">
@@ -297,7 +205,7 @@ export default function Chatroom() {
                 <div className="user p-3">
                   <div className="d-flex align-items-center justify-content-end my-1 chat-box">
                     <div className="size-7 m-size-7 rounded-pill content py-1 px-2">
-                      {v.chat_contentchat}
+                      {v.chat_content}
                     </div>
                     <div className="avatar rounded-circle mr-3 overflow-hidden rounded-circle ms-2">
                       <img

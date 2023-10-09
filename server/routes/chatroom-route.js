@@ -52,6 +52,33 @@ router.get("/userinfo/:uid", (req, res) => {
   );
 });
 
+router.post("/sendchat", (req, res) => {
+  console.log("接收到消息請求");
+  const { chatlist_id, talk_userId, chat_content } = req.body;
+  const timestamp = new Date(); // 建立時間戳記
+
+  // 檢查是否有聊天內容
+  if (!chatlist_id || !talk_userId || !chat_content) {
+    return res.status(400).json({ error: "請提供有效的聊天訊息" });
+  }
+
+  connection.execute(
+    `INSERT INTO chat_content(chatlist_id, talk_userId, chat_content, timestamp)
+    VALUES (?, ?, ?, ?);`,
+    [chatlist_id, talk_userId, chat_content, timestamp],
+    (error, result) => {
+      if (error) {
+        console.error("傳送訊息時出錯", error);
+        return res.status(500).json({ error: "伺服器錯誤" });
+      }
+
+      res
+        .status(201)
+        .json({ message: "訊息已成功傳送", insertId: result.insertId });
+    }
+  );
+});
+
 router.get("/", (req, res) => {
   res.send("測試");
 });
