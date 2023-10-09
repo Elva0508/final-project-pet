@@ -20,46 +20,6 @@ const commonQueryTemplate = `
   JOIN image_mission AS im ON min_ids.mission_id = im.mission_id AND min_ids.min_image_id = im.image_id
 `;
 
-// 排序
-// router.get("/all-missions", (req, res) => {
-//   const sortOrder = req.query.sortOrder; 
-//   let orderBy = null;
-
-//   if (req.query.sortBy === "post_date") {
-//     orderBy = "md.post_date";
-//   } else if (req.query.sortBy === "price") {
-//     orderBy = "md.price";
-//   }
-
-//   if (orderBy) {
-//     // 只有在提供有效的 orderBy 時才應用排序
-//     conn.execute(
-//       `${commonQueryTemplate}
-//       ORDER BY ${orderBy} ${sortOrder}
-//       `,
-//       (err, result) => {
-//         if (err) {
-//           console.log(err);
-//           return;
-//         }
-//         res.send({ status: 200, data: result });
-//       }
-//     );
-//   } else {
-//     // 如果 orderBy 仍然為 null，表示沒有提供有效的排序方式，不進行排序
-//     conn.execute(
-//       `${commonQueryTemplate}`,
-//       (err, result) => {
-//         if (err) {
-//           console.log(err);
-//           return;
-//         }
-//         res.send({ status: 200, data: result });
-//       }
-//     );
-//   }
-// });
-
 // 任務列表：排序＋篩選＋搜尋
 router.get("/all-missions", (req, res) => {
   let sortOrder = req.query.sortOrder;
@@ -130,11 +90,6 @@ router.get("/all-missions", (req, res) => {
   }
 
   let query = commonQueryTemplate;
-
-  // 如果提供了任務類型篩選條件，將其包含在查詢中
-  // if (missionTypeFilter) {
-  //   query += ` WHERE md.mission_type = ${missionTypeFilter}`;
-  // }
 
   // WHERE 子句
   let whereClause = [];
@@ -249,7 +204,7 @@ router.delete("/delete-fav", (req, res) => {
   );
 });
 
-// 可以成功併成一筆資料：
+// 任務詳細頁：可以成功併成一筆資料：
 router.get("/mission-details/:mission_id", (req, res) => {
   const mission_id = req.params.mission_id; // 從路由參數中獲取 mission_id
   conn.execute(
@@ -272,7 +227,7 @@ router.get("/mission-details/:mission_id", (req, res) => {
   );
 });
 
-// 可以讓照片正常顯示
+// 任務詳細頁：可以讓照片正常顯示
 router.get("/mission-details-img/:mission_id", (req, res) => {
   const mission_id = req.params.mission_id; // 從路由參數中獲取 mission_id
   conn.execute(
@@ -291,32 +246,6 @@ router.get("/mission-details-img/:mission_id", (req, res) => {
     }
   );
 })
-
-// 按照刊登時間排序
-// router.get("/mission-sorted/:sortOrder", (req, res) => {
-//   const sortOrder = req.params.sortOrder.toLowerCase(); // 獲取排序順序參數（asc或desc）
-//   if (sortOrder !== "asc" && sortOrder !== "desc") {
-//     res.status(400).send({ status: 400, message: "Invalid sortOrder parameter" });
-//     return;
-//   }
-
-//   const orderBy = sortOrder === "asc" ? "ASC" : "DESC";
-
-//   conn.execute(
-//     `${commonQueryTemplate}
-//     ORDER BY md.post_date ${orderBy}
-//     `,
-//     (err, result) => {
-//       if (err) {
-//         console.log(err);
-//         return;
-//       }
-//       res.send({ status: 200, data: result });
-//     }
-//   );
-// });
-
-
 
 
 module.exports = router;
