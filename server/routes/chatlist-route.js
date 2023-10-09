@@ -79,6 +79,47 @@ router.get("/:uid/:cid", (req, res) => {
   );
 });
 
+router.post("/creatchat", (req, res) => {
+  console.log("接收到新增聊天請求");
+  const { chatlist_userId1, chatlist_userId2 } = req.body;
+  // 查詢是否已有存在紀錄
+  connection.execute(
+    `SELECT chatlist_id FROM chatlist WHERE
+    (chatlist_userId1 = ? AND chatlist_userId2 = ?) OR
+    (chatlist_userId1 = ? AND chatlist_userId2 = ?);`,
+    [chatlist_userId1, chatlist_userId2, chatlist_userId2, chatlist_userId1],
+    (error, results) => {
+      if (error) {
+        console.error("查询聊天记录时出错", error);
+        return res.status(500).json({ error: "伺服器錯誤" });
+      }
+
+      if (results.length > 0) {
+        const existingChatlistId = results[0].chatlist_id;
+        const chatUrl = `/chatlist/${existingChatlistId}`;
+        return res.status(200).json({ message: "訊息已成功傳送", chatUrl });
+      }
+
+      // 如果没有就新增一筆
+      connection.execute(
+        `INSERT INTO chatlist (chatlist_userId1, chatlist_userId2)
+        VALUES (?, ?);`,
+        [chatlist_userId1, chatlist_userId2],
+        (insertError, insertResult) => {
+          if (insertError) {
+            console.error("插入聊天记录时出错", insertError);
+            return res.status(500).json({ error: "伺服器錯誤" });
+          }
+
+          const newChatlistId = insertResult.insertId;
+          const chatUrl = `/chatlist/${newChatlistId}`;
+          return res.status(201).json({ message: "訊息已成功傳送", chatUrl });
+        }
+      );
+    }
+  );
+});
+
 router.get("/", (req, res) => {
   res.send("測試");
 });
