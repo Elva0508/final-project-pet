@@ -14,11 +14,16 @@ const memberOrderDetailRouter = require("./routes/member-order-detail-route");
 const memberWishlistRouter = require("./routes/member-wishlist-route");
 const memberPurchastRouter = require("./routes/member-purchast-route");
 const memberHistoryRouter = require("./routes/member-history-route");
+const memberJoblistRouter = require("./routes/member-joblist-route");
 const cartRouter = require("./routes/cart-route");
 const articleRouter = require("./routes/article-route");
 const articleCategoryRouter = require("./routes/article-category");
 const chatListRouter = require("./routes/chatlist-route");
 const chatRoomRouter = require("./routes/chatroom-route");
+const breadCrumbRouter= require("./routes/breadCrumb");
+const payRouter= require("./routes/pay-route");
+
+
 
 app.use(bodyParser.json()); // 解析 JSON 请求体
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -35,11 +40,14 @@ app.use("/api/member-order-detail", memberOrderDetailRouter);
 app.use("/api/member-wishlist", memberWishlistRouter);
 app.use("/api/member-purchast", memberPurchastRouter);
 app.use("/api/member-history", memberHistoryRouter);
+app.use("/api/member-joblist", memberJoblistRouter);
 app.use("/api/product/cart", cartRouter);
 app.use("/api/article", articleRouter);
 app.use("/api/article-category", articleCategoryRouter);
 app.use("/api/chatlist", chatListRouter);
 app.use("/api/chatroom", chatRoomRouter);
+app.use("/api/breadcrumb", breadCrumbRouter);
+app.use("/api/pay",payRouter );
 
 //------------------------------------------佳瑜
 // //jwt路由使用

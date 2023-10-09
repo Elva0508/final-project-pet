@@ -23,8 +23,8 @@ router.get("/helper", (req, res) => {
   const { user_id } = req.query;
   console.log(req.query);
   conn.execute(
-    `SELECT * FROM mission_helper_info WHERE user_id = ? AND valid = ?`,
-    [user_id, 1],
+    `SELECT h.*,u.cat_helper FROM mission_helper_info h LEFT JOIN userinfo u ON u.user_id = h.user_id WHERE h.user_id = ?`,
+    [user_id],
     (err, results) => {
       if (err) {
         console.log(err);
@@ -44,14 +44,13 @@ router.patch("/helper/valid", async (req, res) => {
       [user_id],
       (err, results) => {
         if (err) {
-          reject(
-            res.status(500).send({ status: 500, error: "使用者查詢錯誤" })
-          );
+          reject({ status: 500, error: "使用者查詢錯誤" });
         }
         resolve(results.length);
       }
     );
   });
+
   if (!checkUser) {
     return res.status(400).send({ status: 400, msg: "查無該使用者" });
   }
@@ -64,7 +63,7 @@ router.patch("/helper/valid", async (req, res) => {
         [user_id],
         (err, results) => {
           if (err) {
-            reject(res.status(500).send({ status: 500, error: "查詢錯誤" }));
+            reject({ status: 500, error: "查詢錯誤" });
           }
           resolve(results.length);
         }
@@ -72,19 +71,19 @@ router.patch("/helper/valid", async (req, res) => {
     });
     if (isExist) {
       console.log(
-        "有找到該使用者的小幫手資料，修改valid值後將資料帶回給客戶端"
+        "有找到該使用者的小幫手資料，修改user的cat_helper值後將資料帶回給客戶端"
       );
 
-      // 修改valid值
+      // 修改cat_helper值
       await new Promise((resolve, reject) => {
         return conn.execute(
-          "UPDATE `mission_helper_info` SET `valid` = ? WHERE `mission_helper_info`.`user_id` = ?",
+          "UPDATE `userinfo` SET `cat_helper` = ? WHERE `userinfo`.`user_id` = ?",
           [1, user_id],
           (err, results) => {
             if (err) {
-              reject(res.status(500).send({ status: 500, error: "查詢錯誤" }));
+              reject({ status: 500, error: "查詢錯誤" });
             } else if (results.affectedRows === 0) {
-              reject(res.status(500).send({ status: 500, error: "更新失敗" }));
+              reject({ status: 500, error: "更新失敗" });
             }
             resolve(results);
           }
@@ -97,7 +96,7 @@ router.patch("/helper/valid", async (req, res) => {
           [user_id],
           (err, results) => {
             if (err) {
-              reject(res.status(500).send({ status: 500, error: "查詢錯誤" }));
+              reject({ status: 500, error: "查詢錯誤" });
             }
             resolve(results);
           }
@@ -109,7 +108,7 @@ router.patch("/helper/valid", async (req, res) => {
           [user_id],
           (err, results) => {
             if (err) {
-              reject(res.status(500).send({ status: 500, error: "查詢錯誤" }));
+              reject({ status: 500, error: "查詢錯誤" });
             }
             resolve(results);
           }
@@ -131,9 +130,7 @@ router.patch("/helper/valid", async (req, res) => {
             [user_id],
             (err, results) => {
               if (err) {
-                reject(
-                  res.status(500).send({ status: 500, error: "查詢錯誤" })
-                );
+                reject({ status: 500, error: "查詢錯誤" });
               }
               resolve(results[0]);
             }
@@ -144,15 +141,25 @@ router.patch("/helper/valid", async (req, res) => {
       // 用取得的user資料新增一筆小幫手資料
       const newHelperInfo = await new Promise((resolve, reject) => {
         return conn.execute(
-          "INSERT INTO `mission_helper_info` (`user_id`, `name`, `Introduction`, `email`, `phone`, `job_description`, `service_county`, `feed_service`, `house_service`, `beauty_service`, `feed_price`, `house_price`, `beauty_price`, `valid`) VALUES (?, ?, '', ?, ?, '', ?, 0, 0, 0, 0, 0, 0, ?)",
-          [user_id, name, email, phone, city, 1],
+          "INSERT INTO `mission_helper_info` (`user_id`, `name`, `Introduction`, `email`, `phone`, `job_description`, `service_county`, `feed_service`, `house_service`, `beauty_service`, `feed_price`, `house_price`, `beauty_price`) VALUES (?, ?, '', ?, ?, '', ?, 0, 0, 0, 0, 0, 0)",
+          [user_id, name, email, phone, city],
           (err, results) => {
             if (err) {
-              reject(
-                res
-                  .status(500)
-                  .send({ status: 500, error: "小幫手資料寫入資料庫錯誤" })
-              );
+              reject({ status: 500, error: "小幫手資料寫入錯誤" });
+            }
+            resolve(results);
+          }
+        );
+      });
+
+      // 將userinfo 的 cat_helper值改為1
+      await new Promise((resolve, reject) => {
+        return conn.execute(
+          "UPDATE `userinfo` SET `cat_helper` = ? WHERE `userinfo`.`user_id` = ?",
+          [1, user_id],
+          (err, results) => {
+            if (err) {
+              reject({ status: 500, error: "小幫手資料寫入錯誤" });
             }
             resolve(results);
           }
@@ -161,8 +168,8 @@ router.patch("/helper/valid", async (req, res) => {
 
       // 將新增成功的小幫手資料帶回client端
       conn.execute(
-        `SELECT * FROM mission_helper_info WHERE user_id = ? AND valid = ?`,
-        [user_id, 1],
+        `SELECT * FROM mission_helper_info WHERE user_id = ?`,
+        [user_id],
         (err, results) => {
           if (err) {
             console.log(err);
@@ -175,17 +182,16 @@ router.patch("/helper/valid", async (req, res) => {
         }
       );
     }
-    return;
   } else {
-    // valid為true(要關閉)，修改小幫手資料的valid = 0
+    // valid為true(要關閉)，修改userinfo的cat_helper資料 = 0
     conn.execute(
-      "UPDATE `mission_helper_info` SET `valid` = ? WHERE `mission_helper_info`.`user_id` = ?",
+      "UPDATE `userinfo` SET `cat_helper` = ? WHERE `userinfo`.`user_id` = ?",
       [0, user_id],
       (err, results) => {
         if (err) {
-          res.status(500).send({ status: 500, error: "伺服器錯誤" });
+          return res.status(500).send({ status: 500, error: "伺服器錯誤" });
         } else if (results.affectedRows === 0) {
-          res.status(500).send({ status: 500, error: "更新失敗" });
+          return res.status(500).send({ status: 500, error: "更新失敗" });
         }
         return res.send({ status: 200, msg: "修改valid成功" });
       }
@@ -197,19 +203,19 @@ router.put("/helper", upload.array("helper-image"), async (req, res) => {
     const {
       user_id,
       name,
-      introduction,
+      Introduction,
       email,
       phone,
       job_description,
-      feedprice,
-      houseprice,
-      beautyprice,
+      feed_price,
+      house_price,
+      beauty_price,
       service_county,
       feed_service,
       house_service,
       beauty_service,
     } = req.body;
-
+    console.log(req.body);
     console.log(req.files);
 
     // 更新小幫手資料
@@ -218,17 +224,17 @@ router.put("/helper", upload.array("helper-image"), async (req, res) => {
         "UPDATE `mission_helper_info` SET `name` = ?, `Introduction` = ?, `email` = ?, `phone` = ?, `job_description` = ?, `service_county` = ?, `feed_service` = ?, `house_service` = ?, `beauty_service` = ?, `feed_price` = ?, `house_price` = ?, `beauty_price` = ? WHERE `mission_helper_info`.`user_id` = ?",
         [
           name,
-          introduction,
+          Introduction,
           email,
           phone,
           job_description,
           service_county,
-          feed_service,
-          house_service,
-          beauty_service,
-          feedprice,
-          houseprice,
-          beautyprice,
+          Boolean(feed_service),
+          Boolean(house_service),
+          Boolean(beauty_service),
+          feed_price,
+          house_price,
+          beauty_price,
           user_id,
         ],
         (err, results) => {
@@ -255,34 +261,36 @@ router.put("/helper", upload.array("helper-image"), async (req, res) => {
     });
 
     // 再增加新的小幫手照片
-    const insertImageResults = await Promise.all(
-      req.files.map(async (image) => {
-        try {
-          const file_path = `http://localhost:3005/helper-image/${image.filename}`;
-          return await new Promise((resolve, reject) => {
-            conn.execute(
-              "INSERT INTO `image_helper` (`image_id`, `group_id`, `file_path`) VALUES (NULL, ?, ?)",
-              [user_id, file_path],
-              (err, results) => {
-                if (err) {
-                  reject({ status: 500, error: "查詢錯誤" });
+    if (req.files.length > 0) {
+      const insertImageResults = await Promise.all(
+        req.files.map(async (image) => {
+          try {
+            const file_path = `http://localhost:3005/helper-image/${image.filename}`;
+            return await new Promise((resolve, reject) => {
+              conn.execute(
+                "INSERT INTO `image_helper` (`image_id`, `group_id`, `file_path`) VALUES (NULL, ?, ?)",
+                [user_id, file_path],
+                (err, results) => {
+                  if (err) {
+                    reject({ status: 500, error: "查詢錯誤" });
+                  }
+                  resolve(results);
                 }
-                resolve(results);
-              }
-            );
-          });
-        } catch (error) {
-          throw error;
-        }
-      })
-    );
+              );
+            });
+          } catch (error) {
+            throw error;
+          }
+        })
+      );
+    }
 
     // 將更新後的資料回傳至client端
 
     const infoPromise = new Promise((resolve, reject) => {
       conn.execute(
-        `SELECT * FROM mission_helper_info WHERE user_id = ? AND valid = ?`,
-        [user_id, 1],
+        `SELECT * FROM mission_helper_info WHERE user_id = ?`,
+        [user_id],
         (err, result) => {
           if (err) {
             console.log(err);
@@ -308,7 +316,7 @@ router.put("/helper", upload.array("helper-image"), async (req, res) => {
     // 使用 Promise.all 等待所有查詢完成
     const [info, images] = await Promise.all([infoPromise, imagesPromise]);
 
-    res.status(200).send({ status: 200, info, images });
+    return res.send({ status: 200, info, images });
   } catch (error) {
     // 錯誤處理
     console.error(error);
@@ -335,6 +343,120 @@ router.get("/reserve", (req, res) => {
     }
   );
 });
+router.get("/reserve/review", (req, res) => {
+  const { pid } = req.query;
+  conn.execute(
+    `SELECT r.*,u.cover_photo,u.name ,COUNT(*) AS review_count FROM mission_helper_reviews r LEFT JOIN userinfo u ON u.user_id = r.user_id WHERE request_id = ?`,
+    [pid],
+    (err, result) => {
+      if (err) {
+        console.log(err);
+        return res.status(500).send("資料庫查詢錯誤");
+      }
+      result = result.map((item) => {
+        return { ...item, review_date: transferDate(item.review_date) };
+      });
+      return res.send({ status: 200, data: result[0] });
+    }
+  );
+});
+router.post("/reserve/review", (req, res) => {
+  const { pid, user_id, helper_id, review_content, star_rating } = req.body;
+  console.log(req.body);
+  conn.execute(
+    "INSERT INTO `mission_helper_reviews` (`review_id`, request_id,`user_id`, `helper_id`, `review_content`, `star_rating`, `review_date`) VALUES (NULL,?, ?, ?, ?, ?, current_timestamp())",
+    [pid, user_id, helper_id, review_content, star_rating],
+    (err, results) => {
+      if (err) {
+        console.log(err);
+        return res.status(500).send("資料庫寫入錯誤");
+      }
+      console.log(results);
+      return res.send({ status: 200, data: results });
+    }
+  );
+});
+router.patch("/request/detail/status", (req, res) => {
+  const { pid, status } = req.body;
+  console.log(pid, status);
+
+  conn.execute(
+    "UPDATE `mission_req_orders` SET `status` = ? WHERE `mission_req_orders`.`oid` = ?",
+    [status, pid],
+    (err, results) => {
+      if (err) {
+        console.log(err);
+        return res.status(500).send("資料庫修改失敗");
+      }
+      console.log(results);
+      return res.send({ status: 200, affectedRows: results.affectedRows });
+    }
+  );
+});
+router.get("/request/detail/:pid", (req, res) => {
+  const { pid } = req.params;
+  // console.log(pid);
+  conn.execute(
+    `SELECT q.*,p.* FROM mission_req_orders q LEFT JOIN users_pet_info p ON q.pet_info_id = p.pet_id WHERE q.oid = ?`,
+    [pid],
+    (err, results) => {
+      if (err) {
+        console.log(err);
+        return res.status(500).send({ status: 500, error: "資料查詢錯誤" });
+      }
+      results = results.map((item) => {
+        const start_day = transferDate(item.start_day);
+        const end_day = transferDate(item.end_day);
+        const created_at = transferDate(item.created_at);
+        return { ...item, start_day, end_day, created_at };
+      });
+      return res.send({ status: 200, data: results[0] });
+    }
+  );
+});
+
+router.get("/selling", (req, res) => {
+  const { user_id, status } = req.query;
+  conn.execute(
+    `SELECT * FROM mission_req_orders WHERE status = ? AND helper_userId = ?`,
+    [status, user_id],
+    (err, results) => {
+      if (err) {
+        console.log(err);
+        return res.status(500).send({ status: 500, error: "資料查詢錯誤" });
+      }
+      console.log(results);
+      results = results.map((item) => {
+        const start_day = transferDate(item.start_day);
+        const end_day = transferDate(item.end_day);
+        const created_at = transferDate(item.created_at);
+        return { ...item, start_day, end_day, created_at };
+      });
+      return res.send({ status: 200, data: results });
+    }
+  );
+});
+// router.get("/selling/detail/:pid", (req, res) => {
+//   const { pid } = req.params;
+//   console.log(pid);
+//   conn.execute(
+//     `SELECT q.*,p.* FROM mission_req_orders q LEFT JOIN users_pet_info p ON q.pet_info_id = p.pet_id WHERE q.oid = ?`,
+//     [pid],
+//     (err, results) => {
+//       if (err) {
+//         console.log(err);
+//         return res.status(500).send({ status: 500, error: "資料查詢錯誤" });
+//       }
+//       results = results.map((item) => {
+//         const start_day = transferDate(item.start_day);
+//         const end_day = transferDate(item.end_day);
+//         const created_at = transferDate(item.created_at);
+//         return { ...item, start_day, end_day, created_at };
+//       });
+//       return res.send({ status: 200, data: results[0] });
+//     }
+//   );
+// });
 module.exports = router;
 
 function generateOrderNumber() {
@@ -355,6 +477,5 @@ function generateOrderNumber() {
 
 const transferDate = (date) => {
   const newDay = dayjs(date).format("YYYY-MM-DD");
-  console.log(newDay);
   return newDay;
 };
