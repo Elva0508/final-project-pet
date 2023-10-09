@@ -1,15 +1,16 @@
 import { React, useState } from 'react';
-import Footer from '@/components/footer';
 import Search from '@/components/job/search';
 import ProductCard2 from '@/components/product/product-card2';
 import { FaCaretUp, FaCaretDown } from 'react-icons/fa';
-import ProductListOffcanvas from '@/components/product/product-list-offcanvas';
 import { useEffect } from 'react';
 import axios from 'axios';
 import Link from 'next/link';
 import Pagination from '@/components/pagination';
 import { HiOutlineFilter } from 'react-icons/hi';
-import Slider from 'react-slider';
+import LoadingOverlay from '@/components/product/loadingoverlay'; //加載畫面尚未成功
+import Box from '@mui/material/Box';
+import Slider from '@mui/material/Slider';
+
 
 
 export default function ProductList() {
@@ -76,9 +77,13 @@ export default function ProductList() {
     const [minPrice, setMinPrice] = useState(null);
     const [maxPrice, setMaxPrice] = useState(null);
     const [sortBy, setSortBy] = useState(null);
+    // 手風琴剛開始只有第一格打開
+    const [activeKey, setActiveKey] = useState(0); // 初始值为0，表示第一个格子展开
+    const [isLoading, setIsLoading] = useState(false); // 加載畫面
     
-    // // 根據篩選條件發送請求到後端 API
+    // 根據篩選條件發送請求到後端 API
     useEffect(() => {
+        setIsLoading(true);
         axios.get('http://localhost:3005/api/product/filter_sort', {
             params: {
                 category,
@@ -90,10 +95,13 @@ export default function ProductList() {
             },
         })
             .then(response => {
+                // 请求完成后隐藏加载蒙层
+                setIsLoading(false);
                 setProductData(response.data.result);
             })
             .catch(error => {
                 console.error('Error:', error);
+                setIsLoading(false);
             });
     }, [category, subcategory, vendor, minPrice, maxPrice, sortBy]);
 
@@ -101,9 +109,13 @@ export default function ProductList() {
     // 透過 event.target.value 來找到用戶輸入的值
     const handleCategoryChange = (categoryName) => {
         setCategory(categoryName);
+        console.log(categoryName)
+        setSubcategory(null);
     };
+    <LoadingOverlay isLoading={isLoading} />
 
     const handlesubCategoryChange = (subcategoryName) => {
+        setCategory(null);
         const trimmedSubcategory = subcategoryName.trim();
         setSubcategory(trimmedSubcategory);
         console.log(trimmedSubcategory)
@@ -126,15 +138,21 @@ export default function ProductList() {
         setSortBy(event.target.value);
     };
 
-    //價錢篩選
-    const [values, setValues] = useState([0, 5]); // 初始值
+    //篩選重複的廠商
+    const [vendorData, setVendorData] = useState({ result: [] });
+    useEffect(() => {
+        axios.get("http://localhost:3005/api/product/vendor").then((response) => {
+            console.log(response.data.result); 
+            setVendorData({ result: response.data.result });
+        });
+    }, []);
 
-    const handleChange = (newValues) => {
-        setValues(newValues);
-    };
+
+
 
     return (
         <>
+           
             <div className='product-list'>
                 <div className='container'>
                     <nav className="breadcrumb-wrapper" aria-label="breadcrumb">
@@ -216,6 +234,7 @@ export default function ProductList() {
                                         </div>
                                     ))}
                                 </div>
+                                <LoadingOverlay isLoading={isLoading} />
 
                                 <div className='filter mt-3 '>
                                     <div className="card filter-card">
@@ -265,14 +284,15 @@ export default function ProductList() {
                                     <div className="accordion-item" key={index}>
                                         <h2 className="accordion-header" id={`panelsStayOpen-headingCategory-${index}`}>
                                             <button
-                                                className="accordion-button"
+                                                className="accordion-button size-6"
                                                 type="button"
                                                 data-bs-toggle="collapse"
                                                 data-bs-target={`#panelsStayOpen-collapseCategory-${index}`}
-                                                aria-expanded="true"
+                                                aria-expanded={activeKey === index}
                                                 aria-controls={`panelsStayOpen-collapseCategory-${index}`}
                                                 data-bs-parent="#accordionPanelsStayOpenExample" // 將這行添加到這個button元素中
                                                 onClick={() => {
+                                                    setActiveKey(index); // 当按钮被点击时，更新activeKey状态
                                                     handleCategoryChange(category.category_name);
                                                     console.log(`Button for category ${category.category_name} clicked.`);
                                                 }}
@@ -280,11 +300,11 @@ export default function ProductList() {
                                                 {category.category_name}
                                             </button>
                                         </h2>
-                                        <div id={`panelsStayOpen-collapseCategory-${index}`} className="accordion-collapse collapse show" aria-labelledby={`panelsStayOpen-headingCategory-${index}`}>
+                                        <div id={`panelsStayOpen-collapseCategory-${index}`} className={`accordion-collapse collapse ${activeKey === index ? 'show' : ''}`}>
                                             <div className="accordion-body row">
                                                 {category.subcategories && category.subcategories.split(',').map((subcategory, subIndex) => (
                                                     <button
-                                                        className="button-subcategory"
+                                                        className="button-subcategory size-7"
                                                         type="button"
                                                         key={subIndex}
                                                         onClick={() => {
@@ -309,8 +329,8 @@ export default function ProductList() {
                                     <div className="card-body">
                                         {/* specialoffer篩選 */}
                                         <div className="col-12">
-                                            <label for="inputprice" className="form-label">價格區間</label>
-                                            {/* <div className="row col-md">
+                                            <label for="inputprice size-6" className="form-label">價格區間</label>
+                                            <div className="row col-md">
                                                 <div className="col-md-5">
                                                     <input type="number" className="form-control" id="price" placeholder="$最低價">
                                                     </input>
@@ -322,32 +342,19 @@ export default function ProductList() {
                                                     <input type="number" className="form-control" id="price" placeholder="$最高價">
                                                     </input>
                                                 </div>
-                                            </div> */}
-                                            <div>
-                                                <label htmlFor="rangeSlider" className="form-label">
-                                                    Example range
-                                                </label>
-                                                <Slider
-                                                    id="rangeSlider"
-                                                    min={0}
-                                                    max={5}
-                                                    step={1}
-                                                    value={values}
-                                                    onChange={handleChange}
-                                                    withBars
-                                                    pearling
-                                                />
-                                                <p>Value 1: {values[0]}</p>
-                                                <p>Value 2: {values[1]}</p>
                                             </div>
-                                            
-                                            
                                         </div>
                                         {/* vendor篩選 */}
                                         <div className="col-12 mt-2">
-                                            <label for="brand" className="form-label">品牌</label>
-                                            <input type="text" className="form-control" id="brand" placeholder="請輸入品牌關鍵字">
-                                            </input>
+                                            <label for="brand size-6" className="form-label">品牌</label>
+                                            {/* <input type="text" className="form-control" id="brand" placeholder="請輸入品牌關鍵字">
+                                            </input> */}
+                                            <select id="inputsubCategory" className="form-select" name="subcategory_name">
+                                                <option selected>請選擇</option>
+                                                {vendorData.result.map((vendor, index) => (
+                                                    <option key={index} value={vendor.vendor}>{vendor.vendor}</option>
+                                                ))}
+                                            </select>
                                         </div>
                                         <button type="submit" className="btn btn-brown col-12 mt-3">
                                             確定

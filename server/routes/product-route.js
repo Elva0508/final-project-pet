@@ -234,6 +234,26 @@ router.get("/filter_sort", (req, res) => {
     );
 });
 
+//商品列表頁
+router.get("/vendor", (req, res) => {
+    connection.execute(
+        ` SELECT
+          products.vendor
+          FROM
+          products
+          GROUP BY
+           products.vendor
+          HAVING
+          COUNT(products.vendor) > 1;
+        `,
+        (error, result) => {
+            res.json({ result });
+        }
+    );
+});
+
+
+
 
 
 

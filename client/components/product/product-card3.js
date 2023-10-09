@@ -1,5 +1,4 @@
 import { Fragment, useState } from "react";
-import { BiSolidCart } from "react-icons/bi";
 import axios from 'axios';
 import { useEffect } from "react";
 import Link from "next/link";
