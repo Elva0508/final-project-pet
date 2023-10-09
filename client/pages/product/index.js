@@ -1,17 +1,13 @@
 import { React, useState } from 'react';
 import Search from '@/components/job/search';
 import ProductCard2 from '@/components/product/product-card2';
-import { FaCaretUp, FaCaretDown } from 'react-icons/fa';
 import { useEffect } from 'react';
 import axios from 'axios';
 import Link from 'next/link';
 import Pagination from '@/components/pagination';
 import { HiOutlineFilter } from 'react-icons/hi';
 import LoadingOverlay from '@/components/product/loadingoverlay'; //加載畫面尚未成功
-import Box from '@mui/material/Box';
-import Slider from '@mui/material/Slider';
-
-
+import { BiSearchAlt } from "react-icons/bi";
 
 export default function ProductList() {
 
@@ -431,7 +427,7 @@ export default function ProductList() {
                             </div>
                         </div>
                         {/* 商品顯示區 */}
-                        <div className='product d-lg-flex flex-column justify-content-center '>
+                        <div className='product d-lg-flex flex-column '>
                             <div className=" row d-flex mb-3 g-3 g-md-4 ">
                                 <ProductCard2 productData={currentData} mainPic={mainPic} setMainPic={setMainPic} />
                                 {/* 原本錯的 */}
