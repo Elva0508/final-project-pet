@@ -110,16 +110,11 @@ export default function JobStatusTwo({close}) {
                 </div>
               </div>
               {/* 2 */}
-              <div className="d-flex flex-column justify-content-between">
                 <div className="d-flex flex-column align-items-center">
-                  <button className="btn btn-confirm m-2 size-6 ">應徵</button>
+                  <div className="btn btn-outline-confirm m-2 size-6 ">已關閉</div>
                 </div>
 
-                <div className="d-flex flex-column">
-                  <p className="size-7 text-center apply">2023-08-22</p>
-                  <p className="size-7 text-center apply">已應徵</p>
-                </div>
-              </div>
+
             </div>
             
           </>
