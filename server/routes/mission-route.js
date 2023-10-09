@@ -109,17 +109,21 @@ router.get("/all-missions", (req, res) => {
   } else if (updateFilter === "one_week") {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
     const oneWeekAgo = new Date(today);
     oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
     dateRangeStart = oneWeekAgo.toISOString();
-    dateRangeEnd = today.toISOString();
+    dateRangeEnd = tomorrow.toISOString();
   } else if (updateFilter === "one_month") {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
     const oneMonthAgo = new Date(today);
     oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
     dateRangeStart = oneMonthAgo.toISOString();
-    dateRangeEnd = today.toISOString();
+    dateRangeEnd = tomorrow.toISOString();
   }
 
   let query = commonQueryTemplate;
