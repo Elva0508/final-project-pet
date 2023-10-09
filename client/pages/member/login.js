@@ -10,6 +10,9 @@ import { BsLine } from "react-icons/bs";
 
 export default function Login() {
  
+
+  //jack@example.com
+  //asdfgh1234
  
 const [email, setEmail]=useState('')
 const [password, setPassword]=useState('')

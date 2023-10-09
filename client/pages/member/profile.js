@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import Link from "next/link";
 import ListD from "@/components/member/list-d";
 import ListM from "@/components/member/list-m";
 import useRWD from "@/hooks/useRWD";
@@ -152,7 +153,9 @@ const ProfilePage = () => {
           <div className="user-form-item">
             <label className={userRfs}>密碼：</label>
             <div>
+              <Link  href="http://localhost:3000/member/reset-password">
               <button className="btn-confirm">設定新密碼</button>
+              </Link>
             </div>
           </div>
 
