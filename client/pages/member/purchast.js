@@ -3,25 +3,19 @@ import ListM from "@/components/member/list-m";
 import ListD from "@/components/member/list-d";
 import ListUserM from "@/components/member/list-user-m";
 import { BiSolidShoppingBag } from "react-icons/bi";
-import { GrFormPrevious } from "react-icons/gr";
-import { GrFormNext } from "react-icons/gr";
 import { useCart } from "@/hooks/useCart"
 import axios from "axios";
+import Pagination from '@/components/pagination'
 
 export default function Purchast() {
   const [product, setProduct] = useState([]);
   const { cart, setCart } = useCart();
   const [wishlist, setWishlist] = useState([])
-
-
   const itemsPerPage = 5;
-  const [currentPage, setCurrentPage] = useState(1);
-  const startIndex = (currentPage - 1) * itemsPerPage;
+  const [activePage, setActivePage] = useState(1);
+  const startIndex = (activePage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentData = product.slice(startIndex, endIndex);
-
-  const [activePage, setActivePage] = useState(1);
-
 
 
   const getProduct = () => {
@@ -102,6 +96,21 @@ export default function Purchast() {
     }
   };
 
+  
+  const deleteWishlist = async (id) => {
+
+    console.log(id);
+    try {
+      const response = await axios.delete(
+        `http://localhost:3005/api/member-purchast/deletewishlist`,
+        { data: { id } }
+      );
+    } catch (error) {
+      console.error("Error:", error);
+    }
+    getWishlist()
+  };
+
 
 
   const getCart = () => {
@@ -118,11 +127,6 @@ export default function Purchast() {
       });
   }
 
-
-
-  const handlePageChange = (newPage) => {
-    setCurrentPage(newPage);
-  };
 
   useEffect(() => {
     getProduct();
@@ -181,8 +185,10 @@ export default function Purchast() {
                           </button>
                         ) : (
                           <button className="btn btn-outline-confirm m-2 size-6 m-size-7"
+                          data-bs-toggle="modal" data-bs-target="#exampleModal1"
+                          onClick={() =>{deleteWishlist(v.product_id)} }
                           >
-                            已加入收藏
+                            取消收藏
                           </button>
                         )}
 
@@ -204,6 +210,24 @@ export default function Purchast() {
                     </div>
                     <div class="modal-body">
                       已成功將商品加入收藏
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-confirm" data-bs-dismiss="modal">關閉</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
+              <div class="modal fade" id="exampleModal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLabel">通知</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      已取消收藏此商品
                     </div>
                     <div class="modal-footer">
                       <button type="button" class="btn btn-confirm" data-bs-dismiss="modal">關閉</button>
@@ -252,31 +276,7 @@ export default function Purchast() {
 
                 </div>
               </div>
-
-
-              <div className="pagination size-7 d-flex justify-content-center mt-4">
-                <button className="btn prev border-0">
-                  <GrFormPrevious />
-                </button>
-                {Array.from({
-                  length: Math.ceil(product.length / itemsPerPage),
-                }).map((_, index) => (
-                  <button
-                    key={index}
-                    onClick={() => {
-                      handlePageChange(index + 1);
-                      setActivePage(index + 1);
-                    }}
-                    className={`btn me-1 ${activePage === index + 1 ? "active" : ""
-                      }`}
-                  >
-                    {index + 1}
-                  </button>
-                ))}
-                <button className="btn next border-0">
-                  <GrFormNext />
-                </button>
-              </div>
+              <Pagination  itemsPerPage={itemsPerPage} total={product} activePage={activePage} setActivePage={setActivePage}/>
             </div>
           </div>
         </div>

@@ -3,13 +3,13 @@ import ListM from "@/components/member/list-m";
 import ListD from "@/components/member/list-d";
 import ListUserM from "@/components/member/list-user-m";
 import { HiClipboardList } from "react-icons/hi";
-import HistoryStatusOne from "@/components/member/history-status-one";
-import HistoryStatusTwo from "@/components/member/history-status-two";
-import HistoryStatusThree from "@/components/member/history-status-three";
+import HistoryStatus from "@/components/member/history-status";
+import HistoryStatusAll from "@/components/member/history-statusAll";
+
 import axios from "axios";
 
 export default function History() {
-  const [currentScreen, setCurrentScreen] = useState("1");
+  const [currentScreen, setCurrentScreen] = useState("2");
   const [history , setHistory]=useState([])
 
   const handleButtonClick = (screenName) => {
@@ -50,38 +50,39 @@ useEffect(() => {
               <div className="my-3">
                 <button
                   className={`mx-2 size-7 listbutton ${
-                    currentScreen === "1" ? "pressed" : ""
-                  }`}
-                  onClick={() => {
-                    handleButtonClick("1");
-                  }}
-                >
-                  全部
-                </button>
-                <button
-                  className={`mx-2 size-7 listbutton ${
                     currentScreen === "2" ? "pressed" : ""
                   }`}
                   onClick={() => {
                     handleButtonClick("2");
                   }}
                 >
+                  全部
+                </button>
+                <button
+                  className={`mx-2 size-7 listbutton ${
+                    currentScreen === "1" ? "pressed" : ""
+                  }`}
+                  onClick={() => {
+                    handleButtonClick("1");
+                  }}
+                >
                   刊登中
                 </button>
                 <button
                   className={`mx-2 size-7 listbutton ${
-                    currentScreen === "3" ? "pressed" : ""
+                    currentScreen === "0" ? "pressed" : ""
                   }`}
                   onClick={() => {
-                    handleButtonClick("3");
+                    handleButtonClick("0");
                   }}
                 >
                   已下架
                 </button>
               </div>
-              {currentScreen === "1" && <HistoryStatusOne history={history}/>}
-              {currentScreen === "2" && <HistoryStatusTwo history={history}/>}
-              {currentScreen === "3" && <HistoryStatusThree history={history}/>}
+              {currentScreen === "2" && <HistoryStatusAll history={history} getHistory={getHistory}/>}
+              {currentScreen === "0" && <HistoryStatus history={history} getHistory={getHistory} currentScreen={currentScreen}/>}
+              {currentScreen === "1" && <HistoryStatus history={history} getHistory={getHistory} currentScreen={currentScreen}/>}
+
             </div>
           </div>
         </div>

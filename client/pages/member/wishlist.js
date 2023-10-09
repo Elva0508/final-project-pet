@@ -4,23 +4,21 @@ import ListD from "@/components/member/list-d";
 import ListUserM from "@/components/member/list-user-m";
 import { FaList } from "react-icons/fa";
 import { RiDeleteBin5Line } from "react-icons/ri";
-import { GrFormPrevious } from "react-icons/gr";
-import { GrFormNext } from "react-icons/gr";
 import {useCart} from "@/hooks/useCart"
 import axios from "axios";
+import Pagination from '@/components/pagination'
 
 export default function Wishlist() {
   const [wishlist, setWishlist] = useState([]);
   const [wishlisttype, setWishlistType] = useState([]);
   const {cart, setCart} = useCart();
-
+  const [activePage, setActivePage] = useState(1);
   const itemsPerPage = 5;
-  const [currentPage, setCurrentPage] = useState(1);
-  const startIndex = (currentPage - 1) * itemsPerPage;
+  const startIndex = (activePage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentData = wishlist.slice(startIndex, endIndex);
 
-  const [activePage, setActivePage] = useState(1);
+
 
   const handleSelectChange = (pid, v) => {
     const newList = wishlist.map((w) => {
@@ -36,9 +34,6 @@ export default function Wishlist() {
     console.log(wishlist);
   };
 
-  const handlePageChange = (newPage) => {
-    setCurrentPage(newPage);
-  };
 
   const addCart = async (id, type) => {
 
@@ -277,30 +272,7 @@ export default function Wishlist() {
                 </div>
               </div>
 
-              <div className="pagination size-7 d-flex justify-content-center mt-4">
-                <button className="btn prev border-0">
-                  <GrFormPrevious />
-                </button>
-                {Array.from({
-                  length: Math.ceil(wishlist.length / itemsPerPage),
-                }).map((_, index) => (
-                  <button
-                    key={index}
-                    onClick={() => {
-                      handlePageChange(index + 1);
-                      setActivePage(index + 1);
-                    }}
-                    className={`btn me-1 ${
-                      activePage === index + 1 ? "active" : ""
-                    }`}
-                  >
-                    {index + 1}
-                  </button>
-                ))}
-                <button className="btn next border-0">
-                  <GrFormNext />
-                </button>
-              </div>
+              <Pagination  itemsPerPage={itemsPerPage} total={wishlist} activePage={activePage} setActivePage={setActivePage}/>
             </div>
           </div>
         </div>

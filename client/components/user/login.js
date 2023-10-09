@@ -1,89 +1,123 @@
-import { useEffect, useState } from "react";
-import { useRouter } from "next/router"; // 使用next/router取代react-router-dom的useNavigate
+import { useEffect } from "react";
+import { useRouter } from "next/router"; 
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
+import jwtDecode from "jwt-decode";
+// import {Icon} from 'react-icons-kit';
+// import {eyeOff} from 'react-icons-kit/feather/eyeOff';
+// import {eye} from 'react-icons-kit/feather/eye'
 
 import { useAuth } from "@/context/fakeAuthContext";
 
 export default function Login() {
+
+ // const [icon, setIcon] = useState(eyeOff);
   
-  const [email, setEmail] = useState("jack@example.com");
-  const [password, setPassword] = useState("qwerty");
-
   const { login, isAuthenticated } = useAuth();
-  const router = useRouter(); // 使用next/router取代react-router-dom的useNavigate
+  const router = useRouter(); 
 
-  // function handleSubmit(e) {
-  //   e.preventDefault();
-
-  //  if (email && password) login(email, password);
-   
+  // const handleToggleEye=()=>{
+  //   if(type === "password"){
+  //     setIcon(eye)
+  //     setType("text")
+  // }else{
+  //     setIcon(eyeOff)
+  //     setType("password")
   // }
-async function handleSubmit(e) {
-  e.preventDefault();
 
-  if (email && password) {
+  useEffect(
+    function () {
+      if (isAuthenticated) router.replace("/member/profile"); 
+    },
+    [isAuthenticated, router]
+  );
+
+
+  const initialValues = {
+    email: "",
+    password: ""
+  };
+
+  const validationSchema = Yup.object({
+    email: Yup.string().email("email格式不正確").required("帳號不能為空"),
+    password: Yup.string().required("密碼不能為空")
+  });
+
+  const onSubmit = async (values, { setSubmitting }) => {
     try {
       const response = await fetch('http://localhost:3005/api/auth-jwt/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ email, password })
+        body: JSON.stringify(values)
       });
 
       if (response.ok) {
         const { token } = await response.json();
         localStorage.setItem('token', token);
-        router.push('/home');
+
+        const decodedToken = jwtDecode(token);
+        const u = decodedToken.id;
+        localStorage.setItem('data',  JSON.stringify(decodedToken));
+        localStorage.setItem('id', u);
+
+        login(token);
+        //router.push('/member/profile');
       } else {
         throw new Error('Login failed');
       }
     } catch (error) {
       console.error(error);
     }
-  }
-}
-
-
-  useEffect(
-    function () {
-      if (isAuthenticated) router.replace("/home"); // 使用router.replace取代navigate
-    },
-    [isAuthenticated, router]
-  );
+    setSubmitting(false);
+  };
 
   return (
-  
-   
+    <Formik
+      initialValues={initialValues}
+      validationSchema={validationSchema}
+      onSubmit={onSubmit}
+    >
+      {({ isSubmitting }) => (
+        <Form className="email-signup">
+          <div className="u-form-group mb-3">
+            <label htmlFor="email">帳號</label>
+            <Field
+              className="form-input"
+              type="email"
+              id="email"
+              name="email"
+            />
+            <ErrorMessage name="email" component="div" className="error" />
+          </div>
 
-      <form className="email-signup" onSubmit={handleSubmit}>
-        <div className="u-form-group mb-3">
-          <label htmlFor="email">帳號</label>
-          <input
-          className="form-input " 
-            type="email"
-            id="email"
-            onChange={(e) => setEmail(e.target.value)}
-            value={email}
-          />
-        </div>
+          <div className="u-form-group mb-3">
+            <label htmlFor="password">密碼</label>
+            <Field
+              className="form-input"
+              type="password"
+              id="password"
+              name="password"
+            />
+            <ErrorMessage
+              name="password"
+              component="div"
+              className="error"
+            />
+          </div>
 
-        <div className="u-form-group mb-3">
-          <label htmlFor="password">密碼</label>
-          <input
-          className="form-input " 
-            type="password"
-            id="password"
-            onChange={(e) => setPassword(e.target.value)}
-            value={password}
-          />
-        </div>
-
-        <div className="u-form-group">
-        
-        <button type="submit" className="btn-brown">登入</button>
-   
-        </div>
-      </form>
-
+          <div className="u-form-group">
+            <button
+              type="submit"
+              className="btn-brown"
+              disabled={isSubmitting}
+            >
+              登入
+            </button>
+          </div>
+        </Form>
+      )}
+    </Formik>
   );
 }

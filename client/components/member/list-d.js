@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useState, useEffect} from "react";
 import { BsFillCaretDownFill } from "react-icons/bs";
 import { HiClipboardList } from "react-icons/hi";
 import { LiaListAltSolid } from "react-icons/lia";
@@ -10,21 +10,44 @@ import { MdDiscount } from "react-icons/md";
 import { FaList } from "react-icons/fa";
 import { RiFileList3Fill } from "react-icons/ri";
 import Link from "next/link";
+import axios from "axios";
 
 export default function ListD() {
+  //無法從localStorage取得資料 所以使用特定使用者api
+  // const userData = localStorage.getItem("data");
+  // const parseData = JSON.parse(userData);
+
+  const [memberData, setMemberData] = useState(null);
+
+  useEffect(() => {
+
+    fetch('http://localhost:3005/api/user/user-info')
+      .then(response => response.json())
+      .then(data => {
+    
+        setMemberData(data.results[0]);
+      })
+      .catch(error => {
+        console.error('API請求失敗', error);
+      });
+  }, []);
+  
+
+
   return (
     <>
       <div className="list-d col-3 d-md-block d-none">
         <div className="user">
           <div className="d-flex justify-content-center">
             <img
-              src="https://cdn-front.mao-select.com.tw//upload_files/fonlego-rwd/prodpic/D_A1VK080502.jpg"
+               //src="https://cdn-front.mao-select.com.tw//upload_files/fonlego-rwd/prodpic/D_A1VK080502.jpg"
+              src={memberData ? memberData.cover_photo : 'loading...'}
               className="m-3"
             ></img>
             <div className="d-flex flex-column justify-content-around mt-3">
               <div>
                 <h6 className="size-6">Hi,</h6>
-                <h6 className="size-6">使用者</h6>
+                <h6 className="size-6">{memberData ? memberData.name : 'loading...'}</h6>
               </div>
               <button className="size-7 level">幼貓</button>
             </div>
@@ -85,15 +108,27 @@ export default function ListD() {
             </Link>
           </li>
           <li>
-            <Link className="size-6" href="">
+            <Link className="size-6" href="http://localhost:3000/member/joblist">
               <LiaListAltSolid />
               任務清單
             </Link>
           </li>
           <li>
-            <Link className="size-6" href="">
+            <Link className="size-6" href="http://localhost:3000/member/history">
               <HiClipboardList />
               刊登紀錄
+            </Link>
+          </li>
+          <li>
+            <Link className="size-6" href="">
+              <HiClipboardList />
+              銷售紀錄
+            </Link>
+          </li>
+          <li>
+            <Link className="size-6" href="">
+              <HiClipboardList />
+              預約紀錄
             </Link>
           </li>
         </ul>

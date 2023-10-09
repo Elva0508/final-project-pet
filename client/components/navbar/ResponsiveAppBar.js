@@ -16,6 +16,9 @@ import Badge from "@mui/material/Badge";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/router"; 
+
+import {useAuth} from "@/context/fakeAuthContext"
 
 //logo-icon
 import catLogo from "@/assets/catLogo.svg";
@@ -24,7 +27,9 @@ import McatLogo from "@/assets/McatLogo.svg";
 import ShoppingCart from "@/assets/shoppingCart.svg";
 
 //cart
-import { useCart } from "@/hooks/useCart";
+import { useCart } from '@/hooks/useCart';
+import { useRouter } from 'next/router';
+
 
 const theme = createTheme({
   // 自定義色調
@@ -83,6 +88,10 @@ const settings = [
 ];
 
 function ResponsiveAppBar() {
+  //會員狀態
+  const { Token, isAuthenticated, login, logout } = useAuth();
+
+
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
@@ -101,7 +110,20 @@ function ResponsiveAppBar() {
     setAnchorElUser(null);
   };
 
+  const router = useRouter(); 
+
+  //登入登出
+  const handleLogout = () => {
+    logout()
+    router.push('/');
+  }
+
+
   const { cart, setCart } = useCart();
+  const router = useRouter();
+  const goCart=()=>{
+    router.push('/product/cart')
+  }
 
   return (
     <ThemeProvider theme={theme}>
@@ -198,11 +220,7 @@ function ResponsiveAppBar() {
                     sx={{ display: { xs: "flex", md: "flex" }, mr: 2 }}
                   />
                 </IconButton>
-                <IconButton
-                  onClick={undefined}
-                  sx={{ p: 0 }}
-                  className="cartNum"
-                >
+                <IconButton onClick={goCart} sx={{ p: 0 }} className="cartNum">
                   <Image src={ShoppingCart} alt="shoppingCart" />
                   <div className="cartNumber size-7 ">
                     <p className="">{cart.length}</p>
@@ -225,13 +243,37 @@ function ResponsiveAppBar() {
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
               >
-                {settings.map((v) => (
-                  <Link href={v.path} key={v.id}>
-                    <MenuItem onClick={handleCloseUserMenu}>
-                      <Typography textAlign="center">{v.name}</Typography>
+              {isAuthenticated  ? (
+                <>
+                <MenuItem onClick={handleLogout}>
+                      <Typography textAlign="center">登出</Typography>
+                    </MenuItem>
+                    <Link href="/article" >
+                    <MenuItem >
+                      <Typography textAlign="center">來聊聊</Typography>
                     </MenuItem>
                   </Link>
-                ))}
+                  </>
+              ) : (
+                <Link href="http://localhost:3000/member/login" >
+                    <MenuItem >
+                      <Typography textAlign="center">登入</Typography>
+                    </MenuItem>
+                  </Link>
+
+              )}
+                  {/* <Link href="/login" >
+                    <MenuItem onClick={handleCloseUserMenu}>
+                      <Typography textAlign="center">登入</Typography>
+                    </MenuItem>
+                  </Link>
+                  
+                  <Link href={v.path} key={v.id}>
+                    <MenuItem onClick={handleCloseUserMenu}>
+                      <Typography textAlign="center">登出</Typography>
+                    </MenuItem>
+                  </Link> */}
+             
               </Menu>
             </Box>
           </Toolbar>
