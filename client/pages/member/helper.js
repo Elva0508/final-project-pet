@@ -11,10 +11,14 @@ const HelperInfoPage = () => {
       <nav className="breadcrumb-wrapper" aria-label="breadcrumb">
         <ol className="breadcrumb">
           <li className="breadcrumb-item">
-            <Link href="/">首頁</Link>
+            <Link href="/" className="active-hover">
+              首頁
+            </Link>
           </li>
           <li className="breadcrumb-item" aria-current="page">
-            <Link href="/member/profile">會員中心</Link>
+            <Link href="/member/profile" className="active-hover">
+              會員中心
+            </Link>
           </li>
           <li className="breadcrumb-item active" aria-current="page">
             小幫手資料
