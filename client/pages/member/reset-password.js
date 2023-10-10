@@ -3,8 +3,13 @@ import ListD from "@/components/member/list-d";
 import ListM from "@/components/member/list-m";
 import Image from "next/image";
 import myProfile from "@/assets/myProfile.svg";
+import useRWD from "@/hooks/useRWD";
 
 const ResetUserPassword = () => {
+//RWD
+const device = useRWD();
+const userRfs = device == "mobile" ? "m-size-6" : "size-6";
+
   const [password, setPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [newPasswordCheck, setNewPasswordCheck] = useState("");
@@ -65,9 +70,9 @@ const ResetUserPassword = () => {
 
         
           <div className="reset-group">
-            <label htmlFor="">原密碼:</label>
+            <label htmlFor="" className={userRfs}>原密碼</label>
             <input
-              className="form-input "
+              className="form-input  "
               type="password"
               placeholder="請輸入密碼"
               value={password}
@@ -75,7 +80,7 @@ const ResetUserPassword = () => {
             />
           </div>
           <div className="reset-group">
-            <label htmlFor="">新密碼:</label>
+            <label htmlFor="" className={userRfs}>新密碼</label>
             <input
               className="form-input "
               type="password"
@@ -85,7 +90,7 @@ const ResetUserPassword = () => {
             />
           </div>
           <div className="reset-group">
-            <label htmlFor="">再輸入一次密碼:</label>
+            <label htmlFor="" className={userRfs}>確認新密碼</label>
             <input
               className="form-input "
               type="password"
@@ -94,7 +99,7 @@ const ResetUserPassword = () => {
               onChange={(e) => setNewPasswordCheck(e.target.value)}
             />
           </div>
-          <div className="d-flex justify-content-center gap-4 mt-5">
+          <div className="d-flex justify-content-center gap-5 mt-5">
             <button className="btn-outline-confirm" onClick={handleCancel}>取消</button>
             <button className="btn-confirm" onClick={handleSubmit}>儲存</button>
           </div>
