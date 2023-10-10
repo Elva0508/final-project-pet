@@ -136,7 +136,6 @@ export default function MissionDetail() {
     const [selectedMissionId, setSelectedMissionId] = useState(null);
     const [recommendation, setRecommendation] = useState('');
     const [autoSend, setAutoSend] = useState(false);
-    // const [showModal, setShowModal] = useState(false);
 
     const getMissionDetail = async (mission_id) => {  // 接受 mission_id 作為參數
         try {
@@ -181,19 +180,11 @@ export default function MissionDetail() {
                 autoSend,
             };
 
-            // 发送 POST 请求将数据发送到后端 API
+            // 發送 POST 請求將數據發送到後端 API
             const response = await axios.post('http://localhost:3005/api/mission/add-record', requestData);
-
-            // 处理成功响应，可以根据需要执行相关操作
             console.log('成功添加到應徵紀錄', response.data);
-
-            // 关闭模态框
-            // setShowModal(false);
-
-            // 延迟2秒后跳转到/chatlist
-            setTimeout(() => {
-                router.push('/chatlist');
-            }, 2000); // 2000毫秒等于2秒
+            // 導到聊天室
+            router.push('/chatlist');
         } catch (error) {
             console.error('添加到應徵紀錄出錯', error);
         }
@@ -213,14 +204,10 @@ export default function MissionDetail() {
         return `${year}/${month}/${day}`;
     }
 
-    useEffect(()=>{
-        console.log("現在的showModal是"+showModal)
-    },[showModal])
-
     return (
         <>
             {/* Modal */}
-            <div className={`modal fade apply-modal ${showModal ? 'show' : ''}`} id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div className={`modal fade apply-modal`} id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div className="modal-dialog modal-dialog-centered">
                     <div className="modal-content">
                         <div className="modal-header">
@@ -255,7 +242,8 @@ export default function MissionDetail() {
 
                         <div className="modal-footer justify-content-center py-4">
                             <button type="button" className=" btn-outline-confirm" data-bs-dismiss="modal">取消</button>
-                            <button type="button" className=" btn-second" onClick={handleConfirmSubmit}>確認送出</button>
+                            <button type="button" className=" btn-second" onClick={handleConfirmSubmit} data-bs-dismiss="modal">確認送出</button>
+                            {/* 在這邊也要加上data-bs-dismiss="modal"才能在送出後關閉modal 才不會到聊天室之後 後面畫面還是灰暗的 */}
                         </div>
                     </div>
                 </div>
