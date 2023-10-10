@@ -13,7 +13,7 @@
   padding: 10px 40px;
   position: relative;
   .title {
-    margin-bottom: 40px;
+    margin: 50px 0;
     & > p {
       font-weight: bold;
       display: flex;
@@ -26,6 +26,10 @@
   }
   }
   .user-form{
+    margin: 0 auto;
+  .user-btn-group{
+margin: 4.5rem 0;
+    }
    .ws20{
     width: 100%;
     overflow: auto;
@@ -40,6 +44,27 @@
       margin-left: 5px;
       margin-right: 5px;
       width: calc(55% - 10px);
+    }
+    .ws6{
+      float: left;
+      width: 80%;
+
+      .fs5{
+        float: left;
+      margin-left: 5px;
+      margin-right: 5px;
+      width: calc(35% - 14px);
+      }
+
+    }
+ 
+   }
+   .address-w20{
+    width: calc(70% - 5px);
+    padding-bottom: 45px; //行距
+    .address-11{
+      width: 78%;
+      float: right;
     }
    }
 

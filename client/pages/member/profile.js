@@ -8,6 +8,7 @@ import Image from "next/image";
 import myProfile from "@/assets/myProfile.svg";
 import data from "@/data/taiwan.json";
 import axios from "axios";
+import { Padding } from "@mui/icons-material";
 
 const ProfilePage = () => {
   //RWD
@@ -130,7 +131,7 @@ const ProfilePage = () => {
           <div className="user-form">
             <div className="user-form-item d-flex">
               
-              <div className="ws20">
+              <div className="ws20 mb-5">
               <label className={`fs3 ${userRfs}`}>Email</label>
                 <input
                   className="form-input fs11"
@@ -142,7 +143,7 @@ const ProfilePage = () => {
             </div>
           
             
-              <div className="ws20">
+              <div className="ws20  mb-5" >
               <label className={`fs3 ${userRfs}`}>姓名</label>
                 <input
                   className="form-input fs11"
@@ -154,8 +155,8 @@ const ProfilePage = () => {
          
            
           
-              <div className="ws20">
-              <label className={`fs3 ${userRfs}`}>密碼：</label>
+              <div className="ws20  mb-5">
+              <label className={`fs3 ${userRfs}`}>密碼</label>
                 <Link href="http://localhost:3000/member/reset-password">
                   <button className="btn-confirm fs11">設定新密碼</button>
                 </Link>
@@ -164,7 +165,7 @@ const ProfilePage = () => {
 
            
               
-              <div className="ws20">
+              <div className="ws20  mb-5">
               <label className={`fs3 ${userRfs}`}>性別</label>
                 <input
                   type="radio"
@@ -192,7 +193,7 @@ const ProfilePage = () => {
           
            
             
-              <div className="ws20">
+              <div className="ws20  mb-5">
               <label className={`fs3 ${userRfs}`}>生日</label>
                 <input
                 className=" fs11"
@@ -203,21 +204,21 @@ const ProfilePage = () => {
           
             </div>
         
-              <div className="ws20">
-              <label className={`fs3 ${userRfs}`}>行動電話</label>
+              <div className="ws20  mb-5">
+              <label className={`fs3 ${userRfs}`}>手機</label>
                 <input
                   className="form-input fs11"
                   type="text"
-                  value={phone}
+                  value={`0${phone}`}
                   onChange={(e) => setPhone(e.target.value)}
                 />
               </div>
        
-            <div className="user-form-item">
-              <label className={userRfs}>地址</label>
-              <div className="d-flex">
+            <div className="ws20  ">
+              <label className={`fs3 py-2 ${userRfs}`}>地址</label>
+              <div className="ws6 ">
                 <select
-                  className="form-select"
+                  className="form-select fs5"
                   value={addressCity}
                   onChange={(e) => setAddressCity(e.target.value)}
                 >
@@ -232,7 +233,7 @@ const ProfilePage = () => {
                 </select>
 
                 <select
-                  className="form-select"
+                  className="form-select fs5"
                   value={addressTown}
                   onChange={(e) => setAddressTown(e.target.value)}
                 >
@@ -247,33 +248,34 @@ const ProfilePage = () => {
                 </select>
               </div>
             </div>
-
-            <div className="user-form-item">
-              <label></label>
-              <div>
+              <div  className="address-w20">
+              {/* <label className={` ${userRfs}`}></label> */}
                 <input
                   type="text"
-                  className="form-control"
+                  className="form-control address-11"
                   value={detailAddress}
                   onChange={(e) => setDetailAddress(e.target.value)}
                 />
               </div>
-            </div>
+        
 
      
          
-              <div className="ws20">
+              <div className="ws20  mt-5">
+
               <label className={`fs3 ${userRfs}`}>毛孩數量</label>
+              <div className="ws6 ">
                 <input
-                  className="form-input"
+                  className="form-input fs5"
                   type="number"
                   value={petCount}
                   onChange={(e) => setPetCount(e.target.value)}
                 />
               </div>
+              </div>
        
 
-            <div className="user-form-item d-flex justify-content-center">
+            <div className="user-btn-group d-flex justify-content-center gap-5">
    
               <button id="save" className="btn-confirm" onClick={handleSave}>
                 儲存
