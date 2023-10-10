@@ -97,8 +97,54 @@ const ImageSwiper = ({ images }) => {
   );
 };
 
-const ReviewSwiper = ({ reviews }) => {
+const ReviewSwiper = ({ reviews, setReviews }) => {
   const [transReview, setTransReview] = useState(reviews);
+  const [filterReview, setFilterReview] = useState([]);
+  const [star, setStar] = useState("all");
+  const router = useRouter();
+  const { uid } = router.query;
+  const sliderRef = useRef(null);
+  useEffect(() => {
+    if (uid) {
+      workService
+        .getFilterReview(uid, star)
+        .then((response) => {
+          console.log(response.data);
+          console.log(response.data.reviews);
+          setFilterReview(response.data.reviews);
+          if (sliderRef.current) {
+            sliderRef.current.slickGoTo(0);
+          }
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    }
+  }, [uid, star]);
+  let fiveStar = 0;
+  let fourStar = 0;
+  let threeStar = 0;
+  let twoStar = 0;
+  let oneStar = 0;
+  reviews.map((review) => {
+    switch (review.star_rating) {
+      case 5:
+        fiveStar++;
+        break;
+      case 4:
+        fourStar++;
+        break;
+      case 3:
+        threeStar++;
+        break;
+      case 2:
+        twoStar++;
+        break;
+      case 1:
+        oneStar++;
+        break;
+    }
+  });
   const settings = {
     dots: true,
     infinite: false,
@@ -141,106 +187,91 @@ const ReviewSwiper = ({ reviews }) => {
       },
     ],
   };
-  return (
-    <>
-      {/* <Swiper
-        modules={[Pagination, Navigation]}
-        spaceBetween={20}
-        slidesPerView="3"
-        navigation
-        pagination={{ clickable: true }}
-        // pagination
-      >
-        {reviews.map((review) => (
-          <SwiperSlide key={review.review_id}>
-            <div className="review-card">
-              <div className="review-card-head d-flex justify-content-center align-items-center">
-                <img
-                  className="review-card-avatar"
-                  src={`${review.cover_photo}`}
-                />
-                <div className="review-card-info d-flex flex-column justify-content-between ps-2">
-                  <div className="d-flex justify-content-between">
-                    <div className="username size-6">{review.name}</div>
-                    <div className="date size-6">{review.review_date}</div>
-                  </div>
-                  <div className="ranking mb-2">
-                    <Rating
-                      name="half-rating-read"
-                      value={review.star_rating}
-                      readOnly
-                      precision={0.5}
-                      emptyIcon={<StarIcon style={{ opacity: 0.35 }} />}
-                    />
-                  </div>
-                </div>
-              </div>
-              <div className="review-card-body mt-3">
-                {review.review_content}
-              </div>
-            </div>
-          </SwiperSlide>
-        ))}
-      </Swiper> */}
+  const handleChangeStar = (e) => {
+    if (e.target.value) {
+      // 有value，代表點在button上而不是button外的div上
+      setStar(e.target.value);
 
-      <Slider {...settings}>
-        {reviews.map((review) => (
-          <div className="review-card" style={{ width: "350px" }}>
-            <div className="review-card-head d-flex justify-content-center align-items-center">
-              <img
-                className="review-card-avatar"
-                src={`${review.cover_photo}`}
-              />
-              <div className="review-card-info d-flex flex-column justify-content-between ps-2">
-                <div className="d-flex justify-content-between">
-                  <div className="username size-6">{review.name}</div>
-                  <div className="date size-7">{review.review_date}</div>
-                </div>
-                <div className="ranking mb-2">
-                  <Rating
-                    name="half-rating-read"
-                    value={review.star_rating}
-                    readOnly
-                    precision={0.5}
-                    emptyIcon={<StarIcon style={{ opacity: 0.35 }} />}
-                  />
-                </div>
-              </div>
-            </div>
-            <div className="review-card-body mt-3">{review.review_content}</div>
-          </div>
-        ))}
-      </Slider>
-    </>
-  );
-};
-const ReviewCard = ({ review }) => {
+      // 將HTML Collection變成可迭代的陣列，先移除所有btn上的樣式，再加樣式在目前點擊的btn上
+      const children = e.currentTarget.children;
+      let childrenArr = Array.from(children);
+      childrenArr.forEach((btn) => {
+        btn.classList.remove("filter-btns-focus");
+      });
+      console.log(e.currentTarget.children);
+      e.target.classList.add("filter-btns-focus");
+    }
+  };
   return (
     <>
-      <div className="review-card">
-        <div className="review-card-head d-flex justify-content-center align-items-center">
-          <img className="review-card-avatar" src={`${review.cover_photo}`} />
-          <div className="review-card-info d-flex flex-column justify-content-between ps-2">
-            <div className="d-flex justify-content-between">
-              <div className="username size-6">{review.name}</div>
-              <div className="date size-6">{review.review_date}</div>
-            </div>
-            <div className="ranking mb-2">
-              <Rating
-                name="half-rating-read"
-                value={review.star_rating}
-                readOnly
-                precision={0.5}
-                emptyIcon={<StarIcon style={{ opacity: 0.35 }} />}
-              />
-            </div>
-          </div>
+      <div className="review-card-group">
+        <div className="size-5">服務評價</div>
+        <p className="m-size-7">
+          (共<span>{reviews.length}</span>則相關評論)
+        </p>
+        <div className="filter-btns " onClick={handleChangeStar}>
+          <button
+            value={"all"}
+            onClick={handleChangeStar}
+            className="filter-btns-focus"
+          >
+            全部評論
+          </button>
+          <button value={5}>
+            5星(<span>{fiveStar}</span>)
+          </button>
+          <button value={4}>
+            4星(<span>{fourStar}</span>)
+          </button>
+          <button value={3}>
+            3星(<span>{threeStar}</span>)
+          </button>
+          <button value={2}>
+            2星(<span>{twoStar}</span>)
+          </button>
+          <button value={1}>
+            1星(<span>{oneStar}</span>)
+          </button>
         </div>
-        <div className="review-card-body mt-3">{review.review_content}</div>
+        {filterReview.length > 0 ? (
+          <Slider {...settings} ref={sliderRef}>
+            {filterReview.map((review) => (
+              <div className="review-card" style={{ width: "350px" }}>
+                <div className="review-card-head d-flex justify-content-center align-items-center">
+                  <img
+                    className="review-card-avatar"
+                    src={`${review.cover_photo}`}
+                  />
+                  <div className="review-card-info d-flex flex-column justify-content-between ps-2">
+                    <div className="d-flex justify-content-between">
+                      <div className="username size-6">{review.name}</div>
+                      <div className="date size-7">{review.review_date}</div>
+                    </div>
+                    <div className="ranking mb-2">
+                      <Rating
+                        name="half-rating-read"
+                        value={review.star_rating}
+                        readOnly
+                        precision={0.5}
+                        emptyIcon={<StarIcon style={{ opacity: 0.35 }} />}
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div className="review-card-body mt-3">
+                  {review.review_content}
+                </div>
+              </div>
+            ))}
+          </Slider>
+        ) : (
+          ""
+        )}
       </div>
     </>
   );
 };
+
 export const HelperDetailSticky = () => {
   const [isFavorite, setIsFavorite] = useState(false); // 初始狀態為未收藏
   const toggleFavorite = () => {
@@ -459,8 +490,8 @@ const Quotation = () => {
           </div>
         }
       >
-        <div className="d-flex justify-content-between">
-          <p>寵物</p>
+        <div className="body-item d-flex justify-content-between align-items-center">
+          <p className="size-6">寵物</p>
           <PetInfo
             petsValue={petsValue}
             setPetsValue={setPetsValue}
@@ -468,8 +499,8 @@ const Quotation = () => {
             setPetsName={setPetsName}
           />
         </div>
-        <div className="d-flex justify-content-between">
-          <p>開始日期</p>
+        <div className="body-item d-flex justify-content-between align-items-center">
+          <p className="size-6">開始日期</p>
           <DatePicker
             open={startDateOpen}
             autoSwitchDate={false}
@@ -501,8 +532,8 @@ const Quotation = () => {
             )}
           />
         </div>
-        <div className="d-flex justify-content-between">
-          <p>結束日期</p>
+        <div className="body-item d-flex justify-content-between align-items-center">
+          <p className="size-6">結束日期</p>
           <DatePicker
             open={endDateOpen}
             autoSwitchDate={false}
@@ -526,8 +557,8 @@ const Quotation = () => {
             )}
           />
         </div>
-        <div className="d-flex justify-content-between">
-          <p>服務類型</p>
+        <div className="body-item d-flex justify-content-between align-items-center">
+          <p className="size-6">服務類型</p>
           <Select
             style={{ width: 150 }}
             onChangeWithObject
@@ -540,8 +571,8 @@ const Quotation = () => {
             }}
           ></Select>
         </div>
-        <div className="d-flex justify-content-between">
-          <p>服務時間</p>
+        <div className="body-item d-flex justify-content-between align-items-center">
+          <p className="size-6">服務時間</p>
           <div className="d-flex align-items-center">
             <CiCircleChevLeft
               position="left"
@@ -556,8 +587,8 @@ const Quotation = () => {
             />
           </div>
         </div>
-        <div className="d-flex justify-content-between">
-          <div>每天次數</div>
+        <div className="body-item d-flex justify-content-between align-items-center">
+          <div className="size-6">每天次數</div>
           <div className="d-flex align-items-center">
             <CiCircleChevLeft
               position="left"
@@ -572,8 +603,8 @@ const Quotation = () => {
             />
           </div>
         </div>
-        <div className="d-flex justify-content-between">
-          <p>地點</p>
+        <div className="body-item d-flex justify-content-between align-items-center">
+          <p className="size-6">地點</p>
           <input
             type="text"
             value={location}
@@ -582,8 +613,8 @@ const Quotation = () => {
             }}
           />
         </div>
-        <div className="d-flex flex-column justify-content-between">
-          <p>備註</p>
+        <div className="body-item d-flex flex-column justify-content-between">
+          <p className="size-6 mb-2">備註</p>
           <textarea
             placeholder="輸入備註或是您毛小孩的需求與個性狀況"
             onChange={(e) => {
@@ -816,19 +847,6 @@ const HelperDetail = () => {
   return (
     <>
       <div className="helper-detail container-fluid">
-        {/* <nav className="breadcrumb-wrapper" aria-label="breadcrumb">
-          <ol className="breadcrumb">
-            <li className="breadcrumb-item">
-              <Link href="/">首頁</Link>
-            </li>
-            <li className="breadcrumb-item" aria-current="page">
-              <Link href="/work/find-helper">小幫手總覽</Link>
-            </li>
-            <li className="breadcrumb-item active" aria-current="page">
-              {uid}
-            </li>
-          </ol>
-        </nav> */}
         <header className="d-flex flex-md-row flex-column justify-content-center align-items-center">
           <div className="avatar">
             <img src={profile.cover_photo} />
@@ -857,29 +875,29 @@ const HelperDetail = () => {
         </header>
         <section className="description">
           <div className="item">
-            <div className="item-title size-5">相片/影片：</div>
+            <div className="item-title size-5">相片/影片</div>
             <div className="item-image item-content">
               <ImageSwiper images={images} setImages={setImages} />
             </div>
           </div>
           <div className="item">
-            <div className="item-title size-5">小幫手介紹：</div>
+            <div className="item-title size-5">小幫手介紹</div>
             <p className="item-content size-6">{profile.job_description}</p>
           </div>
           <div className="item">
-            <div className="item-title size-5 ">可服務時間：</div>
+            <div className="item-title size-5 ">可服務時間</div>
             <span className="size-6 item-content">
               日、一、二、三、四、五、六
             </span>
           </div>
           <div className="item">
-            <div className="item-title size-5">可服務地區：</div>
+            <div className="item-title size-5">可服務地區</div>
             <span className="size-6 item-content">
               {profile.service_county}
             </span>
           </div>
           <div className="item">
-            <div className="item-title size-5">連絡電話：</div>
+            <div className="item-title size-5">連絡電話</div>
             <span className="size-6 item-content">{profile.phone}</span>
           </div>
           <div className="item">
@@ -959,9 +977,7 @@ const HelperDetail = () => {
               </div>
             </div>
           </div>
-          <div className="review-card-group">
-            <ReviewSwiper reviews={reviews} />
-          </div>
+          <ReviewSwiper reviews={reviews} setReviews={setReviews} />
         </section>
       </div>
     </>

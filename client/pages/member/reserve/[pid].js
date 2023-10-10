@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import ListD from "@/components/member/list-d";
 import ListM from "@/components/member/list-m";
 import ListUserM from "@/components/member/list-user-m";
-import RequestRecordDetail from "@/components/member/request-record-detail";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { RecordDetailTemplate } from "@/components/member/Record-template";
@@ -243,7 +242,7 @@ const ReserveDetailPage = () => {
   };
   return (
     <>
-      <nav className="breadcrumb-wrapper" aria-label="breadcrumb">
+      {/* <nav className="breadcrumb-wrapper" aria-label="breadcrumb">
         <ol className="breadcrumb">
           <li className="breadcrumb-item">
             <Link href="/">首頁</Link>
@@ -258,7 +257,7 @@ const ReserveDetailPage = () => {
             {pid}
           </li>
         </ol>
-      </nav>
+      </nav> */}
       <div className="d-flex justify-content-end">
         {/* mobile版的左側tab */}
         <ListM />

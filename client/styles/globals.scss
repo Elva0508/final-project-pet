@@ -63,6 +63,7 @@ ul {
 }
 .active-hover {
   position: relative;
+  // transition: all 0.2s ease-in-out;
   &::before {
     content: "";
     position: absolute;

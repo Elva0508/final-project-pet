@@ -23,7 +23,8 @@ register();
 import "swiper/css";
 import "swiper/css/navigation";
 import { Tune } from "@mui/icons-material";
-
+import { SideSheet, Button } from "@douyinfe/semi-ui";
+import workService from "@/services/work-service";
 const Search = ({
   handleSearch,
   placeholder,
@@ -181,7 +182,7 @@ const MobileFilter = ({
     </Swiper>
   );
 };
-const FamousHelperCard = ({ ...helper }) => {
+const FamousHelperCard = ({ helper }) => {
   const [isFavorite, setIsFavorite] = useState(false); // 初始狀態為未收藏
   const [isFavHovered, setIsFavHovered] = useState(false);
   const service = [
@@ -344,7 +345,7 @@ const MobileFamousHelper = ({ famous, setFamous }) => {
         >
           {famous.map((helper) => (
             <swiper-slide>
-              <FamousHelperCard {...helper} />
+              <FamousHelperCard helper={helper} />
             </swiper-slide>
           ))}
         </swiper-container>
@@ -352,13 +353,10 @@ const MobileFamousHelper = ({ famous, setFamous }) => {
     </>
   );
 };
-
-export const MobileLatestMission = () => {};
-
-const SingleHelperCard = ({ ...helper }) => {
+const SingleHelperCard = ({ helper, collection, setCollection }) => {
   const [isFavorite, setIsFavorite] = useState(false); // 初始狀態為未收藏
   const [isFavHovered, setIsFavHovered] = useState(false);
-
+  // console.log(helper);
   const service = [
     { label: "到府代餵", value: parseInt(helper.feed_service) },
     { label: "安親寄宿", value: parseInt(helper.house_service) },
@@ -366,18 +364,28 @@ const SingleHelperCard = ({ ...helper }) => {
   ];
   const handleFav = (e) => {
     if (!isFavorite) {
+      // 加入收藏
       e.currentTarget.classList.add("animate__animated", "animate__heartBeat");
       setIsFavorite(true);
+      const user_id = e.currentTarget.getAttribute("uid");
+      setCollection((prev) => {
+        return [...prev, user_id];
+      });
     } else {
+      // 移除收藏
       e.currentTarget.classList.remove(
         "animate__animated",
         "animate__heartBeat"
       );
       setIsFavorite(false);
+      const user_id = e.currentTarget.getAttribute("uid");
+      setCollection((prev) => {
+        return prev.filter((item) => item !== user_id);
+      });
     }
   };
   const servicePrice = [];
-  console.log(service);
+  // console.log(service);
   return (
     <>
       <div
@@ -429,6 +437,7 @@ const SingleHelperCard = ({ ...helper }) => {
               {isFavHovered || isFavorite ? (
                 <BsFillHeartFill
                   className="fav-icon-fill"
+                  uid={helper.user_id}
                   onClick={handleFav}
                   onMouseEnter={() => {
                     setIsFavHovered(true);
@@ -464,6 +473,93 @@ const SingleHelperCard = ({ ...helper }) => {
     </>
   );
 };
+const Collection = ({ collection, setCollection }) => {
+  const [visible, setVisible] = useState(false);
+  const [favInfo, setFavInfo] = useState([]);
+  const change = () => {
+    setVisible(!visible);
+  };
+  useEffect(() => {
+    console.log(collection);
+    WorkService.getFavHelpers(collection)
+      .then((response) => {
+        console.log(response.data);
+        setFavInfo(response.data.results);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  }, [collection]);
+  const helper = {};
+  const service = [];
+  return (
+    <>
+      <Button onClick={change}>Open SideSheet</Button>
+      <SideSheet
+        className="favorite-helper-sidesheet"
+        title="滑动侧边栏"
+        visible={visible}
+        onCancel={change}
+      >
+        {favInfo.map((helper) => (
+          <div className={`famous-helper-card d-flex align-items-center`}>
+            <div className="img-wrapper">
+              <img
+                className="famous-helper-card-img"
+                src={helper?.cover_photo}
+                alt="任務"
+              />
+            </div>
+
+            <div className="helper-content ms-2">
+              <div className="title size-6">{helper?.name}</div>
+              <div className="ranking d-flex">
+                <Rating
+                  name="half-rating-read"
+                  value={parseFloat(helper?.average_star)}
+                  precision={0.5}
+                  readOnly
+                  emptyIcon={<StarIcon style={{ opacity: 0.35 }} />}
+                />
+                <span className="ms-1 size-7">
+                  ({helper.review_count ? helper.review_count : 0})
+                </span>
+              </div>
+              <div className="helper-content-info d-flex justify-content-between">
+                <div>
+                  <p className="m-size-7">{helper?.service_county}</p>
+                  <p className="m-size-7">
+                    服務項目：
+                    {service
+                      .filter((item) => item.value != 0)
+                      .map((item, index, arr) =>
+                        index < arr.length - 1 ? (
+                          <span>{item.label}、</span>
+                        ) : (
+                          <span>{item.label}</span>
+                        )
+                      )}
+                  </p>
+                  <p className="m-size-7">
+                    服務時間：<span>周一至周日</span>
+                  </p>
+                </div>
+              </div>
+              <div className="d-flex justify-content-between align-items-end price">
+                <div>
+                  單次<span className="size-6"> NT$140</span>
+                </div>
+                {/* <button className="size-6 animate-button-one">
+                <Link href={`/work/find-helper/${helper.user_id}`}>洽詢</Link>
+              </button> */}
+              </div>
+            </div>
+          </div>
+        ))}
+      </SideSheet>
+    </>
+  );
+};
 const MissionHelperList = () => {
   const arr = Array.from({ length: 12 });
   const [allHelpers, setAllHelpers] = useState([]);
@@ -474,6 +570,7 @@ const MissionHelperList = () => {
   const [currentSearch, setCurrentSearch] = useState(null);
   const [currentPage, setPage] = useState(1);
   const [totalRows, setTotalRows] = useState(18);
+  const [collection, setCollection] = useState([]);
   useEffect(() => {
     if (!currentSearch) {
       setPage(1);
@@ -641,6 +738,7 @@ const MissionHelperList = () => {
           setCurrentSearch={setCurrentSearch}
         />
       </div>
+      <Collection collection={collection} setCollection={setCollection} />
       <div className="mb-2">
         <p className="size-6 d-flex justify-content-end align-items-center me-2">
           {order?.parentValue === "price" &&
@@ -686,16 +784,29 @@ const MissionHelperList = () => {
           <p className="famous-helper-title size-5">熱門小幫手</p>
           <div className="famous-helper-pc d-lg-block d-none">
             {famous.map((helper) => (
-              <FamousHelperCard {...helper} />
+              <FamousHelperCard
+                helper={helper}
+                collection={collection}
+                setCollection={setCollection}
+              />
             ))}
           </div>
           <div className="famous-helper-mobile d-block d-lg-none">
-            <MobileFamousHelper famous={famous} setFamous={setFamous} />
+            <MobileFamousHelper
+              famous={famous}
+              setFamous={setFamous}
+              collection={collection}
+              setCollection={setCollection}
+            />
           </div>
         </section>
         <section className="helper-list d-flex flex-wrap">
           {allHelpers?.map((helper) => (
-            <SingleHelperCard {...helper} />
+            <SingleHelperCard
+              helper={helper}
+              collection={collection}
+              setCollection={setCollection}
+            />
           ))}
         </section>
       </div>

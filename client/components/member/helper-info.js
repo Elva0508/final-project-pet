@@ -529,7 +529,7 @@ const HelperInfo = () => {
               <Link
                 href={`/work/find-helper/1`}
                 // 修改為user_id
-                className="to-detail size-7 m-size-7"
+                className="to-detail size-7 m-size-7 active-hover"
               >
                 點我查看細節頁
               </Link>

@@ -57,7 +57,7 @@ router.patch("/helper/valid", async (req, res) => {
   // 驗證使用者是否存在
   const checkUser = await new Promise((resolve, reject) => {
     return conn.execute(
-      `SELECT * FROM users WHERE user_id = ?`,
+      `SELECT * FROM userinfo WHERE user_id = ?`,
       [user_id],
       (err, results) => {
         if (err) {
@@ -143,7 +143,7 @@ router.patch("/helper/valid", async (req, res) => {
       const { name, phone, city, email } = await new Promise(
         (resolve, reject) => {
           return conn.execute(
-            `SELECT ui.*,u.email FROM userinfo ui LEFT JOIN users u ON u.user_id = ui.user_id WHERE ui.user_id = ?`,
+            `SELECT ui.*FROM userinfo WHERE ui.user_id = ?`,
             [user_id],
             (err, results) => {
               if (err) {

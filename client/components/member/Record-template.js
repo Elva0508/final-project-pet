@@ -53,10 +53,10 @@ export const RecordTemplate = ({
         {icon || <MdHomeRepairService className="icon me-1" />}
         {title || "銷售紀錄"}
       </h5>
-      <nav className="tab-nav mt-4" onClick={handleStatus}>
+      <nav className="tab-nav" onClick={handleStatus}>
         <button
           id="btn1"
-          className="size-7"
+          className="size-7 "
           onClick={() => {
             setStatus(1);
           }}
@@ -66,7 +66,7 @@ export const RecordTemplate = ({
         <button
           autoFocus
           id="btn2"
-          className="size-7"
+          className="size-7 "
           onClick={() => {
             setStatus(2);
           }}
@@ -75,7 +75,7 @@ export const RecordTemplate = ({
         </button>
         <button
           id="btn3"
-          className="size-7"
+          className="size-7 "
           onClick={() => {
             setStatus(3);
           }}
@@ -84,7 +84,7 @@ export const RecordTemplate = ({
         </button>
         <button
           id="btn4"
-          className="size-7"
+          className="size-7 "
           onClick={() => {
             setStatus(4);
           }}
@@ -140,13 +140,17 @@ export const RecordTemplate = ({
       </div>
 
       {info.length === 0 ? (
-        <Empty
-          image={<IllustrationNoContent style={{ width: 300, height: 300 }} />}
-          title="尚未有銷售紀錄"
-          className="d-flex d-sm-none"
-        ></Empty>
+        <div className="record-info-mobile-wrapper">
+          <Empty
+            image={
+              <IllustrationNoContent style={{ width: 300, height: 300 }} />
+            }
+            title="尚未有銷售紀錄"
+            className="d-flex d-sm-none"
+          ></Empty>
+        </div>
       ) : (
-        <>
+        <div className="record-info-mobile-wrapper">
           {info &&
             info.map((item) => (
               <div className="record-info-mobile d-flex d-sm-none flex-column my-3">
@@ -185,7 +189,7 @@ export const RecordTemplate = ({
                 </div>
               </div>
             ))}
-        </>
+        </div>
       )}
     </>
   );
@@ -213,7 +217,7 @@ export const RecordDetailTemplate = ({ icon, title, detail, setDetail }) => {
       </h5>
       <p className="date my-4 size-7 p-1">{detail?.created_at}</p>
       <span className="status size-6">狀態 :</span>
-      <span className="ms-2 size-6">{detail.status}</span>
+      <span className="status-text ms-2 size-6">{detail.status}</span>
       <p className="size-7">
         服務編號 :<span className="ms-2">{detail.oid}</span>
       </p>
