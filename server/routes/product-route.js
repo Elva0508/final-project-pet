@@ -136,10 +136,11 @@ router.get("/cart", (req, res) => {
 
 //用來新增購物車裡沒有的商品
 router.put("/cart", (req, res) => {
-    const { id, type, quantity } = req.body; // 從請求主體中獲取 quantity 參數
+    const { product_id, product_type_id, quantity } = req.body; // 從請求主體中獲取 quantity 參數
+    console.log(product_id, product_type_id, quantity)
     connection.execute(
         `INSERT INTO cart(user_id, product_id, product_type_id, quantity) VALUES (1, ?, ?, ?);`,
-        [id, type, quantity], // 將 quantity 參數傳遞到 SQL 查詢中
+        [product_id, product_type_id, quantity], // 將 quantity 參數傳遞到 SQL 查詢中
         (error, result) => {
             if (error) {
                 console.error("Error inserting into cart:", error);
@@ -184,13 +185,13 @@ router.get("/filter_sort", (req, res) => {
     if (category != null) {
         sqlQuery += 'AND c.category_name = ? ';
         queryParams.push(category);
-    } 
-    if (subcategory != null){
+    }
+    if (subcategory != null) {
         sqlQuery += 'AND s.subcategory_name = ? ';
         queryParams.push(subcategory);
         console.log(subcategory)
-    } 
-    if (vendor != null){
+    }
+    if (vendor != null) {
         sqlQuery += 'AND vendor LIKE ? ';
         queryParams.push(`%${vendor}%`);
     }
@@ -222,7 +223,7 @@ router.get("/filter_sort", (req, res) => {
     }
 
     console.log('category:' + category)
-    console.log('subcategory:'+ subcategory)
+    console.log('subcategory:' + subcategory)
     console.log('vendor:' + vendor)
     // console.log('vendor:' +`%${vendor}%`)
     console.log('qqqqqq')

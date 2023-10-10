@@ -2,14 +2,14 @@ import React, { useState } from 'react';
 import Counter from '@/components/product/quantity-counter';
 import { AiFillStar } from 'react-icons/ai';
 import { FaChevronRight, FaChevronLeft } from 'react-icons/fa';
-import ProductCard from '@/components/home/home-product-card';
 import axios from 'axios';
 import { useEffect } from "react";
 import { useRouter } from "next/router";
 import Link from 'next/link';
 import ProductCard3 from '@/components/product/product-card3';
-
-
+import { useCart } from "@/hooks/useCart"
+import { FiPlus } from 'react-icons/fi';
+import { FiMinus } from 'react-icons/fi';
 
 //next裡innerhtml語法
 function ProductDescription({ htmlContent }) {
@@ -21,6 +21,18 @@ function ProductDescription({ htmlContent }) {
 
 
 export default function ProductDetail() {
+
+    //計算數量
+    const [count, setCount] = useState(1);
+    const handleDecrement = () => {
+        if (count > 0) {
+            setCount(count - 1);
+        }
+    };
+    const handleIncrement = () => {
+        setCount(count + 1);
+    };
+
 
     //商品介紹和推薦跳頁
     const [activeSection, setActiveSection] = useState('product-description')
@@ -118,7 +130,64 @@ export default function ProductDetail() {
             });
     }, []);
 
+    // 添加商品到購物車的函式
+    const { cart, setCart } = useCart();
+    const getCart = () => {
+        axios.get("http://localhost:3005/api/product/cart")
+            .then((response) => {
+                const data = response.data.result;
+                const newData = data.map((v) => {
+                    return { ...v, buy: true }
+                })
+                setCart(newData)
+            })
+            .catch((error) => {
+                console.error("Error:", error);
+            });
+    }
 
+    const addCart = async (product_id, product_type_id, quantity) => {
+
+        // 檢查購物車中是否已經存在具有相同 id 和類型的商品
+        const have = cart.find((v) => v.product_id == product_id && v.type_id == product_type_id);
+        console.log(have);
+
+        // 如果購物車中沒有相同的商品
+        if (have === undefined) {
+            console.log(cart);
+
+            try {
+                // 發送HTTP請求將商品添加到購物車
+                const response = await axios.put(
+                    `http://localhost:3005/api/product/cart`,
+                    { product_id, product_type_id, quantity }
+                );
+            } catch (error) {
+                console.error("錯誤：", error);
+            }
+
+            // 獲取最新的購物車資料
+            getCart();
+        } else { // 如果購物車中已經存在相同的商品
+            try {
+                // 計算新的商品數量（增加1）
+                const newQuantity = have.quantity + 1;
+                console.log(newQuantity);
+                console.log(id);
+
+                // 發送HTTP請求將商品數量更新為新數量
+                const response = await axios.put(
+                    `http://localhost:3005/api/product/cartplus`,
+                    { id, newQuantity, type }
+                );
+            } catch (error) {
+                console.error("錯誤：", error);
+            }
+
+            // 獲取最新的購物車資料
+            getCart();
+        }
+    };
 
     return (
         <>
@@ -181,13 +250,31 @@ export default function ProductDetail() {
                                                 ))}
                                             </div>
                                         </div>
-
+                                        {/* 計算數量 */}
                                         <div className="quantity-counter">
-                                            <Counter />
+                                            <div className="quantity-counter d-flex">
+                                                <button className="decrement  " onClick={handleDecrement}>
+                                                    <FiMinus />
+                                                </button>
+                                                <div className="count d-flex justify-content-center align-items-center ">{count}</div>
+                                                <button className="increment  " onClick={handleIncrement}>
+                                                    <FiPlus />
+                                                </button>
+                                            </div>
                                         </div>
 
                                         <div className="add-to-cart">
-                                            <button type="submit" className=" btn-confirm">
+                                            <button
+                                                className="btn btn-confirm  size-7  m-size-7"
+                                                data-bs-toggle="offcanvas"
+                                                data-bs-target="#offcanvasRight"
+                                                aria-controls="offcanvasRight"
+                                                onClick={() =>{
+                                                    addCart(v.product_id, v.type_id, count);
+                                                    console.log(v.product_id, v.type_id, count)
+                                                }
+                                                }
+                                            >
                                                 加入購物車
                                             </button>
                                         </div>
@@ -195,6 +282,46 @@ export default function ProductDetail() {
                                             <button type="button" className=" btn-second">
                                                 加入收藏
                                             </button>
+                                        </div>
+                                    </div>
+                                    {/* 加到購物車 */}
+                                    <div className="offcanvas offcanvas-end" tabIndex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel" >
+                                        <div className="offcanvas-header">
+                                            <p id="offcanvasRightLabel" className="size-6">我的購物車({cart.length})</p>
+                                            <button type="button" className="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                                        </div>
+                                        <div className="offcanvas-body">
+                                            {cart.map((v, i) => {
+                                                return (
+                                                    <>
+                                                        <div key={i} className="d-flex mb-3 border-bottom mx-2">
+                                                            <div className="">
+                                                                <img src={v.images}></img>
+                                                            </div>
+                                                            <div className="">
+                                                                <p className="size-7">{v.product_name}</p>
+                                                                <p className="size-7 type">{v.type}</p>
+                                                                <p className="size-7 price">NT${v.newprice}</p>
+                                                                <p className="size-7">數量：{v.quantity}</p>
+                                                            </div>
+                                                        </div>
+                                                    </>
+                                                );
+                                            })}
+                                            <div className="d-flex justify-content-around mb-3">
+                                                <button
+                                                    type="button"
+                                                    className="btn btn-confirm"
+                                                    data-bs-dismiss="offcanvas"
+                                                    aria-label="Close"
+                                                >
+                                                    繼續購物
+                                                </button>
+                                                <button type="button" className="btn btn-confirm">
+                                                    前往購物車
+                                                </button>
+                                            </div>
+
                                         </div>
                                     </div>
                                 </section>
@@ -240,7 +367,6 @@ export default function ProductDetail() {
                                         </div>
                                     </section>
                                 )}
-
 
                             </>
                         );
@@ -309,7 +435,7 @@ export default function ProductDetail() {
                                 </div>
                                 <div className="carousel-item active">
                                     <div className="row d-lg-flex  justify-content-center ">
-                                            <ProductCard3 />
+                                        <ProductCard3 />
                                     </div>
                                 </div>
                             </div>
