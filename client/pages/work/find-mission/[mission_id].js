@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import { useRouter } from "next/router";
 import axios from "axios"
 import Link from "next/link";
+import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 import { IoPaperPlaneOutline } from "react-icons/io5";
 import { PiWechatLogoThin } from "react-icons/pi";
 import { FaRegHeart, FaHeart } from "react-icons/fa";
@@ -118,6 +119,31 @@ function CustomHTMLRenderer({ htmlContent }) {
     );
 }
 
+const MapComponent = ({ lat, lng }) => {
+    const mapContainerStyle = {
+        width: '90%',
+        height: '50vh',
+    };
+
+    const center = {
+        lat,
+        lng,
+    };
+
+    return (
+        <LoadScript googleMapsApiKey="AIzaSyD3M4Wt4xdyN-LrJyCVDwGSUkQ1B8KpKT8">
+            <GoogleMap
+                mapContainerStyle={mapContainerStyle}
+                center={center}
+                zoom={16}
+            >
+                <Marker position={center} />
+            </GoogleMap>
+        </LoadScript>
+    );
+};
+
+
 export default function MissionDetail() {
     // const [inputValue, setInputValue] = useState('');
 
@@ -131,6 +157,12 @@ export default function MissionDetail() {
 
     const [missionDetail, setMissionDetail] = useState([])
     const [missionImages, setMissionImages] = useState([])
+
+    // GOOGLE地圖API：初始狀態
+    const [missionLocation, setMissionLocation] = useState({
+        lat: 0, // 设置初始值为0或者其他合适的默认值
+        lng: 0,
+    });
 
     // 彈跳視窗
     const [selectedMissionId, setSelectedMissionId] = useState(null);
@@ -166,6 +198,26 @@ export default function MissionDetail() {
                 .catch((error) => {
                     console.error('Error fetching data from API 2:', error);
                 });
+        }
+    }, [mission_id]);
+
+    // 使用useEffect發起第三個API請求，供GOOGLE地圖使用
+    useEffect(() => {
+        if (mission_id) {
+            axios.get(`http://localhost:3005/api/mission/mission-details-map/${mission_id}`)
+                .then((response) => {
+                    // 將第三個API的數據儲存到missionImages狀態中
+                    // GOOGLE地圖API：從後端獲取經緯度，更新狀態
+                    setMissionLocation({
+                        lat: response.data.data.location.lat,
+                        lng: response.data.data.location.lng,
+                    });
+                    console.log("lat是:" + response.data.data.location.lat + "lng是:" + response.data.data.location.lng)
+                })
+                .catch((error) => {
+                    console.error('Error fetching data from API 3:', error);
+                });
+
         }
     }, [mission_id]);
 
@@ -292,7 +344,9 @@ export default function MissionDetail() {
                                 </div>
                                 <p className="size-6 d-flex align-items-center ms-4 ms-sm-0">{v.city}{v.area}{v.location_detail}</p>
                             </div>
-                            <div><iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d28912.322574287376!2d121.48607389999998!3d25.066622449999997!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3442a8de05921eb3%3A0xe818cd4640a88cc6!2zMjQx5paw5YyX5biC5LiJ6YeN5Y2A!5e0!3m2!1szh-TW!2stw!4v1695367764015!5m2!1szh-TW!2stw" referrerpolicy="no-referrer-when-downgrade"></iframe></div>
+                            <div className='d-flex justify-content-center'>
+                                <MapComponent lat={missionLocation.lat} lng={missionLocation.lng} />
+                            </div>
 
                             <CustomHTMLRenderer htmlContent={v.description} />
 

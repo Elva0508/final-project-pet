@@ -227,6 +227,54 @@ router.get("/mission-details/:mission_id", (req, res) => {
   );
 });
 
+// 任務詳細頁：GOOGLE地圖API
+const googleMapsClient = require('@google/maps').createClient({
+  key: 'AIzaSyD3M4Wt4xdyN-LrJyCVDwGSUkQ1B8KpKT8' // 你的 Google 地图 API 密钥
+});
+router.get("/mission-details-map/:mission_id", (req, res) => {
+  const mission_id = req.params.mission_id; // 從路由參數中獲取 mission_id
+  conn.execute(
+    `
+    SELECT md.*, u.*, GROUP_CONCAT(DISTINCT im.file_path ORDER BY im.image_id) AS file_paths
+    FROM mission_detail AS md 
+    JOIN users AS u ON md.post_user_id = u.user_id 
+    JOIN image_mission AS im ON md.mission_id = im.mission_id
+    WHERE md.mission_id = ?
+    GROUP BY md.mission_id;
+    `,
+    [mission_id],  // 使用 mission_id 進行查詢
+    (err, result) => {
+      if (err) {
+        console.log(err);
+        return;
+      }
+      // GOOGLE地圖API
+      const missionData = result[0];
+      const { city, area, location_detail } = missionData;
+      console.log("Mission Data:", missionData);
+
+      // 组合成完整的地址
+      const address = `${city}, ${area}, ${location_detail}`;
+
+      // 使用 Google 地圖 API 進行地理編碼（地址反查）
+      googleMapsClient.geocode({ address }, (geoErr, geoResponse) => {
+        if (geoErr) {
+          console.error(geoErr);
+          res.status(500).send({ status: 500, message: 'Geocoding error' }); // 沒成功連到API的時候會顯示
+          return;
+        }
+
+        const location = geoResponse.json.results[0].geometry.location;
+        // 將地理編碼的結果加到 missionData 中
+        missionData.location = location;
+
+        res.send({ status: 200, data: missionData });
+      });
+      // res.send({ status: 200, data: result });
+    }
+  );
+});
+
 // 任務詳細頁：可以讓照片正常顯示
 router.get("/mission-details-img/:mission_id", (req, res) => {
   const mission_id = req.params.mission_id; // 從路由參數中獲取 mission_id
