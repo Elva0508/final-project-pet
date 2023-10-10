@@ -377,13 +377,51 @@ const LatestMission=()=> {
     return `${year}/${month}/${day}`;
   }
 
-  // 為每個卡片創建獨立的isFavorite狀態數組
-  const [isFavorites, setIsFavorites] = useState(latestMissions.map(() => false));
+  // 收藏
+  const [isFavorites, setIsFavorites] = useState([]);
 
-  const toggleFavorite = (index) => {
+  useEffect(() => {
+    // 在組件加載時從後端獲取已收藏的任務
+    const fetchFavoriteMissions = async () => {
+      try {
+        const response = await axios.get('http://localhost:3005/api/mission/fav');
+        const favoriteMissionIds = response.data.result.map((fav) => fav.mission_id);
+
+        // 根據已收藏的任務和當前任務列表來初始化 isFavorites 數組
+        const initialFavorites = latestMissions.map((mission) =>
+          favoriteMissionIds.includes(mission.mission_id)
+        );
+        setIsFavorites(initialFavorites);
+      } catch (error) {
+        console.error('前端請求錯誤：', error);
+      }
+    };
+
+    fetchFavoriteMissions();
+  }, [latestMissions]);
+
+  const toggleFavorite = async (index) => {
+    try {
       const newFavorites = [...isFavorites];
       newFavorites[index] = !newFavorites[index];
-      setIsFavorites(newFavorites);
+      setIsFavorites(newFavorites); // 立即更新圖標狀態
+  
+      const missionId = latestMissions[index].mission_id;
+      console.log(missionId)
+
+        if (!isFavorites[index]) {
+          // 如果任務未被收藏，發送加入收藏的請求
+          await axios.put('http://localhost:3005/api/mission/add-fav', { missionId });
+          console.log('已加入收藏');
+        } else {
+          // 如果任務已被收藏，發送取消收藏的請求
+          await axios.delete('http://localhost:3005/api/mission/delete-fav', { data: { missionId } });
+          console.log('已取消收藏');
+        }
+
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -419,16 +457,11 @@ const LatestMission=()=> {
 
 // 最新任務（手機版）
 const MobileLatestMission = () => {
-  const [isFavorite, setIsFavorite] = useState(false);
   const [latestMissions, setLatestMissions] = useState([]);
   const [activeIndex, setActiveIndex] = useState(0);
   // 追蹤動畫狀態 防止多次快速點擊上一張或下一張按鈕 導致卡片重疊
   const [isAnimating, setIsAnimating] = useState(false);
   const [isIndicatorsDisabled, setIsIndicatorsDisabled] = useState(false);
-
-  const toggleFavorite = () => {
-    setIsFavorite(!isFavorite);
-  };
 
   const getLatestMissions = async () => {
     try {
@@ -492,6 +525,53 @@ const MobileLatestMission = () => {
     setActiveIndex(index);
   };
 
+  // 收藏
+  const [isFavorites, setIsFavorites] = useState([]);
+
+  useEffect(() => {
+    // 在組件加載時從後端獲取已收藏的任務
+    const fetchFavoriteMissions = async () => {
+      try {
+        const response = await axios.get('http://localhost:3005/api/mission/fav');
+        const favoriteMissionIds = response.data.result.map((fav) => fav.mission_id);
+
+        // 根據已收藏的任務和當前任務列表來初始化 isFavorites 數組
+        const initialFavorites = latestMissions.map((mission) =>
+          favoriteMissionIds.includes(mission.mission_id)
+        );
+        setIsFavorites(initialFavorites);
+      } catch (error) {
+        console.error('前端請求錯誤：', error);
+      }
+    };
+
+    fetchFavoriteMissions();
+  }, [latestMissions]);
+
+  const toggleFavorite = async (index) => {
+    try {
+      const newFavorites = [...isFavorites];
+      newFavorites[index] = !newFavorites[index];
+      setIsFavorites(newFavorites); // 立即更新圖標狀態
+  
+      const missionId = latestMissions[index].mission_id;
+      console.log(missionId)
+
+        if (!isFavorites[index]) {
+          // 如果任務未被收藏，發送加入收藏的請求
+          await axios.put('http://localhost:3005/api/mission/add-fav', { missionId });
+          console.log('已加入收藏');
+        } else {
+          // 如果任務已被收藏，發送取消收藏的請求
+          await axios.delete('http://localhost:3005/api/mission/delete-fav', { data: { missionId } });
+          console.log('已取消收藏');
+        }
+
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <div id="carouselExampleIndicators" className="carousel slide pb-3" data-bs-ride="carousel">
       <div className="carousel-indicators mt-5">
@@ -522,7 +602,7 @@ const MobileLatestMission = () => {
                 <div className='title size-6'>{v.title}</div>
                 <div className='d-flex justify-content-between mt-1 mt-sm-2'>
                   <div className='size-7'>{v.city}{v.area}<br />{formatDate(v.post_date)}</div>
-                  <img src={isFavorite ? "/heart-clicked.svg" : "/heart.svg"} alt={isFavorite ? "已收藏" : "未收藏"} onClick={toggleFavorite} />
+                  <img src={isFavorites[index] ? "/heart-clicked.svg" : "/heart.svg"} alt={isFavorites[index] ? "已收藏" : "未收藏"} onClick={() => toggleFavorite(index)} />
                 </div>
                 <div className='d-flex justify-content-between align-items-end price'>
                   <div >單次<span className='size-6'> NT${v.price}</span></div>
@@ -593,6 +673,7 @@ const MissionCard = ({ missionType, missionCity, missionArea, setMissionType, up
     return `${year}/${month}/${day}`;
   }
 
+  // 收藏
   const [isFavorites, setIsFavorites] = useState([]);
 
   useEffect(() => {
