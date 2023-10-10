@@ -345,7 +345,7 @@ export default function MissionDetail() {
                                 <p className="size-6 d-flex align-items-center ms-4 ms-sm-0">{v.city}{v.area}{v.location_detail}</p>
                             </div>
                             <div className='d-flex justify-content-center'>
-                                <MapComponent lat={missionLocation.lat} lng={missionLocation.lng} />
+                                <MapComponent key={`map-${missionLocation.lat}-${missionLocation.lng}`} lat={missionLocation.lat} lng={missionLocation.lng} />
                             </div>
 
                             <CustomHTMLRenderer htmlContent={v.description} />
