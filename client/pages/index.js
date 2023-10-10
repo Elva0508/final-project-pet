@@ -104,7 +104,7 @@ export default function Index() {
       <div className="home">
         <div className="container my-5">
           <div className="block-two my-5">
-            <div className="size-1 home-tilte d-flex justify-content-center mb-5">
+            <div className="size-2 home-tilte d-flex justify-content-center mb-5">
               新品推薦
             </div>
             <div className="my-5">
@@ -129,7 +129,7 @@ export default function Index() {
           </div>
 
           <div className="block-four my-5">
-            <div className="size-1 home-tilte d-flex justify-content-center mb-5">
+            <div className="size-2 home-tilte d-flex justify-content-center mb-5">
               本週排行榜
             </div>
             <div className="mb-3">
@@ -158,12 +158,12 @@ export default function Index() {
 
           <div className="block-six my-5">
             <div className="photo mb-3">
-              <img
+              {/* <img
                 src="https://images.unsplash.com/photo-1555685812-4b943f1cb0eb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80"
                 className="img-fluid"
                 alt="..."
-              ></img>
-              <div className="size-1 mt-3 home-tilte d-flex justify-content-center">
+              ></img> */}
+              <div className="size-2 mt-3 home-tilte d-flex justify-content-center">
                 小貓兩三知
               </div>
             </div>
@@ -174,12 +174,12 @@ export default function Index() {
 
           <div className="block-six-mobile my-5">
             <div className="photo mb-3">
-              <img
+              {/* <img
                 src="https://images.unsplash.com/photo-1555685812-4b943f1cb0eb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80"
                 className="img-fluid"
                 alt="..."
-              ></img>
-              <div className="size-1 mt-3 home-tilte d-flex justify-content-center">
+              ></img> */}
+              <div className="size-2 mt-3 home-tilte d-flex justify-content-center">
                 小貓兩三知
               </div>
             </div>

@@ -92,4 +92,8 @@ router.get("/", (req, res) => {
   );
 });
 
+// router.get("/test", (req, res) => {
+//   res.send("test");
+// });
+
 module.exports = router;
