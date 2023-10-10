@@ -142,9 +142,9 @@ export default function Purchast() {
         <ListUserM />
         <div className="d-flex justify-content-around py-2">
           <ListD />
-          <div className="row col-lg-8 col-md-8 col-12 purchast-bg  p-3">
-            <div>
-              <h5 className="size-5">
+          <div className="d-flex flex-column col-md-8 col-12 purchast-bg ">
+
+              <h5 className="size-5 mt-3 ms-md-5 ms-3">
                 <BiSolidShoppingBag />
                 購買紀錄
               </h5>
@@ -152,8 +152,8 @@ export default function Purchast() {
               {currentData.map((v, i) => {
                 return (
                   <>
-                    <div className="d-flex border-bottom py-2 justify-content-between">
-                      <div className="d-flex  col-9" key={i}>
+                    <div className="d-flex border-bottom pt-4 pb-2 justify-content-between ms-md-5 ms-3">
+                      <div className="d-flex  col-8" key={i}>
                         <img
                           className="picture me-4"
                           src={v.image}
@@ -166,7 +166,7 @@ export default function Purchast() {
                         </div>
                       </div>
 
-                      <div className="col-3  d-flex flex-column align-items-center justify-content-center">
+                      <div className="col-4  d-flex flex-column align-items-center justify-content-center">
                         <button className="btn btn-confirm m-2 size-6 m-size-7"
                           data-bs-toggle="offcanvas"
                           data-bs-target="#offcanvasRight"
@@ -181,14 +181,14 @@ export default function Purchast() {
                             data-bs-toggle="modal" data-bs-target="#exampleModal"
                             onClick={() => addWishlist(v.product_id)}
                           >
-                            加入收藏
+                            加入追蹤
                           </button>
                         ) : (
                           <button className="btn btn-outline-confirm m-2 size-6 m-size-7"
                           data-bs-toggle="modal" data-bs-target="#exampleModal1"
                           onClick={() =>{deleteWishlist(v.product_id)} }
                           >
-                            取消收藏
+                            取消追蹤
                           </button>
                         )}
 
@@ -246,7 +246,7 @@ export default function Purchast() {
                   {cart.map((v, i) => {
                     return (
                       <>
-                        <div key={i} className="d-flex mb-3 border-bottom mx-2">
+                        <div key={i} className="d-flex mb-3 border-bottom mx-2 ">
                           <div className="">
                             <img className="picture" src={v.images}></img>
                           </div>
@@ -260,7 +260,7 @@ export default function Purchast() {
                       </>
                     );
                   })}
-                  <div className="d-flex justify-content-around mb-3">
+                  <div className="d-flex justify-content-center my-3">
                     <button
                       type="button"
                       className="btn btn-confirm"
@@ -269,18 +269,20 @@ export default function Purchast() {
                     >
                       繼續購物
                     </button>
-                    <button type="button" className="btn btn-confirm">
-                      前往購物車
+                    <button type="button" className="btn btn-confirm ms-5">
+                      前往結帳
                     </button>
                   </div>
 
                 </div>
               </div>
-              <Pagination  itemsPerPage={itemsPerPage} total={product} activePage={activePage} setActivePage={setActivePage}/>
+              <div className="mt-4">
+                <Pagination  itemsPerPage={itemsPerPage} total={product} activePage={activePage} setActivePage={setActivePage}/>
+              </div>
+              
             </div>
           </div>
         </div>
-      </div>
     </>
   );
 }

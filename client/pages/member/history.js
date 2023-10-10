@@ -41,15 +41,15 @@ useEffect(() => {
         <ListUserM />
         <div className="d-flex justify-content-around py-2">
           <ListD />
-          <div className="row col-lg-8 col-md-8 col-12 history p-3">
-            <div>
-              <h5 className="size-5">
+          <div className="d-flex flex-column col-12 col-md-8 history">
+
+              <h5 className="size-5  mt-3 ms-md-5 ms-3">
                 <HiClipboardList />
                 刊登紀錄
               </h5>
               <div className="my-3">
                 <button
-                  className={`mx-2 size-7 listbutton ${
+                  className={` size-6 listbutton first ${
                     currentScreen === "2" ? "pressed" : ""
                   }`}
                   onClick={() => {
@@ -59,7 +59,7 @@ useEffect(() => {
                   全部
                 </button>
                 <button
-                  className={`mx-2 size-7 listbutton ${
+                  className={` size-6 listbutton ${
                     currentScreen === "1" ? "pressed" : ""
                   }`}
                   onClick={() => {
@@ -69,7 +69,7 @@ useEffect(() => {
                   刊登中
                 </button>
                 <button
-                  className={`mx-2 size-7 listbutton ${
+                  className={` size-6 listbutton ${
                     currentScreen === "0" ? "pressed" : ""
                   }`}
                   onClick={() => {
@@ -86,7 +86,6 @@ useEffect(() => {
             </div>
           </div>
         </div>
-      </div>
     </>
   );
 }
