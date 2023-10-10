@@ -2,6 +2,11 @@ import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import ListD from "@/components/member/list-d";
 import ListM from "@/components/member/list-m";
+import SingleCoupon from "@/components/user/SingleCoupon";
+import SingleCouponFree from "@/components/user/singleCouponFree";
+import Image from "next/image";
+
+import Cat2 from "@/assets/cat-02.png";
 
 const UserCouponPage = () => {
   const [coupons, setCoupons] = useState([]);
@@ -80,7 +85,7 @@ const UserCouponPage = () => {
           <a className={`px-2 ${!showAll ? 'active' : ''}`} value='expiring' onClick={handleFilter}>即將到期({filteredCoupons.length})</a>
         </div>
 
-        <table className='userTable'>
+        {/* <table className='userTable'>
           <thead>
             <tr>
               <th>名稱</th>
@@ -105,7 +110,35 @@ const UserCouponPage = () => {
               </tr>
             ))}
           </tbody>
-        </table>
+        </table> */}
+        <div className="coupon-wrapper">
+        {filteredCoupons.map(v=>(
+        <div id="container-coupon">
+        <div id="success-box">
+          <div className="cat-box">
+            <Image src={Cat2} width={80} height={80} className="cat2" />
+          </div>
+          <div className="shadow scale" />
+          <div className="message-coupon">
+            <h1 className="priceCode">${v.discount_amount}</h1>
+            <p>
+              序號：{v.coupon_code}
+              <br />
+              最低消費：{v.usage_min}
+              <br />
+              使用期限：{v.end_date}
+              <br />
+              <a  href='#'> -前往購物-</a>
+            </p>
+          </div>
+        </div>
+      </div>
+      ))}
+        {/* <SingleCoupon />
+        <SingleCoupon /> */}
+        </div>
+        
+
       </div>
     </div>
   );

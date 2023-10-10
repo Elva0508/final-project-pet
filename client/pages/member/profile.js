@@ -113,7 +113,7 @@ const ProfilePage = () => {
   };
   return (
     <div className=" my-3">
-      <div className="p-wrapper">
+      <div className="d-flex justify-content-around pt-2">
         {/* mobile版的左側tab */}
         <ListM />
 
@@ -121,7 +121,7 @@ const ProfilePage = () => {
 
         <ListD />
         {/* <UserForm /> */}
-        <div className="user-profile ">
+        <div className="user-profile row col-lg-8 col-md-8 col-12 ">
           <div className="title">
             <p className=" size-4">
               <Image src={myProfile} alt="myProfile-logo" />
@@ -129,9 +129,10 @@ const ProfilePage = () => {
             </p>
           </div>
           <div className="user-form">
-            <div className="user-form-item d-flex">
+          <div></div>
+            <div className="user-form-item">
               
-              <div className="ws20 mb-5">
+              <div className="ws20 mb-5 d-flex justify-content-center">
               <label className={`fs3 ${userRfs}`}>Email</label>
                 <input
                   className="form-input fs11"
@@ -143,7 +144,7 @@ const ProfilePage = () => {
             </div>
           
             
-              <div className="ws20  mb-5" >
+              <div className="ws20 mb-5 d-flex justify-content-center" >
               <label className={`fs3 ${userRfs}`}>姓名</label>
                 <input
                   className="form-input fs11"
@@ -155,18 +156,22 @@ const ProfilePage = () => {
          
            
           
-              <div className="ws20  mb-5">
+              <div className="ws20  mb-5 d-flex justify-content-center">
               <label className={`fs3 ${userRfs}`}>密碼</label>
-                <Link href="http://localhost:3000/member/reset-password">
-                  <button className="btn-confirm fs11">設定新密碼</button>
+              <div className="fs11 ">
+              <Link href="http://localhost:3000/member/reset-password">
+                  <button className="btn-confirm fs-btn">設定新密碼</button>
                 </Link>
+              </div>
+                
               </div>
         
 
            
               
-              <div className="ws20  mb-5">
+              <div className="ws20 gender mb-5 d-flex justify-content-center">
               <label className={`fs3 ${userRfs}`}>性別</label>
+              <div className="fs11">
                 <input
                   type="radio"
                   name="gender"
@@ -190,13 +195,14 @@ const ProfilePage = () => {
                 />
                 女
               </div>
+              </div>
           
            
             
-              <div className="ws20  mb-5">
+              <div className="ws20  mb-5 d-flex justify-content-center">
               <label className={`fs3 ${userRfs}`}>生日</label>
                 <input
-                className=" fs11"
+                className="form-input fs11"
                   type="date"
                   value={birthday}
                   onChange={(e) => setBirthday(e.target.value)}
@@ -204,7 +210,7 @@ const ProfilePage = () => {
           
             </div>
         
-              <div className="ws20  mb-5">
+              <div className="ws20  mb-5 d-flex justify-content-center">
               <label className={`fs3 ${userRfs}`}>手機</label>
                 <input
                   className="form-input fs11"
@@ -214,9 +220,9 @@ const ProfilePage = () => {
                 />
               </div>
        
-            <div className="ws20  ">
+            <div className="ws20   d-flex justify-content-center">
               <label className={`fs3 py-2 ${userRfs}`}>地址</label>
-              <div className="ws6 ">
+              <div className="fs11 ">
                 <select
                   className="form-select fs5"
                   value={addressCity}
@@ -248,7 +254,8 @@ const ProfilePage = () => {
                 </select>
               </div>
             </div>
-              <div  className="address-w20">
+            <div className="d-flex justify-content-center">
+              <div  className="address-w20 ">
               {/* <label className={` ${userRfs}`}></label> */}
                 <input
                   type="text"
@@ -257,14 +264,15 @@ const ProfilePage = () => {
                   onChange={(e) => setDetailAddress(e.target.value)}
                 />
               </div>
+              </div>
         
 
      
          
-              <div className="ws20  mt-5">
+              <div className="ws20   d-flex justify-content-center">
 
               <label className={`fs3 ${userRfs}`}>毛孩數量</label>
-              <div className="ws6 ">
+              <div className="fs11 ">
                 <input
                   className="form-input fs5"
                   type="number"

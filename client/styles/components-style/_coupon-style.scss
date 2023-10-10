@@ -1,9 +1,17 @@
 #container-coupon {
     position: relative;
-    margin: auto;
+    // margin: auto;
     overflow: hidden;
     width: 700px;
     height: 300px;
+
+    p {
+        margin-top: -5px;
+        font-size: 0.5em;
+        font-weight: 100;
+        color:$text-main;
+    
+      }
   }
   
   h1 {
@@ -27,20 +35,14 @@
     font-size: 1.2rem;
   }
   
-  p {
-    margin-top: -5px;
-    font-size: 0.5em;
-    font-weight: 100;
-    color:$text-main;
-
-  }
+  
   
   button, .dot-coupon {
     cursor: pointer;
   }
   
   #success-box {
-    position: absolute;
+    //position: absolute;
     width: 35%;
     height: 100%;
     left: 12%;

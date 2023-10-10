@@ -1,19 +1,14 @@
-.p-wrapper{
-  display: grid;
-  grid-template-rows: 1fr 3fr;
-  grid-gap: 1rem;
-}
 
 .user-profile {
   // min-height: 913px;
-  width: 60%;
-  // margin: 0 auto 0; 
+  //width: 100%;
+  //margin: 0 auto 0; 
   background-color: $content-bg;
   $form-height: 80px;
-  padding: 10px 40px;
+  padding: 0 auto;
   position: relative;
   .title {
-    margin: 50px 0;
+    margin: 50px 150px; //手機要調整
     & > p {
       font-weight: bold;
       display: flex;
@@ -26,13 +21,18 @@
   }
   }
   .user-form{
-    margin: 0 auto;
+    .fs-btn{
+      width: 100%;
+    }
+    
+   // margin: 0 50px;
   .user-btn-group{
 margin: 4.5rem 0;
     }
    .ws20{
     width: 100%;
     overflow: auto;
+ 
     .fs3{
       float: left;
       margin-left: 5px;
@@ -59,9 +59,16 @@ margin: 4.5rem 0;
     }
  
    }
+   .fs5{
+    float: left;
+  margin-left: 5px;
+  margin-right: 5px;
+  width: calc(35% - 14px);
+  }
    .address-w20{
     width: calc(70% - 5px);
     padding-bottom: 45px; //行距
+
     .address-11{
       width: 78%;
       float: right;
@@ -70,7 +77,15 @@ margin: 4.5rem 0;
 
   }
 
+
+
   @media  (max-width: 768px) {
+    .p-wrapper{
+      //max-width: 1400px;
+      display: grid;
+      grid-template-columns: 1fr ;
+    
+    }
     .user-profile {
       // min-height: 913px;
       width: 100%;
