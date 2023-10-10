@@ -28,8 +28,6 @@ export default function SingleCoupon() {
             </p>
           </div>
         </div>
-       
-      
       </div>
     </>
   );
