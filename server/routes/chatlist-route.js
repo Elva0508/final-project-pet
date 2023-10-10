@@ -82,6 +82,13 @@ router.get("/:uid/:cid", (req, res) => {
 router.post("/creatchat", (req, res) => {
   console.log("接收到新增聊天請求");
   const { chatlist_userId1, chatlist_userId2 } = req.body;
+  console.log("chatlist_userId1:", chatlist_userId1);
+  console.log("chatlist_userId2:", chatlist_userId2);
+
+  if (!chatlist_userId1 || !chatlist_userId2) {
+    console.log("請提供有效的使用者ID");
+    return res.status(400).json({ error: "請提供有效的使用者ID" });
+  }
   // 查詢是否已有存在紀錄
   connection.execute(
     `SELECT chatlist_id FROM chatlist WHERE
@@ -90,13 +97,16 @@ router.post("/creatchat", (req, res) => {
     [chatlist_userId1, chatlist_userId2, chatlist_userId2, chatlist_userId1],
     (error, results) => {
       if (error) {
-        console.error("查询聊天记录时出错", error);
+        console.error("查詢聊天紀錄錯誤", error);
         return res.status(500).json({ error: "伺服器錯誤" });
       }
 
       if (results.length > 0) {
+        // 如果已存在對應的資料，取得該資料的 chatlist_id
         const existingChatlistId = results[0].chatlist_id;
+        console.log("existingChatlistId", existingChatlistId);
         const chatUrl = `/chatlist/${existingChatlistId}`;
+        console.log("chatUrl", chatUrl);
         return res.status(200).json({ message: "訊息已成功傳送", chatUrl });
       }
 
@@ -112,7 +122,9 @@ router.post("/creatchat", (req, res) => {
           }
 
           const newChatlistId = insertResult.insertId;
+          console.log("newChatlistId", newChatlistId);
           const chatUrl = `/chatlist/${newChatlistId}`;
+          console.log("newchatUrl", chatUrl);
           return res.status(201).json({ message: "訊息已成功傳送", chatUrl });
         }
       );
