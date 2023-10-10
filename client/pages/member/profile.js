@@ -10,6 +10,7 @@ import data from "@/data/taiwan.json";
 import axios from "axios";
 import { Padding } from "@mui/icons-material";
 
+
 const ProfilePage = () => {
   //RWD
   const device = useRWD();
@@ -50,6 +51,8 @@ const ProfilePage = () => {
   const [detailAddress, setDetailAddress] = useState("");
   const [petCount, setPetCount] = useState(1);
 
+
+
   useEffect(() => {
     axios
       .get("http://localhost:3005/api/user/user-info")
@@ -71,6 +74,10 @@ const ProfilePage = () => {
 
   const handleSave = (event) => {
     event.preventDefault();
+
+    setErrors({});
+    
+    
     const updatedUserData = {
       email,
       name,
@@ -118,7 +125,6 @@ const ProfilePage = () => {
         <ListM />
 
         <ListUserM />
-
         <ListD />
         {/* <UserForm /> */}
         <div className="user-profile row col-lg-8 col-md-8 col-12 ">
@@ -129,11 +135,10 @@ const ProfilePage = () => {
             </p>
           </div>
           <div className="user-form">
-          <div></div>
+            <div></div>
             <div className="user-form-item">
-              
               <div className="ws20 mb-5 d-flex justify-content-center">
-              <label className={`fs3 ${userRfs}`}>Email</label>
+                <label className={`fs3 ${userRfs}`}>Email</label>
                 <input
                   className="form-input fs11"
                   type="text"
@@ -142,34 +147,27 @@ const ProfilePage = () => {
                 />
               </div>
             </div>
-          
-            
-              <div className="ws20 mb-5 d-flex justify-content-center" >
+
+            <div className="ws20 mb-5 d-flex justify-content-center">
               <label className={`fs3 ${userRfs}`}>姓名</label>
-                <input
-                  className="form-input fs11"
-                  type="text"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                />
-              </div>
-         
-           
-          
-              <div className="ws20  mb-5 d-flex justify-content-center">
+              <input
+                className="form-input fs11"
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
+            </div>
+
+            <div className="ws20  mb-5 d-flex justify-content-center">
               <label className={`fs3 ${userRfs}`}>密碼</label>
               <div className="fs11 ">
-              <Link href="http://localhost:3000/member/reset-password">
+                <Link href="http://localhost:3000/member/reset-password">
                   <button className="btn-confirm fs-btn">設定新密碼</button>
                 </Link>
               </div>
-                
-              </div>
-        
+            </div>
 
-           
-              
-              <div className="ws20 gender mb-5 d-flex justify-content-center">
+            <div className="ws20 gender mb-5 d-flex justify-content-center">
               <label className={`fs3 ${userRfs}`}>性別</label>
               <div className="fs11">
                 <input
@@ -195,31 +193,28 @@ const ProfilePage = () => {
                 />
                 女
               </div>
-              </div>
-          
-           
-            
-              <div className="ws20  mb-5 d-flex justify-content-center">
-              <label className={`fs3 ${userRfs}`}>生日</label>
-                <input
-                className="form-input fs11"
-                  type="date"
-                  value={birthday}
-                  onChange={(e) => setBirthday(e.target.value)}
-                />
-          
             </div>
-        
-              <div className="ws20  mb-5 d-flex justify-content-center">
+
+            <div className="ws20  mb-5 d-flex justify-content-center">
+              <label className={`fs3 ${userRfs}`}>生日</label>
+              <input
+                className="form-input fs11"
+                type="date"
+                value={birthday}
+                onChange={(e) => setBirthday(e.target.value)}
+              />
+            </div>
+
+            <div className="ws20  mb-5 d-flex justify-content-center">
               <label className={`fs3 ${userRfs}`}>手機</label>
-                <input
-                  className="form-input fs11"
-                  type="text"
-                  value={`0${phone}`}
-                  onChange={(e) => setPhone(e.target.value)}
-                />
-              </div>
-       
+              <input
+                className="form-input fs11"
+                type="text"
+                value={`0${phone}`}
+                onChange={(e) => setPhone(e.target.value)}
+              />
+            </div>
+
             <div className="ws20   d-flex justify-content-center">
               <label className={`fs3 py-2 ${userRfs}`}>地址</label>
               <div className="fs11 ">
@@ -255,8 +250,8 @@ const ProfilePage = () => {
               </div>
             </div>
             <div className="d-flex justify-content-center">
-              <div  className="address-w20 ">
-              {/* <label className={` ${userRfs}`}></label> */}
+              <div className="address-w20 ">
+                {/* <label className={` ${userRfs}`}></label> */}
                 <input
                   type="text"
                   className="form-control address-11"
@@ -264,13 +259,9 @@ const ProfilePage = () => {
                   onChange={(e) => setDetailAddress(e.target.value)}
                 />
               </div>
-              </div>
-        
+            </div>
 
-     
-         
-              <div className="ws20   d-flex justify-content-center">
-
+            <div className="ws20   d-flex justify-content-center">
               <label className={`fs3 ${userRfs}`}>毛孩數量</label>
               <div className="fs11 ">
                 <input
@@ -280,23 +271,18 @@ const ProfilePage = () => {
                   onChange={(e) => setPetCount(e.target.value)}
                 />
               </div>
-              </div>
-       
+            </div>
 
             <div className="user-btn-group d-flex justify-content-center gap-5">
-   
               <button id="save" className="btn-confirm" onClick={handleSave}>
                 儲存
               </button>
               <button className="btn-outline-confirm" onClick={handleCancel}>
                 取消
               </button>
-
-
             </div>
           </div>
         </div>
-
       </div>
     </div>
   );

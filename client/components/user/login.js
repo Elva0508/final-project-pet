@@ -87,9 +87,11 @@ const [viewPwd,SetViewPwd]=useState(false)
             <ErrorMessage name="email" component="div" className="error form-alert" />
           </div>
 
-          <div className="u-form-group mb-3">
+          <div className="u-form-group  mb-3 eye-box"
+          style={{position: 'relative'}}
+          >
             <Field
-              className="form-input center-input"
+              className="form-input center-input "
               type={viewPwd ? 'text':'password'}
               id="password"
               name="password"
@@ -98,7 +100,8 @@ const [viewPwd,SetViewPwd]=useState(false)
               onChange={e => setPwd(e.target.value)}
             />
             <Image
-          style={{ cursor: 'pointer',position: 'absolute',right: '105px',top: '63px'}}
+            className="eye"
+          style={{ cursor: 'pointer',position: 'absolute',right: '105px',top: '5px'}}
               title={viewPwd ? 'Hide password' : 'Show password'}
               src={!viewPwd ? hidePwdImg : showPwdImg}
               onClick={()=> SetViewPwd(prevState => !prevState)}

@@ -70,9 +70,6 @@ app.get("/login", (req,res)=>{
 })
 
 
-
-
-
 app.listen(3005, () => {
   console.log("server is running");
 });

@@ -1,8 +1,11 @@
-import React from "react";
+import React,{useState} from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import Image from "next/image";
+import showPwdImg from "@/assets/showPwd.svg";
+import hidePwdImg from "@/assets/hidePwd.svg";
 
-const RegisterForm = () => {
+const RegisterForm = () => { 
   const initialValues = {
     userName: "",
     signupEmail: "",
@@ -22,12 +25,15 @@ const RegisterForm = () => {
     rePassword: Yup.string()
       .oneOf([Yup.ref("signupPassword"), null], "密碼不一致")
       .required("請再次輸入密碼"),
-    confirm: Yup.boolean().oneOf([true], "請閱讀並同意使用規範"),
+    confirm: Yup.boolean().oneOf([true], "請閱讀並同意會員條款"),
   });
 
   const onSubmit = (values) => {
     console.log(values);
   };
+
+  const [pwd, setPwd]=useState('')
+const [viewPwd,SetViewPwd]=useState(false)
 
   return (
     <Formik
@@ -40,7 +46,7 @@ const RegisterForm = () => {
           <div className="u-form-group mb-3">
           
             <Field
-              className="form-input"
+              className="form-input center-input"
               type="text"
               name="userName"
               id="userName"
@@ -55,7 +61,7 @@ const RegisterForm = () => {
           <div className="u-form-group mb-3">
         
             <Field
-              className="form-input"
+              className="form-input center-input"
               type="email"
               name="signupEmail"
               id="signupEmail"
@@ -67,14 +73,24 @@ const RegisterForm = () => {
               component="div"
             />
           </div>
-          <div className="u-form-group mb-3">
+          <div className="u-form-group mb-3" 
+          style={{position: 'relative'}}>
     
             <Field
-              className="form-input"
-              type="password"
+              className="form-input center-input"
+              type={viewPwd ? 'text':'password'}
               name="signupPassword"
               id="signupPassword"
               placeholder="請輸入密碼"
+              value={pwd}
+              onChange={e => setPwd(e.target.value)}
+            />
+             <Image
+            className="eye"
+          style={{ cursor: 'pointer',position: 'absolute',right: '105px',top: '5px'}}
+              title={viewPwd ? 'Hide password' : 'Show password'}
+              src={!viewPwd ? hidePwdImg : showPwdImg}
+              onClick={()=> SetViewPwd(prevState => !prevState)}
             />
             <ErrorMessage
               className="form-alert"
@@ -82,14 +98,24 @@ const RegisterForm = () => {
               component="div"
             />
           </div>
-          <div className="u-form-group mb-3">
+          <div className="u-form-group mb-3"  
+          style={{position: 'relative'}}>
       
             <Field
-              className="form-input"
-              type="password"
+              className="form-input center-input"
+              type={viewPwd ? 'text':'password'}
               name="rePassword"
               id="rePassword"
-              placeholder="請再次輸入密碼"
+              placeholder="再次輸入密碼"
+              value={pwd}
+              onChange={e => setPwd(e.target.value)}
+            />
+             <Image
+            className="eye"
+          style={{ cursor: 'pointer',position: 'absolute',right: '105px',top: '5px'}}
+              title={viewPwd ? 'Hide password' : 'Show password'}
+              src={!viewPwd ? hidePwdImg : showPwdImg}
+              onClick={()=> SetViewPwd(prevState => !prevState)}
             />
             <ErrorMessage
               className="form-alert"
@@ -97,19 +123,25 @@ const RegisterForm = () => {
               component="div"
             />
           </div>
-          <div className="u-form-group mb-3">
+          <div className="d-flex justify-content-center">
+          <div className="mb-3 ">
             <Field
-              className="form-input"
+              className="register-checkbox"
               type="checkbox"
               name="confirm"
               id="confirm"
+              style={{ width: '15px'}}
             />
-            <label htmlFor="confirm">已閱讀使用規範</label>
+            <label htmlFor="confirm">已閱讀會員
+            <a href="#">條款</a>
+            </label>
             <ErrorMessage
               className="form-alert"
               name="confirm"
               component="div"
+           
             />
+          </div>
           </div>
           <div className="u-form-group">
             <button type="submit" className="btn-brown">
