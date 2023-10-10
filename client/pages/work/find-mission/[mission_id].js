@@ -181,15 +181,11 @@ export default function MissionDetail() {
     }
 
     useEffect(() => {
-        console.log("Effect called with mission_id:", mission_id);
         if (mission_id) {
+            // 顯示詳細資料
             getMissionDetail(mission_id);
-        }
-    }, [mission_id])
 
-    // 使用useEffect發起第二個API請求，供ImageSwiper使用
-    useEffect(() => {
-        if (mission_id) {
+            // 使用useEffect發起第二個API請求，供ImageSwiper使用
             axios.get(`http://localhost:3005/api/mission/mission-details-img/${mission_id}`)
                 .then((response) => {
                     // 將第二個API的數據儲存到missionImages狀態中
@@ -198,15 +194,11 @@ export default function MissionDetail() {
                 .catch((error) => {
                     console.error('Error fetching data from API 2:', error);
                 });
-        }
-    }, [mission_id]);
 
-    // 使用useEffect發起第三個API請求，供GOOGLE地圖使用
-    useEffect(() => {
-        if (mission_id) {
+            // 使用useEffect發起第三個API請求，供GOOGLE地圖使用
             axios.get(`http://localhost:3005/api/mission/mission-details-map/${mission_id}`)
                 .then((response) => {
-                    // 將第三個API的數據儲存到missionImages狀態中
+                    // 將第三個API的數據儲存到missionLocation狀態中
                     // GOOGLE地圖API：從後端獲取經緯度，更新狀態
                     setMissionLocation({
                         lat: response.data.data.location.lat,
@@ -217,10 +209,10 @@ export default function MissionDetail() {
                 .catch((error) => {
                     console.error('Error fetching data from API 3:', error);
                 });
-
         }
     }, [mission_id]);
 
+    
     // 彈跳視窗(確認送出)
     const handleConfirmSubmit = async () => {
         setSelectedMissionId(mission_id)
