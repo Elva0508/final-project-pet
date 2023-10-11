@@ -190,7 +190,7 @@ router.put("/cartplus", (req, res) => {
 
 //產品列表頁大類小類篩選＋價格篩選＋上架時間與價格排序
 router.get("/filter_sort", (req, res) => {
-    const { vendor, subcategory, category, minPrice, maxPrice, sortBy } = req.query;
+    const { productname, vendor, subcategory, category, minPrice, maxPrice, sortBy } = req.query;
 
     // 創建查詢參數數組，將參數添加到數組中
     const queryParams = [];
@@ -211,11 +211,14 @@ router.get("/filter_sort", (req, res) => {
     if (subcategory != null) {
         sqlQuery += 'AND s.subcategory_name = ? ';
         queryParams.push(subcategory);
-        console.log(subcategory)
     }
     if (vendor != null) {
         sqlQuery += 'AND vendor LIKE ? ';
         queryParams.push(`%${vendor}%`);
+    }
+    if (productname != null) {
+        sqlQuery += 'AND product_name LIKE ? ';
+        queryParams.push(`%${productname}%`);
     }
 
     // 如果指定了最小價格和最大價格，將價格篩選條件添加到 SQL 查詢中
@@ -223,16 +226,6 @@ router.get("/filter_sort", (req, res) => {
         sqlQuery += `AND p.specialoffer BETWEEN ? AND ? `;
         queryParams.push(minPrice, maxPrice);
     }
-
-    // // 根據 sortBy 條件添加不同的排序方式
-    // if (sortBy === 'created_at_asc') {
-    //     sqlQuery += `ORDER BY p.created_at ASC;`;
-    // } else if (sortBy === 'price_asc') {
-    //     sqlQuery += `ORDER BY p.specialoffer ASC;`;
-    // } else {
-    //     // 添加默認排序方式，如果未提供 sortBy 條件
-    //     sqlQuery += `ORDER BY p.created_at DESC, p.specialoffer ASC;`;
-    // }
 
     // 根據 sortBy 條件添加升序或降序排序方式
     if (sortBy === 'price_asc') {
@@ -266,6 +259,7 @@ router.get("/filter_sort", (req, res) => {
         }
     );
 });
+
 
 //商品列表頁vendor篩選
 router.get("/vendor", (req, res) => {
@@ -318,6 +312,5 @@ router.put("/collections", (req, res) => {
         }
     );
 });
-
 
 module.exports = router;
