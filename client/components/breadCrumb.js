@@ -8,7 +8,7 @@ import Link from 'next/link'
 
 function BreadCrumb(props) {
     const { pathname,query } = useRouter();
-    console.log(query);
+    console.log(pathname);
     const [product, setProduct] = useState([])
     const [article, setArticle] = useState([])
     const [mission, setMission] = useState([])

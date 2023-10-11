@@ -136,24 +136,20 @@ export default function Purchast() {
   return (
     <>
       <div className="my-3">
-        <div className="d-flex justify-content-end me-3">
-          <ListM />
-        </div>
         <ListUserM />
         <div className="d-flex justify-content-around py-2">
           <ListD />
           <div className="d-flex flex-column col-md-8 col-12 purchast-bg ">
 
               <h5 className="size-5 mt-3 ms-md-5 ms-3">
-                <BiSolidShoppingBag />
                 購買紀錄
               </h5>
 
               {currentData.map((v, i) => {
                 return (
                   <>
-                    <div className="d-flex border-bottom pt-4 pb-2 justify-content-between ms-md-5 ms-3">
-                      <div className="d-flex  col-8" key={i}>
+                    <div className="d-flex border-bottom pt-4 pb-2 justify-content-between mx-md-5 ms-3">
+                      <div className="d-flex  col-8 col-md-9" key={i}>
                         <img
                           className="picture me-4"
                           src={v.image}
@@ -166,7 +162,7 @@ export default function Purchast() {
                         </div>
                       </div>
 
-                      <div className="col-4  d-flex flex-column align-items-center justify-content-center">
+                      <div className="col-4 ps-2 ps-md-5 ms-md-4 col-md-3 d-flex flex-column align-items-center">
                         <button className="btn btn-confirm m-2 size-6 m-size-7"
                           data-bs-toggle="offcanvas"
                           data-bs-target="#offcanvasRight"

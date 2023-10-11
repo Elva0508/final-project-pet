@@ -1,7 +1,8 @@
 @import "@/styles/variable";
 .purchast-bg{
+    border-radius: 10px 10px 10px 10px;
     color:$text-main;
-    background: $content-bg;
+    background: #fff;
     @media screen and (max-width: 768px) {
         background: $main-bg;
     }

@@ -36,17 +36,13 @@ useEffect(() => {
 
   return (
       <div className="my-3">
-        <div className="d-flex justify-content-end me-3">
-          <ListM />
-        </div>
         <ListUserM />
-        
           <div className="d-flex justify-content-around py-2">
             <ListD />
-            <div className="d-flex flex-column col-md-8 col-12 order ">
+            <div className="d-flex flex-column col-md-8 col-12 order">
   
-                <h5 className="size-5 mt-3 ms-md-5 ms-3">
-                  <p className=""><RiFileList3Fill />我的訂單</p>
+                <h5 className="size-4 mt-3">
+                  <p className="big">我的訂單</p>
                 </h5>
 
               <div className="col-12">

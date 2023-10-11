@@ -40,16 +40,12 @@ export default function Joblist() {
   return (
     <>
       <div className="my-3">
-        <div className="d-flex justify-content-end me-3">
-          <ListM />
-        </div>
         <ListUserM />
         <div className="d-flex justify-content-around py-2">
           <ListD />
           <div className="d-flex flex-column col-md-8 col-12 joblist  ">
 
               <h5 className="size-5 mt-3 ms-md-5 ms-3">
-                <LiaListAltSolid />
                 任務清單
               </h5>
           
