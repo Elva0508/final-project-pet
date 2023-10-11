@@ -3,16 +3,22 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import { FiSend } from "react-icons/fi";
 import { BiMessageRounded } from "react-icons/bi";
+import { FaRegHeart, FaHeart } from "react-icons/fa";
 import { CiCircleChevLeft, CiCircleChevRight } from "react-icons/ci";
 import Footer from "@/components/footer";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Scrollbar, Navigation } from "swiper/modules";
+import { Swiper, SwiperSlide, useSwiper } from "swiper/react";
+import { Scrollbar, Navigation, Pagination } from "swiper/modules";
 // import function to register Swiper custom elements
 import { register } from "swiper/element/bundle";
 import workService from "@/services/work-service";
 import { GoStarFill } from "react-icons/go";
 import Rating from "@mui/material/Rating";
 import StarIcon from "@mui/icons-material/Star";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import { useAuth } from "@/context/fakeAuthContext";
+import { useHelper } from "@/context/helperContext";
 // import { Button, Modal } from "antd";
 import {
   DatePicker,
@@ -31,12 +37,6 @@ import {
 import dayjs from "dayjs";
 // register Swiper custom elements
 register();
-
-// Import Swiper styles
-import "swiper/css";
-import "swiper/css/scrollbar";
-import "swiper/css/navigation";
-import { TextArea } from "@douyinfe/semi-ui";
 const ImageSwiper = ({ images }) => {
   const swiperRef = useRef(null);
   useEffect(() => {
@@ -98,58 +98,249 @@ const ImageSwiper = ({ images }) => {
     </>
   );
 };
-const ReviewSwiper = ({ reviews }) => {
-  const [transReview, setTransReview] = useState(reviews);
 
+const ReviewSwiper = ({ reviews, setReviews }) => {
+  const [transReview, setTransReview] = useState(reviews);
+  const [filterReview, setFilterReview] = useState([]);
+  const [star, setStar] = useState("all");
+  const router = useRouter();
+  const { uid } = router.query;
+  const sliderRef = useRef(null);
+  useEffect(() => {
+    if (uid) {
+      workService
+        .getFilterReview(uid, star)
+        .then((response) => {
+          console.log(response.data);
+          console.log(response.data.reviews);
+          setFilterReview(response.data.reviews);
+          if (sliderRef.current) {
+            sliderRef.current.slickGoTo(0);
+          }
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    }
+  }, [uid, star]);
+  let fiveStar = 0;
+  let fourStar = 0;
+  let threeStar = 0;
+  let twoStar = 0;
+  let oneStar = 0;
+  reviews.map((review) => {
+    switch (review.star_rating) {
+      case 5:
+        fiveStar++;
+        break;
+      case 4:
+        fourStar++;
+        break;
+      case 3:
+        threeStar++;
+        break;
+      case 2:
+        twoStar++;
+        break;
+      case 1:
+        oneStar++;
+        break;
+    }
+  });
+  const settings = {
+    dots: true,
+    infinite: false,
+    speed: 500,
+    slidesToShow: 3,
+    slidesToScroll: 3,
+    // nextArrow: <img src="/caret-right.svg" className="next-arrow" />,
+    // prevArrow: <img src="/caret-left.svg" className="prev-arrow" />,
+    responsive: [
+      {
+        breakpoint: 1280,
+        settings: {
+          slidesToShow: 2.5,
+          slidesToScroll: 2,
+          infinite: true,
+          dots: true,
+        },
+      },
+      {
+        breakpoint: 1048,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 2,
+          initialSlide: 2,
+        },
+      },
+      {
+        breakpoint: 876,
+        settings: {
+          slidesToShow: 1.5,
+          slidesToScroll: 1,
+        },
+      },
+      {
+        breakpoint: 694,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+        },
+      },
+    ],
+  };
+  const handleChangeStar = (e) => {
+    if (e.target.value) {
+      // 有value，代表點在button上而不是button外的div上
+      setStar(e.target.value);
+
+      // 將HTML Collection變成可迭代的陣列，先移除所有btn上的樣式，再加樣式在目前點擊的btn上
+      const children = e.currentTarget.children;
+      let childrenArr = Array.from(children);
+      childrenArr.forEach((btn) => {
+        btn.classList.remove("filter-btns-focus");
+      });
+      console.log(e.currentTarget.children);
+      e.target.classList.add("filter-btns-focus");
+    }
+  };
   return (
-    <Swiper
-      modules={[Scrollbar]}
-      spaceBetween={20}
-      slidesPerView="auto"
-      scrollbar={{
-        draggable: true,
-        dragSize: "150px",
-      }}
-    >
-      {reviews.map((review) => (
-        <SwiperSlide key={review.review_id}>
-          <div className="review-card">
-            <div className="review-card-head d-flex justify-content-center align-items-center">
-              <img
-                className="review-card-avatar"
-                src={`${review.cover_photo}`}
-              />
-              <div className="review-card-info d-flex flex-column justify-content-between ps-2">
-                <div className="d-flex justify-content-between">
-                  <div className="username size-6">{review.name}</div>
-                  <div className="date size-6">{review.review_date}</div>
-                </div>
-                <div className="ranking mb-2">
-                  <Rating
-                    name="half-rating-read"
-                    value={review.star_rating}
-                    readOnly
-                    precision={0.5}
-                    emptyIcon={<StarIcon style={{ opacity: 0.35 }} />}
+    <>
+      <div className="review-card-group">
+        <div className="size-5">服務評價</div>
+        <p className="m-size-7">
+          (共<span>{reviews.length}</span>則相關評論)
+        </p>
+        <div className="filter-btns " onClick={handleChangeStar}>
+          <button
+            value={"all"}
+            onClick={handleChangeStar}
+            className="filter-btns-focus"
+          >
+            全部評論
+          </button>
+          <button value={5}>
+            5星(<span>{fiveStar}</span>)
+          </button>
+          <button value={4}>
+            4星(<span>{fourStar}</span>)
+          </button>
+          <button value={3}>
+            3星(<span>{threeStar}</span>)
+          </button>
+          <button value={2}>
+            2星(<span>{twoStar}</span>)
+          </button>
+          <button value={1}>
+            1星(<span>{oneStar}</span>)
+          </button>
+        </div>
+        {filterReview.length > 0 ? (
+          <Slider {...settings} ref={sliderRef}>
+            {filterReview.map((review) => (
+              <div className="review-card" style={{ width: "350px" }}>
+                <div className="review-card-head d-flex justify-content-center align-items-center">
+                  <img
+                    className="review-card-avatar"
+                    src={`${review.cover_photo}`}
                   />
+                  <div className="review-card-info d-flex flex-column justify-content-between ps-2">
+                    <div className="d-flex justify-content-between">
+                      <div className="username size-6">{review.name}</div>
+                      <div className="date size-7">{review.review_date}</div>
+                    </div>
+                    <div className="ranking mb-2">
+                      <Rating
+                        name="half-rating-read"
+                        value={review.star_rating}
+                        readOnly
+                        precision={0.5}
+                        emptyIcon={<StarIcon style={{ opacity: 0.35 }} />}
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div className="review-card-body mt-3">
+                  {review.review_content}
                 </div>
               </div>
-            </div>
-            <div className="review-card-body mt-3">{review.review_content}</div>
-          </div>
-        </SwiperSlide>
-      ))}
-    </Swiper>
+            ))}
+          </Slider>
+        ) : (
+          ""
+        )}
+      </div>
+    </>
   );
 };
 
 export const HelperDetailSticky = () => {
+  const { collection, setCollection } = useHelper();
+  const { isAuthenticated } = useAuth();
+  const router = useRouter();
+  const user_id = parseInt(router.query.uid);
+  // console.log(router.query);
+  // useEffect(() => {
+  //   // 初次渲染時載入儲存在localStorage的收藏
+  //   if (localStorage.getItem("helperFav"))
+  //     setCollection(JSON.parse(localStorage.getItem("helperFav")));
+  // }, []);
+  useEffect(() => {
+    // 更新localStorage的收藏
+    if (collection.length === 0) {
+      localStorage.removeItem("helperFav");
+    } else {
+      localStorage.setItem("helperFav", JSON.stringify(collection));
+    }
+  }, [collection]);
+  // const [isFavorite, setIsFavorite] = useState(false); // 初始狀態為未收藏
+  // const toggleFavorite = () => {
+  //   setIsFavorite(!isFavorite); // 切換收藏狀態
+  // };
+
+  const handleFav = (e) => {
+    if (isAuthenticated) {
+      if (!collection.find((item) => item === user_id)) {
+        setCollection((prev) => {
+          return [...prev, user_id];
+        });
+      } else {
+        setCollection((prev) => {
+          const newArr = prev.filter((item) => item !== user_id);
+          console.log(newArr);
+          return newArr;
+        });
+      }
+    } else {
+      alert("請先登入會員");
+      router.push("/member/login");
+    }
+  };
   return (
     <section className="get-price d-flex justify-content-around align-items-center">
-      <p className="get-price-number size-4 m-0">
-        NT$<span>500</span>/次
-      </p>
-      <Quotation />
+      <div
+        className="fav d-flex justify-content-center align-items-center"
+        onClick={handleFav}
+      >
+        {collection.find((item) => item === user_id) ? (
+          <div className="d-flex flex-column justify-content-end align-items-start ms-2">
+            <FaHeart className="size-4 heart-icon" />
+            <span>取消</span>
+          </div>
+        ) : (
+          <div className="d-flex flex-column justify-content-end align-items-start ms-2">
+            <FaRegHeart className="size-4 heart-icon" />
+            <span>收藏</span>
+          </div>
+        )}
+      </div>
+      <div className="d-flex justify-content-around align-items-center">
+        <p className="get-price-number size-5 me-2">
+          <span>NT$</span>
+          <span>500</span>/次
+        </p>
+        <Quotation />
+      </div>
     </section>
   );
 };
@@ -169,7 +360,7 @@ const Quotation = () => {
   const handleSubmit = () => {
     setVisible(false);
     const user = 1;
-    const requestDate = {
+    const requestData = {
       customer_id: user,
       startDay,
       endDay,
@@ -184,7 +375,7 @@ const Quotation = () => {
       subtotal: serviceType.price,
     };
     workService
-      .createReqOrder(requestDate)
+      .createReqOrder(requestData)
       .then((response) => {
         console.log(response.data);
         if (response.data.status === 200) {
@@ -319,8 +510,9 @@ const Quotation = () => {
 
       <Modal
         title="預約細節"
-        fullScreen
         visible={visible}
+        closable={false}
+        maskClosable={false}
         onOk={handleSubmit}
         afterClose={handleAfterClose} //>=1.16.0
         onCancel={handleCancel}
@@ -337,8 +529,8 @@ const Quotation = () => {
           </div>
         }
       >
-        <div className="d-flex justify-content-between">
-          <p>寵物</p>
+        <div className="body-item d-flex justify-content-between align-items-center">
+          <p className="size-6">寵物</p>
           <PetInfo
             petsValue={petsValue}
             setPetsValue={setPetsValue}
@@ -346,8 +538,8 @@ const Quotation = () => {
             setPetsName={setPetsName}
           />
         </div>
-        <div className="d-flex justify-content-between">
-          <p>開始日期</p>
+        <div className="body-item d-flex justify-content-between align-items-center">
+          <p className="size-6">開始日期</p>
           <DatePicker
             open={startDateOpen}
             autoSwitchDate={false}
@@ -379,8 +571,8 @@ const Quotation = () => {
             )}
           />
         </div>
-        <div className="d-flex justify-content-between">
-          <p>結束日期</p>
+        <div className="body-item d-flex justify-content-between align-items-center">
+          <p className="size-6">結束日期</p>
           <DatePicker
             open={endDateOpen}
             autoSwitchDate={false}
@@ -404,8 +596,8 @@ const Quotation = () => {
             )}
           />
         </div>
-        <div className="d-flex justify-content-between">
-          <p>服務類型</p>
+        <div className="body-item d-flex justify-content-between align-items-center">
+          <p className="size-6">服務類型</p>
           <Select
             style={{ width: 150 }}
             onChangeWithObject
@@ -418,8 +610,8 @@ const Quotation = () => {
             }}
           ></Select>
         </div>
-        <div className="d-flex justify-content-between">
-          <p>服務時間</p>
+        <div className="body-item d-flex justify-content-between align-items-center">
+          <p className="size-6">服務時間</p>
           <div className="d-flex align-items-center">
             <CiCircleChevLeft
               position="left"
@@ -434,8 +626,8 @@ const Quotation = () => {
             />
           </div>
         </div>
-        <div className="d-flex justify-content-between">
-          <div>每天次數</div>
+        <div className="body-item d-flex justify-content-between align-items-center">
+          <div className="size-6">每天次數</div>
           <div className="d-flex align-items-center">
             <CiCircleChevLeft
               position="left"
@@ -450,8 +642,8 @@ const Quotation = () => {
             />
           </div>
         </div>
-        <div className="d-flex justify-content-between">
-          <p>地點</p>
+        <div className="body-item d-flex justify-content-between align-items-center">
+          <p className="size-6">地點</p>
           <input
             type="text"
             value={location}
@@ -460,8 +652,8 @@ const Quotation = () => {
             }}
           />
         </div>
-        <div className="d-flex flex-column justify-content-between">
-          <p>備註</p>
+        <div className="body-item d-flex flex-column justify-content-between">
+          <p className="size-6 mb-2">備註</p>
           <textarea
             placeholder="輸入備註或是您毛小孩的需求與個性狀況"
             onChange={(e) => {
@@ -505,9 +697,11 @@ const Quotation = () => {
 };
 
 const PetInfo = ({ petsValue, setPetsValue, petsName, setPetsName }) => {
+  const { isAuthenticated } = useAuth();
   const router = useRouter();
   const { uid } = router.query;
   const [pets, setPets] = useState([]);
+  const [isCreate, setIsCreate] = useState(false);
   let tempValue, tempName;
 
   useEffect(() => {
@@ -532,6 +726,8 @@ const PetInfo = ({ petsValue, setPetsValue, petsName, setPetsName }) => {
   };
   const handleCancel = () => {
     setVisible(false);
+    setPetsValue(null);
+    setPetsName(null);
   };
   const handleAfterClose = () => {
     console.log("After Close callback executed");
@@ -539,7 +735,18 @@ const PetInfo = ({ petsValue, setPetsValue, petsName, setPetsName }) => {
 
   return (
     <>
-      <label onClick={showDialog}>{petsName || "選擇寵物"}</label>
+      <label
+        onClick={() => {
+          if (isAuthenticated) {
+            showDialog();
+          } else {
+            alert("請先登入會員");
+            router.push("/member/login");
+          }
+        }}
+      >
+        {petsName || "選擇寵物"}
+      </label>
 
       <Modal
         // title="基本对话框"
@@ -554,49 +761,90 @@ const PetInfo = ({ petsValue, setPetsValue, petsName, setPetsName }) => {
         footer={
           <div className="pet-info-modal-footer">
             <Button type="tertiary" onClick={handleCancel}>
-              取消
+              清除
             </Button>
             <button className="btn-confirm" onClick={handleOk}>
-              確認
+              選擇
             </button>
+            {/* <button
+              className="btn btn-info"
+              onClick={() => {
+                setIsCreate(true);
+              }}
+            >
+              新增寵物
+            </button> */}
           </div>
         }
       >
-        {pets.length === 0 ? (
-          <Empty
-            image={
-              <IllustrationConstruction style={{ width: 150, height: 150 }} />
-            }
-            darkModeImage={
-              <IllustrationConstructionDark
-                style={{ width: 150, height: 150 }}
-              />
-            }
-            title={"暫無內容"}
-            description="請添加您的寵物資訊。"
-          />
+        {isCreate ? (
+          <>
+            <div className="d-flex flex-column">
+              <p>毛小孩名字</p>
+              <input type="text" />
+            </div>
+            <div className="d-flex flex-column">
+              <p>健康狀況描述</p>
+              <input type="text" />
+            </div>
+            <div className="d-flex flex-column">
+              <p>出生年</p>
+              <input type="number" />
+            </div>
+            <div className="d-flex flex-column">
+              <p>性別</p>
+              <input type="radio" />
+            </div>
+            <div className="d-flex flex-column">
+              <p>是否結紮</p>
+              <input type="radio" />
+            </div>
+            <div className="d-flex flex-column">
+              <p>是否規律施打疫苗</p>
+              <input type="radio" />
+            </div>
+          </>
         ) : (
-          <RadioGroup
-            type="pureCard"
-            direction="horizontal"
-            aria-label="選擇寵物"
-            defaultValue={petsValue}
-            onChange={(e) => {
-              console.log(e.target);
-              tempValue = e.target.value;
-              tempName = e.target.children[1].props.children;
-            }}
-          >
-            {pets.map((pet) => (
-              <Radio
-                value={pet.pet_id}
-                // extra="Semi Design 是由互娱社区前端团队与 UED 团队共同设计开发并维护的设计系统"
+          <>
+            {pets.length === 0 ? (
+              <Empty
+                image={
+                  <IllustrationConstruction
+                    style={{ width: 150, height: 150 }}
+                  />
+                }
+                darkModeImage={
+                  <IllustrationConstructionDark
+                    style={{ width: 150, height: 150 }}
+                  />
+                }
+                title={"暫無內容"}
+                description="請添加您的寵物資訊。"
+              />
+            ) : (
+              <RadioGroup
+                type="pureCard"
+                direction="horizontal"
+                aria-label="選擇寵物"
+                defaultValue={petsValue}
+                onChange={(e) => {
+                  console.log(e.target);
+                  tempValue = e.target.value;
+                  tempName = e.target.children[1].props.children;
+                }}
               >
-                <img className="pet-photo" src={pet.image}></img>
-                <p className="size-6">{pet.name}</p>
-              </Radio>
-            ))}
-          </RadioGroup>
+                {pets.map((pet) => (
+                  <Radio
+                    value={pet.pet_id}
+                    // extra="Semi Design 是由互娱社区前端团队与 UED 团队共同设计开发并维护的设计系统"
+                  >
+                    <img className="pet-photo" src={pet.image}></img>
+                    <p className="size-6">{pet.name}</p>
+                  </Radio>
+                ))}
+              </RadioGroup>
+            )}
+          </>
         )}
       </Modal>
     </>
@@ -608,7 +856,7 @@ const HelperDetail = () => {
   const [profile, setProfile] = useState({});
   const [reviews, setReviews] = useState([]);
   const [images, setImages] = useState([]);
-
+  const { isAuthenticated, userId } = useAuth();
   useEffect(() => {
     if (uid) {
       workService
@@ -623,6 +871,10 @@ const HelperDetail = () => {
         });
     }
   }, [uid]);
+  console.log(123, isAuthenticated, userId);
+  useEffect(() => {
+    console.log(isAuthenticated);
+  }, []);
   let fiveStar = 0;
   let fourStar = 0;
   let threeStar = 0;
@@ -650,25 +902,12 @@ const HelperDetail = () => {
   return (
     <>
       <div className="helper-detail container-fluid">
-        <nav className="breadcrumb-wrapper" aria-label="breadcrumb">
-          <ol className="breadcrumb">
-            <li className="breadcrumb-item">
-              <Link href="/">首頁</Link>
-            </li>
-            <li className="breadcrumb-item" aria-current="page">
-              <Link href="/work/find-helper">小幫手總覽</Link>
-            </li>
-            <li className="breadcrumb-item active" aria-current="page">
-              {uid}
-            </li>
-          </ol>
-        </nav>
         <header className="d-flex flex-md-row flex-column justify-content-center align-items-center">
           <div className="avatar">
             <img src={profile.cover_photo} />
           </div>
           <div className="profile row justify-content-center justify-content-md-start">
-            <div className="size-2 m-size-3 username col-4 col-md-12 text-end text-sm-start">
+            <div className="size-3 m-size-4 username col-4 col-md-12 text-end text-sm-start">
               {profile.name}
             </div>
             <p className="intro size-6 col-12">{profile.Introduction}</p>
@@ -691,32 +930,34 @@ const HelperDetail = () => {
         </header>
         <section className="description">
           <div className="item">
-            <div className="item-title size-4">相片/影片：</div>
+            <div className="item-title size-5">相片/影片</div>
             <div className="item-image item-content">
               <ImageSwiper images={images} setImages={setImages} />
             </div>
           </div>
           <div className="item">
-            <div className="item-title size-4">小幫手介紹：</div>
+            <div className="item-title size-5">小幫手介紹</div>
             <p className="item-content size-6">{profile.job_description}</p>
           </div>
           <div className="item">
-            <div className="item-title size-4 ">可服務時間：</div>
-            <span className="size-4 item-content">
+            <div className="item-title size-5 ">可服務時間</div>
+            <span className="size-6 item-content">
               日、一、二、三、四、五、六
             </span>
           </div>
           <div className="item">
-            <div className="item-title size-4">可服務地區：</div>
-            <span className="size-4 item-content">台北市、新北市</span>
+            <div className="item-title size-5">可服務地區</div>
+            <span className="size-6 item-content">
+              {profile.service_county}
+            </span>
           </div>
           <div className="item">
-            <div className="item-title size-4">連絡電話：</div>
-            <span className="size-4 item-content">0912-345-678</span>
+            <div className="item-title size-5">連絡電話</div>
+            <span className="size-6 item-content">{profile.phone}</span>
           </div>
           <div className="item">
-            <div className="item-title size-4">電子信箱</div>
-            <span className="size-4 item-content">example01@test.com</span>
+            <div className="item-title size-5">電子信箱</div>
+            <span className="size-6 item-content">{profile.email}</span>
           </div>
         </section>
         <section className="">
@@ -791,9 +1032,7 @@ const HelperDetail = () => {
               </div>
             </div>
           </div>
-          <div className="review-card-group d-flex">
-            <ReviewSwiper reviews={reviews} />
-          </div>
+          <ReviewSwiper reviews={reviews} setReviews={setReviews} />
         </section>
       </div>
     </>

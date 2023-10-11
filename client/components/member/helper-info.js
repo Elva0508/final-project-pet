@@ -1,10 +1,14 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { BiUpload } from "react-icons/bi";
+import { PiPawPrintFill, PiPawPrint } from "react-icons/pi";
 import { Switch, message } from "antd";
 import memberService from "@/services/member-service";
 import { useForm } from "react-hook-form";
+import { Upload } from "@douyinfe/semi-ui";
+import { IconPlus } from "@douyinfe/semi-icons";
+import { CheckboxGroup, Checkbox, TextArea } from "@douyinfe/semi-ui";
 const countyOption = [
   "台北市",
   "新北市",
@@ -28,39 +32,96 @@ const countyOption = [
   "金門縣",
   "連江縣",
 ];
-const Context = React.createContext({
-  name: "Default",
-});
 
-const SwitchInput = ({ label, status, price, type, setStatus }) => {
-  const [switchStatus, setSwitchStatus] = useState(false);
+const CheckboxInput = ({
+  label,
+  feedStatus,
+  status,
+  setStatus,
+  info,
+  setInfo,
+  checked,
+}) => {
+  const inputWrapperRef = useRef();
+  const checkRef = useRef();
+
   useEffect(() => {
-    if (status === 0) {
-      setStatus(false);
+    const checkBox = document.querySelector('input[type="checkbox"]');
+    const input = document.querySelector(".number-input");
+    if (checked.some((item) => item === label) && input.value !== "") {
+      inputWrapperRef.current.classList.remove("input-wrapper-active");
     }
-    if (status === 1) {
-      setStatus(true);
-    }
-  }, [status]);
-  const handleSwitch = (e) => {
-    setStatus(e);
-  };
-  return (
-    <div className={`switch-info ${status && "mb-5"}`}>
-      <label className="size-6 m-size-7 ">{label}：</label>
-      <div className="switch-info-price col-auto">
-        <Switch onChange={handleSwitch} checked={status} />
+    // inputs.forEach((input) => {
+    //   console.log(input.value);
+    //   // if()
+    // });
+    // console.log(inputs);
+    // console.log(checkRef.current.props.value);
+  }, [checked]);
+  console.log(checked);
 
-        <input
-          type="number"
-          id=""
-          placeholder="服務價格"
-          defaultValue={price && price}
-          className={`form-input m-form-input ${!status && "d-none"}`}
-          name={type + "price"}
-        />
-      </div>
-    </div>
+  return (
+    <>
+      <Checkbox
+        value={label}
+        ref={checkRef}
+        extra={
+          <>
+            {checked.some((item) => item === label) && (
+              <>
+                <p>請輸入您提供該項服務的收費</p>
+                <div
+                  className="input-wrapper input-wrapper-active"
+                  ref={inputWrapperRef}
+                >
+                  <input
+                    type="number"
+                    placeholder="輸入金額"
+                    value={status.price}
+                    className="form-input number-input"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                    }}
+                    onFocus={() => {
+                      inputWrapperRef.current.classList.remove(
+                        "input-wrapper-active"
+                      );
+                    }}
+                    onBlur={(e) => {
+                      if (e.target.value !== "") {
+                        inputWrapperRef.current.classList.remove(
+                          "input-wrapper-active"
+                        );
+                      } else {
+                        inputWrapperRef.current.classList.add(
+                          "input-wrapper-active"
+                        );
+                      }
+                    }}
+                    onChange={(e) => {
+                      console.log(e.target.value);
+                      setStatus({ ...status, price: e.target.value });
+                    }}
+                  />
+                  <span className="ms-1">
+                    / {label === "安親寄宿" ? "天" : "次"}
+                  </span>
+                </div>
+              </>
+            )}
+          </>
+        }
+        style={{ width: 220 }}
+      >
+        {checked.some((item) => item === label) ? (
+          <PiPawPrintFill className="check-icon icon-fill" />
+        ) : (
+          <PiPawPrint className="check-icon icon-hollow" />
+        )}
+
+        <span className="size-7 check-title">{label}</span>
+      </Checkbox>
+    </>
   );
 };
 
@@ -90,17 +151,45 @@ const Close = ({ open, setOpen }) => {
   );
 };
 
-const Open = ({ open, setOpen, info, setInfo }) => {
-  const { register, handleSubmit, watch } = useForm({
-    defaultValues: {
-      name: info?.name,
-    },
+const Open = ({ open, setOpen, info, setInfo, images, setImages }) => {
+  const [feedStatus, setFeedStatus] = useState({
+    service: info?.feed_service,
+    price: info?.feed_price,
   });
-  const [feedStatus, setFeedStatus] = useState(info?.feed_service);
-  const [houseStatus, setHouseStatus] = useState(info?.house_service);
-  const [beautyStatus, setBeautyStatus] = useState(info?.beauty_service);
+  const [houseStatus, setHouseStatus] = useState({
+    service: info?.house_service,
+    price: info?.house_price,
+  });
+  const [beautyStatus, setBeautyStatus] = useState({
+    service: info?.beauty_service,
+    price: info?.beauty_price,
+  });
+  const [checked, setChecked] = useState([]);
   const [messageApi, contextHolder] = message.useMessage();
-  const [name] = watch(["name"]);
+
+  let action = "https://api.semi.design/upload";
+
+  useEffect(() => {
+    // info清除時重置回預設值
+    setChecked([]);
+    if (feedStatus.service) {
+      setChecked((prevChecked) => [...prevChecked, "到府代餵"]);
+    }
+    if (houseStatus.service) {
+      setChecked((prevChecked) => [...prevChecked, "安親寄宿"]);
+    }
+    if (beautyStatus.service) {
+      setChecked((prevChecked) => [...prevChecked, "到府美容"]);
+    }
+  }, [feedStatus]);
+
+  const handleImage = ({ fileList, currentFile, event }) => {
+    console.log("onChange");
+    console.log(fileList);
+    console.log(currentFile);
+    let newFileList = [...fileList]; // spread to get new array
+    setImages(newFileList);
+  };
   const editSuccess = () => {
     messageApi.open({
       type: "success",
@@ -137,16 +226,34 @@ const Open = ({ open, setOpen, info, setInfo }) => {
   };
   const handleEdit = (e) => {
     e.preventDefault();
-    const form = document.querySelector("#helper-form");
-    const formData = new FormData(form);
-    formData.append("user_id", 30);
-    formData.append("feed_service", feedStatus);
-    formData.append("house_service", houseStatus);
-    formData.append("beauty_service", beautyStatus);
+    // console.log(feedStatus, houseStatus, beautyStatus);
+    const formData = new FormData();
+    const result = {
+      ...info,
+      feed_service: feedStatus.service,
+      house_service: houseStatus.service,
+      beauty_service: beautyStatus.service,
+      feed_price: feedStatus.price,
+      house_price: houseStatus.price,
+      beauty_price: beautyStatus.price,
+    };
+    for (const [key, value] of Object.entries(result)) {
+      formData.append(key, value);
+    }
+    setInfo(result);
+    images.forEach((image) => {
+      if (!image.status) {
+        // 舊的相片
+        formData.append("oldImages", image.url);
+      } else {
+        // 新的相片
+        formData.append("newImages", image.fileInstance);
+      }
+    });
     memberService
       .handleHelperEdit(formData)
       .then((response) => {
-        console.log(response);
+        // console.log(response);
         if (response?.data?.status === 200) {
           setInfo(response?.data?.info);
           editSuccess();
@@ -165,8 +272,27 @@ const Open = ({ open, setOpen, info, setInfo }) => {
       .getHelperInfo()
       .then((response) => {
         if (response?.data?.status === 200) {
-          console.log(response.data);
-          setInfo(response?.data?.data[0]);
+          const profile = response?.data?.profile[0];
+          setInfo(profile);
+          setFeedStatus({
+            service: profile.feed_service,
+            price: profile.feed_price,
+          });
+          setHouseStatus({
+            service: profile.house_service,
+            price: profile.house_price,
+          });
+          setBeautyStatus({
+            service: profile.beauty_service,
+            price: profile.beauty_price,
+          });
+
+          const tempImages = response?.data?.images;
+          setImages(() => {
+            return tempImages.map((image) => {
+              return { uid: image.image_id, url: image.file_path };
+            });
+          });
         }
       })
       .catch((e) => {
@@ -180,7 +306,7 @@ const Open = ({ open, setOpen, info, setInfo }) => {
         className=""
         id="helper-form"
         name="helper-form"
-        onSubmit={handleSubmit((data) => console.log(data))}
+        onSubmit={handleEdit}
       >
         <div className="form-item">
           <label className="size-6 m-size-7">姓名：</label>
@@ -188,18 +314,26 @@ const Open = ({ open, setOpen, info, setInfo }) => {
             className="form-input m-form-input"
             type="text"
             placeholder="請輸入名稱"
-            name="name"
-            {...register("name")}
+            value={info?.name}
+            onChange={(e) => {
+              const value = e.target.value;
+              setInfo({ ...info, name: value });
+            }}
           />
         </div>
         <div className="form-item">
           <label className="size-6 m-size-7">個人簡述：</label>
           <textarea
-            className="form-input m-form-input"
+            autosize
+            rows={3}
+            className="form-input m-form-input h-auto"
             type="text"
             placeholder="請簡單輸入自我介紹"
-            defaultValue={info?.Introduction}
-            name="introduction"
+            value={info?.Introduction}
+            onChange={(e) => {
+              const value = e.target.value;
+              setInfo({ ...info, Introduction: value });
+            }}
           />
         </div>
 
@@ -209,8 +343,11 @@ const Open = ({ open, setOpen, info, setInfo }) => {
             className="form-input m-form-input"
             type="text"
             placeholder="請輸入Email"
-            defaultValue={info?.email}
-            name="email"
+            value={info?.email}
+            onChange={(e) => {
+              const value = e.target.value;
+              setInfo({ ...info, email: value });
+            }}
           />
         </div>
         <div className="form-item">
@@ -219,36 +356,38 @@ const Open = ({ open, setOpen, info, setInfo }) => {
             className="form-input m-form-input"
             type="text"
             placeholder="請輸入聯絡電話"
-            defaultValue={info?.phone}
-            name="phone"
+            value={info?.phone}
+            onChange={(e) => {
+              const value = e.target.value;
+              setInfo({ ...info, phone: value });
+            }}
           />
         </div>
-        <div className="form-item">
-          <label className="size-6 m-size-7">上傳相片/影片：</label>
-          <div className="upload">
-            <button className="" type="button">
-              <input
-                className="d-none"
-                type="file"
-                id="upload-input"
-                name="helper-image"
-              />
-              {/* 使用label關聯被隱藏的file input */}
-              <BiUpload className="icon" />
-              <label className="" htmlFor="upload-input">
-                上傳檔案
-              </label>
-            </button>
-          </div>
+        <div className="form-item image-item">
+          <label className="size-6 m-size-7">相片/影片：</label>
+          <Upload
+            action={action}
+            listType="picture"
+            onChange={handleImage}
+            fileList={images}
+            accept="image/*"
+            multiple
+          >
+            <IconPlus size="extra-large" />
+          </Upload>
         </div>
-        <div className="form-item">
+        <div className="service-intro-item form-item">
           <label className="size-6 m-size-7">服務介紹：</label>
           <textarea
-            className="form-input m-form-input"
+            className="form-input m-form-input h-auto"
             type="text"
+            rows={8}
             placeholder="請輸入服務介紹"
-            defaultValue={info?.job_description}
-            name="job_description"
+            value={info?.job_description}
+            onChange={(e) => {
+              const value = e.target.value;
+              setInfo({ ...info, job_description: value });
+            }}
           />
         </div>
         <div className="form-item">
@@ -262,34 +401,54 @@ const Open = ({ open, setOpen, info, setInfo }) => {
         </div>
         <div className="form-item">
           <label className="size-6 m-size-7 service-type">可服務類型：</label>
-          <div className="service-switch">
-            <SwitchInput
-              label="到府照顧"
-              status={feedStatus}
-              price={info?.feed_price}
-              type="feed"
-              setStatus={setFeedStatus}
-            />
-            <SwitchInput
-              label="安親寄宿"
-              status={houseStatus}
-              price={info?.house_price}
-              type="house"
-              setStatus={setHouseStatus}
-            />
-            <SwitchInput
-              label="到府美容"
-              status={beautyStatus}
-              price={info?.beauty_price}
-              type="beauty"
-              setStatus={setBeautyStatus}
-            />
+          <div className="service-check-group">
+            <CheckboxGroup
+              type="pureCard"
+              value={checked}
+              direction="vertical"
+              aria-label="CheckboxGroup 示例"
+              onChange={(checkedValue) => {
+                setChecked(checkedValue);
+              }}
+            >
+              <CheckboxInput
+                label={"到府代餵"}
+                status={feedStatus}
+                setStatus={setFeedStatus}
+                info={info}
+                setInfo={setInfo}
+                checked={checked}
+              />
+              <CheckboxInput
+                label={"安親寄宿"}
+                status={houseStatus}
+                setStatus={setHouseStatus}
+                info={info}
+                setInfo={setInfo}
+                checked={checked}
+              />
+              <CheckboxInput
+                label={"到府美容"}
+                status={beautyStatus}
+                setStatus={setBeautyStatus}
+                info={info}
+                setInfo={setInfo}
+                checked={checked}
+              />
+            </CheckboxGroup>
           </div>
         </div>
         <div className="form-item">
           <label className="size-6 m-size-7">可服務地區：</label>
           <div>
-            <select className="form-select" name="service_county">
+            <select
+              className="form-select"
+              name="service_county"
+              onChange={(e) => {
+                const value = e.target.value;
+                setInfo({ ...info, service_county: value });
+              }}
+            >
               {countyOption.map((county) => {
                 if (info.service_county === county) {
                   return (
@@ -303,28 +462,27 @@ const Open = ({ open, setOpen, info, setInfo }) => {
             </select>
           </div>
         </div>
-        <div className="d-flex mb-2">
-          <div className="btn-groups d-flex justify-content-start ">
-            <button
-              className="btn-outline-confirm"
-              type="button"
-              onClick={handleCancel}
-            >
-              取消
-            </button>
-            {contextHolder}
-            <button type="submit" className="btn-confirm">
-              送出
-            </button>
-          </div>
+
+        <div className="btn-groups d-flex justify-content-center gap-4">
           <button
+            className="btn-outline-confirm"
             type="button"
-            className="close-helper btn-brown ms-auto"
-            onClick={handleOpen}
+            onClick={handleCancel}
           >
-            關閉小幫手功能
+            取消
+          </button>
+          {contextHolder}
+          <button type="submit" className="btn-confirm">
+            送出
           </button>
         </div>
+        <button
+          type="button"
+          className="close-helper btn-brown ms-auto"
+          onClick={handleOpen}
+        >
+          關閉小幫手功能
+        </button>
       </form>
     </>
   );
@@ -332,32 +490,46 @@ const Open = ({ open, setOpen, info, setInfo }) => {
 const HelperInfo = () => {
   const [open, setOpen] = useState(false);
   const [info, setInfo] = useState({});
-
+  const [images, setImages] = useState([]);
+  let defaultInfo, defaultImages;
   useEffect(() => {
     memberService
       .getHelperInfo()
       .then((response) => {
-        if (response?.data?.data?.length > 0) {
+        console.log(response);
+        const profile = response?.data?.profile[0];
+        setInfo(profile);
+        defaultInfo = profile;
+        if (profile.cat_helper) {
           setOpen(true);
-          setInfo(response?.data?.data[0]);
         }
+        const tempImages = response?.data?.images;
+        setImages(() => {
+          return tempImages.map((image) => {
+            return { uid: image.image_id, url: image.file_path };
+          });
+        });
+        defaultImages = images;
       })
       .catch((e) => {
         console.log(e);
       });
   }, []);
+  if (process.client) {
+    console.log("運行在客戶端");
+  }
   return (
     <>
-      <div className="helper-info ">
+      <div className="col-12 col-sm-8 helper-info ">
         <div className="title">
           <p className="size-4 m-size-5">
             <img src="/member-icon/helper-info.svg" />
             小幫手資料
             {open && (
               <Link
-                href={`/work/find-helper/30`}
+                href={`/work/find-helper/1`}
                 // 修改為user_id
-                className="to-detail size-7 m-size-7"
+                className="to-detail size-7 m-size-7 active-hover"
               >
                 點我查看細節頁
               </Link>
@@ -365,7 +537,14 @@ const HelperInfo = () => {
           </p>
         </div>
         {open ? (
-          <Open open={open} setOpen={setOpen} info={info} setInfo={setInfo} />
+          <Open
+            open={open}
+            setOpen={setOpen}
+            info={info}
+            setInfo={setInfo}
+            images={images}
+            setImages={setImages}
+          />
         ) : (
           <Close open={open} setOpen={setOpen} />
         )}

@@ -1,14 +1,22 @@
 import React, { useEffect, useState } from "react";
 import ListD from "@/components/member/list-d";
-import ListM from "@/components/member/list-m";
 import ListUserM from "@/components/member/list-user-m";
 import { BsCalendarDateFill } from "react-icons/bs";
 import { RecordTemplate } from "@/components/member/Record-template";
 import memberService from "@/services/member-service";
-
+import Link from "next/link";
+import { useAuth } from "@/context/fakeAuthContext";
+import { useRouter } from "next/router";
 const MemberReserve = () => {
   const [requests, setRequests] = useState([]);
-  const [status, setStatus] = useState(1);
+  const [status, setStatus] = useState(2);
+  const { isAuthenticated, userId } = useAuth();
+  const router = useRouter();
+  useEffect(() => {
+    if (!isAuthenticated) {
+      router.push("/member/login");
+    }
+  }, [isAuthenticated]);
   useEffect(() => {
     memberService
       .getReserve(status)
@@ -20,27 +28,34 @@ const MemberReserve = () => {
         console.log(e);
       });
   }, [status]);
-  return (
-    <div className="d-flex container-fluid flex-column flex-md-row my-3">
-      <div className="d-flex justify-content-end">
-        {/* mobile版的左側tab */}
-        <ListM />
-      </div>
 
-      {/* <ListUserM /> */}
-      <ListD />
-      <div className="sales-and-request my-3">
-        <RecordTemplate
-          icon={<BsCalendarDateFill className="icon me-1" />}
-          title={"預約紀錄"}
-          item1={"待回覆"}
-          info={requests}
-          setInfo={setRequests}
-          status={status}
-          setStatus={setStatus}
-        />
-      </div>
-    </div>
+  return (
+    <>
+      {isAuthenticated && (
+        <>
+          <div className="d-flex justify-content-end">
+            {/* mobile版的左側tab */}
+            <ListM />
+          </div>
+          <ListUserM />
+          <div className="d-flex container-fluid flex-column justify-content-around flex-md-row my-3">
+            {/* <ListUserM /> */}
+            <ListD />
+            <div className="col-12 col-sm-8 sales-and-request">
+              <RecordTemplate
+                icon={<BsCalendarDateFill className="icon me-1" />}
+                title={"預約紀錄"}
+                item1={"待回覆"}
+                info={requests}
+                setInfo={setRequests}
+                status={status}
+                setStatus={setStatus}
+              />
+            </div>
+          </div>
+        </>
+      )}
+    </>
   );
 };
 

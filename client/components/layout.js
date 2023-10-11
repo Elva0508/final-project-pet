@@ -4,15 +4,15 @@ import Footer from "@/components/footer";
 import { MissionDetailSticky } from "@/pages/work/find-mission/[mission_id]";
 import { HelperDetailSticky } from "@/pages/work/find-helper/[uid]";
 import { HomeVedio } from "@/pages/index";
+import BreadCrumb from "./breadCrumb";
 
 export default function Layout({ children }) {
-  const { pathname,query } = useRouter();
-  console.log(pathname);
+  const { pathname, query } = useRouter();
   return (
     <>
       <ResponsiveAppBar />
       {pathname && pathname == "/" ? <HomeVedio /> : null}
-      <main style={{ maxWidth: "1400px", margin: "auto" }}>{children}</main>
+      <main style={{ maxWidth: "1320px", margin: "auto" }}>{children}</main>
       <Footer />
       {pathname === "/work/find-mission/[mission_id]" && query.mission_id ? (
         <MissionDetailSticky />

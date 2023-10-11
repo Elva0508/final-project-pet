@@ -1,28 +1,23 @@
 @import "@/styles/variable";
 .order-detail {
-  background: $content-bg;
+  background: #fff;
+  border-radius: 10px 10px 10px 10px;
   color:$text-main;
+  line-height: 2;
   @media screen and (max-width: 768px) {
     background: $main-bg;
   }
-  .date {
 
-      background: #fff;
-
-  }
-  .textcolor {
-    color: $text-mark;
-  }
   .textareasize {
     height: 160px;
   }
 
     img {
-      width: 150px;
-      height: 150px;
+      width: 100px;
+      height: 100px;
       @media screen and (max-width: 768px) {
-        width: 100px;
-        height: 100px;
+        width: 80px;
+        height: 80px;
 
     }
   }
@@ -47,5 +42,25 @@
     border: none;
     outline: none;
     cursor: pointer;
+  }
+  p{
+    color:  $text-dark;
+  }
+  .listbutton{
+    width: 200px;
+    height: 50px;
+    border: 0px;
+    border-radius: 10px 10px 0px 0px;
+    background:#fff;
+
+  }
+  span{
+    color:$text-main;
+  }
+  .back{
+    text-indent: 2em;
+  }
+  .title{
+    font-weight: 600;
   }
 }

@@ -1,17 +1,14 @@
 import React from "react";
-import ListM from "@/components/member/list-m";
 import ListD from "@/components/member/list-d";
 import ListUserM from "@/components/member/list-user-m";
 import { RiFileList3Fill } from "react-icons/ri";
-import { useState, useEffect } from "react";
+import { useState, useEffect} from "react";
 import axios from "axios";
-import OrderStatusOne from "@/components/member/order-status-one";
-import OrderStatusTwo from "@/components/member/order-status-two";
-import OrderStatusThree from "@/components/member/order-status-three";
-import OrderStatusFour from "@/components/member/order-status-four";
+import OrderStatus from "@/components/member/order-status";
 
 
 export default function Order() {
+
   const [currentScreen, setCurrentScreen] = useState("1");
   const [order, setOrder] = useState([])
   const getOrder = async() => {
@@ -37,32 +34,30 @@ useEffect(() => {
 
 
   return (
-    <>
       <div className="my-3">
-        <div className="d-flex justify-content-end me-3">
-          <ListM />
-        </div>
         <ListUserM />
-        <div className="">
           <div className="d-flex justify-content-around py-2">
             <ListD />
-            <div className="row col-lg-8 col-md-8 col-12 order p-3">
-              <div>
-                <h5 className="size-5">
-                  <RiFileList3Fill />
-                  我的訂單
+            <div className="d-flex flex-column col-md-8 col-12 order">
+  
+                <h5 className="size-4 mt-3">
+                  <p className="big">我的訂單</p>
                 </h5>
-                <div className="mt-3">
+
+              <div className="col-12">
+                
                   <button
-                    className={`mx-3 size-7 listbutton ${currentScreen === "1" ? 'pressed' : ''}`}
+                    className={` size-6 listbutton first ${currentScreen === "1" ? 'pressed' : ''}`}
                     onClick={() => {
                       handleButtonClick("1");
                     }}
                   >
                     待出貨
                   </button>
+
+
                   <button
-                    className={`mx-3 size-7 listbutton ${currentScreen === "2" ? 'pressed' : ''}`}
+                    className={` size-6 listbutton ${currentScreen === "2" ? 'pressed' : ''}`}
                     onClick={() => {
                       handleButtonClick("2");
                     }}
@@ -70,7 +65,7 @@ useEffect(() => {
                     運送中
                   </button>
                   <button
-                    className={`mx-3 size-7 listbutton ${currentScreen === "3" ? 'pressed' : ''}`}
+                    className={` size-6 listbutton ${currentScreen === "3" ? 'pressed' : ''}`}
                     onClick={() => {
                       handleButtonClick("3");
                     }}
@@ -78,28 +73,18 @@ useEffect(() => {
                     已完成
                   </button>
                   <button
-                    className={`mx-3 size-7 listbutton ${currentScreen === "4" ? 'pressed' : ''}`}
+                    className={` size-6 listbutton  ${currentScreen === "4" ? 'pressed' : ''}`}
                     onClick={() => {
                       handleButtonClick("4");
                     }}
                   >
                     已取消
                   </button>
-
-                  {currentScreen === "1" && (<OrderStatusOne order={order}/>)}
-                  {currentScreen === "2" && (<OrderStatusTwo order={order}/>)}
-                  {currentScreen === "3" && (<OrderStatusThree order={order}/>)}
-                  {currentScreen === "4" && (<OrderStatusFour order={order}/>)}
                 </div>
-
-
-
-
-              </div>
+                <OrderStatus order={order} currentScreen={currentScreen} />
             </div>
           </div>
         </div>
-      </div>
-    </>
+   
   );
 }

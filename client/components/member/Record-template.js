@@ -1,7 +1,13 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { MdHomeRepairService } from "react-icons/md";
 import { useRouter } from "next/router";
+import dayjs from "dayjs";
+import { Empty } from "@douyinfe/semi-ui";
+import {
+  IllustrationNoContent,
+  IllustrationNoContentDark,
+} from "@douyinfe/semi-illustrations";
 export const RecordTemplate = ({
   icon,
   title,
@@ -47,10 +53,10 @@ export const RecordTemplate = ({
         {icon || <MdHomeRepairService className="icon me-1" />}
         {title || "銷售紀錄"}
       </h5>
-      <nav className="tab-nav mt-4" onClick={handleStatus}>
+      <nav className="tab-nav" onClick={handleStatus}>
         <button
           id="btn1"
-          className="size-7"
+          className="size-7 "
           onClick={() => {
             setStatus(1);
           }}
@@ -60,7 +66,7 @@ export const RecordTemplate = ({
         <button
           autoFocus
           id="btn2"
-          className="size-7"
+          className="size-7 "
           onClick={() => {
             setStatus(2);
           }}
@@ -69,7 +75,7 @@ export const RecordTemplate = ({
         </button>
         <button
           id="btn3"
-          className="size-7"
+          className="size-7 "
           onClick={() => {
             setStatus(3);
           }}
@@ -78,7 +84,7 @@ export const RecordTemplate = ({
         </button>
         <button
           id="btn4"
-          className="size-7"
+          className="size-7 "
           onClick={() => {
             setStatus(4);
           }}
@@ -93,62 +99,98 @@ export const RecordTemplate = ({
           <p>預約日期</p>
           <p>服務總價</p>
         </div>
-        {info &&
-          info.map((item) => (
-            <div className="info-content d-flex align-items-center justify-content-around">
-              <p>{item.created_at}</p>
-              <p>{item.oid}</p>
-              <p>
-                {item.start_day} ~<br className="d-md-none d-block" />
-                {item.end_day}
-              </p>
-              <div className="d-flex flex-column justify-content-center align-items-center">
-                <p className="mb-1 size-6">NT$ {item.total_price}</p>
-                <button
-                  className="btn-outline-confirm"
-                  onClick={() => {
-                    router.push(`/member/reserve/${item.oid}`);
-                  }}
-                >
-                  查看明細
-                </button>
-              </div>
-            </div>
-          ))}
+        {info.length === 0 ? (
+          <Empty
+            image={
+              <IllustrationNoContent style={{ width: 300, height: 300 }} />
+            }
+            title="尚未有銷售紀錄"
+          ></Empty>
+        ) : (
+          <>
+            {info &&
+              info.map((item) => (
+                <div className="info-content d-flex align-items-center justify-content-around">
+                  <p>{item.created_at}</p>
+                  <p>{item.oid}</p>
+                  <p>
+                    {item.start_day} ~<br className="d-md-none d-block" />
+                    {item.end_day}
+                  </p>
+                  <div className="d-flex flex-column justify-content-center align-items-center">
+                    <p className="mb-1 size-6 price">NT$ {item.total_price}</p>
+                    <button
+                      className="btn-outline-confirm"
+                      onClick={() => {
+                        if (title === "銷售紀錄") {
+                          router.push(`/member/selling/${item.oid}`);
+                        }
+                        if (title === "預約紀錄") {
+                          router.push(`/member/reserve/${item.oid}`);
+                        }
+                      }}
+                    >
+                      查看明細
+                    </button>
+                  </div>
+                </div>
+              ))}
+          </>
+        )}
       </div>
-      {info &&
-        info.map((item) => (
-          <div className="record-info-mobile d-flex flex-column d-sm-none my-3">
-            <div>
-              <p>成立日期</p>
-              <p>{item.created_at}</p>
-            </div>
-            <div>
-              <p>預約編號</p>
-              <p>{item.oid}</p>
-            </div>
-            <div>
-              <p>預約日期</p>
-              <p>
-                {item.start_day} ~ {item.end_day}
-              </p>
-            </div>
-            <div>
-              <p>服務總價</p>
-              <div className="d-flex align-items-center justify-content-center">
-                <p className="size-6 me-2 fw-bold">NT$ {item.total_price}</p>
-                <button
-                  className="btn-outline-confirm"
-                  onClick={() => {
-                    router.push(`/member/reserve/${item.oid}`);
-                  }}
-                >
-                  查看明細
-                </button>
+
+      {info.length === 0 ? (
+        <div className="record-info-mobile-wrapper">
+          <Empty
+            image={
+              <IllustrationNoContent style={{ width: 300, height: 300 }} />
+            }
+            title="尚未有銷售紀錄"
+            className="d-flex d-sm-none"
+          ></Empty>
+        </div>
+      ) : (
+        <div className="record-info-mobile-wrapper">
+          {info &&
+            info.map((item) => (
+              <div className="record-info-mobile d-flex d-sm-none flex-column my-3">
+                <div>
+                  <p>成立日期</p>
+                  <p>{item.created_at}</p>
+                </div>
+                <div>
+                  <p>預約編號</p>
+                  <p>{item.oid}</p>
+                </div>
+                <div>
+                  <p>預約日期</p>
+                  <p>
+                    {item.start_day} ~ {item.end_day}
+                  </p>
+                </div>
+                <div>
+                  <p>服務總價</p>
+                  <div className="d-flex align-items-center justify-content-center">
+                    <p className="size-6 me-2 price">NT$ {item.total_price}</p>
+                    <button
+                      className="btn-outline-confirm"
+                      onClick={() => {
+                        if (title === "銷售紀錄") {
+                          router.push(`/member/selling/${item.oid}`);
+                        }
+                        if (title === "預約紀錄") {
+                          router.push(`/member/reserve/${item.oid}`);
+                        }
+                      }}
+                    >
+                      查看明細
+                    </button>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-        ))}
+            ))}
+        </div>
+      )}
     </>
   );
 };
@@ -156,7 +198,16 @@ export const RecordTemplate = ({
 // title={大標題名稱}
 // item1={第一個button}
 
-export const RecordDetailTemplate = ({ icon, title }) => {
+export const RecordDetailTemplate = ({ icon, title, detail, setDetail }) => {
+  const [days, setDays] = useState(0);
+  const year = new Date().getFullYear();
+  useEffect(() => {
+    console.log(detail);
+    const start = dayjs(detail.start_day);
+    const end = dayjs(detail.end_day);
+    setDays(end.diff(start, "day") + 1);
+  }, [detail]);
+
   return (
     <>
       <h5 className="size-5 d-flex align-items-start fw-bold">
@@ -164,11 +215,11 @@ export const RecordDetailTemplate = ({ icon, title }) => {
 
         {title || "銷售服務"}
       </h5>
-      <p className="date my-4 size-7 p-1">2023-08-26</p>
+      <p className="date my-4 size-7 p-1">{detail?.created_at}</p>
       <span className="status size-6">狀態 :</span>
-      <span className="ms-2 size-6">已完成</span>
+      <span className="status-text ms-2 size-6">{detail.status}</span>
       <p className="size-7">
-        服務編號 :<span className="ms-2">1534868</span>
+        服務編號 :<span className="ms-2">{detail.oid}</span>
       </p>
       <p className="info-title size-6">預約資訊 :</p>
       <div className=" d-flex">
@@ -181,31 +232,31 @@ export const RecordDetailTemplate = ({ icon, title }) => {
           <p>備註</p>
         </div>
         <div className="content ">
-          <p>2023-10-05</p>
-          <p>2023-10-05</p>
-          <p>30分鐘/次</p>
-          <p>2次</p>
-          <p>桃園市中壢區</p>
-          <p>我需要早晚各一次，幫我清貓砂和餵飼料</p>
+          <p>{detail.start_day}</p>
+          <p>{detail.end_day}</p>
+          <p>{30 * detail.service_time} 分鐘/次</p>
+          <p>{detail.frequency} 次</p>
+          <p>{detail.location}</p>
+          <p>{detail.note}</p>
         </div>
       </div>
 
       <p className="info-title size-6">寵物資訊 :</p>
       <div className="pet d-flex">
-        <img
-          className="pet-img"
-          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSMlBOyArfydO4vCXBl_C5pREJO6Ty9a6tjPg&usqp=CAU"
-        ></img>
+        <img className="pet-img" src={detail.image}></img>
         <div className="pet-info ms-3">
           <p>
-            <span>小毛</span>
-            <span>6歲</span>
-            <span>公</span>
+            <span>{detail.name}</span>
+            <span>{year - detail.birthday_year} 歲</span>
+            <span>{detail.gender}</span>
             <span>4.5公斤</span>
           </p>
           <p></p>
-          <p>已結紮,有定期施打疫苗</p>
-          <p>這裡是個性、健康狀況描述欄位的詳細內容</p>
+          <p>
+            {detail.ligation ? "已結紮" : "尚未結紮"},
+            {detail.vaccine ? "有定期施打疫苗" : "無定期施打疫苗"}
+          </p>
+          <p>{detail.description}</p>
         </div>
       </div>
       <div className="divider my-2"></div>
@@ -213,26 +264,26 @@ export const RecordDetailTemplate = ({ icon, title }) => {
         <div className="d-flex justify-content-between">
           <p className="">小計</p>
           <p>
-            NT$<span>400</span>
+            NT$<span>{detail.subtotal_price}</span>
           </p>
         </div>
         <div className="d-flex justify-content-between">
           <p>天數</p>
-          <p>x1</p>
+          <p>x{days}</p>
         </div>
         <div className="d-flex justify-content-between">
           <p>服務時間(每30分鐘)</p>
-          <p>x1</p>
+          <p>x{detail.service_time}</p>
         </div>
         <div className="d-flex justify-content-between">
           <p>每天次數</p>
-          <p>x2</p>
+          <p>x{detail.frequency}</p>
         </div>
         <div className="divider"></div>
         <div className="d-flex justify-content-between">
           <p>總金額</p>
-          <p>
-            NT$<span>800</span>
+          <p className="price">
+            NT$<span>{detail.total_price}</span>
           </p>
         </div>
       </div>

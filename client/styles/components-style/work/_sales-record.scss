@@ -1,0 +1,246 @@
+.sales-and-request {
+  a {
+    width: 100%;
+    height: 100%;
+    border-bottom: none;
+    color: $hover;
+    &:hover {
+      border-bottom: none;
+      color: $cos-white;
+    }
+  }
+  .tab-nav .btn-focus {
+    // 被選中的btn要加上這個樣式
+    z-index: 20;
+    top: 15px;
+    border-bottom: none;
+    padding-bottom: 9px;
+    color: lighten($text-dark, 15%);
+  }
+  background: $content-bg;
+  padding: 1rem;
+  p {
+    margin: 0;
+  }
+  .icon {
+    font-size: 28px;
+  }
+  .tab-nav {
+    button {
+      color: lighten($text-mark, 15%);
+      background-color: $main-bg;
+      width: calc(100% / 4);
+      border: 2px solid lighten($light-gray, 2%);
+      border-radius: 10px 10px 0 0;
+      // box-shadow: 0px 0px 5px lighten($light-gray, 5%);
+      // border-bottom: 5px solid transparent;
+      padding: 4px 0 20px 0;
+      position: relative;
+      top: 20px;
+      // margin: 0 0.3rem;
+      transition: top 0.3s ease;
+      &:hover {
+        top: 15px;
+        // transform: scale(1.2);
+        color: lighten($text-dark, 15%);
+      }
+    }
+  }
+  .info-title {
+    padding: 0.5rem 0;
+    background-color: $main-bg;
+    border-top: 2px solid lighten($light-gray, 2%);
+    border-bottom: 2px solid lighten($light-gray, 2%);
+    box-shadow: 0px 0px 5px lighten($light-gray, 5%);
+    position: relative;
+    z-index: 10;
+    & > * {
+      margin: 0.2rem;
+      width: 25%;
+      text-align: center;
+    }
+  }
+  .info-content {
+    background-color: $cos-white;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid $light-gray;
+    color: $text-main;
+    border-radius: 2px;
+    font-size: 1rem;
+    // margin: 0.8rem 0;
+    box-shadow: 0px 0px 5px rgba(218, 218, 218, 0.295);
+    &:hover {
+      background-color: rgba(243, 238, 238, 0.788);
+      opacity: 0.8;
+    }
+    & > * {
+      width: 25%;
+      text-align: center;
+    }
+    .price {
+      color: $price;
+      font-weight: bold;
+    }
+  }
+
+  .record-info-mobile {
+    box-shadow: 1px 0px 5px rgba(0, 0, 0, 0.1);
+    max-width: 420px;
+    margin: auto;
+    & > div {
+      border-bottom: 1px solid $light-gray;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      & > :first-child {
+        width: 25%;
+        background-color: $main-bg;
+        text-align: center;
+        color: $text-main;
+      }
+      & > :last-child {
+        padding: 0.5rem;
+        width: 75%;
+        background-color: $content-bg;
+        text-align: center;
+      }
+    }
+    .price {
+      color: $price;
+      font-weight: bold;
+    }
+  }
+  .semi-empty {
+    height: 650px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+.sales-record-detail {
+  background: $content-bg;
+  padding: 1rem;
+  p {
+    margin: 5px 0;
+  }
+  .icon {
+    font-size: 30px;
+  }
+  .date {
+    background: $main-bg;
+  }
+  .status-text {
+    font-size: 1.2rem;
+    border: 1px solid rgb(182, 182, 182);
+    background-color: $cos-white;
+    padding: 0.1rem 0.4rem;
+    border-radius: 8px;
+    cursor: default;
+    box-shadow: 0px 0px 8px rgba(185, 185, 185, 0.349);
+    &:hover {
+      color: $price;
+    }
+  }
+  .info-title {
+    margin: 15px 0 0 0;
+  }
+  .title {
+    min-width: 65px;
+  }
+  .pet {
+    &-img {
+      width: 180px;
+      height: 180px;
+    }
+    &-info {
+      span {
+        margin-right: 0.5rem;
+      }
+      & > p {
+        margin: 10px 0;
+      }
+    }
+  }
+  .settlement-amount {
+    p {
+      margin: 5px 0;
+      color: $text-main;
+    }
+    & div:last-child {
+      font-weight: bold;
+    }
+  }
+  .divider {
+    width: 100%;
+    height: 1px;
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+  button {
+    width: 100px;
+    height: 40px;
+    font-size: 18px;
+  }
+}
+
+.reserve-review-modal {
+  .semi-modal-content {
+    border-radius: 2px;
+  }
+  .reserve-review-footer {
+    width: 100%;
+    display: flex;
+    justify-content: end;
+    padding-right: 1rem;
+    gap: 30px;
+    button {
+      width: 80px;
+      height: 40px;
+      font-size: 1.25rem;
+      border-radius: 2px;
+    }
+  }
+  .review-card-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .sales-and-request,
+  .sales-record-detail {
+    width: 100%;
+    background: $main-bg;
+    padding: 0;
+  }
+  .sales-record-detail {
+    .pet-img {
+      width: 130px;
+      height: 130px;
+    }
+  }
+}
+@media screen and (max-width: 576px) {
+  .sales-and-request {
+    .record-info-mobile-wrapper {
+      border-top: 2px solid lighten($light-gray, 2%);
+      padding: 20px 0;
+      position: relative;
+      z-index: 10;
+      background-color: $main-bg;
+      &::before {
+        content: "";
+        display: flex;
+        position: absolute;
+        width: 100%;
+        height: 2px;
+        top: 6px;
+        background-color: lighten($light-gray, 2%);
+      }
+    }
+  }
+  .sales-record-detail {
+    background: $main-bg;
+  }
+}

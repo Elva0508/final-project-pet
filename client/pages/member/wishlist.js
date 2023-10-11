@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import ListM from "@/components/member/list-m";
 import ListD from "@/components/member/list-d";
 import ListUserM from "@/components/member/list-user-m";
 import { FaList } from "react-icons/fa";
@@ -7,6 +6,8 @@ import { RiDeleteBin5Line } from "react-icons/ri";
 import {useCart} from "@/hooks/useCart"
 import axios from "axios";
 import Pagination from '@/components/pagination'
+import { useRouter } from 'next/router';
+
 
 export default function Wishlist() {
   const [wishlist, setWishlist] = useState([]);
@@ -18,6 +19,7 @@ export default function Wishlist() {
   const endIndex = startIndex + itemsPerPage;
   const currentData = wishlist.slice(startIndex, endIndex);
 
+  const router = useRouter();
 
 
   const handleSelectChange = (pid, v) => {
@@ -131,30 +133,26 @@ export default function Wishlist() {
   return (
     <>
       <div className="my-3">
-        <div className="d-flex justify-content-end me-3">
-          <ListM />
-        </div>
         <ListUserM />
         <div className="d-flex justify-content-around pt-2">
           <ListD />
-          <div className="row col-lg-8 col-md-8 col-12 wishlist pt-3 px-3">
-            <div>
+          <div className="d-flex flex-column col-md-8 col-12 wishlist">
+
               <div className="d-flex justify-content-between">
-                <h5 className="size-5">
-                  <FaList />
+                <h5 className="size-5 mt-3 ms-md-5 ms-3 big">
                   追蹤清單
                 </h5>
-                <p>已追蹤{wishlist.length}樣商品</p>
+                <p className="size-7 mt-3 me-md-5 pe-md-5 pe-2">已追蹤{wishlist.length}樣商品</p>
               </div>
 
               {currentData.map((v, i) => {
                 return (
                   <>
                     <div
-                      className="col-12 d-flex justify-content-between border-bottom py-2"
+                      className="d-flex justify-content-between border-bottom pt-4 pb-2 mx-md-5"
                       key={v.collection_id}
                     >
-                      <div className="d-flex col-7 col-sm-8">
+                      <div className="d-flex col-7 col-md-9">
                         <img src={v.images} alt={v.product_name} />
                         <div className="ms-3">
                           <p className="size-6 m-size-7">{v.product_name}</p>
@@ -179,37 +177,37 @@ export default function Wishlist() {
                         </div>
                       </div>
 
-                      <div className="col-4 col-sm-3  d-md-flex align-items-center d-none ">
+                      <div className="col-5 col-md-3  d-md-flex align-items-center d-none  flex-column justify-content-center">
                         <button
-                          className="btn btn-confirm size-6 m-size-7 me-4 " 
+                          className="btn btn-confirm size-6 m-size-7 my-2" 
                           data-bs-toggle="offcanvas" 
                           data-bs-target="#offcanvasRight" 
                           aria-controls="offcanvasRight"
                           onClick={() => addCart(v.product_id, v.product_type)}
                         >
-                          加入購物車
+                          立即購買
                         </button>
                         <button
-                          className="delete"
+                          className="btn btn-outline-confirm size-6 m-size-7 my-2"
                           onClick={() => {
                             // 這裡作刪除的動作
                             deleteWishlist(v.collection_id);
                           }}
                         >
-                          <RiDeleteBin5Line />
+                          取消追蹤
                         </button>
                       </div>
 
                       <div className="col-4 d-md-none d-flex flex-column justify-content-between align-items-end">
                         <div className="d-flex justify-content-center">
                           <button
-                            className="delete"
+                            className="delete btn btn-outline-confirm size-6 m-size-7 m-2"
                             onClick={() => {
                               // 這裡作刪除的動作
                               deleteWishlist(v.collection_id);
                             }}
                           >
-                            <RiDeleteBin5Line />
+                            取消追蹤
                           </button>
                         </div>
                         <div className="d-flex justify-content-center">
@@ -222,7 +220,7 @@ export default function Wishlist() {
                               addCart(v.product_id, v.product_type)
                             }
                           >
-                            加入購物車
+                            立即購買
                           </button>
                         </div>
                       </div>
@@ -255,7 +253,7 @@ export default function Wishlist() {
                         </>
                       );
                     })}
-                    <div className="d-flex justify-content-around mb-3">
+                    <div className="d-flex justify-content-center my-3">
                       <button
                         type="button"
                         className="btn btn-confirm"
@@ -264,19 +262,22 @@ export default function Wishlist() {
                       >
                         繼續購物
                       </button>
-                      <button type="button" className="btn btn-confirm">
-                        前往購物車
+                      <button type="button" className="btn btn-confirm  ms-5" onClick={()=>{
+                        router.push("/product/cart")
+                      }}>
+                        前往結帳
                       </button>
                     </div>
 
                 </div>
               </div>
-
-              <Pagination  itemsPerPage={itemsPerPage} total={wishlist} activePage={activePage} setActivePage={setActivePage}/>
+              <div className="mt-4">
+                <Pagination  itemsPerPage={itemsPerPage} total={wishlist} activePage={activePage} setActivePage={setActivePage}/>
+              </div>
+              
             </div>
           </div>
         </div>
-      </div>
     </>
   );
 }

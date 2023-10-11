@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import ListM from "@/components/member/list-m";
 import ListD from "@/components/member/list-d";
 import ListUserM from "@/components/member/list-user-m";
 import { RiFileList3Fill } from "react-icons/ri";
@@ -9,13 +8,14 @@ import axios from "axios";
 // import moment from "moment"
 
 export default function Orderdetail() {
+
+
   const [showCommentForm, setShowCommentForm] = useState(false);
   const [currentProductId, setCurrentProductId] = useState(null);
   const [comments, setComments] = useState({});
   const [value, setValue] = useState(0);
   const [detail, setDetail] = useState([{}]);
   const router = useRouter();
-
 
   const handleSaveComment = async(productId,orderId) => {
         try {
@@ -78,53 +78,54 @@ export default function Orderdetail() {
     // eslint-disable-next-line
   }, [router.query]);
 
+
+const back =(id)=>{
+  router.push('http://localhost:3000/member/order')
+}
+
   return (
     <>
       <div className="my-3">
-        <div className="d-flex justify-content-end me-3">
-          <ListM />
-        </div>
         <ListUserM />
         <div className="d-flex py-2 justify-content-around">
           <ListD />
 
-          <div className="row col-lg-8 col-md-8 col-12 order-detail p-3">
-            <div>
-              <h5 className="size-5">
-                <RiFileList3Fill />
+          <div className="d-flex flex-column col-md-8 col-12 order-detail">
+
+              <h5 className="size-5 mt-3 ms-md-5 ms-3 title">
                 我的訂單
               </h5>
-
-              <p className="date my-3 size-7">{detail[0].created_at}</p>
-              <p className="size-7">狀態 : {detail[0].status_name}</p>
-              <p className="size-7">訂單編號 :{detail[0].oid}</p>
-              <p className="size-7">收件資訊 :</p>
-              <p className="textcolor size-7">收件人{detail[0].buyer_name}</p>
-              <p className="textcolor size-7">地址 {detail[0].buyer_address}</p>
-              <p className="textcolor size-7">電話 {detail[0].buyer_phone}</p>
-              <p className="size-7">付款資訊 : {detail[0].payment}</p>
-              <p className="size-7">寄送方式 : {detail[0].shipment}</p>
-              <p className="size-7">購買項目 :</p>
+              <div className="px-md-5 px-3">
+              <p className="size-6  mt-2"><span>訂單編號：</span>{detail[0].oid}</p>
+              <p className="size-7"><span>訂單時間：</span>{detail[0].created_at}</p>
+              <p className="size-7"><span>訂單狀態：</span>{detail[0].status_name}</p>
+              <p className="size-7"><span>付款資訊：</span>{detail[0].payment}</p>
+              <p className="size-7"><span>寄送方式：</span>{detail[0].shipment}</p>
+              <p className="size-7"><span>收件資訊：</span></p>
+              <p className="size-7 back"><span>收件姓名：</span>{detail[0].buyer_name}</p>
+              <p className="size-7 back"><span>收件地址：</span>{detail[0].buyer_address}</p>
+              <p className="size-7 back"><span>聯絡電話：</span>{detail[0].buyer_phone}</p>
+              <p className="size-7"><span>購買項目：</span></p>
               {detail.map((v, i) => {
                 return (
                   <div key={v.product_id}>
                     <div className="d-flex border-bottom pb-3 d-md-flex d-none align-items-center">
-                      <div className="d-flex col-8 align-items-center">
+                      <div className="d-flex col-7 align-items-center">
                         <img src={v.image}></img>
                         <div>
                           <p className="ms-3 size-7">
-                            商品名稱:{v.product_name}
+                          <span>商品名稱：</span>{v.product_name}
                           </p>
-                          <p className="ms-3 size-7">{v.type}</p>
-                          <p className="ms-3 size-7">NT${v.price}</p>
+                          <p className="ms-3 size-7"><span>商品規格：</span>{v.type}</p>
+                          <p className="ms-3 size-7"><span>商品單價：</span>NT${v.price}</p>
                         </div>
                       </div>
-                      <div className="col-1">
-                        <p className="ms-3 size-7">x{v.quantity}</p>
+                      <div className="col-2">
+                        <p className="ms-3 size-7"><span>數量：</span>{v.quantity}</p>
                       </div>
                       <div className="ms-auto size-7 me-3">
                         <p className="ms-3 size-7">
-                          小計:NT${v.quantity * v.price}
+                        <span>小計：</span>NT${v.quantity * v.price}
                         </p>
                       </div>
                     </div>
@@ -134,15 +135,15 @@ export default function Orderdetail() {
                         <img src={v.image}></img>
                         <div className="ms-3 d-flex flex-column justify-content-around">
                           <div>
-                            <p className="size-7">商品名稱:{v.product_name}</p>
+                            <p className="size-7"><span>商品名稱：</span>{v.product_name}</p>
                           </div>
                           <div>
-                            <p className="size-7">x{v.quantity}</p>
+                            <p className="size-7"><span>數量：</span>{v.quantity}</p>
                           </div>
 
                           <div>
                             <p className="size-7">
-                              小計:NT${v.quantity * v.price}
+                            <span>小計：NT${v.quantity * v.price}</span>
                             </p>
                           </div>
                         </div>
@@ -152,9 +153,11 @@ export default function Orderdetail() {
                       <div>                   
 
                         {showCommentForm && currentProductId === v.product_id && v.status_id=== 3?(
-                          <div className="mt-3">
-                            <Star startRating={v.star_rating} valid={v.star_rating} />
-                            <p>我的評論: {v.review_content}</p>
+                          <div className="mt-3  d-flex justify-content-end">
+                            <div>
+                              <Star startRating={v.star_rating} valid={v.star_rating} />
+                              <p><span>我的評論：</span>{v.review_content}</p>
+                            </div>  
                           </div>
                         ):("")}
 
@@ -181,7 +184,7 @@ export default function Orderdetail() {
                       ): showCommentForm && currentProductId === v.product_id && v.status_id=== 3 ?
                       (
                        <div>
-                            <h5 className="size-6 mt-3">商品評論</h5>
+                            <h5 className="size-6 mt-3">商品評論：</h5>
                             <Star startRating={value} onRatingChange={setValue} valid={v.star_rating}/>
                             <textarea
                               className="form-control col-12 textareasize "
@@ -231,7 +234,7 @@ export default function Orderdetail() {
                 <table className="col-12 col-lg-4 col-md-6">
                   <thead>
                     <tr>
-                      <td className="size-7">商品總金額</td>
+                      <td className="size-7">商品總金額：</td>
                       <td className="size-7 text-end">NT${detail[0].order_price}</td>
                     </tr>
                     {/* <tr>
@@ -239,21 +242,21 @@ export default function Orderdetail() {
                                   <td className="size-7">NT$880</td>
                                 </tr> */}
                     <tr>
-                      <td className="size-7">優惠折扣</td>
+                      <td className="size-7">優惠折扣：</td>
                       <td className="size-7 text-end">NT$-{detail[0].sale}</td>
                     </tr>
                     <tr className="border-bottom">
-                      <td className="size-7">運費</td>
+                      <td className="size-7">運費：</td>
                       <td className="size-7 text-end">NT${detail[0].freight}</td>
                     </tr>
                     <tr>
-                      <th className="size-7">訂單金額</th>
+                      <th className="size-7">訂單金額：</th>
                       <td className="size-7 text-end">NT${detail[0].total_amount}</td>
                     </tr>
                   </thead>
                 </table>
               </div>
-            </div>
+              </div>
           </div>
         </div>
       </div>

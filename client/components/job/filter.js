@@ -3,7 +3,7 @@ import { BiSolidDownArrow, BiSolidUpArrow } from "react-icons/bi";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 
-const Filter = ({ items, src, onClick, order }) => {
+const Filter = ({ items, src, onClick, order, filterType }) => {
   const dropDownRef = useRef(null);
   const [anchorEl, setAnchorEl] = useState(null);
   const handleClick = (event) => {
@@ -30,12 +30,7 @@ const Filter = ({ items, src, onClick, order }) => {
           <img src={src} />
         </div>
         {items.title || "選項"}
-        <BiSolidDownArrow
-          className={`icon icon-down ${!anchorEl ? "" : "d-none"}`}
-        />
-        <BiSolidUpArrow
-          className={`icon icon-up ${anchorEl ? "" : "d-none"}`}
-        />
+        <BiSolidDownArrow className={`icon icon-down `} />
       </button>
       <Menu
         id="simple-menu"
@@ -47,9 +42,10 @@ const Filter = ({ items, src, onClick, order }) => {
       >
         {items?.children?.map((item) => {
           if (
-            order &&
-            order.value === item.value &&
-            order.parentValue === items.value
+            (order &&
+              order.value === item.value &&
+              order.parentValue === items.value) ||
+            (items.value === "type" && item.value === filterType)
           ) {
             return (
               <MenuItem
