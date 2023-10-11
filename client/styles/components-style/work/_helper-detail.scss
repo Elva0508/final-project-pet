@@ -1,8 +1,8 @@
 %helper-button-style {
-  font-size: 1.6rem;
+  font-size: 1.2rem;
   // font-weight: bold;
-  width: 180px;
-  height: 55px;
+  width: 150px;
+  height: 45px;
   svg {
     font-size: 28px;
     margin-right: 0.2rem;
@@ -379,7 +379,7 @@ $detail-block-width: 9px; //標題左側直槓槓
 }
 .get-price {
   overflow-x: hidden;
-  height: 100px;
+  height: 80px;
   background-color: $main-bg;
   position: sticky;
   bottom: 0;
