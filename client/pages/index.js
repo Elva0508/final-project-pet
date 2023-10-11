@@ -8,6 +8,7 @@ import BlockFiveMobile from "@/components/home/block-five-mobile";
 import BlockSix from "@/components/home/block-six";
 import BlockSixMobile from "@/components/home/block-six-mobile";
 import HomeProductCard2 from "@/components/home/home-product-card2";
+import HomeProductCardHot from "@/components/home/home-product-card-hot";
 
 export function HomeVedio() {
   return (
@@ -130,11 +131,8 @@ export default function Index() {
             <div className="size-2 home-tilte d-flex justify-content-center mb-5">
               本週排行榜
             </div>
-            <div className="mb-3">
-              <BlockTwo />
-            </div>
-            <div className="mb-3">
-              <BlockTwo />
+            <div className="row gy-5">
+              <HomeProductCardHot />
             </div>
           </div>
 

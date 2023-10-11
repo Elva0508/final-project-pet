@@ -14,16 +14,16 @@ import React from "react";
 // import Filter from "@/components/job/filter";
 
 //nono
-import HomeProductCard2 from "@/components/home/home-product-card2";
-const Test = () => {
-  return (
-    <>
-      <div className="container row gy-5">
-        <HomeProductCard2 />
-      </div>
-    </>
-  );
-};
+// import HomeProductCard2 from "@/components/home/home-product-card2";
+// const Test = () => {
+//   return (
+//     <>
+//       <div className="container row gy-5">
+//         <HomeProductCard2 />
+//       </div>
+//     </>
+//   );
+// };
 //佳瑜
 // import LoginForm from "@/components/user/loginForm";
 // import UserForm from "@/components/user/userForm";
