@@ -21,6 +21,7 @@ function ProductDescription({ htmlContent }) {
 
 
 export default function ProductDetail() {
+    const [collection, setCollection ]  = useState([]);
 
     //計算數量
     const [count, setCount] = useState(1);
@@ -40,7 +41,7 @@ export default function ProductDetail() {
     // 讀取product個別id資料
     const router = useRouter();
     const product_id = router.query.pid;
-   
+
     const [productData, setProductData] = useState([]);
     useEffect(() => {
         if (product_id) {
@@ -129,12 +130,15 @@ export default function ProductDetail() {
             .catch((error) => {
                 console.error('Error fetching random products:', error);
             });
+
+        getCollection()
+        
     }, []);
 
     // 添加商品到購物車的函式
     const { cart, setCart } = useCart();
     //儲存選中的type_id-selectedTypeId
-    const [selectedTypeId, setSelectedTypeId] = useState(''); 
+    const [selectedTypeId, setSelectedTypeId] = useState('');
     const getCart = () => {
         axios.get("http://localhost:3005/api/product/cart")
             .then((response) => {
@@ -192,6 +196,57 @@ export default function ProductDetail() {
             getCart();
         }
     };
+
+    // 添加商品到收藏的函式
+   
+    //儲存選中的type_id-selectedTypeId 加到購物車時已經有寫了
+    // const [selectedTypeId, setSelectedTypeId] = useState('');
+    const getCollection = () => {
+        axios.get("http://localhost:3005/api/product/collections")
+            .then((response) => {
+                setCollection(response.data.result);
+                console.log(response.data.result)
+            })
+            .catch((error) => {
+                console.error("Error:", error);
+            });
+        
+    }
+
+    const addCollection = async (product_id, product_type) => {
+        console.log(product_id, product_type)
+
+        // 檢查收藏中是否已經存在具有相同 id 和類型的商品
+        const have = collection.find((v) => v.product_id == product_id && v.type_id == product_type);
+        console.log(have);
+
+        // 如果購物車中沒有相同的商品
+        if (have === undefined) {
+            try {
+                // 發送HTTP請求將商品添加到購物車
+                const response = await axios.put(
+                    `http://localhost:3005/api/product/collections`,
+                    { product_id, product_type }
+                );
+            } catch (error) {
+                console.error("錯誤：", error);
+            }
+
+            // 獲取最新的收藏資料
+            getCollection();
+        }
+        //  else { // 如果購物車中已經存在相同的商品
+        //     try {
+
+        //     } catch (error) {
+        //         console.error("錯誤：", error);
+        //     }
+
+        //     // 獲取最新收藏資料
+        //     getCart();
+        // }
+    };
+
 
     return (
         <>
@@ -260,7 +315,8 @@ export default function ProductDetail() {
                                         </div>
                                         {/* 計算數量 */}
                                         <div className="quantity-counter">
-                                            <div className="quantity-counter d-flex ">
+                                            <div className="type-chinese">數量</div>
+                                            <div className="quantity-counter d-flex mt-1">
                                                 <button className="decrement  " onClick={handleDecrement}>
                                                     <FiMinus />
                                                 </button>
@@ -277,7 +333,7 @@ export default function ProductDetail() {
                                                 data-bs-toggle="offcanvas"
                                                 data-bs-target="#offcanvasRight"
                                                 aria-controls="offcanvasRight"
-                                                onClick={() =>{
+                                                onClick={() => {
                                                     addCart(v.product_id, selectedTypeId, count);
                                                     console.log(v.product_id, selectedTypeId, count)
                                                 }
@@ -287,9 +343,32 @@ export default function ProductDetail() {
                                             </button>
                                         </div>
                                         <div className="add-to-favorites">
-                                            <button type="button" className=" btn-second">
+                                            <button
+                                                type="button"
+                                                className=" btn-second"
+                                                onClick={()=>{
+                                                    addCollection(v.product_id, selectedTypeId)
+                                                    console.log('收藏:',v.product_id, selectedTypeId)
+                                                }}
+                                               
+                                                >
                                                 加入收藏
                                             </button>
+                                        </div>
+                                        <div>
+                                            <p>訂單金額滿新臺幣 4,500 元即享免費標準運送服務
+
+
+                                                臺北市:
+                                                標準運送的商品可於 2-5 個工作天內送達
+                                                快遞運送的商品可於 2-3 個工作天內送達
+
+                                                其它縣市:
+                                                標準運送的商品可於 3-6 個工作天內送達
+                                                快遞運送的商品可於 3-5 個工作天內送達
+
+
+                                                訂單皆於星期一至星期五之間處理與寄送 (國定假日除外)</p>
                                         </div>
                                     </div>
                                     {/* 加到購物車 */}

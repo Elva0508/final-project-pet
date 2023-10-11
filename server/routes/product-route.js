@@ -246,7 +246,7 @@ router.get("/filter_sort", (req, res) => {
     );
 });
 
-//商品列表頁
+//商品列表頁vendor篩選
 router.get("/vendor", (req, res) => {
     connection.execute(
         ` SELECT
@@ -264,10 +264,36 @@ router.get("/vendor", (req, res) => {
     );
 });
 
+//加入收藏
+//查看收藏內有甚麼商品
+router.get("/collections", (req, res) => {
+    connection.execute(
+        `SELECT product_collections.*
+        FROM product_collections
+        WHERE user_id=1;`
+        , (error, result) => {
+            res.json({ result })
+        }
+    )
+})
 
-
-
-
+//用來新增收藏裡沒有的商品
+router.put("/collections", (req, res) => {
+    const { product_id, product_type} = req.body; // 從請求主體中獲取 quantity 參數
+    console.log(product_id, product_type)
+    connection.execute(
+        `INSERT INTO product_collections(user_id, product_id, product_type) VALUES (1, ?, ?);`,
+        [product_id, product_type], // 將 quantity 參數傳遞到 SQL 查詢中
+        (error, result) => {
+            if (error) {
+                console.error("Error inserting into cart:", error);
+                res.status(500).json({ error: "Internal Server Error" });
+            } else {
+                res.json({ result });
+            }
+        }
+    );
+});
 
 
 module.exports = router;

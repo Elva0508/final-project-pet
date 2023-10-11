@@ -85,6 +85,11 @@ a{
       width: 100%;   
     }
 }
+.btn-outline-brown:active {
+  background-color: $text-main;
+  color: $text-main;
+
+}
 
 //section-product-detail-tabs
  .product-detail-tabs {

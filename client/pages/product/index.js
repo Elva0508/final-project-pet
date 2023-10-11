@@ -132,9 +132,9 @@ export default function ProductList() {
         setMaxPrice(event.target.value);
     };
 
-    const handleSortByChange = (event) => {
-        setSortBy(event.target.value);
-    };
+    // const handleSortByChange = (event) => {
+    //     setSortBy(event.target.value);
+    // };
 
     // 處理排序選擇的變化
     const handleSortChange = (event) => {
