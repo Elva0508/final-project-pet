@@ -6,6 +6,8 @@ import { RiDeleteBin5Line } from "react-icons/ri";
 import {useCart} from "@/hooks/useCart"
 import axios from "axios";
 import Pagination from '@/components/pagination'
+import { useRouter } from 'next/router';
+
 
 export default function Wishlist() {
   const [wishlist, setWishlist] = useState([]);
@@ -17,6 +19,7 @@ export default function Wishlist() {
   const endIndex = startIndex + itemsPerPage;
   const currentData = wishlist.slice(startIndex, endIndex);
 
+  const router = useRouter();
 
 
   const handleSelectChange = (pid, v) => {
@@ -259,7 +262,9 @@ export default function Wishlist() {
                       >
                         繼續購物
                       </button>
-                      <button type="button" className="btn btn-confirm  ms-5">
+                      <button type="button" className="btn btn-confirm  ms-5" onClick={()=>{
+                        router.push("/product/cart")
+                      }}>
                         前往結帳
                       </button>
                     </div>
