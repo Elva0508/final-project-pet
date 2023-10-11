@@ -28,7 +28,7 @@ export function ActivePageProvider ({ children }) {
   }else if(pathname=="/member/reserve"){
     page=9
   }else {
-    page=1
+    page=0
   }
 
   const [activeButton, setActiveButton] = useState(page)

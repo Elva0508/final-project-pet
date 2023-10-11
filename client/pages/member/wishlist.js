@@ -1,12 +1,9 @@
 import React, { useState, useEffect } from "react";
 import ListD from "@/components/member/list-d";
 import ListUserM from "@/components/member/list-user-m";
-import { FaList } from "react-icons/fa";
-import { RiDeleteBin5Line } from "react-icons/ri";
 import {useCart} from "@/hooks/useCart"
 import axios from "axios";
 import Pagination from '@/components/pagination'
-import { useRouter } from 'next/router';
 
 
 export default function Wishlist() {
@@ -18,8 +15,6 @@ export default function Wishlist() {
   const startIndex = (activePage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentData = wishlist.slice(startIndex, endIndex);
-
-  const router = useRouter();
 
 
   const handleSelectChange = (pid, v) => {
@@ -263,7 +258,7 @@ export default function Wishlist() {
                         繼續購物
                       </button>
                       <button type="button" className="btn btn-confirm  ms-5" onClick={()=>{
-                        router.push("/product/cart")
+                        window.location.href=("/product/cart")
                       }}>
                         前往結帳
                       </button>
