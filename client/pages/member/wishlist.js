@@ -139,7 +139,7 @@ export default function Wishlist() {
           <div className="d-flex flex-column col-md-8 col-12 wishlist">
 
               <div className="d-flex justify-content-between">
-                <h5 className="size-5 mt-3 ms-md-5 ms-3">
+                <h5 className="size-5 mt-3 ms-md-5 ms-3 big">
                   追蹤清單
                 </h5>
                 <p className="size-7 mt-3 me-md-5 pe-md-5 pe-2">已追蹤{wishlist.length}樣商品</p>

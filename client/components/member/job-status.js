@@ -69,7 +69,7 @@ export default function JobStatusTwo({job,currentScreen}) {
       {currentData.map((v,i) => {
         return (
           <>
-          <div className="d-md-none d-flex mt-3 ms-3">
+          <div className="d-md-none d-flex pt-3 ps-3 bg">
                   <p className="size-6 title"><span>任務主題：</span>{v.title}
                    {v.mission_status==0?(
                     <>
@@ -85,7 +85,7 @@ export default function JobStatusTwo({job,currentScreen}) {
                   </p>
 
             </div>
-            <div className="d-flex border-bottom py-md-3 justify-content-between mx-md-5 ms-3" key={i}>
+            <div className="d-flex border-bottom py-md-3 justify-content-between px-md-5 ps-3 bg" key={i}>
               <div className=" d-flex ">
                 {/* 1 */}
                 <div className="">
