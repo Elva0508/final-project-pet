@@ -7,6 +7,8 @@ import dayjs from "dayjs";
 import { Controller, useForm } from "react-hook-form";
 import { register } from "swiper/element";
 import workService from "@/services/work-service";
+import { Upload } from "@douyinfe/semi-ui";
+import { IconPlus } from "@douyinfe/semi-icons";
 const options = cityData.map((city) => {
   return {
     value: city.CityName,
@@ -18,6 +20,8 @@ const options = cityData.map((city) => {
 });
 
 const CreateMission = () => {
+  const user = 1;
+  const uploadRef = useRef();
   const router = useRouter();
   const imgRef = useRef();
   const today = new Date();
@@ -25,6 +29,7 @@ const CreateMission = () => {
   const [endDay, setEndDay] = useState(undefined);
   const [city, setCity] = useState(undefined);
   const [area, setArea] = useState(undefined);
+  const [imageList, setImageList] = useState([]);
   const onChange = (value, selectedOptions) => {
     // console.log(value, selectedOptions);
     setCity(selectedOptions[0].label);
@@ -40,23 +45,55 @@ const CreateMission = () => {
     const form = document.querySelector("#form");
     const formData = new FormData(form);
     const img = document.getElementById("missionImage");
-    formData.append("missionImage", img.files);
+    // const dataTransfer = new DataTransfer();
+    // imageList.forEach((file) => {
+    //   dataTransfer.items.add(file);
+    // });
+    // const fileList = dataTransfer.files;
+    // console.log(dataTransfer);
+    // console.log(img.files);
+    // console.log(fileList);
+    console.log(imageList);
+    imageList.forEach((image) => {
+      formData.append("missionImage", image);
+    });
+    formData.append("user_id", user);
     formData.append("startDay", startDay);
     formData.append("endDay", endDay);
     formData.append("city", city);
     formData.append("area", area);
+    // uploadRef.current.upload(); //照片手動上傳
     workService
       .createMission(formData)
       .then((response) => {
         if (response?.data?.status === 200) {
           console.log(response);
-          router.push(`/work/find-mission/${response.data.detail[0].pid}`);
+          alert("新增任務成功，準備跳轉");
+          router.push(`/work/find-mission/${response.data.insertId}`);
         }
       })
       .catch((e) => {
         console.log(e);
       });
   };
+  // const action = "http://localhost:3005/api/work/mission/image";
+  const action = "http://localhost:3000/work/create-mission";
+  const getPrompt = (isListType) => {
+    let basicStyle = {
+      display: "flex",
+      alignItems: "center",
+      color: "grey",
+      height: isListType ? "100%" : 32,
+    };
+    let marginStyle = {
+      left: { marginRight: 10 },
+      right: { marginLeft: 10 },
+    };
+    let style = { ...basicStyle, ...marginStyle["right"] };
+
+    return <div style={style}>请上传认证材料</div>;
+  };
+  const positions = ["right", "bottom"];
   return (
     <form
       id="form"
@@ -93,13 +130,37 @@ const CreateMission = () => {
           <div className="body-item">
             <label className="size-6">任務相片</label>
             <br />
-            <input
+            {/* <input
               id="missionImage"
               name="missionImage"
               multiple
               ref={imgRef}
               type="file"
-            />
+            /> */}
+            <Upload
+              action={action}
+              prompt={getPrompt(true)}
+              promptPosition={"right"}
+              listType="picture"
+              name="missionImage"
+              ref={uploadRef}
+              multiple
+              // uploadTrigger="custom"
+              onSuccess={(responseBody, file, fileList) => {
+                console.log(fileList);
+                setImageList(() => {
+                  let files = [];
+                  fileList.map((file) => {
+                    files = [...files, file.fileInstance];
+                  });
+                  console.log(files);
+                  return files;
+                  // return fileList[0].fileInstance;
+                });
+              }}
+            >
+              <IconPlus size="extra-large" />
+            </Upload>
           </div>
           <div className="body-item">
             <label className="size-6">任務地點</label>
@@ -123,9 +184,13 @@ const CreateMission = () => {
             <br />
             <div></div>
             <select className="form-select" name="mission_type">
-              <option selected>到府照顧</option>
-              <option>安親寄宿</option>
-              <option>到府美容</option>
+              <option selected value={1}>
+                到府照顧
+              </option>
+              <option value={2}>安親寄宿</option>
+              <option value={3}>到府美容</option>
+              <option value={4}>行為訓練</option>
+              <option value={5}>醫療護理</option>
             </select>
           </div>
           <div className="body-item">
@@ -156,8 +221,10 @@ const CreateMission = () => {
             <label className="size-6">支付方式</label>
             <br />
             <select className="form-select" name="payment">
-              <option selected>現金</option>
-              <option>轉帳匯款</option>
+              <option selected value={1}>
+                現金
+              </option>
+              <option value={2}>轉帳匯款</option>
             </select>
           </div>
         </div>

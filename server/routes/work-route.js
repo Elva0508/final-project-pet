@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const conn = require("../db");
 const multer = require("multer");
+const dayjs = require("dayjs");
 const path = require("path");
 const { v4: uuidv4 } = require("uuid");
 const storage = multer.diskStorage({
@@ -257,6 +258,41 @@ router.get("/helpers/search", async (req, res) => {
   );
 });
 
+router.get("/helpers/favorite", async (req, res) => {
+  let { collection } = req.query;
+  // console.log(collection);
+  if (collection) {
+    collection = collection.reverse();
+    console.log(collection);
+    try {
+      const results = await Promise.all(
+        collection.map(async (item) => {
+          return new Promise((resolve, reject) => {
+            return conn.execute(
+              `SELECT h.*,u.cover_photo, u.cat_helper, r.review_count,r.average_star FROM mission_helper_info h LEFT JOIN userinfo u ON h.user_id = u.user_id LEFT JOIN (SELECT helper_id ,COUNT(*) AS review_count , SUM(star_rating) /  COUNT(*) AS average_star FROM mission_helper_reviews GROUP BY helper_id) r ON h.user_id = r.helper_id WHERE h.user_id = ?`,
+              [item],
+              (err, results) => {
+                if (err) {
+                  console.log(err);
+                  reject({ status: 500, msg: "資料庫查詢錯誤" });
+                }
+                resolve(results[0]);
+              }
+            );
+          });
+        })
+      );
+      console.log("異步查詢結束");
+      return res.send({ status: 200, results });
+    } catch (e) {
+      console.log(e);
+      return res.status(500).send(e);
+    }
+  } else {
+    return res.send({ status: 200, results: [] });
+  }
+});
+
 router.get("/helpers", (req, res) => {
   // sql所有開啟小幫手功能的小幫手資料 & 依類型篩選小幫手資料
 
@@ -335,6 +371,84 @@ router.get("/helpers/detail/petInfo", (req, res) => {
     }
   );
 });
+router.get("/helpers/detail/review", async (req, res) => {
+  const { star, uid } = req.query;
+  console.log(star, uid);
+  try {
+    if (star === "all") {
+      const review_count = await new Promise((resolve, reject) => {
+        conn.execute(
+          `SELECT COUNT(*) AS review_count FROM mission_helper_reviews  WHERE helper_id = ?`,
+          [uid],
+          (err, result) => {
+            if (err) {
+              console.log(err);
+              reject(err);
+            }
+            resolve(result[0].review_count);
+          }
+        );
+      });
+      const reviews = await new Promise((resolve, reject) => {
+        conn.execute(
+          `SELECT r.*,u.cover_photo,u.name FROM mission_helper_reviews r LEFT JOIN userinfo u ON r.user_id = u.user_id WHERE r.helper_id = ?`,
+          [uid],
+          (err, result) => {
+            if (err) {
+              console.log(err);
+              reject(err);
+            }
+            // 在後端轉換review的日期格式
+            result = result.map((review) => {
+              const newDate = transferDate(review.review_date);
+              console.log(newDate);
+              return { ...review, review_date: newDate };
+            });
+            resolve(result);
+          }
+        );
+      });
+      return res.send({ status: 200, reviews, review_count });
+    } else {
+      const review_count = await new Promise((resolve, reject) => {
+        conn.execute(
+          `SELECT COUNT(*) AS review_count FROM mission_helper_reviews  WHERE helper_id = ? AND star_rating = ?`,
+          [uid, star],
+          (err, result) => {
+            if (err) {
+              console.log(err);
+              reject(err);
+            }
+            resolve(result[0].review_count);
+          }
+        );
+      });
+      const reviews = await new Promise((resolve, reject) => {
+        conn.execute(
+          `SELECT r.*,u.cover_photo,u.name FROM mission_helper_reviews r LEFT JOIN userinfo u ON r.user_id = u.user_id WHERE r.helper_id = ? AND star_rating = ?`,
+          [uid, star],
+          (err, result) => {
+            if (err) {
+              console.log(err);
+              reject(err);
+            }
+            // 在後端轉換review的日期格式
+            result = result.map((review) => {
+              const newDate = transferDate(review.review_date);
+              console.log(newDate);
+              return { ...review, review_date: newDate };
+            });
+            resolve(result);
+          }
+        );
+      });
+      return res.send({ status: 200, reviews, review_count });
+    }
+  } catch (e) {
+    console.log(e);
+    return res.status(500).send({});
+  }
+});
 router.get("/helpers/detail/:uid", async (req, res) => {
   const { uid } = req.params;
   console.log(uid);
@@ -398,6 +512,7 @@ router.get("/helpers/detail/:uid", async (req, res) => {
     res.status(500).send({ status: 500, error: "伺服器端查詢錯誤" });
   }
 });
+
 router.post("/helpers/request", (req, res) => {
   // const {customer_userId,start_day,end_day,pet_info_id,helper_userId,service_type,service_time,frequency,note,subtotal_price,total_price,status}
   console.log(req.body);
@@ -446,6 +561,7 @@ router.post("/helpers/request", (req, res) => {
 router.post("/mission", upload.array("missionImage"), async (req, res) => {
   // const { formData } = req.body;
   const {
+    user_id,
     title,
     location_detail,
     mission_type,
@@ -456,10 +572,26 @@ router.post("/mission", upload.array("missionImage"), async (req, res) => {
     endDay,
     city,
     area,
+    missionImage,
   } = req.body;
-  const taskId = uuidv4();
+  console.log(
+    user_id,
+    title,
+    location_detail,
+    mission_type,
+    description,
+    price,
+    payment,
+    startDay,
+    endDay,
+    city,
+    area,
+    missionImage
+  );
+  console.log(req.files);
+  const taskId = generateOrderNumber();
   conn.execute(
-    "INSERT INTO `mission_detail` (`mission_id`, `pid`, `title`, `price`, `start_date`, `end_date`, `city`, `area`, `location_detail`, `description`, `mission_type`, `payment_type`) VALUES (NULL, ?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?)",
+    "INSERT INTO `mission_detail` (`mission_id`, `pid`, `title`, `price`, `start_date`, `end_date`, `city`, `area`, `location_detail`, `description`, `mission_type`, `payment_type`,`post_user_id`) VALUES (NULL, ?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?,?)",
     [
       taskId,
       title,
@@ -472,6 +604,7 @@ router.post("/mission", upload.array("missionImage"), async (req, res) => {
       description,
       mission_type,
       payment,
+      user_id,
     ],
     async (err, results) => {
       if (err) {
@@ -483,42 +616,42 @@ router.post("/mission", upload.array("missionImage"), async (req, res) => {
         await req.files.map((file) => {
           conn.execute(
             "INSERT INTO `image_mission` (`image_id`, `mission_id`, `file_path`) VALUES (NULL, ?, ?)",
-            [insertId, file.filename]
+            [insertId, `http://localhost:3005/mission-image/${file.filename}`]
           );
         });
-        const mission_detail_promise = new Promise((resolve, reject) => {
-          return conn.execute(
-            `SELECT * FROM mission_detail WHERE mission_id = ?`,
-            [insertId],
-            (err, results) => {
-              if (err) {
-                reject(
-                  res.status(500).send({ status: 500, error: "查詢錯誤" })
-                );
-              }
-              resolve(results);
-            }
-          );
-        });
-        const mission_image_promise = new Promise((resolve, reject) => {
-          return conn.execute(
-            `SELECT file_path FROM image_mission WHERE mission_id = ?`,
-            [insertId],
-            (err, results) => {
-              if (err) {
-                reject(
-                  res.status(500).send({ status: 500, error: "查詢錯誤" })
-                );
-              }
-              resolve(results);
-            }
-          );
-        });
-        let [detail, image] = await Promise.all([
-          mission_detail_promise,
-          mission_image_promise,
-        ]);
-        res.send({ status: 200, detail, image });
+        // const mission_detail_promise = new Promise((resolve, reject) => {
+        //   return conn.execute(
+        //     `SELECT * FROM mission_detail WHERE mission_id = ?`,
+        //     [insertId],
+        //     (err, results) => {
+        //       if (err) {
+        //         reject(
+        //           res.status(500).send({ status: 500, error: "查詢錯誤" })
+        //         );
+        //       }
+        //       resolve(results);
+        //     }
+        //   );
+        // });
+        // const mission_image_promise = new Promise((resolve, reject) => {
+        //   return conn.execute(
+        //     `SELECT file_path FROM image_mission WHERE mission_id = ?`,
+        //     [insertId],
+        //     (err, results) => {
+        //       if (err) {
+        //         reject(
+        //           res.status(500).send({ status: 500, error: "查詢錯誤" })
+        //         );
+        //       }
+        //       resolve(results);
+        //     }
+        //   );
+        // });
+        // let [detail, image] = await Promise.all([
+        //   mission_detail_promise,
+        //   mission_image_promise,
+        // ]);
+        res.send({ status: 200, insertId });
       } catch (err) {
         console.log(err);
         return res.status(500).send({ status: 500, error: "寫入錯誤" });
@@ -526,6 +659,17 @@ router.post("/mission", upload.array("missionImage"), async (req, res) => {
     }
   );
 });
+router.post(
+  "/mission/image",
+  upload.array("missionImage"),
+  async (req, res) => {
+    // const { formData } = req.body;
+    console.log(req.files);
+    console.log("觸發一次route");
+    conn.execute();
+    res.send("照片上傳route");
+  }
+);
 module.exports = router;
 
 async function orders(
@@ -628,15 +772,8 @@ async function orders(
 }
 
 const transferDate = (date) => {
-  const originDate = date;
-  const transferDate = new Date(originDate);
-  console.log(date, transferDate);
-  const year = transferDate.getFullYear();
-  const month = transferDate.getMonth() + 1;
-  const day = transferDate.getDate();
-  console.log(day);
-  const newFormat = `${year}年${month}月${day}日`;
-  return newFormat;
+  const newDay = dayjs(date).format("YYYY年MM月DD日");
+  return newDay;
 };
 function generateOrderNumber() {
   const timestamp = Date.now().toString().slice(-7); // 取得時間戳記的後六位數

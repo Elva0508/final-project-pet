@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import ListD from "@/components/member/list-d";
 import ListUserM from "@/components/member/list-user-m";
-import RequestRecordDetail from "@/components/member/request-record-detail";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { RecordDetailTemplate } from "@/components/member/Record-template";
@@ -10,6 +9,8 @@ import memberService from "@/services/member-service";
 import { Modal, Button, Rating } from "@douyinfe/semi-ui";
 // import Rating from "@mui/material/Rating";
 import StarIcon from "@mui/icons-material/Star";
+import { useAuth } from "@/context/fakeAuthContext";
+import { useRouter } from "next/router";
 
 const CreateReview = ({ detail, pid, setIsReviewed }) => {
   const user = 1;
@@ -182,6 +183,12 @@ const ReserveDetailPage = () => {
   const [review, setReview] = useState(null);
   const [isReviewed, setIsReviewed] = useState(false);
   const { pid } = router.query;
+  const { isAuthenticated, userId } = useAuth();
+  useEffect(() => {
+    if (!isAuthenticated) {
+      router.push("/member/login");
+    }
+  }, [isAuthenticated]);
   useEffect(() => {
     memberService
       .getRequestDetail(pid)
@@ -242,59 +249,51 @@ const ReserveDetailPage = () => {
   };
   return (
     <>
-      <nav className="breadcrumb-wrapper" aria-label="breadcrumb">
-        <ol className="breadcrumb">
-          <li className="breadcrumb-item">
-            <Link href="/">首頁</Link>
-          </li>
-          <li className="breadcrumb-item" aria-current="page">
-            <Link href="/member/profile">會員中心</Link>
-          </li>
-          <li className="breadcrumb-item" aria-current="page">
-            <Link href="/member/reserve">預約紀錄</Link>
-          </li>
-          <li className="breadcrumb-item active" aria-current="page">
-            {pid}
-          </li>
-        </ol>
-      </nav>
-      <ListUserM />
-      <div className="d-flex container-fluid flex-column justify-content-around flex-md-row my-3">
-        {/* <ListUserM /> */}
-        <ListD />
-        <div className="col-12 col-sm-8 sales-record-detail ">
-          <RecordDetailTemplate
-            icon={<BsCalendarDateFill className="icon me-1" />}
-            title={"預約紀錄"}
-            detail={detail}
-            setDetail={setDetail}
-          />
-          {status && status !== 3 && status !== 4 && (
-            <div className="d-flex justify-content-end mb-5">
-              <button
-                className="btn-outline-confirm mt-2"
-                onClick={handleReject}
-              >
-                {status === 1 ? "取消預約" : "取消服務"}
-              </button>
-            </div>
-          )}
-          {status && status === 3 && !isReviewed && (
-            <div className="d-flex justify-content-end mb-5">
-              <CreateReview
+      {isAuthenticated && (
+        <>
+          <div className="d-flex justify-content-end">
+            {/* mobile版的左側tab */}
+            <ListM />
+          </div>
+          <ListUserM />
+          <div className="d-flex container-fluid flex-column justify-content-around flex-md-row my-3">
+            {/* <ListUserM /> */}
+            <ListD />
+            <div className="col-12 col-sm-8 sales-record-detail ">
+              <RecordDetailTemplate
+                icon={<BsCalendarDateFill className="icon me-1" />}
+                title={"預約紀錄"}
                 detail={detail}
-                pid={pid}
-                setIsReviewed={setIsReviewed}
+                setDetail={setDetail}
               />
+              {status && status !== 3 && status !== 4 && (
+                <div className="d-flex justify-content-end mb-5">
+                  <button
+                    className="btn-outline-confirm mt-2"
+                    onClick={handleReject}
+                  >
+                    {status === 1 ? "取消預約" : "取消服務"}
+                  </button>
+                </div>
+              )}
+              {status && status === 3 && !isReviewed && (
+                <div className="d-flex justify-content-end mb-5">
+                  <CreateReview
+                    detail={detail}
+                    pid={pid}
+                    setIsReviewed={setIsReviewed}
+                  />
+                </div>
+              )}
+              {status && status === 3 && isReviewed && (
+                <div className="d-flex justify-content-end mb-5">
+                  <CheckReview review={review} />
+                </div>
+              )}
             </div>
-          )}
-          {status && status === 3 && isReviewed && (
-            <div className="d-flex justify-content-end mb-5">
-              <CheckReview review={review} />
-            </div>
-          )}
-        </div>
-      </div>
+          </div>
+        </>
+      )}
     </>
   );
 };
