@@ -1,51 +1,7 @@
 @import "@/styles/variable";
-.checkout{
-    background: $main-bg;
+.pay{
     color: $text-main;
-    .step{
-        .step1{
-            background: #fff;
-            border-radius: 20px 0 0 20px;
-            color: $light-gray;
-
-        }
-        .step2{
-            background: #fff;
-            border-radius: 0 20px 20px 0;
-            border-bottom: 4px $hover  solid;
-        }
-    }
-    .notice{
-        p{
-            font-weight: 600;
-            line-height: 1.5;
-        }
-    }
-    .title{
-        background: $header-bg;
-        font-weight: 600;        
-    }
-    .information{     
-        .form-check-input:checked {
-            background-color: $text-main;
-            border: 0;
-        }
-        .plan{
-            font-weight: 600;
-        }
-
-    }
-    .form-control:focus{
-        border: 1px solid $text-main;
-    }
-    .form-select:focus{
-        box-shadow: none;
-        border: 1px solid $text-main;       
-    }
     .cart-d-content{
-        thead{
-        border-bottom: 1px $light-gray solid;
-        }
         th{
             line-height: 2.5;
         }
@@ -129,26 +85,7 @@
             }   
         }
     }
-    .accordion{
-        display: flex;
-        flex-direction: column;
-        label {
-            cursor: pointer;
-            // padding: 10px;
-        }      
-        .form-check-input:checked {
-            background-color: $text-main;
-            border: 0;
-        }     
-        .content {
-            display: none;
-            padding-top: 10px;
-            padding-bottom: 10px;
-        }       
-        input[type="radio"]:checked + label + .content {
-            display: block;
-        }
-    }
+    
     .detail{
         border: 1px $text-main solid;
         border-radius: 2px;
@@ -166,21 +103,39 @@
     }
     .newprice{
         color: $price;
-    }   
-    .progress-part{
-        p{
-            color: $light-gray;
-            line-height: 0.1;
-        }
-        background: #fff;
-        .progress-bar{
-            background-color:$hover;
-        }
+    }  
     
+    .ischeck{
+        // color: $hover;
+        color: #08BF5B;
+        height: 100px;
+        width: 100px;
     }
-    .nextStep{
-        // background:  #f2f2f2;
-        background: $border-color;
+    p{
+        line-height: 1.5;
+        margin: 0;
+    }
+    .title{
+        display: inline-block;
+    }
+    span{
+        color: black;
+    }
 
-    }
 }
+
+.pay-confirm{
+    height: calc(100vh - 477px);
+    color: $text-main;
+    overflow: auto;
+
+}    
+@media screen and (max-width: 895px) {
+       .pay-confirm{
+        height: calc(100vh - 430px);
+            img{
+            width: 200px;
+            height: 200px;
+       };
+       }
+      }
