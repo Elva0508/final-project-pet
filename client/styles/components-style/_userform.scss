@@ -1,13 +1,14 @@
+
 .user-profile {
   // min-height: 913px;
-  width: 60%;
-  margin: 0 auto 0; 
+  //width: 100%;
+  //margin: 0 auto 0; 
   background-color: $content-bg;
   $form-height: 80px;
-  padding: 10px 40px;
+  padding: 0 auto;
   position: relative;
   .title {
-    margin-bottom: 40px;
+    margin: 50px 150px; //手機要調整
     & > p {
       font-weight: bold;
       display: flex;
@@ -20,23 +21,71 @@
   }
   }
   .user-form{
-    &-item{
-      margin-bottom: 1rem;
-      display: flex;
-      > label{
-        width: 15%;
-        float: left;
-        padding-right: 10px;
-      }
-      > div{
-        width: 85%;
-        float: right;
-      }
+    .fs-btn{
+      width: 100%;
     }
+    
+   // margin: 0 50px;
+  .user-btn-group{
+margin: 4.5rem 0;
+    }
+   .ws20{
+    width: 100%;
+    overflow: auto;
+ 
+    .fs3{
+      float: left;
+      margin-left: 5px;
+      margin-right: 5px;
+      width: calc(15% - 10px);
+    }
+    .fs11{
+      float: left;
+      margin-left: 5px;
+      margin-right: 5px;
+      width: calc(55% - 10px);
+    }
+    .ws6{
+      float: left;
+      width: 80%;
+
+      .fs5{
+        float: left;
+      margin-left: 5px;
+      margin-right: 5px;
+      width: calc(35% - 14px);
+      }
+
+    }
+ 
+   }
+   .fs5{
+    float: left;
+  margin-left: 5px;
+  margin-right: 5px;
+  width: calc(35% - 14px);
+  }
+   .address-w20{
+    width: calc(70% - 5px);
+    padding-bottom: 45px; //行距
+
+    .address-11{
+      width: 78%;
+      float: right;
+    }
+   }
 
   }
 
+
+
   @media  (max-width: 768px) {
+    .p-wrapper{
+      //max-width: 1400px;
+      display: grid;
+      grid-template-columns: 1fr ;
+    
+    }
     .user-profile {
       // min-height: 913px;
       width: 100%;

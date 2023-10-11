@@ -49,9 +49,11 @@ app.use("/api/pay",payRouter );
 // //jwt路由使用
 const authJWTRouter = require("./routes/auth-jwt");
 const userRouter = require("./routes/user-route");
+const JWTOtherRouter = require("./routes/auth-jwt-other");
 
 // // // 掛載 auth-jwt 路由
 app.use('/api/auth-jwt', authJWTRouter);
+app.use('/api/auth-jwt-other', JWTOtherRouter );
 app.use('/api/user', userRouter);
 
 
@@ -71,9 +73,6 @@ app.use(
 app.get("/login", (req,res)=>{
   res.send("登入頁面測試")
 })
-
-
-
 
 
 app.listen(3005, () => {
