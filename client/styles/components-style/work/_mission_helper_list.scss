@@ -1,11 +1,5 @@
 .mission-helper-list {
-  max-width: 1440px;
-  padding: 0 20px;
-  margin: auto;
-  a,
-  a:hover {
-    border: none;
-  }
+  // margin: auto;
   .breadcrumb-wrapper {
     margin: 10px 0 20px 0;
     .breadcrumb {
@@ -21,19 +15,24 @@
   }
   .filters {
     display: flex;
-    width: 90%;
-    max-width: 1000px;
+    width: 100%;
+    // max-width: 1000px;
     margin: 2rem auto;
     justify-content: space-around;
   }
 
   .famous-helper {
+    a,
+    a:hover {
+      border: none;
+    }
     display: flex;
     flex-direction: column;
-    width: calc(100% - 65%);
-    min-width: 355px;
+    min-width: 360px;
     background-color: $content-bg;
     padding: 15px;
+    border-radius: 2px;
+
     &-title {
       font-weight: bold;
       margin-bottom: 2rem;
@@ -41,11 +40,30 @@
     &-card {
       $img-size: 120px;
       margin-bottom: 3rem;
+      max-width: 380px;
       min-width: 325px;
-      &-img {
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      &:hover {
+        .img-wrapper img {
+          transform: scale(1.1);
+        }
+      }
+      .img-wrapper {
         width: $img-size;
         height: $img-size;
+        // display: flex;
+        // justify-content: center;
+        // align-items: center;
         border-radius: 50%;
+        overflow: hidden;
+        box-shadow: 0px 0px 8px rgba(167, 167, 167, 0.49);
+        img {
+          width: 100%;
+          height: 100%;
+          transition: all 0.3s ease-in-out;
+        }
       }
       .helper-content {
         width: calc(100% - $img-size);
@@ -70,6 +88,41 @@
             padding: 3px 10px;
           }
         }
+      }
+      .fav-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background-color: rgba(138, 138, 138, 0.25);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: absolute;
+        right: 0;
+        top: 20px;
+        cursor: pointer;
+        &-fill {
+          width: 100%;
+          height: 100%;
+          font-size: 20px;
+          color: $hover;
+          padding: 10px;
+        }
+        &-hollow {
+          font-size: 20px;
+          color: $text-mark;
+        }
+      }
+    }
+    .active-fav-in-fam-card {
+      &:hover {
+        .fav-icon {
+          right: 0px;
+        }
+      }
+      .fav-icon {
+        right: -50px;
+        transition: all 0.4s ease-in-out;
       }
     }
     &-mobile {
@@ -96,15 +149,30 @@
     }
   }
   .helper-list {
-    width: 65%;
+    width: calc(100% - 360px);
+    // justify-content: space-evenly;
+    gap: 25px;
   }
   .single-card {
-    width: calc((100% - 30px) / 3);
+    a,
+    a:hover {
+      border: none;
+    }
+    width: calc((100% - 50px) / 3);
     height: 410px;
-    margin: 0 0 20px 10px;
+    // margin: 0 0 20px 10px;
     min-width: 220px;
     background-color: $cos-white;
+    border-radius: 2px;
     padding: 0.6rem;
+    box-shadow: 0px 0px 5px rgba(40, 39, 39, 0.1);
+    position: relative;
+    top: 0;
+    transition: all 0.2s ease-in;
+    overflow: hidden;
+    &:hover {
+      top: -5px;
+    }
     &-img {
       $img-size: 160px;
       width: $img-size;
@@ -145,6 +213,41 @@
         padding: 3px 10px;
       }
     }
+    .fav-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: rgba(138, 138, 138, 0.25);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: absolute;
+      right: 10px;
+      top: 20px;
+      cursor: pointer;
+      &-fill {
+        width: 100%;
+        height: 100%;
+        font-size: 20px;
+        color: $hover;
+        padding: 10px;
+      }
+      &-hollow {
+        font-size: 20px;
+        color: $text-mark;
+      }
+    }
+  }
+  .active-fav-in-card {
+    &:hover {
+      .fav-icon {
+        top: 20px;
+      }
+    }
+    .fav-icon {
+      top: -40px;
+      transition: all 0.4s ease-in-out;
+    }
   }
   .famous-carousel {
     background-color: $content-bg;
@@ -154,8 +257,85 @@
       align-items: center;
       svg {
         color: $text-main;
-        font-size: 30px;
+        font-size: 35px;
         cursor: pointer;
+      }
+    }
+  }
+}
+.favorite-helper-sidesheet {
+  .famous-helper-card {
+    $img-size: 120px;
+    margin-bottom: 3rem;
+    max-width: 380px;
+    min-width: 325px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    &:hover {
+      .img-wrapper img {
+        transform: scale(1.1);
+      }
+    }
+    .img-wrapper {
+      width: $img-size;
+      height: $img-size;
+      // display: flex;
+      // justify-content: center;
+      // align-items: center;
+      border-radius: 50%;
+      overflow: hidden;
+      box-shadow: 0px 0px 8px rgba(167, 167, 167, 0.49);
+      img {
+        width: 100%;
+        height: 100%;
+        transition: all 0.3s ease-in-out;
+      }
+    }
+    .helper-content {
+      width: calc(100% - $img-size);
+      .title {
+        font-weight: bold;
+      }
+      &-info p {
+        margin: 0 0 0.5rem 0;
+      }
+      &-info span {
+        color: $price;
+      }
+      &-info img {
+        cursor: pointer;
+      }
+      .price {
+        span {
+          color: $price;
+          font-weight: 600;
+        }
+        button {
+          padding: 3px 10px;
+        }
+      }
+    }
+    .dlt-icon {
+      & > * {
+        width: 22px;
+        height: 22px;
+        // border-radius: 50%;
+      }
+
+      // background-color: rgba(138, 138, 138, 0.25);
+      // display: flex;
+      // justify-content: center;
+      // align-items: center;
+      // position: absolute;
+      // right: 0;
+      // top: 20px;
+      cursor: pointer;
+      &-fill {
+        color: $hover;
+      }
+      &-hollow {
+        color: $text-mark;
       }
     }
   }
@@ -174,44 +354,34 @@
     }
   }
   .swiper-slide {
-    width: 130px;
+    width: 150px;
   }
 }
-@media screen and (max-width: 1200px) {
+@media screen and (max-width: 1400px) {
+  .mission-helper-list {
+    .helper-list {
+      width: 100%;
+    }
+  }
+}
+@media screen and (max-width: 1199px) {
   .mission-helper-list {
     .helper-list {
       .single-card {
-        width: calc((100% - 30px) / 2);
+        width: calc((100% - 25px) / 2);
       }
     }
   }
 }
-@media screen and (max-width: 900px) {
+@media screen and (max-width: 991px) {
   .mission-helper-list {
-    .famous-helper {
-      //   padding: 1rem;
-      width: 65%;
-    }
-    .helper-list {
-      justify-content: center;
-      .single-card {
-        width: calc((100% - 30px));
-        max-width: 350px;
-      }
-    }
-  }
-}
-
-@media screen and (max-width: 768px) {
-  .mission-helper-list {
-    padding: 0 5px;
+    // padding: 0 5px;
 
     .job-search {
       width: 100%;
-      margin-top: 19px;
     }
     .filters {
-      margin: 0rem auto;
+      margin: 2rem auto;
     }
     .famous-helper {
       width: 100%;
@@ -222,31 +392,32 @@
       }
       &-card {
         padding: 0 10px;
-        $img-size: 100px;
-        margin-bottom: 0.4rem;
-        &-img {
-          width: $img-size;
-          height: $img-size;
-        }
+        width: 80%;
+        max-width: 100%;
+        margin: 0.4rem auto;
+        gap: 20px;
+      }
+      .img-wrapper {
+        $img-size: 160px;
+        width: $img-size;
+        height: $img-size;
+        // img {
+        //   width: $img-size;
+        //   height: $img-size;
+        // }
+      }
+      .helper-content {
+        width: calc(100% - 200px);
       }
     }
-    .famous-carousel {
-      & > :first-child,
-      & > :last-child {
-        svg {
-          font-size: 22px;
-        }
-      }
-    }
+
     .helper-list {
-      width: 100%;
+      // width: 100%;
       justify-content: start;
-      margin: 10px auto;
-      gap: 10px;
 
       .single-card {
-        width: calc((100% - 20px) / 3);
-        // height: 400px;
+        width: calc((100% - 50px) / 3);
+        height: 370px;
         margin-bottom: 10px;
         margin-left: 0;
         min-width: 175px;
@@ -259,6 +430,25 @@
         &-content {
           height: calc(100% - $img-size);
         }
+
+        .animate-button-one {
+          width: 80px;
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .mission-helper-list {
+    .helper-list {
+      // width: 100%;
+      // justify-content: start;
+      // margin: 10px auto;
+      gap: 25px;
+
+      .single-card {
+        width: calc((100% - 25px) / 2);
       }
     }
   }
@@ -266,10 +456,25 @@
 
 @media screen and (max-width: 576px) {
   .mission-helper-list {
+    .famous-helper {
+      &-card {
+        width: 100%;
+      }
+      .helper-content {
+        width: calc(100% - 100px);
+      }
+      .img-wrapper {
+        $img-size: 100px;
+        width: $img-size;
+        height: $img-size;
+      }
+    }
     .helper-list {
+      gap: 15px;
       .single-card {
-        width: calc((100% - 10px) / 2);
-        min-width: 175px;
+        min-width: 0;
+        width: calc((100% - 15px) / 2);
+        height: 360px;
       }
     }
   }
