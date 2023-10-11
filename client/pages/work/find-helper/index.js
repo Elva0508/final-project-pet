@@ -531,7 +531,7 @@ const Collection = ({ collection, setCollection }) => {
   useEffect(() => {
     WorkService.getFavHelpers(collection)
       .then((response) => {
-        console.log(response.data.results);
+        // console.log(response.data.results);
         if (response.data.results.length > 0) {
           setFavInfo(response.data.results);
         } else {
@@ -657,7 +657,7 @@ const MissionHelperList = () => {
   const [currentPage, setPage] = useState(1);
   const [totalRows, setTotalRows] = useState(18);
   const { collection, setCollection } = useHelper();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, userId } = useAuth();
   useEffect(() => {
     if (!currentSearch) {
       setPage(1);
@@ -724,7 +724,9 @@ const MissionHelperList = () => {
         });
     }
   }, [currentPage]);
-
+  useEffect(() => {
+    console.log(userId);
+  }, [userId]);
   // useEffect(() => {
   //   // 初次渲染時載入儲存在localStorage的收藏
   //   if (localStorage.getItem("helperFav"))

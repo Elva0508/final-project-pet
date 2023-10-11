@@ -12,8 +12,8 @@ import StarIcon from "@mui/icons-material/Star";
 import { useAuth } from "@/context/fakeAuthContext";
 import { useRouter } from "next/router";
 
-const CreateReview = ({ detail, pid, setIsReviewed }) => {
-  const user = 1;
+const CreateReview = ({ user_id, detail, pid, setIsReviewed }) => {
+  // const user = 1;
   const [visible, setVisible] = useState(false);
   const [starValue, setStarValue] = useState(0);
   const [starHover, setStarHover] = useState(undefined);
@@ -30,7 +30,7 @@ const CreateReview = ({ detail, pid, setIsReviewed }) => {
   };
   const handleSubmit = () => {
     memberService
-      .createReview(pid, user, detail.helper_userId, review, starValue)
+      .createReview(pid, user_id, detail.helper_userId, review, starValue)
       .then((response) => {
         console.log(response.data);
         if (response.data.status === 200) {
@@ -183,10 +183,15 @@ const ReserveDetailPage = () => {
   const [review, setReview] = useState(null);
   const [isReviewed, setIsReviewed] = useState(false);
   const { pid } = router.query;
-  const { isAuthenticated, userId } = useAuth();
+  const { isAuthenticated, userId: user_id } = useAuth();
   useEffect(() => {
-    if (!isAuthenticated) {
-      router.push("/member/login");
+    // 初始狀態時isAuthenticated為null，等到isAuthenticated有值時(true or false)才做驗證判斷
+    if (isAuthenticated === null) {
+      return;
+    } else {
+      if (isAuthenticated === false) {
+        router.push("/member/login");
+      }
     }
   }, [isAuthenticated]);
   useEffect(() => {
@@ -253,7 +258,6 @@ const ReserveDetailPage = () => {
         <>
           <div className="d-flex justify-content-end">
             {/* mobile版的左側tab */}
-            <ListM />
           </div>
           <ListUserM />
           <div className="d-flex container-fluid flex-column justify-content-around flex-md-row my-3">
@@ -282,6 +286,7 @@ const ReserveDetailPage = () => {
                     detail={detail}
                     pid={pid}
                     setIsReviewed={setIsReviewed}
+                    user_id={user_id}
                   />
                 </div>
               )}

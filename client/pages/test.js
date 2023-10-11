@@ -29,11 +29,12 @@ import ResetPassword from "@/components/user/resetPassword";
 
 //家綺
 import ProductListOffcanvas from "@/components/product/product-list-offcanvas";
+import CatLoading from "@/components/cat-loading";
 
 const Test = () => {
   return (
     <>
-      <Filter />
+      <CatLoading />
     </>
   );
 };

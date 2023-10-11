@@ -8,9 +8,15 @@ import { useRouter } from "next/router";
 const HelperInfoPage = () => {
   const { isAuthenticated, userId } = useAuth();
   const router = useRouter();
+  console.log(isAuthenticated);
   useEffect(() => {
-    if (!isAuthenticated) {
-      router.push("/member/login");
+    // 初始狀態時isAuthenticated為null，等到isAuthenticated有值時(true or false)才做驗證判斷
+    if (isAuthenticated === null) {
+      return;
+    } else {
+      if (isAuthenticated === false) {
+        router.push("/member/login");
+      }
     }
   }, [isAuthenticated]);
 
@@ -20,7 +26,6 @@ const HelperInfoPage = () => {
         <>
           <div className="d-flex justify-content-end">
             {/* mobile版的左側tab */}
-            <ListM />
           </div>
           <div className="d-flex container-fluid flex-column justify-content-around flex-md-row my-3">
             <ListD />
