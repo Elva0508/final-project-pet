@@ -91,6 +91,7 @@ const [viewPwd,SetViewPwd]=useState(false)
               title={viewPwd ? 'Hide password' : 'Show password'}
               src={!viewPwd ? hidePwdImg : showPwdImg}
               onClick={()=> SetViewPwd(prevState => !prevState)}
+              alt="show/hide password"
             />
             <ErrorMessage
               className="form-alert"
@@ -116,6 +117,7 @@ const [viewPwd,SetViewPwd]=useState(false)
               title={viewPwd ? 'Hide password' : 'Show password'}
               src={!viewPwd ? hidePwdImg : showPwdImg}
               onClick={()=> SetViewPwd(prevState => !prevState)}
+              alt="show/hide password"
             />
             <ErrorMessage
               className="form-alert"

@@ -33,8 +33,8 @@
     "react-slick": "^0.29.0",
     "sass": "^1.67.0",
     "slick-carousel": "^1.8.1",
-    "yup": "^1.3.2",
     "sweetalert2": "^11.7.31",
-    "swiper": "^10.3.0"
+    "swiper": "^10.3.0",
+    "yup": "^1.3.2"
   }
 }

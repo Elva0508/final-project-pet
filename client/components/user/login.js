@@ -58,7 +58,7 @@ const [viewPwd,SetViewPwd]=useState(false)
         localStorage.setItem('id', u);
 
         login(token);
-        //router.push('/member/profile');
+       router.push('/member/profile');
       } else {
         throw new Error('Login failed');
       }
@@ -105,6 +105,7 @@ const [viewPwd,SetViewPwd]=useState(false)
               title={viewPwd ? 'Hide password' : 'Show password'}
               src={!viewPwd ? hidePwdImg : showPwdImg}
               onClick={()=> SetViewPwd(prevState => !prevState)}
+              alt="show/hide password"
             />
             <ErrorMessage
               name="password"
