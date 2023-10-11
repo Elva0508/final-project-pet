@@ -250,21 +250,50 @@ router.get("/mission-details/:mission_id", (req, res) => {
 // 任務詳細頁：取得收藏的任務
 router.get("/fav/:mission_id", (req, res) => {
   const mission_id = req.params.mission_id; // 從路由參數中獲取 mission_id
-  // const userId = req.query.userId; // 從請求的 URL 中獲取用戶 token
+  const userId = req.query.userId; // 從請求的 URL 中獲取用戶 token
+  console.log("mission_id是:"+mission_id+"userId是:"+userId)
   conn.execute(
     `SELECT mf.*,md.mission_id AS mission_id
     FROM mission_fav AS mf
     JOIN mission_detail AS md ON mf.mission_id = md.mission_id 
-    WHERE md.mission_id = ? AND mf.user_id = ?
-    GROUP BY md.mission_id;
-    `,
-    [mission_id, 1],  // 使用 mission_id 進行查詢
-    (err, result) => {
-      if (err) {
-        console.log(err);
-        return;
+    WHERE mf.mission_id = ? AND mf.user_id = ?;`,
+    [mission_id, userId],
+    (error, result) => {
+      res.json({ result });
+    }
+  );
+});
+// 任務詳細頁：加入收藏
+router.put("/add-fav/:mission_id", (req, res) => {
+  const mission_id = req.params.mission_id; // 從路由參數中獲取 mission_id
+  const userId = req.query.userId; // 從請求的 URL 中獲取用戶 token
+  conn.execute(
+    `INSERT INTO mission_fav(mission_id, user_id) VALUES (?,?)`,
+    [mission_id, userId], // 使用參數化查詢來防止 SQL 注入攻擊
+    (error, result) => {
+      if (error) {
+        console.error(error);
+        res.status(500).json({ error: '加到收藏出錯' });
+      } else {
+        res.json({ result });
       }
-      res.send({ status: 200, data: result });
+    }
+  );
+});
+// 任務詳細頁：取消收藏
+router.delete("/delete-fav/:mission_id", (req, res) => {
+  const mission_id = req.params.mission_id; // 從路由參數中獲取 mission_id
+  const userId = req.query.userId; // 從請求的 URL 中獲取用戶 token
+  conn.execute(
+    "DELETE FROM mission_fav WHERE mission_id = ? AND user_id = ?;",
+    [mission_id, userId],
+    (error, result) => {
+      if (error) {
+        console.error(error);
+        res.status(500).json({ error: '移除收藏出錯' });
+      } else {
+        res.json({ result });
+      }
     }
   );
 });

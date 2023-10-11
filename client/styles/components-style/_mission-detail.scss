@@ -18,6 +18,17 @@
     h2 {
       font-weight: bold;
     }
+
+    img {
+      cursor: pointer;
+      width: 50px;
+      top: 10px;
+      right: 10px;
+    }
+
+    img:hover {
+      content: url("/heart-clicked.svg");
+    }
   }
 
   .description {

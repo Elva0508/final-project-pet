@@ -83,72 +83,9 @@ const ImageSwiper = ({ missionImages }) => {
 };
 
 export const MissionDetailSticky = () => {
-    // 收藏
-    const [isFavorite, setIsFavorite] = useState(false);
-    const router = useRouter();
-    const { mission_id } = router.query;
-
-    useEffect(() => {
-        // 在組件加載時從後端獲取已收藏的任務
-        const fetchFavoriteMissions = async () => {
-            try {
-              const response = await axios.get(`http://localhost:3005/api/mission/fav?userId=${userId}`);
-      
-              // 根據已收藏的任務和當前任務列表來初始化 isFavorites 數組
-              const initialFavorites = currentData.map((mission) =>
-                favoriteMissionIds.includes(mission.mission_id)
-              );
-              setIsFavorites(initialFavorites);
-            } catch (error) {
-              console.error('前端請求錯誤：', error);
-            }
-          };
-
-        // fetchFavoriteMissions();
-    }, []);
-
-    
-
-    const toggleFavorite = async (mission_id) => {  // 接受 mission_id 作為參數
-        // 檢查用戶是否已登入
-        if (!userId) {
-            alert('請先登入會員');
-            return;
-        }
-
-        try {
-            // const newFavorites = [...isFavorites];
-            // newFavorites[index] = !newFavorites[index];
-            setIsFavorite(!isFavorite); // 立即更新圖標狀態
-
-            // const missionId = currentData[index].mission_id;
-            console.log(missionId)
-
-            // if (!isFavorites) {
-            //     // 如果任務未被收藏，發送加入收藏的請求
-            //     await axios.put(`http://localhost:3005/api/mission/add-fav?userId=${userId}`, { missionId });
-            //     console.log('已加入收藏');
-            // } else {
-            //     // 如果任務已被收藏，發送取消收藏的請求
-            //     await axios.delete(`http://localhost:3005/api/mission/delete-fav?userId=${userId}`, { data: { missionId } });
-            //     console.log('已取消收藏');
-            // }
-
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
     return (
         <>
             <section className="ask-and-apply d-flex justify-content-center align-items-center">
-                <div className='position-absolute fav' onClick={toggleFavorite}>
-                    <img
-                        src={isFavorite ? "/heart-clicked.svg" : "/heart.svg"}
-                        alt={isFavorite ? "已收藏" : "未收藏"}
-                        onClick={toggleFavorite}
-                    />
-                </div>
                 <button className="ask-and-apply-btn btn-outline-confirm d-flex align-items-center justify-content-center">
                     <PiWechatLogoThin />
                     線上詢問
@@ -211,6 +148,8 @@ export default function MissionDetail() {
 
     const [missionDetail, setMissionDetail] = useState([])
     const [missionImages, setMissionImages] = useState([])
+    // 用於儲存解析後的userID
+    const [userId, setUserId] = useState(null);
 
     // GOOGLE地圖API：初始狀態
     const [missionLocation, setMissionLocation] = useState({
@@ -266,6 +205,79 @@ export default function MissionDetail() {
         }
     }, [mission_id]);
 
+    // 利用token拿到當前登入的userID
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+        if (token) {
+            try {
+                const decodedToken = jwt_decode(token);
+                const currentUserID = decodedToken.id;
+                console.log("currentUserID", currentUserID);
+                setUserId(currentUserID);
+                // 在此處將令牌token添加到請求標頭
+                axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+            } catch (error) {
+                console.error("解析Token時出錯", error);
+            }
+        }
+    }, []);
+
+    // 收藏
+    const [isFavorite, setIsFavorite] = useState(false);
+
+    // 獲取任務是否已被收藏的狀態
+    const getIsFavoriteStatus = async (mission_id) => {
+        try {
+            const response = await axios.get(`http://localhost:3005/api/mission/fav/${mission_id}?userId=${userId}`);
+
+            if (response.data.result.length > 0) {
+                // 如果返回的結果不為空，代表用戶已收藏
+                setIsFavorite(true);
+            } else {
+                // 否則用戶未收藏
+                setIsFavorite(false);
+            }
+        } catch (error) {
+            console.error('獲取任務是否已收藏時出錯：', error);
+        }
+    };
+    useEffect(() => {
+        if (mission_id && userId) {
+            // 獲取任務是否已被收藏的狀態
+            getIsFavoriteStatus(mission_id);
+        }
+    }, [mission_id, userId]);
+
+    const toggleFavorite = () => {
+        if (!userId) {
+            alert('請先登入會員');
+            return;
+        }
+        console.log("mission_id是:" + mission_id + "userId是:" + userId)
+        if (isFavorite) {
+            removeFromFavorites(mission_id);
+        } else {
+            addToFavorites(mission_id);
+        }
+    };
+
+    const addToFavorites = async (mission_id) => {
+        try {
+            const response = await axios.put(`http://localhost:3005/api/mission/add-fav/${mission_id}?userId=${userId}`);
+            setIsFavorite(true);
+        } catch (error) {
+            console.error('加到收藏時出錯：', error);
+        }
+    };
+
+    const removeFromFavorites = async (mission_id) => {
+        try {
+            const response = await axios.delete(`http://localhost:3005/api/mission/delete-fav/${mission_id}?userId=${userId}`);
+            setIsFavorite(false);
+        } catch (error) {
+            console.error('從收藏中移除時出錯：', error);
+        }
+    };
 
     // 彈跳視窗(確認送出)
     const handleConfirmSubmit = async () => {
@@ -350,7 +362,7 @@ export default function MissionDetail() {
             {missionDetail.map((v, i) => {
                 return (
                     <div className='container mission-detail my-3'>
-                        <nav className="breadcrumb-wrapper" aria-label="breadcrumb">
+                        {/* <nav className="breadcrumb-wrapper" aria-label="breadcrumb">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item">
                                     <Link href="/">首頁</Link>
@@ -364,9 +376,13 @@ export default function MissionDetail() {
                                     {v.title}
                                 </li>
                             </ol>
-                        </nav>
-                        <header className='mt-3 p-4'>
-                            <p>案件編號：{v.pid}</p>
+                        </nav> */}
+                        <header className='mt-3 p-4 position-relative'>
+                            <div className=' d-flex '>
+                                <p>案件編號：{v.pid}</p>
+                                <img className='position-absolute' src={isFavorite ? "/heart-clicked.svg" : "/heart.svg"} alt={isFavorite ? "已收藏" : "未收藏"} onClick={toggleFavorite} />
+                            </div>
+
                             <h2 className='size-3'>{v.title}</h2>
                             <p className='size-6 mt-3'>刊登日期：{formatDate(v.post_date)}</p>
                             <p className='size-6 mt-2'>最後更新：{formatDate(v.update_date)}</p>
