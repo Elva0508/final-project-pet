@@ -11,6 +11,26 @@ import { BiSearchAlt } from "react-icons/bi";
 
 export default function ProductList() {
 
+    // 用於儲存解析後的userID
+    const [userId, setUserId] = useState(null);
+
+    // 利用token拿到當前登入的userID
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+        if (token) {
+            try {
+                const decodedToken = jwt_decode(token);
+                const currentUserID = decodedToken.id;
+                console.log("currentUserID", currentUserID);
+                setUserId(currentUserID);
+                // 在此處將令牌token添加到請求標頭
+                axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+            } catch (error) {
+                console.error("解析Token時出錯", error);
+            }
+        }
+    }, []);
+
     // 讀取資料庫資料
     const [productData, setProductData] = useState([]); // 初始化為一個帶有 result 屬性的物件
     //圖片抽換
@@ -183,7 +203,7 @@ export default function ProductList() {
 
             <div className='product-list'>
                 <div className='container'>
-                    <nav className="breadcrumb-wrapper" aria-label="breadcrumb">
+                    {/* <nav className="breadcrumb-wrapper" aria-label="breadcrumb">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item">
                                 <Link href="/">首頁</Link>
@@ -194,7 +214,7 @@ export default function ProductList() {
                                 </Link>
                             </li>
                         </ol>
-                    </nav>
+                    </nav> */}
                     <div className="search-sort d-flex flex-md-row flex-column justify-content-between align-items-center ms-3 me-3">
                         <Search />
                         {/* created_at和specialoffer排序 */}

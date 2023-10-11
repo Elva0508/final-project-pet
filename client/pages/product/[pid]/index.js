@@ -21,7 +21,29 @@ function ProductDescription({ htmlContent }) {
 
 
 export default function ProductDetail() {
+
+    //用來儲存收藏
     const [collection, setCollection ]  = useState([]);
+
+    // 用於儲存解析後的userID
+    const [userId, setUserId] = useState(null);
+
+    // 利用token拿到當前登入的userID
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+        if (token) {
+            try {
+                const decodedToken = jwt_decode(token);
+                const currentUserID = decodedToken.id;
+                console.log("currentUserID", currentUserID);
+                setUserId(currentUserID);
+                // 在此處將令牌token添加到請求標頭
+                axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+            } catch (error) {
+                console.error("解析Token時出錯", error);
+            }
+        }
+    }, []);
 
     //計算數量
     const [count, setCount] = useState(1);
@@ -140,7 +162,7 @@ export default function ProductDetail() {
     //儲存選中的type_id-selectedTypeId
     const [selectedTypeId, setSelectedTypeId] = useState('');
     const getCart = () => {
-        axios.get("http://localhost:3005/api/product/cart")
+        axios.get("http://localhost:3005/api/product/cart?userId=${userId}")
             .then((response) => {
                 const data = response.data.result;
                 const newData = data.map((v) => {
@@ -167,8 +189,10 @@ export default function ProductDetail() {
             try {
                 // 發送HTTP請求將商品添加到購物車
                 const response = await axios.put(
-                    `http://localhost:3005/api/product/cart`,
-                    { product_id, product_type_id, quantity }
+                    `http://localhost:3005/api/product/car?userId=${userId}`,
+                    { product_id, product_type_id, quantity },
+                    console.log(product_id, product_type_id, quantity),
+                    console.log('我是會員'+ userId)
                 );
             } catch (error) {
                 console.error("錯誤：", error);
@@ -202,7 +226,7 @@ export default function ProductDetail() {
     //儲存選中的type_id-selectedTypeId 加到購物車時已經有寫了
     // const [selectedTypeId, setSelectedTypeId] = useState('');
     const getCollection = () => {
-        axios.get("http://localhost:3005/api/product/collections")
+        axios.get("http://localhost:3005/api/product/collections?userId=${userId}")
             .then((response) => {
                 setCollection(response.data.result);
                 console.log(response.data.result)
@@ -225,7 +249,7 @@ export default function ProductDetail() {
             try {
                 // 發送HTTP請求將商品添加到購物車
                 const response = await axios.put(
-                    `http://localhost:3005/api/product/collections`,
+                    `http://localhost:3005/api/product/collections?userId=${userId}`,
                     { product_id, product_type }
                 );
             } catch (error) {
@@ -255,7 +279,7 @@ export default function ProductDetail() {
                     {productData.map((v, i) => {
                         return (
                             <>
-                                <nav className="breadcrumb-wrapper" aria-label="breadcrumb">
+                                {/* <nav className="breadcrumb-wrapper" aria-label="breadcrumb">
                                     <ol class="breadcrumb">
                                         <li class="breadcrumb-item">
                                             <Link href="/">首頁</Link>
@@ -269,7 +293,7 @@ export default function ProductDetail() {
                                             {v.product_name}
                                         </li>
                                     </ol>
-                                </nav>
+                                </nav> */}
                                 <section className="product-itembox row justify-content-center" key={v.product_id} >
                                     <div className="product-pic col-lg-6" >
                                         <figure className="main-pic  ">

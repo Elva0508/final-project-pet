@@ -1,5 +1,22 @@
 const router = require("express").Router();
 const connection = require("../db");
+//註冊登入
+const jwt = require("jsonwebtoken");
+
+const authenticateToken = (req, res, next) => {
+    const authHeader = req.headers["authorization"];
+    const token = authHeader && authHeader.split(" ")[1]; // 從 Authorization 標頭中提取令牌
+
+    if (token == null) {
+        return res.sendStatus(401); // 如果令牌不存在，返回未經授權的狀態碼
+    }
+
+    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
+        if (err) return res.sendStatus(403); // 如果令牌無效，返回禁止狀態碼
+        req.user = user;
+        next();
+    });
+};
 
 
 //product產品資料
@@ -119,6 +136,7 @@ router.get("/recommend", (req, res) => {
 
 //查看購物車內有甚麼商品
 router.get("/cart", (req, res) => {
+    const userId = req.query.userId; // 從請求的 URL 中獲取用戶 token OK
     connection.execute(
         `SELECT cart.*, 
         p.product_name AS name,
@@ -128,8 +146,9 @@ router.get("/cart", (req, res) => {
         FROM cart 
         JOIN products AS p ON cart.product_id=p.product_id 
         JOIN product_type AS pt ON cart.product_type_id=pt.type_id AND p.product_id=pt.product_id
-        WHERE user_id=1;`
-        , (error, result) => {
+        WHERE user_id=?;`,
+        [userId],
+        (error, result) => {
             res.json({ result })
         }
     )
@@ -137,11 +156,12 @@ router.get("/cart", (req, res) => {
 
 //用來新增購物車裡沒有的商品
 router.put("/cart", (req, res) => {
+    const userId = req.query.userId; // 從請求的 URL 中獲取用戶 token OK
     const { product_id, product_type_id, quantity } = req.body; // 從請求主體中獲取 quantity 參數
     console.log(product_id, product_type_id, quantity)
     connection.execute(
-        `INSERT INTO cart(user_id, product_id, product_type_id, quantity) VALUES (1, ?, ?, ?);`,
-        [product_id, product_type_id, quantity], // 將 quantity 參數傳遞到 SQL 查詢中
+        `INSERT INTO cart(user_id, product_id, product_type_id, quantity) VALUES (?, ?, ?, ?);`,
+        [userId,product_id, product_type_id, quantity], // 將 quantity 參數傳遞到 SQL 查詢中
         (error, result) => {
             if (error) {
                 console.error("Error inserting into cart:", error);
@@ -157,10 +177,11 @@ router.put("/cart", (req, res) => {
 //用來修改購物車裡已經有的商品數量
 router.put("/cartplus", (req, res) => {
     console.log(req);
+    const userId = req.query.userId; // 從請求的 URL 中獲取用戶 token OK
     const { id, newQuantity, type } = req.body
     connection.execute(
-        `UPDATE cart SET quantity=? WHERE user_id=1 AND product_id=? AND product_type_id=?`,
-        [newQuantity, id, type]
+        `UPDATE cart SET quantity=? WHERE user_id=? AND product_id=? AND product_type_id=?`,
+        [userId, newQuantity, id, type]
         , (error, result) => {
             res.json({ result })
         }
@@ -267,11 +288,13 @@ router.get("/vendor", (req, res) => {
 //加入收藏
 //查看收藏內有甚麼商品
 router.get("/collections", (req, res) => {
+    const userId = req.query.userId; // 從請求的 URL 中獲取用戶 token   這裡有問題!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     connection.execute(
         `SELECT product_collections.*
         FROM product_collections
-        WHERE user_id=1;`
-        , (error, result) => {
+        WHERE user_id=?;`,
+        [userId], 
+        (error, result) => {
             res.json({ result })
         }
     )
@@ -279,11 +302,12 @@ router.get("/collections", (req, res) => {
 
 //用來新增收藏裡沒有的商品
 router.put("/collections", (req, res) => {
+    const userId = req.query.userId; // 從請求的 URL 中獲取用戶 token
     const { product_id, product_type} = req.body; // 從請求主體中獲取 quantity 參數
     console.log(product_id, product_type)
     connection.execute(
-        `INSERT INTO product_collections(user_id, product_id, product_type) VALUES (1, ?, ?);`,
-        [product_id, product_type], // 將 quantity 參數傳遞到 SQL 查詢中
+        `INSERT INTO product_collections(user_id, product_id, product_type) VALUES (?, ?, ?);`,
+        [userId, product_id, product_type], // 將 quantity 參數傳遞到 SQL 查詢中
         (error, result) => {
             if (error) {
                 console.error("Error inserting into cart:", error);
