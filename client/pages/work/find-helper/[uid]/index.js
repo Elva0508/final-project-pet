@@ -410,7 +410,7 @@ const Quotation = () => {
   const [serviceType, setServiceType] = useState({});
   const [note, setNote] = useState("");
   const [location, setLocation] = useState("");
-
+  const [pets, setPets] = useState([]);
   useEffect(() => {
     if (startDay && endDay) {
       const start = dayjs(startDay);
@@ -458,6 +458,16 @@ const Quotation = () => {
         console.log(e);
       });
   }, [uid]);
+  useEffect(() => {
+    workService
+      .getPetInfo(uid)
+      .then((response) => {
+        setPets(response?.data?.data);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  }, []);
   const handleDisabledStart = (date) => {
     if (dayjs(date).isBefore(today)) {
       return true;
@@ -531,12 +541,18 @@ const Quotation = () => {
       >
         <div className="body-item d-flex justify-content-between align-items-center">
           <p className="size-6">寵物</p>
-          <PetInfo
-            petsValue={petsValue}
-            setPetsValue={setPetsValue}
-            petsName={petsName}
-            setPetsName={setPetsName}
-          />
+          <Select
+            defaultValue="請選擇寵物"
+            className="pet-list-btn"
+            dropdownClassName="pet-list-dropdown"
+          >
+            {pets.map((pet) => (
+              <Select.Option value={pet.pet_id} className="pet-list">
+                <img className="pet-photo" src={pet.image}></img>
+                <p className="size-6 ms-2">{pet.name}</p>
+              </Select.Option>
+            ))}
+          </Select>
         </div>
         <div className="body-item d-flex justify-content-between align-items-center">
           <p className="size-6">開始日期</p>
@@ -602,6 +618,8 @@ const Quotation = () => {
             style={{ width: 150 }}
             onChangeWithObject
             optionList={serviceList}
+            className="service-type_list"
+            dropdownClassName="service-type-dropdown"
             placeholder="請選擇服務類型"
             defaultValue={serviceList[0]}
             onChange={(value) => {
@@ -700,20 +718,9 @@ const PetInfo = ({ petsValue, setPetsValue, petsName, setPetsName }) => {
   const { isAuthenticated } = useAuth();
   const router = useRouter();
   const { uid } = router.query;
-  const [pets, setPets] = useState([]);
+
   const [isCreate, setIsCreate] = useState(false);
   let tempValue, tempName;
-
-  useEffect(() => {
-    workService
-      .getPetInfo(uid)
-      .then((response) => {
-        setPets(response?.data?.data);
-      })
-      .catch((e) => {
-        console.log(e);
-      });
-  }, []);
 
   const [visible, setVisible] = useState(false);
   const showDialog = () => {

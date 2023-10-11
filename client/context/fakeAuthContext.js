@@ -51,12 +51,11 @@ function AuthProvider({ children }) {
 
   useEffect(() => {
     const data = JSON.parse(localStorage.getItem("data"));
-    const token = jwt(localStorage.getItem("token"));
-
+    const token = localStorage.getItem("token");
     if (data && token) {
       console.log(data.id);
       setUserId(data.id);
-      dispatch({ type: "login", payload: token });
+      dispatch({ type: "login", payload: jwt(token) });
     }
   }, []);
 

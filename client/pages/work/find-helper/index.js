@@ -549,7 +549,15 @@ const Collection = ({ collection, setCollection }) => {
       <Button onClick={change}>Open SideSheet</Button>
       <SideSheet
         className="favorite-helper-sidesheet"
-        title="滑动侧边栏"
+        title={
+          <button
+            onClick={() => {
+              setCollection([]);
+            }}
+          >
+            清除全部
+          </button>
+        }
         visible={visible}
         onCancel={change}
       >

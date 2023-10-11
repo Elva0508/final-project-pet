@@ -264,6 +264,40 @@
   }
 }
 .favorite-helper-sidesheet {
+  .semi-sidesheet-title {
+    order: 1;
+    text-align: end;
+    button {
+      // width: 70px;
+      font-size: 0.9rem;
+      color: $text-mark;
+      background-color: transparent;
+      border: none;
+      border-bottom: 2px solid rgba(146, 146, 146, 0.399);
+      &:hover {
+        color: $hover;
+      }
+    }
+  }
+  .semi-sidesheet-close:hover {
+    background-color: transparent;
+  }
+  .semi-icon {
+    position: relative;
+    & > :first-child {
+      opacity: 0;
+    }
+
+    &::after {
+      content: "";
+      background: url("/job-icon/arrow-left-solid.svg") center center no-repeat;
+      top: -35%;
+      left: -50%;
+      width: 28px;
+      height: 28px;
+      position: absolute;
+    }
+  }
   .famous-helper-card {
     $img-size: 120px;
     margin-bottom: 3rem;
