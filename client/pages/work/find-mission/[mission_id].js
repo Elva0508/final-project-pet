@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import { useRouter } from "next/router";
 import axios from "axios"
 import Link from "next/link";
-import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
+import { GoogleMap, LoadScript, MarkerF, InfoWindowF, OverlayView } from '@react-google-maps/api';
 import { IoPaperPlaneOutline } from "react-icons/io5";
 import { PiWechatLogoThin } from "react-icons/pi";
 import { FaRegHeart, FaHeart } from "react-icons/fa";
@@ -113,7 +113,7 @@ export const MissionDetailSticky = () => {
 function CustomHTMLRenderer({ htmlContent }) {
     return (
         <div className="item">
-            <div className="item-title size-5">詳細說明</div>
+            <div className="item-title size-5 mb-3">詳細說明</div>
             <ul className="item-content size-6" dangerouslySetInnerHTML={{ __html: htmlContent }} />
         </div>
     );
@@ -129,6 +129,8 @@ const MapComponent = ({ lat, lng }) => {
         lat,
         lng,
     };
+    console.log('center.lat是:', center.lat);
+    console.log('center.lng是:', center.lng);
 
     return (
         <LoadScript googleMapsApiKey="AIzaSyD3M4Wt4xdyN-LrJyCVDwGSUkQ1B8KpKT8">
@@ -137,7 +139,7 @@ const MapComponent = ({ lat, lng }) => {
                 center={center}
                 zoom={16}
             >
-                <Marker position={center} />
+                <MarkerF position={center} />
             </GoogleMap>
         </LoadScript>
     );
@@ -217,7 +219,7 @@ export default function MissionDetail() {
     const handleConfirmSubmit = async () => {
         setSelectedMissionId(mission_id)
         try {
-            // // 使用 selectedMissionId 作为 missionId
+            // 使用 selectedMissionId 作為 missionId
             const requestData = {
                 missionId: selectedMissionId,
                 recommendation,
@@ -228,7 +230,7 @@ export default function MissionDetail() {
             const response = await axios.post('http://localhost:3005/api/mission/add-record', requestData);
             console.log('成功添加到應徵紀錄', response.data);
             // 導到聊天室
-            router.push('/chatlist');
+            // router.push('/chatlist');
         } catch (error) {
             console.error('添加到應徵紀錄出錯', error);
         }

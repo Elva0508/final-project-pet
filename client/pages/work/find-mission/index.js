@@ -284,7 +284,7 @@ const MyFilter = ({ missionType, setMissionType, missionCity, setMissionCity, mi
             </ul>
           </div>
         )}
-        <button className="btn-second ms-4 filter-button" onClick={clearFilters} >清空條件</button>
+        <button className="btn-second ms-4 filter-button" onClick={clearFilters} >清除篩選</button>
       </div>
     </>
   );
