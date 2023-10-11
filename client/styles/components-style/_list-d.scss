@@ -3,7 +3,12 @@
 .list-d{
   // min-width: 280px;
   .user{
-    background:$content-bg ; 
+    background:#fff ;
+    border-radius: 10px 10px 10px 10px;
+  }
+  .useravatar{
+    background:linear-gradient(to bottom, $header-bg 0%,rgb(248, 247, 247) 80%,#fff 100%); 
+    border-radius: 10px 10px 10px 10px;
   }
   img{
     width: 100px;
@@ -15,35 +20,26 @@
     height: 80px;
 }
   }
-  
-  .level{
-    color: $price;
-    border:1px solid;
-    background:$main-bg;
-    
+  .lv{
+    border:1px solid $price;
+    border-radius: 20px 20px 20px 20px ;
+    background:$price;
   }
-  ul{
-    padding: 0;
-    list-style: none;
-    a{
-    background: #ffffff;
-    text-decoration: none;
-    color: $text-main;
-    display: block;
-    text-align: center;
-    padding: 15px;
-    }
-    h6{
-    border-bottom: 1px dashed;
-    text-align: center;
-    background: $content-bg;
-    color: $text-main;
-    padding: 15px;
-    font-weight: 600;
-    color: $text-main;
-    margin: 0;
-    }
+  .level{
+    color:$main-bg ;
+  }
 
+  .bg{
+    background: $cos-white;
+    border-radius: 10px 10px 10px 10px ;
+
+  }
+  .title{
+    font-weight: 600;
+  }
+  button{
+    border:0;
+    background: transparent;
   }
 }
 
