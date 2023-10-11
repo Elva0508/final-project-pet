@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import ListM from "@/components/member/list-m";
 import ListD from "@/components/member/list-d";
 import ListUserM from "@/components/member/list-user-m";
 import { FaList } from "react-icons/fa";
@@ -131,9 +130,6 @@ export default function Wishlist() {
   return (
     <>
       <div className="my-3">
-        <div className="d-flex justify-content-end me-3">
-          <ListM />
-        </div>
         <ListUserM />
         <div className="d-flex justify-content-around pt-2">
           <ListD />
@@ -141,7 +137,6 @@ export default function Wishlist() {
 
               <div className="d-flex justify-content-between">
                 <h5 className="size-5 mt-3 ms-md-5 ms-3">
-                  <FaList />
                   追蹤清單
                 </h5>
                 <p className="size-7 mt-3 me-md-5 pe-md-5 pe-2">已追蹤{wishlist.length}樣商品</p>
@@ -151,10 +146,10 @@ export default function Wishlist() {
                 return (
                   <>
                     <div
-                      className="col-12 d-flex justify-content-between border-bottom pt-4 pb-2 ps-md-5 ps-3"
+                      className="d-flex justify-content-between border-bottom pt-4 pb-2 mx-md-5"
                       key={v.collection_id}
                     >
-                      <div className="d-flex col-7 col-md-8">
+                      <div className="d-flex col-7 col-md-9">
                         <img src={v.images} alt={v.product_name} />
                         <div className="ms-3">
                           <p className="size-6 m-size-7">{v.product_name}</p>
@@ -179,7 +174,7 @@ export default function Wishlist() {
                         </div>
                       </div>
 
-                      <div className="col-5 col-md-4  d-md-flex align-items-center d-none  flex-column justify-content-center">
+                      <div className="col-5 col-md-3  d-md-flex align-items-center d-none  flex-column justify-content-center">
                         <button
                           className="btn btn-confirm size-6 m-size-7 my-2" 
                           data-bs-toggle="offcanvas" 

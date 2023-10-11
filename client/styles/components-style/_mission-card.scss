@@ -9,6 +9,9 @@
         }
     }
     .mission-content{
+        .title{
+            min-height: 3.75rem;
+        }
         img{
             cursor: pointer;
             width: 45px;
@@ -28,4 +31,12 @@
         }
     }
 }
-
+@media screen and (max-width: 575px) {
+    .mission-list-card{
+        .mission-content{
+            .title{
+                min-height: 3rem;
+            }
+        }
+    }
+}

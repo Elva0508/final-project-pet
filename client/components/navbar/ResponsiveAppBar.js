@@ -118,7 +118,6 @@ function ResponsiveAppBar() {
 
 
   const { cart, setCart } = useCart();
-
   const goCart=()=>{
     router.push('/product/cart')
   }

@@ -1,5 +1,5 @@
 import React from "react";
-import ArticleListCard from "../article/article-list-card";
+import ArticleListCard from "../home/article-list-card";
 import { FaChevronLeft } from "react-icons/fa";
 import { FaChevronRight } from "react-icons/fa";
 
@@ -9,45 +9,28 @@ export default function BlockSix() {
       <div className="block-six">
         <div id="carouselExample" className="carousel slide">
           <div className="carousel-inner">
-            <div className="carousel-item active">
-              <div className="row row-cols-1 row-cols-md-3 g-4 px-5">
-                <div className="col">
-                  <ArticleListCard />
-                </div>
-                <div className="col">
-                  <ArticleListCard />
-                </div>
+            <ArticleListCard />
+            {/* <div className="carousel-item active">
+              <div className="row g-4 px-5">
                 <div className="col">
                   <ArticleListCard />
                 </div>
               </div>
             </div>
             <div className="carousel-item">
-              <div className="row row-cols-1 row-cols-md-3 g-4 px-5">
-                <div className="col">
-                  <ArticleListCard />
-                </div>
-                <div className="col">
-                  <ArticleListCard />
-                </div>
+              <div className="row g-4 px-5">
                 <div className="col">
                   <ArticleListCard />
                 </div>
               </div>
             </div>
             <div className="carousel-item">
-              <div className="row row-cols-1 row-cols-md-3 g-4 px-5">
-                <div className="col">
-                  <ArticleListCard />
-                </div>
-                <div className="col">
-                  <ArticleListCard />
-                </div>
+              <div className="row g-4 px-5">
                 <div className="col">
                   <ArticleListCard />
                 </div>
               </div>
-            </div>
+            </div> */}
           </div>
           <button
             className="carousel-control-prev"

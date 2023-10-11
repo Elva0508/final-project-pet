@@ -11,6 +11,14 @@ $carousel-indicator-height: 5px;
 $breadcrumb-divider: quote(">");
 $offcanvas-horizontal-width: 50%;
 
+$dropdown-link-color:               #512f10;
+$dropdown-link-hover-color:         shade-color($dropdown-link-color, 10%);
+$dropdown-link-hover-bg:            #f8cb9f;
+$dropdown-link-active-color: #512f10;
+$dropdown-link-active-bg: #f8cb9f;
+$dropdown-bg:                       #fffdfb;
+$dropdown-border-width:             0;
+
 // ↑↑↑  變數覆蓋(Variable overrides) 要寫在這行"上面"  ↑↑↑
 // 導入所有 bootstrap 樣式
 @import "~bootstrap/scss/bootstrap";
@@ -95,7 +103,6 @@ ul {
 
 //會員頁面
 @import "@/styles/components-style/_list-d.scss";
-@import "@/styles/components-style/_list-m.scss";
 @import "@/styles/components-style/_list-user-m.scss";
 @import "@/styles/components-style/work/_member-helper.scss";
 @import "@/styles/components-style/_member-order-detail.scss";
