@@ -33,13 +33,12 @@ router.post('/create-order', async (req, res) => {
       options: { display: { locale: 'zh_TW' } },
     }
   
-    console.log(order);
+    // console.log(order);
     // Save order information
     // cache.put(orderId, order)
   
     // insert new order to database
     const newOrder = await orderModel.create({
-      oid:  +new Date(),
       total_amount: req.body.amount,
       order_info: JSON.stringify(order), // request to line pay
       status_id: 5,
