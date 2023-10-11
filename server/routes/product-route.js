@@ -48,7 +48,8 @@ router.get("/product-detail/:product_id", (req, res) => {
         products.*,
         category.category_name AS category_name,
         subcategory.subcategory_name AS subcategory_name,
-        GROUP_CONCAT(product_type.type_name) AS type_names
+        GROUP_CONCAT(product_type.type_name) AS type_names,
+        GROUP_CONCAT(product_type.type_id) AS type_ids
         FROM products
         JOIN category ON category.category_id = products.category_id
         JOIN subcategory ON subcategory.subcategory_id = products.subcategory_id

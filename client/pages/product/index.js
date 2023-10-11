@@ -225,9 +225,7 @@ export default function ProductList() {
                     {/* 手機版篩選 */}
                     <div className="product-offcanvas-m d-block d-lg-none ">
                         <button className="product-sidebar-btn btn-confirm size-5" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"><HiOutlineFilter /></button>
-
                         <div className="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
-
                             <div className="offcanvas-header">
                                 <h5 className="offcanvas-title" id="offcanvasRightLabel">篩選</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
@@ -240,14 +238,15 @@ export default function ProductList() {
                                         <div className="accordion-item" key={index}>
                                             <h2 className="accordion-header" id={`panelsStayOpen-headingCategory-${index}`}>
                                                 <button
-                                                    className="accordion-button"
+                                                    className="accordion-button size-6"
                                                     type="button"
                                                     data-bs-toggle="collapse"
                                                     data-bs-target={`#panelsStayOpen-collapseCategory-${index}`}
-                                                    aria-expanded="true"
+                                                    aria-expanded={activeKey === index}
                                                     aria-controls={`panelsStayOpen-collapseCategory-${index}`}
                                                     data-bs-parent="#accordionPanelsStayOpenExample" // 將這行添加到這個button元素中
                                                     onClick={() => {
+                                                        setActiveKey(index); // 当按钮被点击时，更新activeKey状态
                                                         handleCategoryChange(category.category_name);
                                                         console.log(`Button for category ${category.category_name} clicked.`);
                                                     }}
@@ -255,11 +254,11 @@ export default function ProductList() {
                                                     {category.category_name}
                                                 </button>
                                             </h2>
-                                            <div id={`panelsStayOpen-collapseCategory-${index}`} className="accordion-collapse collapse show" aria-labelledby={`panelsStayOpen-headingCategory-${index}`}>
+                                            <div id={`panelsStayOpen-collapseCategory-${index}`} className={`accordion-collapse collapse ${activeKey === index ? 'show' : ''}`}>
                                                 <div className="accordion-body row">
                                                     {category.subcategories && category.subcategories.split(',').map((subcategory, subIndex) => (
                                                         <button
-                                                            className="button-subcategory"
+                                                            className="button-subcategory size-7"
                                                             type="button"
                                                             key={subIndex}
                                                             onClick={() => {
@@ -285,28 +284,56 @@ export default function ProductList() {
                                         <div className="card-body">
                                             {/* specialoffer篩選 */}
                                             <div className="col-12">
-                                                <label for="inputprice" className="form-label">價格區間</label>
+                                                <label for="inputprice size-6" className="form-label">價格區間</label>
                                                 <div className="row col-md">
                                                     <div className="col-md-5">
-                                                        <input type="number" className="form-control" id="price" placeholder="$最低價">
-                                                        </input>
+                                                        <input
+                                                            type="number"
+                                                            className="form-control"
+                                                            id="price"
+                                                            placeholder="$最低價"
+                                                            value={minPrice}
+                                                            onChange={handleMinPriceChange}
+                                                        />
                                                     </div>
                                                     <div class="col-md dash">
                                                         ~
                                                     </div>
                                                     <div className="col-md-5">
-                                                        <input type="number" className="form-control" id="price" placeholder="$最高價">
-                                                        </input>
+                                                        <input
+                                                            type="number"
+                                                            className="form-control"
+                                                            id="price"
+                                                            placeholder="$最高價"
+                                                            value={maxPrice}
+                                                            onChange={handleMaxPriceChange}
+                                                        />
                                                     </div>
                                                 </div>
                                             </div>
                                             {/* vendor篩選 */}
                                             <div className="col-12 mt-2">
-                                                <label for="brand" className="form-label">品牌</label>
-                                                <input type="text" className="form-control" id="brand" placeholder="請輸入品牌關鍵字">
-                                                </input>
+                                                <label for="brand size-6" className="form-label">品牌</label>
+                                                {/* <input type="text" className="form-control" id="brand" placeholder="請輸入品牌關鍵字">
+                                            </input> */}
+                                                <select
+                                                    id="inputsubCategory"
+                                                    className="form-select"
+                                                    name="subcategory_name"
+                                                    value={vendor}
+                                                    onChange={handleVendorChange}
+                                                >
+                                                    <option value="">請選擇</option>
+                                                    {vendorData.result.map((vendor, index) => (
+                                                        <option key={index} value={vendor.vendor}>{vendor.vendor}</option>
+                                                    ))}
+                                                </select>
                                             </div>
-                                            <button type="submit" className="btn btn-brown col-12 mt-3">
+                                            <button
+                                                type="button"
+                                                className="btn btn-brown col-12 mt-3"
+                                                onClick={handleFilterSubmit} // 點擊按鈕時觸發事件處理程序
+                                            >
                                                 確定
                                             </button>
                                         </div>

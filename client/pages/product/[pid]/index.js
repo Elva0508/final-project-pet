@@ -40,6 +40,7 @@ export default function ProductDetail() {
     // 讀取product個別id資料
     const router = useRouter();
     const product_id = router.query.pid;
+   
     const [productData, setProductData] = useState([]);
     useEffect(() => {
         if (product_id) {
@@ -132,6 +133,8 @@ export default function ProductDetail() {
 
     // 添加商品到購物車的函式
     const { cart, setCart } = useCart();
+    //儲存選中的type_id-selectedTypeId
+    const [selectedTypeId, setSelectedTypeId] = useState(''); 
     const getCart = () => {
         axios.get("http://localhost:3005/api/product/cart")
             .then((response) => {
@@ -147,6 +150,7 @@ export default function ProductDetail() {
     }
 
     const addCart = async (product_id, product_type_id, quantity) => {
+        console.log(product_id, product_type_id, quantity)
 
         // 檢查購物車中是否已經存在具有相同 id 和類型的商品
         const have = cart.find((v) => v.product_id == product_id && v.type_id == product_type_id);
@@ -244,15 +248,19 @@ export default function ProductDetail() {
                                                         key={i}
                                                         type="button"
                                                         className="btn-outline-brown me-4"
+                                                        onClick={() => {
+                                                            // 儲存選中的type_id
+                                                            setSelectedTypeId(v.type_ids.split(',')[i].trim());
+                                                        }}
                                                     >
-                                                        {typeName.trim()} {/* 移除可能的前後空格 */}
+                                                        {typeName.trim()}
                                                     </button>
                                                 ))}
                                             </div>
                                         </div>
                                         {/* 計算數量 */}
                                         <div className="quantity-counter">
-                                            <div className="quantity-counter d-flex">
+                                            <div className="quantity-counter d-flex ">
                                                 <button className="decrement  " onClick={handleDecrement}>
                                                     <FiMinus />
                                                 </button>
@@ -270,8 +278,8 @@ export default function ProductDetail() {
                                                 data-bs-target="#offcanvasRight"
                                                 aria-controls="offcanvasRight"
                                                 onClick={() =>{
-                                                    addCart(v.product_id, v.type_id, count);
-                                                    console.log(v.product_id, v.type_id, count)
+                                                    addCart(v.product_id, selectedTypeId, count);
+                                                    console.log(v.product_id, selectedTypeId, count)
                                                 }
                                                 }
                                             >
