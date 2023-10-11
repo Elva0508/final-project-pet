@@ -1,14 +1,14 @@
 import React,{useState, useEffect} from "react";
-import { BsFillCaretDownFill } from "react-icons/bs";
 import { HiClipboardList } from "react-icons/hi";
 import { LiaListAltSolid } from "react-icons/lia";
-import { FaAddressCard } from "react-icons/fa";
 import { FaPencilAlt } from "react-icons/fa";
-import { FaAward } from "react-icons/fa6";
 import { BiSolidShoppingBag } from "react-icons/bi";
 import { MdDiscount } from "react-icons/md";
 import { FaList } from "react-icons/fa";
 import { RiFileList3Fill } from "react-icons/ri";
+import  {FaChartLine} from "react-icons/fa"
+import {FaIdBadge} from "react-icons/fa"
+import {FaRegCalendarCheck} from "react-icons/fa"
 import Link from "next/link";
 import axios from "axios";
 
@@ -38,6 +38,7 @@ export default function ListD() {
     <>
       <div className="list-d col-3 d-md-block d-none">
         <div className="user">
+        <div className="useravatar">
           <div className="d-flex justify-content-center">
           <div>
           <div className="text-center">
@@ -48,7 +49,7 @@ export default function ListD() {
               >
 
               </img>
-              </div>
+          </div>
             <p className="size-5 my-3 text-center">Hi,{memberData ? memberData.name : 'loading...'}</p>
             <Link className="size-7" href=""><span className="me-2">管理個人資料</span><FaPencilAlt /></Link>
           </div>
@@ -59,66 +60,72 @@ export default function ListD() {
               </div>
               <Link className="size-7 mt-3 ms-3" href="">查看會員等級優惠</Link>
             </div>
-      <ul className="mt-5">
+          </div>
+          <ul className="mt-2 ms-5">
           <li>
-            <h6 className="size-6">小貓商城</h6>
+            <div className="py-2"><p className="size-5 title">小貓商城</p></div>
           </li>
           <li>
-            <Link className="size-6" href="http://localhost:3000/member/order">
-              <RiFileList3Fill />
-              <span>我的訂單</span>
-            </Link>
+            <button className="size-6" onClick={()=>{
+              window.location.href ="http://localhost:3000/member/order"
+            }}> 
+              <div className="ms-5 my-3"><RiFileList3Fill /><span className="ms-2">我的訂單</span></div>
+            </button>
           </li>
           <li>
-            <Link className="size-6" href="http://localhost:3000/member/purchast">
-              <BiSolidShoppingBag />
-              購買紀錄
-            </Link>
+            <button className="size-6" onClick={()=>{
+              window.location.href ="http://localhost:3000/member/purchast"
+            }}>
+              <div className="ms-5 my-3"><BiSolidShoppingBag /><span className="ms-2">購買紀錄</span></div>
+            </button>
           </li>
           <li>
-            <Link className="size-6" href="http://localhost:3000/member/wishlist">
-              <FaList />
-              追蹤清單
-            </Link>
+            <button className="size-6" onClick={()=>{
+              window.location.href ="http://localhost:3000/member/wishlist"
+            }}> 
+              <div className="ms-5 my-3"><FaList /><span className="ms-2">追蹤清單</span></div>
+            </button>
           </li>
           <li>
-            <Link className="size-6" href="">
-              <MdDiscount />
-              我的優惠券
-            </Link>
+            <button className="size-6" onClick={()=>{
+              window.location.href =""
+            }}>
+              <div className="ms-5 my-3"><MdDiscount /><span className="ms-2">我的優惠券</span></div>
+            </button>
           </li>
           <li>
-            <h6 className="size-6">小貓上工</h6>
+           <div className="p-2"><p className="size-5 title">小貓上工</p></div> 
           </li>
           <li>
-            <Link className="size-6" href="">
-              <FaPencilAlt />
-              小幫手資料
-            </Link>
+            <button className="size-6" onClick={()=>{
+              window.location.href =""
+            }} >
+              <div className="ms-5 my-3"><FaIdBadge /><span className="ms-2">小幫手資料</span></div>
+            </button>
           </li>
           <li>
-            <Link className="size-6" href="http://localhost:3000/member/joblist">
-              <LiaListAltSolid />
-              任務清單
-            </Link>
+            <button className="size-6" onClick={()=>{
+              window.location.href ="http://localhost:3000/member/joblist"
+            }}>
+              <div className="ms-5 my-3"><LiaListAltSolid /><span className="ms-2">任務清單</span></div>
+            </button>
           </li>
           <li>
-            <Link className="size-6" href="http://localhost:3000/member/history">
-              <HiClipboardList />
-              刊登紀錄
-            </Link>
+            <button className="size-6" onClick={()=>{
+              window.location.href ="http://localhost:3000/member/history"
+            }}> 
+              <div className="ms-5 my-3"><HiClipboardList /><span className="ms-2">刊登紀錄</span></div>
+            </button>
           </li>
           <li>
-            <Link className="size-6" href="">
-              <HiClipboardList />
-              銷售紀錄
-            </Link>
+            <button className="size-6">
+              <div className="ms-5 my-3"><FaChartLine /><span className="ms-2">銷售紀錄</span></div>
+            </button>
           </li>
           <li>
-            <Link className="size-6" href="">
-              <HiClipboardList />
-              預約紀錄
-            </Link>
+            <button className="size-6"> 
+              <div className="ms-5 mt-3 pb-3"><FaRegCalendarCheck /><span className="ms-2">預約紀錄</span></div>
+            </button>
           </li>
         </ul>
 
