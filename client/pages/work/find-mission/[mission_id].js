@@ -291,7 +291,7 @@ export default function MissionDetail() {
             };
 
             // 發送 POST 請求將數據發送到後端 API
-            const response = await axios.post('http://localhost:3005/api/mission/add-record', requestData);
+            const response = await axios.post(`http://localhost:3005/api/mission/add-record?userId=${userId}`, requestData);
             console.log('成功添加到應徵紀錄', response.data);
             // 導到聊天室
             // router.push('/chatlist');

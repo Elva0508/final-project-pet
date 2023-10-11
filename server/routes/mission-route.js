@@ -369,6 +369,7 @@ router.get("/mission-details-img/:mission_id", (req, res) => {
 // 應徵紀錄
 router.post("/add-record", (req, res) => {
   const { missionId } = req.body; // 從請求體中獲取任務的 missionId  
+  const userId = req.query.userId; // 從請求的 URL 中獲取用戶 token
   const today = new Date();
   today.setHours(0, 0, 0, 0); // 將時間設為 00:00:00.000
   const tomorrow = new Date(today); // 複製今天的日期
@@ -376,8 +377,8 @@ router.post("/add-record", (req, res) => {
   const formattedDate = tomorrow.toISOString().split('T')[0]; // 格式化成 YYYY-MM-DD 格式的日期字符串
   console.log("req.body:", req.body);
   conn.execute(
-    `INSERT INTO mission_record(user_id, mission_id, job_date) VALUES (1,?,?)`,
-    [missionId, formattedDate],
+    `INSERT INTO mission_record(user_id, mission_id, job_date) VALUES (?,?,?)`,
+    [userId, missionId, formattedDate],
     (error, result) => {
       if (error) {
         console.error(error);
