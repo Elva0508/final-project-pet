@@ -855,16 +855,18 @@ export default function MissionList() {
     console.log(`重載後是+http://localhost:3005/api/mission/all-missions?missionType=${missionType}&updateDate=${updateDate}&missionCity=${missionCity}&missionArea=${missionArea}&sortOrder=${sortOrder}&sortBy=${sortBy}&missionSearch=${search}`);
   }, []);
 
+  // 點麵包屑重置所有設定
   const clearSettings = () => {
     setMissionType(null);
     setUpdateDate(null);
-    setMissionCity(""); // 確保將其重置為空字符串
+    setMissionCity(""); 
     setMissionArea(null);
     setSortOrder('asc');
     setSortBy('post_date');
     setInputValue('');
     setSearch("");
-    // 任何其他你想要重置的狀態變數
+    setActivePage(1);
+    getAllMissions()
     console.log("狀態變數已重置為預設值");
   };
 
@@ -879,7 +881,7 @@ export default function MissionList() {
               <Link href="/">首頁</Link>
             </li>
             <li class="breadcrumb-item" aria-current="page">
-              <Link href="/work/find-mission" onclick={clearSettings}>任務總覽</Link>
+              <Link href="/work/find-mission" onClick={clearSettings}>小貓上工(找任務)</Link>
             </li>
             {search ? (
               <>
@@ -892,8 +894,8 @@ export default function MissionList() {
               </>
             ) : (
               <>
-                <li class="breadcrumb-item" aria-current="page">
-                  所有
+                <li class="breadcrumb-item active" aria-current="page">
+                  所有任務
                 </li>
               </>
             )}
