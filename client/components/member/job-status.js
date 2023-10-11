@@ -85,10 +85,10 @@ export default function JobStatusTwo({job,currentScreen}) {
                   </p>
 
             </div>
-            <div className="d-flex border-bottom py-md-3 justify-content-between" key={i}>
+            <div className="d-flex border-bottom py-md-3 justify-content-between mx-md-5 ms-3" key={i}>
               <div className=" d-flex ">
                 {/* 1 */}
-                <div className="ms-md-5 ms-3">
+                <div className="">
                 <div className="d-md-flex d-none">
                   <p className="size-6 title"><span>任務主題：</span>{v.title}</p>
                   {v.mission_status==0?(
@@ -124,7 +124,7 @@ export default function JobStatusTwo({job,currentScreen}) {
                 </div>
               </div>
               {/* 2 */}
-              <div className="me-1 me-md-4 d-flex align-items-center justify-content-center col-md-2 col-4">
+              <div className="me-1 me-md-0 d-flex align-items-center justify-content-center col-md-2 col-4">
               <div className="">
               {v.mission_status==0?(
                 (v.record_mission_id==null?(

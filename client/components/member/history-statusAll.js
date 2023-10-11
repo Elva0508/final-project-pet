@@ -64,7 +64,7 @@ export default function HistoryStatusOne({ history ,getHistory }) {
           <>
           <p className="size-6 title d-md-none d-block ms-3">任務主題：{v.title}</p>
             <div className="d-flex justify-content-between border-bottom my-2 mx-md-5 ms-3">
-              <div>
+              <div className="col-md-9 col-8">
                 <p className="size-6 title d-md-block d-none">任務主題：{v.title}</p>
                 <p className="size-7" key={i}><span>刊登日期：</span>{transferDate(v.post_date)}</p>
                 <p className="size-7 content">
@@ -94,7 +94,7 @@ export default function HistoryStatusOne({ history ,getHistory }) {
 
                 <p className="size-7 follow">6-10人追蹤</p>
               </div>
-              <div className="d-flex align-items-center col-4">
+              <div className="d-flex align-items-center col-4 col-md-3 ps-md-5 ms-md-5 ms-0">
                 {v.mission_status === 1 ? (
                   <button className=" btn-confirm m-2 size-6" 
                   onClick={() =>{removetype(v.mission_id)}}

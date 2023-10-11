@@ -1,6 +1,7 @@
 @import "@/styles/variable";
 .history{
-    background: $content-bg;
+    border-radius: 10px 10px 10px 10px;
+    background:#fff;
     color:$text-main;
     line-height: 2;
     @media screen and (max-width: 768px) {
@@ -25,7 +26,7 @@
         border-radius: 10px 10px 0px 0px;
         // background: #f9f4dc;
         // background: #e5e8dc;
-        background: #edf3ec;
+        background:  rgb(248, 239, 233);
         border-top:1px solid $light-gray ;
         border-right: 1px solid $light-gray;
     }
@@ -34,7 +35,7 @@
     }
 
     button.pressed{
-        background:$content-bg;
+        background:#fff;
         @media screen and (max-width: 768px) {
             background: $main-bg;
         }

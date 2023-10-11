@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import ListD from "@/components/member/list-d";
-import ListM from "@/components/member/list-m";
 import ListUserM from "@/components/member/list-user-m";
 import { BsCalendarDateFill } from "react-icons/bs";
 import { RecordTemplate } from "@/components/member/Record-template";
@@ -37,10 +36,6 @@ const MemberReserve = () => {
           </li>
         </ol>
       </nav>
-      <div className="d-flex justify-content-end">
-        {/* mobile版的左側tab */}
-        <ListM />
-      </div>
       <ListUserM />
       <div className="d-flex container-fluid flex-column justify-content-around flex-md-row my-3">
         {/* <ListUserM /> */}

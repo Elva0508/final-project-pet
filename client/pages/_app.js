@@ -4,6 +4,7 @@ import "@/styles/globals.scss";
 import { AuthProvider } from "@/context/fakeAuthContext";
 import { CartProvider } from "@/hooks/useCart";
 import BreadCrumb from "@/components/breadCrumb";
+import { ActivePageProvider } from "@/hooks/useActivePage";
 
 export default function App({ Component, pageProps }) {
   useEffect(() => {
@@ -14,8 +15,10 @@ export default function App({ Component, pageProps }) {
     <AuthProvider>
       <CartProvider>
         <Layout>
-          <BreadCrumb />
-          <Component {...pageProps} />
+          <ActivePageProvider>
+            <BreadCrumb />
+            <Component {...pageProps} />
+          </ActivePageProvider>
         </Layout>
       </CartProvider>
     </AuthProvider>
