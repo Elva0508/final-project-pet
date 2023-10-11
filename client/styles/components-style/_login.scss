@@ -1,17 +1,22 @@
 .login-box{
     max-width: 37.5rem;
     background: #f4ece4;
-    padding: 3rem 0;
+    padding: 6rem 0;
+    margin: 7rem 0;
 }
 .login-header{
     position: relative;
+}
+.active{
+  color: $text-main;
+  font-weight: bold;
 }
 .email-login,
 .email-signup{
     position: relative;
     width: 100%;
     height: auto;
-    margin: 1.25rem;
+    margin:2rem 1.25rem;
 }
 .u-form-group {
     display: flex;
@@ -24,7 +29,7 @@
         width: 70%;
         font-weight: bold;
     }
-    & input {
+     .form-input {
         width: 70%;
     }
     & button{
@@ -52,7 +57,15 @@
   }
 
   .form-alert{
-    color: red;
+    color: rgb(221, 70, 70);
+    padding-top: 5px;
   }
 
-  
+  .center-input::placeholder{
+text-align: center;
+  }
+  .pwd-icon{
+    cousor: pointer;
+  }
+
+ 

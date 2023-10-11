@@ -16,6 +16,7 @@ import Badge from "@mui/material/Badge";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 import { useAuth } from "@/context/fakeAuthContext";
 
@@ -28,6 +29,7 @@ import ShoppingCart from "@/assets/shoppingCart.svg";
 //cart
 import { useCart } from "@/hooks/useCart";
 import { useRouter } from "next/router";
+import { useCart } from "@/hooks/useCart";
 
 const theme = createTheme({
   // 自定義色調
@@ -107,6 +109,7 @@ function ResponsiveAppBar() {
     setAnchorElUser(null);
   };
 
+  const router = useRouter();
   //登入登出
   const handleLogout = () => {
     logout();
@@ -114,7 +117,6 @@ function ResponsiveAppBar() {
   };
 
   const { cart, setCart } = useCart();
-  const router = useRouter();
   const goCart = () => {
     router.push("/product/cart");
   };

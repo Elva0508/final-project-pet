@@ -8,24 +8,52 @@
     .title{
         font-weight: 600;
     }
-    .content{
-        color:black;
-    }
 
     .follow{
         color:$price;
     }
 
-    .apply{
-        color:$hover;
-    }
+
     .listbutton{
+        width: 20%;
+        // width: 200px;
+        height: 50px;
         border: 0px;
-        background: transparent;
+        border-radius: 10px 10px 0px 0px;
+        // background: #f9f4dc;
+        // background: #e5e8dc;
+        background: #edf3ec;
+        border-top:1px solid $light-gray ;
+        border-right: 1px solid $light-gray;
+    }
+    .first{
+        border-left:1px solid $light-gray ;
     }
 
     button.pressed{
-        border-bottom: 5px solid $hover;
+        background:$content-bg;
+        @media screen and (max-width: 768px) {
+            background: $main-bg;
+        }
+    }
+    .apply{
+        border: 1px solid $hover;
+        
+        background: $cos-white;
+
+    }
+    .apply p{
+        color:$text-main;
+    }
+    .status{
+        color: $price;
+
+    }
+    span{
+        color:$text-main;
+      }
+    .title1{
+        color:$price;
     }
 
 }

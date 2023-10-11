@@ -9,7 +9,7 @@ export default function BlockThree() {
             <div className="col-md-7">
               <div className="mt-5 ms-5">
                 <div className="desktop-title">
-                  <span className="title size-1 m-size-3 d-flex justify-content-start">開幕慶</span>
+                  <span className="title size-2 m-size-3 d-flex justify-content-start">開幕慶</span>
                 </div>
                 <div className="d-flex justify-content-start">
                   <span>限時特賣活動，現在加入會員最划算</span>

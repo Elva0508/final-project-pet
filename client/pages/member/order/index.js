@@ -40,30 +40,29 @@ useEffect(() => {
           <ListM />
         </div>
         <ListUserM />
-        <div className="">
+        
           <div className="d-flex justify-content-around py-2">
             <ListD />
-            <div className="row col-lg-8 col-md-8 col-12 order">
-              <div className="title p-3">
-                <h5 className="size-5">
-                  <RiFileList3Fill />
-                  我的訂單
+            <div className="d-flex flex-column col-md-8 col-12 order ">
+  
+                <h5 className="size-5 mt-3 ms-md-5 ms-3">
+                  <p className=""><RiFileList3Fill />我的訂單</p>
                 </h5>
-              </div>
-              <div className="p-3">
-              <div>
 
-                <div className="mt-3">
+              <div className="col-12">
+                
                   <button
-                    className={`mx-3 size-7 listbutton ${currentScreen === "1" ? 'pressed' : ''}`}
+                    className={` size-6 listbutton first ${currentScreen === "1" ? 'pressed' : ''}`}
                     onClick={() => {
                       handleButtonClick("1");
                     }}
                   >
                     待出貨
                   </button>
+
+
                   <button
-                    className={`mx-3 size-7 listbutton ${currentScreen === "2" ? 'pressed' : ''}`}
+                    className={` size-6 listbutton ${currentScreen === "2" ? 'pressed' : ''}`}
                     onClick={() => {
                       handleButtonClick("2");
                     }}
@@ -71,7 +70,7 @@ useEffect(() => {
                     運送中
                   </button>
                   <button
-                    className={`mx-3 size-7 listbutton ${currentScreen === "3" ? 'pressed' : ''}`}
+                    className={` size-6 listbutton ${currentScreen === "3" ? 'pressed' : ''}`}
                     onClick={() => {
                       handleButtonClick("3");
                     }}
@@ -79,25 +78,18 @@ useEffect(() => {
                     已完成
                   </button>
                   <button
-                    className={`mx-3 size-7 listbutton ${currentScreen === "4" ? 'pressed' : ''}`}
+                    className={` size-6 listbutton  ${currentScreen === "4" ? 'pressed' : ''}`}
                     onClick={() => {
                       handleButtonClick("4");
                     }}
                   >
                     已取消
                   </button>
-
-                 <OrderStatus order={order} currentScreen={currentScreen} />
-                 {/* <OrderStatus order={order} /> */}
-
-
                 </div>
-              </div>
+                <OrderStatus order={order} currentScreen={currentScreen} />
             </div>
-            </div>
-
           </div>
         </div>
-      </div>
+   
   );
 }

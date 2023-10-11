@@ -8,19 +8,17 @@ import Pagination from '@/components/pagination'
 export default function HistoryStatusOne({ history ,getHistory ,currentScreen}) {
 
   const [activePage, setActivePage] = useState(1)
-
   const itemsPerPage = 5;
-  const [currentPage, setCurrentPage] = useState(1);
-  const startIndex = (currentPage - 1) * itemsPerPage;
+  const startIndex = (activePage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const type=history.filter((v)=>v.mission_status==currentScreen)
   const currentData = type.slice(startIndex, endIndex);
 
-
-
-
-  const handlePageChange = (newPage) => {
-    setCurrentPage(newPage);
+  const [showcontent,setShowContent]=useState(false)
+  const [id ,setId]=useState(0)
+  const toggleContent = (i) => {
+    setShowContent(!showcontent);
+    setId(i)
   };
 
   function CustomHTMLRenderer({ htmlContent }) {
@@ -58,35 +56,43 @@ export default function HistoryStatusOne({ history ,getHistory ,currentScreen}) 
     <>
       {currentData.map((v, i) => {
         return (
-          <>
-            <p className="size-7" key={i}>{transferDate(v.post_date)}
-            </p>
-            <div className="d-flex border-bottom my-2">
-              <div className="col-9">
-                <p className="size-6 title">{v.title}</p>
-                <p className="size-7 content">
-                  單次NT${v.price} | {v.city}
-                  {v.area}
-                  {v.location_detail}
+          <> 
+          <p className="size-6 title d-md-none d-block ms-3">任務主題：{v.title}</p>
+            <div className="d-flex justify-content-between border-bottom my-2 mx-md-5 ms-3">
+              <div>
+                <p className="size-6 title d-md-block d-none">任務主題：{v.title}</p>
+                <p className="size-7" key={i}><span>刊登日期：</span>{transferDate(v.post_date)}</p>
+                <p className="size-7">
+                <span>任務費用：</span>NT${v.price}/次  
                 </p>
-                <p className="size-7 content">
-                  任務內容｜
-                  <CustomHTMLRenderer htmlContent={v.description} />
+                <p className="size-7"><span>任務地點：</span>{v.city}{v.area}{v.location_detail}</p>
+                <p className="size-7">
+                <span>任務時間：</span>{transferDate(v.start_date)}~{transferDate(v.end_date)}
                 </p>
-                <p className="size-7 content">
-                  任務時間｜{transferDate(v.start_date)}~{transferDate(v.end_date)}
+                <p className="size-7">
+                <span>任務內容：</span>
+                  {showcontent && id==i? ( 
+                    <>
+                    <CustomHTMLRenderer htmlContent={v.description} />
+                    <button className="btn-confirm" onClick={()=>{toggleContent(i)}}>隱藏內容</button>
+                    </>
+
+                  ):(
+                  <>
+                  <button className="btn-confirm" onClick={()=>{toggleContent(i)}}>顯示內容</button>
+                  </>
+                  )}
                 </p>
+
                 <p className="size-7 follow">6-10人追蹤</p>
               </div>
-              <div className="col-3">
+              <div className="d-flex align-items-center col-4">
                 {v.mission_status === 1 ? (
                   <button className=" btn-confirm m-2 size-6" 
                   onClick={() =>{removetype(v.mission_id)}}
-                  >下架</button>
+                  >下架任務</button>
                 ) : (
-                  <button className=" btn-outline-confirm m-2 size-6">
-                    已下架
-                  </button>
+                  <div className="m-2 size-6 remove px-4 py-2">已下架</div>
                 )}
               </div>
             </div>
