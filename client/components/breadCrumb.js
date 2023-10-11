@@ -8,6 +8,7 @@ import Link from 'next/link'
 
 function BreadCrumb(props) {
     const { pathname,query } = useRouter();
+    console.log(pathname);
     console.log(query);
     const [product, setProduct] = useState([])
     const [article, setArticle] = useState([])
@@ -54,23 +55,22 @@ const getSubcategory =  () => {
      console.error("Error:", error);
  });
 }
- 
-subcategory
+
     useEffect(() => {
       getProduct()
       getArticle()
       getMission()
       getSubcategory()
       }, []) 
+      let pathArray=[]
 
     const formatTextLocale = (pathname) => {
-    const pathArray = pathname.split('/')
+    pathArray = pathname.split('/')
 
     const pathArrayLocale = pathArray.map((v, i) => {
       if (!v) return ''
-      console.log(v);
+      // console.log(v);
  
-
       //訂單
       if (v == "[oid]") return '訂單明細'
       const pid=query.pid
@@ -96,13 +96,17 @@ subcategory
       if (v == "[id]" && query.id) return article[aid-1].title
       //小貓上工
       if (v == "work") return ''
+     
       //幫手
       //任務
       if (v == "[mission_id]" && query.mission_id) return mission[mid-1].title
+
+      //結帳
+      if (v == "checkout") return ''
+
       //其他
       return pathnameLocale[v] ? pathnameLocale[v] : v
     })
-    console.log(pathArrayLocale);
 
     const listArray = pathArrayLocale.map((v, i, array) => {
       // 第一個 與 id類(數字類型)的最後結尾params會忽略, 首頁不需要
@@ -140,12 +144,7 @@ subcategory
         <nav aria-label="breadcrumb " className='my-4 container'>
         <ol className="breadcrumb">
 
-          {formatTextLocale(pathname)[1]=="" && formatTextLocale(pathname)[2]?
-          (<><li className="breadcrumb-item">
-            <Link href="/">首頁</Link>
-          </li>{formatTextLocale(pathname)}</>)
-          :
-          formatTextLocale(pathname)[1]==""?
+          {pathname=="/" ||pathname=="/product/cart/checkout" ||pathname=="/chatlist/[id]" || pathname=="/product/cart/checkout/pay" || pathname=="/pay-confirm"?
           ("")
           :
           (<><li className="breadcrumb-item">

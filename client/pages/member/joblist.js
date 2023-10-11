@@ -3,23 +3,14 @@ import ListM from "@/components/member/list-m";
 import ListD from "@/components/member/list-d";
 import ListUserM from "@/components/member/list-user-m";
 import { LiaListAltSolid } from "react-icons/lia";
-import JobStatusOne from "@/components/member/job-status-one";
-import JobStatusTwo from "@/components/member/job-status-two";
-import JobStatusThree from "@/components/member/job-status-three";
-import JobStatusFour from "@/components/member/job-status-four";
+import JobStatus from "@/components/member/job-status";
 import axios from "axios";
 
 
 export default function Joblist() {
-  const [currentScreen, setCurrentScreen] = useState("1");
+  const [currentScreen, setCurrentScreen] = useState(4);
   const [job, setJob] = useState([]);
-  const [record, setRecord] = useState([]);
-  const [close ,setClose]=useState([])
-  const [norecord,setNorecord]=useState([])
 
-  const handleButtonClick = (screenName) => {
-    setCurrentScreen(screenName);
-  };
 
 
 
@@ -37,51 +28,11 @@ export default function Joblist() {
   };
 
 
-  const  getRecord = async () => {
-    await axios
-      .get("http://localhost:3005/api/member-joblist/record")
-      .then((response) => {
-        const data = response.data.result;
-        console.log(data);
-        setRecord(data);
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
-  };
-
-  const  getNorecord = async () => {
-    await axios
-      .get("http://localhost:3005/api/member-joblist/norecord")
-      .then((response) => {
-        const data = response.data.result;
-        console.log(data);
-        setNorecord(data);
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
-  };
-
-  const  getClose = async () => {
-    await axios
-      .get("http://localhost:3005/api/member-joblist/close")
-      .then((response) => {
-        const data = response.data.result;
-        console.log(data);
-        setClose(data);
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
-  };
 
 
   useEffect(() => {
     getJob();
-    getRecord()
-    getClose()
-    getNorecord()
+
   }, []);
 
  
@@ -95,50 +46,60 @@ export default function Joblist() {
         <ListUserM />
         <div className="d-flex justify-content-around py-2">
           <ListD />
-          <div className="row col-lg-8 col-md-8 col-12 joblist p-3 ">
-            <div>
-              <h5 className="size-5 ">
+          <div className="d-flex flex-column col-md-8 col-12 joblist  ">
+
+              <h5 className="size-5 mt-3 ms-md-5 ms-3">
                 <LiaListAltSolid />
                 任務清單
               </h5>
           
-                <div className="my-3">
+                <div className="mt-3">
                   <button
-                    className={`mx-2 size-7 listbutton ${
-                      currentScreen === "1" ? "pressed" : ""
+                    className={`size-6 listbutton first ${
+                      currentScreen === 4 ? "pressed" : ""
                     }`}
                     onClick={() => {
-                      handleButtonClick("1");
+                      setCurrentScreen(4);
                     }}
                   >
                     全部
                   </button>
                   <button
-                    className={`mx-2 size-7 listbutton ${
-                      currentScreen === "2" ? "pressed" : ""
+                    className={` size-6 listbutton ${
+                      currentScreen === 2 ? "pressed" : ""
                     }`}
                     onClick={() => {
-                      handleButtonClick("2");
+                      setCurrentScreen(2);
                     }}
                   >
                     未應徵
                   </button>
                   <button
-                    className={`mx-2 size-7 listbutton ${
-                      currentScreen === "3" ? "pressed" : ""
+                    className={` size-6 listbutton ${
+                      currentScreen === 3 ? "pressed" : ""
                     }`}
                     onClick={() => {
-                      handleButtonClick("3");
+                      setCurrentScreen(3);
                     }}
                   >
                     已應徵
                   </button>
                   <button
-                    className={`mx-2 size-7 listbutton ${
-                      currentScreen === "4" ? "pressed" : ""
+                    className={`size-6 listbutton ${
+                      currentScreen === 1 ? "pressed" : ""
                     }`}
                     onClick={() => {
-                      handleButtonClick("4");
+                      setCurrentScreen(1);
+                    }}
+                  >
+                    刊登中
+                  </button>
+                  <button
+                    className={`size-6 listbutton ${
+                      currentScreen === 0 ? "pressed" : ""
+                    }`}
+                    onClick={() => {
+                      setCurrentScreen(0);
                     }}
                   >
                     已關閉
@@ -148,15 +109,11 @@ export default function Joblist() {
                 
              
 
-                  {currentScreen === "1" && <JobStatusOne job={job}/>}
-                  {currentScreen === "2" && <JobStatusTwo norecord={norecord}/>}
-                  {currentScreen === "3" && <JobStatusThree record={record}/>}
-                  {currentScreen === "4" && <JobStatusFour close={close}/>}
+                  <JobStatus job={job} currentScreen ={currentScreen }/>
 
             </div>
           </div>
         </div>
-      </div>
     </>
   );
 }

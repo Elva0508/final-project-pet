@@ -50,7 +50,7 @@ export default function Star({startRating = 0,valid, onRatingChange = () => {} }
       </div>
     ):(
       <div className='star'>
-      商品評分:
+      <span>商品評分：</span>
         {/* 快速產生5個成員都是1陣列，表達式語法 */}
         {Array(5)
           .fill(1)
