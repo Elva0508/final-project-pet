@@ -742,7 +742,7 @@ export default function MissionList() {
   const [inputValue, setInputValue] = useState('');
   const [search, setSearch] = useState("");
   // 用於儲存解析後的userID
-  const [userId, setUserId] = useState(null); 
+  const [userId, setUserId] = useState(null);
 
 
   const [allMissions, setAllMissions] = useState([]);
@@ -785,6 +785,23 @@ export default function MissionList() {
     console.log("allMissions是", allMissions);
   }, [allMissions]);
 
+  // 利用token拿到當前登入的userID
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      try {
+        const decodedToken = jwt_decode(token);
+        const currentUserID = decodedToken.id;
+        console.log("currentUserID", currentUserID);
+        setUserId(currentUserID);
+        // 在此處將令牌token添加到請求標頭
+        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      } catch (error) {
+        console.error("解析Token時出錯", error);
+      }
+    }
+  }, []);
+
   // 分頁
   const itemsPerPage = 18;
   const [activePage, setActivePage] = useState(1);
@@ -792,7 +809,7 @@ export default function MissionList() {
   const endIndex = startIndex + itemsPerPage;
   const currentData = allMissions.slice(startIndex, endIndex);
   useEffect(() => {
-    console.log("currentData這頁的資料是", currentData);
+    // console.log("currentData這頁的資料是", currentData);
   }, [currentData]);
 
   // 收藏
@@ -802,7 +819,7 @@ export default function MissionList() {
     // 在組件加載時從後端獲取已收藏的任務
     const fetchFavoriteMissions = async () => {
       try {
-        const response = await axios.get(`http://localhost:3005/api/mission/fav`);
+        const response = await axios.get(`http://localhost:3005/api/mission/fav?userId=${userId}`);
         const favoriteMissionIds = response.data.result.map((fav) => fav.mission_id);
 
         // 根據已收藏的任務和當前任務列表來初始化 isFavorites 數組
@@ -829,11 +846,11 @@ export default function MissionList() {
 
       if (!isFavorites[index]) {
         // 如果任務未被收藏，發送加入收藏的請求
-        await axios.put('http://localhost:3005/api/mission/add-fav', { missionId });
+        await axios.put(`http://localhost:3005/api/mission/add-fav?userId=${userId}`, { missionId });
         console.log('已加入收藏');
       } else {
         // 如果任務已被收藏，發送取消收藏的請求
-        await axios.delete('http://localhost:3005/api/mission/delete-fav', { data: { missionId } });
+        await axios.delete(`http://localhost:3005/api/mission/delete-fav?userId=${userId}`, { data: { missionId } });
         console.log('已取消收藏');
       }
 
@@ -861,7 +878,7 @@ export default function MissionList() {
   const clearSettings = () => {
     setMissionType(null);
     setUpdateDate(null);
-    setMissionCity(""); 
+    setMissionCity("");
     setMissionArea(null);
     setSortOrder('asc');
     setSortBy('post_date');
@@ -872,20 +889,6 @@ export default function MissionList() {
     console.log("狀態變數已重置為預設值");
   };
 
-  // 利用token拿到當前登入的userID
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      try {
-        const decodedToken = jwt_decode(token);
-        const currentUserID = decodedToken.id;
-        console.log("currentUserID", currentUserID);
-        setUserId(currentUserID);
-      } catch (error) {
-        console.error("解析Token時出錯", error);
-      }
-    }
-  }, []);
 
 
 
