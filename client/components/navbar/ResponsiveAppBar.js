@@ -16,7 +16,7 @@ import Badge from "@mui/material/Badge";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/router"; 
+import { useRouter } from 'next/router';
 
 import {useAuth} from "@/context/fakeAuthContext"
 
@@ -109,8 +109,7 @@ function ResponsiveAppBar() {
     setAnchorElUser(null);
   };
 
-  const router = useRouter(); 
-
+  const router = useRouter();
   //登入登出
   const handleLogout = () => {
     logout()

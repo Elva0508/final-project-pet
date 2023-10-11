@@ -28,7 +28,7 @@ export default function ArticleCard() {
 
     const data = await res.json();
 
-    console.log(data);
+    // console.log(data);
     // 設定到狀態中 -> 會觸發重新渲染(re-render)
     setArticles(data);
   };
@@ -36,7 +36,7 @@ export default function ArticleCard() {
     if (router.isReady) {
       // 確保能得到router.query有值
       const { article_category_id, id } = router.query;
-      console.log({ article_category_id, id });
+      // console.log({ article_category_id, id });
       // 有id後，向伺服器要求資料，設定到狀態中
       getArticles({ article_category_id, id });
     }

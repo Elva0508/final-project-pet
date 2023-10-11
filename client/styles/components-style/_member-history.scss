@@ -2,6 +2,7 @@
 .history{
     background: $content-bg;
     color:$text-main;
+    line-height: 2;
     @media screen and (max-width: 768px) {
         background: $main-bg;
     }
@@ -17,13 +18,32 @@
     }
 
     .listbutton{
+        width: 25%;
+        // width: 200px;
+        height: 50px;
         border: 0px;
-        background: transparent;
+        border-radius: 10px 10px 0px 0px;
+        // background: #f9f4dc;
+        // background: #e5e8dc;
+        background: #edf3ec;
+        border-top:1px solid $light-gray ;
+        border-right: 1px solid $light-gray;
+    }
+    .first{
+        border-left:1px solid $light-gray ;
     }
 
     button.pressed{
-        border-bottom: 5px solid $hover;
+        background:$content-bg;
+        @media screen and (max-width: 768px) {
+            background: $main-bg;
+        }
     }
-
-
+    span{
+        color:$text-main;
+      }
+    .remove{
+        border: 1px solid $hover;
+        background: $cos-white;
+    }
 }
