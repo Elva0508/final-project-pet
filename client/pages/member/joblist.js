@@ -44,7 +44,7 @@ export default function Joblist() {
           <ListD />
           <div className="d-flex flex-column col-md-8 col-12 joblist  ">
 
-              <h5 className="size-5 mt-3 ms-md-5 ms-3">
+              <h5 className="size-5 mt-3 ms-md-0 ms-3 big">
                 任務清單
               </h5>
           

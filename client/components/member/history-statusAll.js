@@ -62,8 +62,8 @@ export default function HistoryStatusOne({ history ,getHistory }) {
       {currentData.map((v, i) => {
         return (
           <>
-          <p className="size-6 title d-md-none d-block ms-3">任務主題：{v.title}</p>
-            <div className="d-flex justify-content-between border-bottom my-2 mx-md-5 ms-3">
+          <p className="size-6 title d-md-none d-block ps-3 bg">任務主題：{v.title}</p>
+            <div className="d-flex justify-content-between border-bottom py-2 px-md-5 ps-3 bg">
               <div className="col-md-9 col-8">
                 <p className="size-6 title d-md-block d-none">任務主題：{v.title}</p>
                 <p className="size-7" key={i}><span>刊登日期：</span>{transferDate(v.post_date)}</p>

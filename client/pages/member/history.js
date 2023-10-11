@@ -39,10 +39,10 @@ useEffect(() => {
           <ListD />
           <div className="d-flex flex-column col-12 col-md-8 history">
 
-              <h5 className="size-5  mt-3 ms-md-5 ms-3">
+              <h5 className="size-5  my-3 ms-md-0 ms-3 big">
                 刊登紀錄
               </h5>
-              <div className="my-3">
+              <div className="">
                 <button
                   className={` size-6 listbutton first ${
                     currentScreen === "2" ? "pressed" : ""
