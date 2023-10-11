@@ -11,6 +11,7 @@ import { MdHomeRepairService } from "react-icons/md";
 import { MdDiscount } from "react-icons/md";
 import { FaList } from "react-icons/fa";
 import { RiFileList3Fill } from "react-icons/ri";
+import Link from "next/link";
 
 export default function ListM() {
   return (
@@ -71,10 +72,10 @@ export default function ListM() {
             <h6 className="dropdown-header m-size-6">小貓上工</h6>
           </li>
           <li>
-            <a className="dropdown-item " href="/member/helper">
+            <Link className="dropdown-item " href="/member/helper">
               <FaPencilAlt />
               小幫手資料
-            </a>
+            </Link>
           </li>
           <li>
             <a className="dropdown-item " href="#">
@@ -89,16 +90,16 @@ export default function ListM() {
             </a>
           </li>
           <li>
-            <a className="dropdown-item " href="/member/selling">
+            <Link className="dropdown-item " href="/member/selling">
               <MdHomeRepairService />
               銷售服務
-            </a>
+            </Link>
           </li>
           <li>
-            <a className="dropdown-item " href="/member/reserve">
+            <Link className="dropdown-item " href="/member/reserve">
               <BsCalendarDateFill />
               我的預約
-            </a>
+            </Link>
           </li>
         </ul>
       </div>

@@ -24,6 +24,8 @@ import StarIcon from "@mui/icons-material/Star";
 import { Pagination } from "antd";
 import { BiSearchAlt } from "react-icons/bi";
 import "animate.css";
+import { useAuth } from "@/context/fakeAuthContext";
+import { useRouter } from "next/router";
 register();
 // Import Swiper styles
 import "swiper/css";
@@ -31,6 +33,7 @@ import "swiper/css/navigation";
 import { Tune } from "@mui/icons-material";
 import { SideSheet, Button } from "@douyinfe/semi-ui";
 import workService from "@/services/work-service";
+import { useHelper } from "@/context/helperContext";
 const Search = ({
   handleSearch,
   placeholder,
@@ -194,29 +197,37 @@ const MobileFilter = ({
 const FamousHelperCard = ({ helper, collection, setCollection }) => {
   // const [isFavorite, setIsFavorite] = useState(false); // 初始狀態為未收藏
   const [isFavHovered, setIsFavHovered] = useState(false);
+  const { isAuthenticated } = useAuth();
+  const router = useRouter();
   const service = [
     { label: "到府代餵", value: parseInt(helper.feed_service) },
     { label: "安親寄宿", value: parseInt(helper.house_service) },
     { label: "到府美容", value: parseInt(helper.beauty_service) },
   ];
   const handleFav = (e) => {
-    if (!collection.find((item) => item === helper.user_id)) {
-      e.currentTarget.classList.add("animate__animated", "animate__heartBeat");
-      // setIsFavorite(true);
-      setCollection((prev) => {
-        return [...prev, helper.user_id];
-      });
+    if (isAuthenticated) {
+      if (!collection.find((item) => item === helper.user_id)) {
+        e.currentTarget.classList.add(
+          "animate__animated",
+          "animate__heartBeat"
+        );
+        setCollection((prev) => {
+          return [...prev, helper.user_id];
+        });
+      } else {
+        e.currentTarget.classList.remove(
+          "animate__animated",
+          "animate__heartBeat"
+        );
+        setCollection((prev) => {
+          const newArr = prev.filter((item) => item !== helper.user_id);
+          console.log(newArr);
+          return newArr;
+        });
+      }
     } else {
-      e.currentTarget.classList.remove(
-        "animate__animated",
-        "animate__heartBeat"
-      );
-      // setIsFavorite(false);
-      setCollection((prev) => {
-        const newArr = prev.filter((item) => item !== helper.user_id);
-        console.log(newArr);
-        return newArr;
-      });
+      alert("請先登入會員");
+      router.push("/member/login");
     }
   };
   return (
@@ -385,6 +396,8 @@ const MobileFamousHelper = ({
 const SingleHelperCard = ({ helper, collection, setCollection }) => {
   // const [isFavorite, setIsFavorite] = useState(false); // 初始狀態為未收藏
   const [isFavHovered, setIsFavHovered] = useState(false);
+  const { isAuthenticated } = useAuth();
+  const router = useRouter();
   // useEffect(() => {
   //   setIsFavorite(collection.find((item) => helper.user_id === item));
   // }, [collection]);
@@ -394,27 +407,29 @@ const SingleHelperCard = ({ helper, collection, setCollection }) => {
     { label: "到府美容", value: parseInt(helper.beauty_service) },
   ];
   const handleFav = (e) => {
-    if (!collection.find((item) => item === helper.user_id)) {
-      // 加入收藏
-      e.currentTarget.classList.add("animate__animated", "animate__heartBeat");
-      // setIsFavorite(true);
-      // const user_id = e.currentTarget.getAttribute("uid");
-      setCollection((prev) => {
-        return [...prev, helper.user_id];
-      });
+    if (isAuthenticated) {
+      if (!collection.find((item) => item === helper.user_id)) {
+        e.currentTarget.classList.add(
+          "animate__animated",
+          "animate__heartBeat"
+        );
+        setCollection((prev) => {
+          return [...prev, helper.user_id];
+        });
+      } else {
+        e.currentTarget.classList.remove(
+          "animate__animated",
+          "animate__heartBeat"
+        );
+        setCollection((prev) => {
+          const newArr = prev.filter((item) => item !== helper.user_id);
+          console.log(newArr);
+          return newArr;
+        });
+      }
     } else {
-      // 移除收藏
-      e.currentTarget.classList.remove(
-        "animate__animated",
-        "animate__heartBeat"
-      );
-      // setIsFavorite(false);
-      // const user_id = e.currentTarget.getAttribute("uid");
-      setCollection((prev) => {
-        const newArr = prev.filter((item) => item !== helper.user_id);
-        console.log(newArr);
-        return newArr;
-      });
+      alert("請先登入會員");
+      router.push("/member/login");
     }
   };
   return (
@@ -641,8 +656,8 @@ const MissionHelperList = () => {
   const [currentSearch, setCurrentSearch] = useState(null);
   const [currentPage, setPage] = useState(1);
   const [totalRows, setTotalRows] = useState(18);
-  const [collection, setCollection] = useState([]);
-
+  const { collection, setCollection } = useHelper();
+  const { isAuthenticated } = useAuth();
   useEffect(() => {
     if (!currentSearch) {
       setPage(1);
@@ -710,11 +725,11 @@ const MissionHelperList = () => {
     }
   }, [currentPage]);
 
-  useEffect(() => {
-    // 初次渲染時載入儲存在localStorage的收藏
-    if (localStorage.getItem("helperFav"))
-      setCollection(JSON.parse(localStorage.getItem("helperFav")));
-  }, []);
+  // useEffect(() => {
+  //   // 初次渲染時載入儲存在localStorage的收藏
+  //   if (localStorage.getItem("helperFav"))
+  //     setCollection(JSON.parse(localStorage.getItem("helperFav")));
+  // }, []);
   useEffect(() => {
     // 更新localStorage的收藏
     if (collection.length === 0) {
@@ -823,7 +838,10 @@ const MissionHelperList = () => {
           setCurrentSearch={setCurrentSearch}
         />
       </div>
-      <Collection collection={collection} setCollection={setCollection} />
+      {isAuthenticated && (
+        <Collection collection={collection} setCollection={setCollection} />
+      )}
+
       <div className="mb-2">
         <p className="size-6 d-flex justify-content-end align-items-center me-2">
           {order?.parentValue === "price" &&

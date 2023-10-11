@@ -13,14 +13,14 @@ import { FaIdBadge } from "react-icons/fa";
 import { FaRegCalendarCheck } from "react-icons/fa";
 import Link from "next/link";
 import axios from "axios";
-
+import { useRouter } from "next/router";
 export default function ListD() {
   //無法從localStorage取得資料 所以使用特定使用者api
   // const userData = localStorage.getItem("data");
   // const parseData = JSON.parse(userData);
 
   const [memberData, setMemberData] = useState(null);
-
+  const router = useRouter();
   useEffect(() => {
     fetch("http://localhost:3005/api/user/user-info")
       .then((response) => response.json())
@@ -133,7 +133,7 @@ export default function ListD() {
               <button
                 className="size-6"
                 onClick={() => {
-                  window.location.href = "";
+                  router.push("/member/helper");
                 }}
               >
                 <div className="ms-5 my-3">
@@ -169,7 +169,12 @@ export default function ListD() {
               </button>
             </li>
             <li>
-              <button className="size-6">
+              <button
+                className="size-6"
+                onClick={() => {
+                  router.push("/member/selling");
+                }}
+              >
                 <div className="ms-5 my-3">
                   <FaChartLine />
                   <span className="ms-2">銷售紀錄</span>
@@ -177,7 +182,12 @@ export default function ListD() {
               </button>
             </li>
             <li>
-              <button className="size-6">
+              <button
+                className="size-6"
+                onClick={() => {
+                  router.push("/member/reserve");
+                }}
+              >
                 <div className="ms-5 mt-3 pb-3">
                   <FaRegCalendarCheck />
                   <span className="ms-2">預約紀錄</span>

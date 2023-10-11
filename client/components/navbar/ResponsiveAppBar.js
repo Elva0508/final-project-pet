@@ -16,7 +16,6 @@ import Badge from "@mui/material/Badge";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/router";
 
 import { useAuth } from "@/context/fakeAuthContext";
 
@@ -29,7 +28,6 @@ import ShoppingCart from "@/assets/shoppingCart.svg";
 //cart
 import { useCart } from "@/hooks/useCart";
 import { useRouter } from "next/router";
-import { useCart } from "@/hooks/useCart";
 
 const theme = createTheme({
   // 自定義色調
@@ -113,6 +111,9 @@ function ResponsiveAppBar() {
   //登入登出
   const handleLogout = () => {
     logout();
+    localStorage.removeItem("helperFav"); //移除小幫手收藏
+    localStorage.removeItem("data");
+    localStorage.removeItem("token");
     router.push("/");
   };
 

@@ -29,7 +29,7 @@
     button {
       color: lighten($text-mark, 15%);
       background-color: $main-bg;
-      width: 90px;
+      width: calc(100% / 4);
       border: 2px solid lighten($light-gray, 2%);
       border-radius: 10px 10px 0 0;
       // box-shadow: 0px 0px 5px lighten($light-gray, 5%);
@@ -37,15 +37,13 @@
       padding: 4px 0 20px 0;
       position: relative;
       top: 20px;
-      margin: 0 0.3rem;
+      // margin: 0 0.3rem;
       transition: top 0.3s ease;
       &:hover {
         top: 15px;
         // transform: scale(1.2);
         color: lighten($text-dark, 15%);
       }
-    }
-    button {
     }
   }
   .info-title {
@@ -69,10 +67,10 @@
     color: $text-main;
     border-radius: 2px;
     font-size: 1rem;
-    margin: 0.8rem 0;
-    box-shadow: 0px 0px 5px rgba(181, 181, 181, 0.489);
+    // margin: 0.8rem 0;
+    box-shadow: 0px 0px 5px rgba(218, 218, 218, 0.295);
     &:hover {
-      background-color: rgba(239, 238, 238, 0.311);
+      background-color: rgba(243, 238, 238, 0.788);
       opacity: 0.8;
     }
     & > * {

@@ -1,39 +1,35 @@
-import React from "react";
+import React, { useEffect } from "react";
 import ListD from "@/components/member/list-d";
 import ListM from "@/components/member/list-m";
 import ListUserM from "@/components/member/list-user-m";
 import HelperInfo from "@/components/member/helper-info";
 import Link from "next/link";
-
+import { useAuth } from "@/context/fakeAuthContext";
+import { useRouter } from "next/router";
 const HelperInfoPage = () => {
+  const { isAuthenticated, userId } = useAuth();
+  const router = useRouter();
+  useEffect(() => {
+    if (!isAuthenticated) {
+      router.push("/member/login");
+    }
+  }, [isAuthenticated]);
+
   return (
     <>
-      {/* <nav className="breadcrumb-wrapper" aria-label="breadcrumb">
-        <ol className="breadcrumb">
-          <li className="breadcrumb-item">
-            <Link href="/" className="active-hover">
-              首頁
-            </Link>
-          </li>
-          <li className="breadcrumb-item" aria-current="page">
-            <Link href="/member/profile" className="active-hover">
-              會員中心
-            </Link>
-          </li>
-          <li className="breadcrumb-item active" aria-current="page">
-            小幫手資料
-          </li>
-        </ol>
-      </nav> */}
-      <div className="d-flex justify-content-end">
-        {/* mobile版的左側tab */}
-        <ListM />
-      </div>
-      <div className="d-flex container-fluid flex-column justify-content-around flex-md-row my-3">
-        <ListD />
-        <HelperInfo />
-      </div>
-      {/* <ListUserM /> */}
+      {isAuthenticated && (
+        <>
+          <div className="d-flex justify-content-end">
+            {/* mobile版的左側tab */}
+            <ListM />
+          </div>
+          <div className="d-flex container-fluid flex-column justify-content-around flex-md-row my-3">
+            <ListD />
+            <HelperInfo user_id={userId} />
+          </div>
+          {/* <ListUserM /> */}
+        </>
+      )}
     </>
   );
 };

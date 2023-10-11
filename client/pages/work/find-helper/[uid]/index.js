@@ -17,6 +17,8 @@ import StarIcon from "@mui/icons-material/Star";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { useAuth } from "@/context/fakeAuthContext";
+import { useHelper } from "@/context/helperContext";
 // import { Button, Modal } from "antd";
 import {
   DatePicker,
@@ -273,17 +275,54 @@ const ReviewSwiper = ({ reviews, setReviews }) => {
 };
 
 export const HelperDetailSticky = () => {
-  const [isFavorite, setIsFavorite] = useState(false); // 初始狀態為未收藏
-  const toggleFavorite = () => {
-    setIsFavorite(!isFavorite); // 切換收藏狀態
+  const { collection, setCollection } = useHelper();
+  const { isAuthenticated } = useAuth();
+  const router = useRouter();
+  const user_id = parseInt(router.query.uid);
+  // console.log(router.query);
+  // useEffect(() => {
+  //   // 初次渲染時載入儲存在localStorage的收藏
+  //   if (localStorage.getItem("helperFav"))
+  //     setCollection(JSON.parse(localStorage.getItem("helperFav")));
+  // }, []);
+  useEffect(() => {
+    // 更新localStorage的收藏
+    if (collection.length === 0) {
+      localStorage.removeItem("helperFav");
+    } else {
+      localStorage.setItem("helperFav", JSON.stringify(collection));
+    }
+  }, [collection]);
+  // const [isFavorite, setIsFavorite] = useState(false); // 初始狀態為未收藏
+  // const toggleFavorite = () => {
+  //   setIsFavorite(!isFavorite); // 切換收藏狀態
+  // };
+
+  const handleFav = (e) => {
+    if (isAuthenticated) {
+      if (!collection.find((item) => item === user_id)) {
+        setCollection((prev) => {
+          return [...prev, user_id];
+        });
+      } else {
+        setCollection((prev) => {
+          const newArr = prev.filter((item) => item !== user_id);
+          console.log(newArr);
+          return newArr;
+        });
+      }
+    } else {
+      alert("請先登入會員");
+      router.push("/member/login");
+    }
   };
   return (
     <section className="get-price d-flex justify-content-around align-items-center">
       <div
         className="fav d-flex justify-content-center align-items-center"
-        onClick={toggleFavorite}
+        onClick={handleFav}
       >
-        {isFavorite ? (
+        {collection.find((item) => item === user_id) ? (
           <div className="d-flex flex-column justify-content-end align-items-start ms-2">
             <FaHeart className="size-4 heart-icon" />
             <span>取消</span>
@@ -296,7 +335,7 @@ export const HelperDetailSticky = () => {
         )}
       </div>
       <div className="d-flex justify-content-around align-items-center">
-        <p className="get-price-number size-4 me-2">
+        <p className="get-price-number size-5 me-2">
           <span>NT$</span>
           <span>500</span>/次
         </p>
@@ -658,6 +697,7 @@ const Quotation = () => {
 };
 
 const PetInfo = ({ petsValue, setPetsValue, petsName, setPetsName }) => {
+  const { isAuthenticated } = useAuth();
   const router = useRouter();
   const { uid } = router.query;
   const [pets, setPets] = useState([]);
@@ -695,7 +735,18 @@ const PetInfo = ({ petsValue, setPetsValue, petsName, setPetsName }) => {
 
   return (
     <>
-      <label onClick={showDialog}>{petsName || "選擇寵物"}</label>
+      <label
+        onClick={() => {
+          if (isAuthenticated) {
+            showDialog();
+          } else {
+            alert("請先登入會員");
+            router.push("/member/login");
+          }
+        }}
+      >
+        {petsName || "選擇寵物"}
+      </label>
 
       <Modal
         // title="基本对话框"
@@ -805,7 +856,7 @@ const HelperDetail = () => {
   const [profile, setProfile] = useState({});
   const [reviews, setReviews] = useState([]);
   const [images, setImages] = useState([]);
-
+  const { isAuthenticated, userId } = useAuth();
   useEffect(() => {
     if (uid) {
       workService
@@ -820,6 +871,10 @@ const HelperDetail = () => {
         });
     }
   }, [uid]);
+  console.log(123, isAuthenticated, userId);
+  useEffect(() => {
+    console.log(isAuthenticated);
+  }, []);
   let fiveStar = 0;
   let fourStar = 0;
   let threeStar = 0;
@@ -852,7 +907,7 @@ const HelperDetail = () => {
             <img src={profile.cover_photo} />
           </div>
           <div className="profile row justify-content-center justify-content-md-start">
-            <div className="size-2 m-size-4 username col-4 col-md-12 text-end text-sm-start">
+            <div className="size-3 m-size-4 username col-4 col-md-12 text-end text-sm-start">
               {profile.name}
             </div>
             <p className="intro size-6 col-12">{profile.Introduction}</p>

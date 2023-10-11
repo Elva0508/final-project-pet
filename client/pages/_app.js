@@ -3,6 +3,7 @@ import Layout from "@/components/layout";
 import "@/styles/globals.scss";
 import { AuthProvider } from "@/context/fakeAuthContext";
 import { CartProvider } from "@/hooks/useCart";
+import { HelperProvider } from "@/context/helperContext";
 import BreadCrumb from "@/components/breadCrumb";
 import { useRouter } from "next/router";
 
@@ -15,10 +16,12 @@ export default function App({ Component, pageProps }) {
   return (
     <AuthProvider>
       <CartProvider>
-        <Layout>
-          {pathname === "/work/find-helper" ? "" : <BreadCrumb />}
-          <Component {...pageProps} />
-        </Layout>
+        <HelperProvider>
+          <Layout>
+            {pathname === "/work/find-helper" ? "" : <BreadCrumb />}
+            <Component {...pageProps} />
+          </Layout>
+        </HelperProvider>
       </CartProvider>
     </AuthProvider>
   );
