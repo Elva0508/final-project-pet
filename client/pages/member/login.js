@@ -36,7 +36,7 @@ const router=useRouter()
               <Link
                 className={ `login-lg mx-3 ${isLogin ? "active" : ""}`}
                 href="http://localhost:3000/member/login"
-                onClick={toggleLoginRegister}
+                onClick={()=>setIsLogin(true)}
               >
                 登入
               </Link>
@@ -45,7 +45,7 @@ const router=useRouter()
               <Link
                 className={ `login-lg mx-3 ${!isLogin ? "active" : ""}`}
                 href="http://localhost:3000/member/login"
-                onClick={toggleLoginRegister}
+                onClick={()=>setIsLogin(false)}
               >
                 註冊
               </Link>

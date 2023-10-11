@@ -1,12 +1,14 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import Pagination from "@/components/pagination";
 
 export default function ArticleListCard() {
   const router = useRouter();
   const [articleListCard, setArticleListCard] = useState([]);
+  const [activePage, setActivePage] = useState(1);
 
-  // 向伺服器要求資料，設定到狀態中
+  // // 向伺服器要求資料，設定到狀態中
   const getArticleListCard = async (article_category_id) => {
     const res = await fetch(
       "http://localhost:3005/api/article/" + article_category_id
@@ -19,7 +21,7 @@ export default function ArticleListCard() {
     if (Array.isArray(data)) setArticleListCard(data);
   };
 
-  // didMount 初次渲染"後", 向伺服器要求資料，設定到狀態中
+  // // didMount 初次渲染"後", 向伺服器要求資料，設定到狀態中
   useEffect(() => {
     if (router.isReady) {
       // 確保能得到router.query有值
@@ -31,11 +33,22 @@ export default function ArticleListCard() {
     // eslint-disable-next-line
   }, [router.isReady]);
 
+  const itemsPerPage = 9;
+  const startIndex = (activePage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+
+  // 根據當前路由決定 articleListCard的文章別
+  const type = articleListCard.filter(
+    (v) => v.article_category_id == router.query.article_category_id
+  );
+
+  const currentData = type.slice(startIndex, endIndex);
+
   return (
     <>
       <div className="article-list-card">
         <div className="row row-cols-1 row-cols-md-3 g-4 mb-5">
-          {articleListCard.map((v, i) => {
+          {currentData.map((v, i) => {
             return (
               <div className="col" key={`article-card-${v.article_id}`}>
                 <Link
@@ -56,6 +69,12 @@ export default function ArticleListCard() {
           })}
         </div>
       </div>
+      <Pagination
+        itemsPerPage={itemsPerPage}
+        total={type}
+        activePage={activePage}
+        setActivePage={setActivePage}
+      />
     </>
   );
 }

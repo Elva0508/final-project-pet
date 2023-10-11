@@ -6,7 +6,7 @@ function PayConfirm(props) {
   
   return (
     <>
-      <div className='container my-5'>
+      <div className='container my-5 pay-confirm'>
         <h2>已完成付款</h2>
         <button className="btn btn-confirm" onClick={ () => router.push('/member/order')}>
             查看我的訂單
