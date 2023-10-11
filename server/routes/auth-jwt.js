@@ -323,49 +323,81 @@ router.put("/profile", checkToken, (req, res) => {
 // });
 
 //---------------------------------------------
+// const Register = async (req, res) => {
+  
+//   const { userName, signupEmail, signupPassword } = req.body;
+//   // if (password !== confPassword)
+//   //   return res.status(400).json({ msg: "password 不一致" });
+
+//   //  const salt = await bcrypt.genSalt(10);
+//   //  const hashPassword = await bcrypt.hash(password, salt);
+  
+//   const connection = mysql.createConnection({
+//     host: "localhost",
+//     port: 3306,
+//     user: "admin",
+//     password: "12345",
+//     database: "cat",
+//   });
+
+//   // 檢查數據庫中是否存在具有相同email的用戶
+//   const checkUserQuery = "SELECT * FROM userinfo WHERE email = ?";
+//   connection.query(checkUserQuery, [email], async (error, results) => {
+//     if (error) {
+//       console.error(error);
+//       return res.status(500).json({ error: "資料庫錯誤" });
+//     }
+
+//     if (results.length > 0) {
+//       return res.status(400).json({ msg: "Email 已存在" });
+//     }
+
+//     // 如果email不存在於數據庫中，則創建新用戶記錄
+//     const createUserSql = `INSERT INTO users (name, email, password) VALUES ('${userName}', '${signupEmail}', '${signupPassword}')`;
+//     connection.query(createUserSql ,  (error, results) => {
+//       if (error) {
+//         console.error(error);
+//         return res.status(500).json({ error: "註冊失敗資料庫輸入有問題" });
+//       }else{
+//         console.log(result);
+//       res.status(200).send('註冊成功');
+//       }
+  
+//       // 關閉連接
+//       connection.end();
+//       res.json({ msg: "Register Success" });
+//     });
+//   });
+// };
 const Register = async (req, res) => {
-  
-  const { name, email, password, confPassword } = req.body;
-  if (password !== confPassword)
-    return res.status(400).json({ msg: "password 不一致" });
+  const { userName, signupEmail, signupPassword } = req.body;
 
-  //  const salt = await bcrypt.genSalt(10);
-  //  const hashPassword = await bcrypt.hash(password, salt);
-  
-  const connection = mysql.createConnection({
-    host: "localhost",
-    port: 3306,
-    user: "admin",
-    password: "12345",
-    database: "cat",
-  });
-
-  // 檢查數據庫中是否存在具有相同email的用戶
-  const checkUserQuery = "SELECT * FROM users WHERE email = ?";
-  connection.query(checkUserQuery, [email], async (error, results) => {
+  // 檢查數據庫中是否存在具有相同 email 的用戶
+  const checkUserQuery = "SELECT * FROM userinfo WHERE email = ?";
+  db.query(checkUserQuery, [signupEmail], async (error, results) => {
     if (error) {
       console.error(error);
-      return res.status(500).json({ error: "已經有這個email" });
+      return res.status(500).json({ error: "資料庫錯誤" });
     }
 
     if (results.length > 0) {
       return res.status(400).json({ msg: "Email 已存在" });
     }
 
-    // 如果email不存在於數據庫中，則創建新用戶記錄
-    const createUserQuery = "INSERT INTO users (username, email, password,) VALUES (?, ?, ?)";
-    connection.query(createUserQuery, [name, email, password], (insertError) => {
-      if (insertError) {
-        console.error(insertError);
-        return res.status(500).json({ error: "資料庫輸入有問題" });
+    // 如果 email 不存在於數據庫中，創建新用戶記錄
+    const createUserSql = "INSERT INTO userinfo (name, email, password) VALUES (?, ?, ?)";
+    db.query(createUserSql, [userName, signupEmail, signupPassword], (error, result) => {
+      if (error) {
+        console.error(error);
+        return res.status(500).json({ error: "註冊失敗，資料庫輸入有問題" });
       }
-  
-      // 關閉連接
-      connection.end();
-      res.json({ msg: "Register Success" });
+
+      console.log(result);
+      res.status(200).json({ msg: "註冊成功" });
     });
   });
 };
+
 
 router.post("/register", Register);
 
