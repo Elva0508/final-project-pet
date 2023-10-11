@@ -20,10 +20,8 @@ const articleRouter = require("./routes/article-route");
 const articleCategoryRouter = require("./routes/article-category");
 const chatListRouter = require("./routes/chatlist-route");
 const chatRoomRouter = require("./routes/chatroom-route");
-const breadCrumbRouter= require("./routes/breadCrumb");
-const payRouter= require("./routes/pay-route");
-
-
+const breadCrumbRouter = require("./routes/breadCrumb");
+const payRouter = require("./routes/pay-route");
 
 app.use(bodyParser.json()); // 解析 JSON 请求体
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -47,7 +45,7 @@ app.use("/api/article-category", articleCategoryRouter);
 app.use("/api/chatlist", chatListRouter);
 app.use("/api/chatroom", chatRoomRouter);
 app.use("/api/breadcrumb", breadCrumbRouter);
-app.use("/api/pay",payRouter );
+app.use("/api/pay", payRouter);
 
 //------------------------------------------佳瑜
 // //jwt路由使用
@@ -56,10 +54,9 @@ const userRouter = require("./routes/user-route");
 const JWTOtherRouter = require("./routes/auth-jwt-other");
 
 // // // 掛載 auth-jwt 路由
-app.use('/api/auth-jwt', authJWTRouter);
-app.use('/api/auth-jwt-other', JWTOtherRouter );
-app.use('/api/user', userRouter);
-
+app.use("/api/auth-jwt", authJWTRouter);
+app.use("/api/auth-jwt-other", JWTOtherRouter);
+app.use("/api/user", userRouter);
 
 //跨網域資源共用、設置白名單
 app.use(
@@ -73,13 +70,11 @@ app.use(
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
-)
+);
 
-
-app.get("/login", (req,res)=>{
-  res.send("登入頁面測試")
-})
-
+app.get("/login", (req, res) => {
+  res.send("登入頁面測試");
+});
 
 app.listen(3005, () => {
   console.log("server is running");

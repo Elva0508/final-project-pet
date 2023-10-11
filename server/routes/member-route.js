@@ -19,20 +19,37 @@ router.get("/", (req, res) => {
   res.send("member-route測試成功");
 });
 
-router.get("/helper", (req, res) => {
+router.get("/helper", async (req, res) => {
   const { user_id } = req.query;
   console.log(req.query);
-  conn.execute(
-    `SELECT h.*,u.cat_helper FROM mission_helper_info h LEFT JOIN userinfo u ON u.user_id = h.user_id WHERE h.user_id = ?`,
-    [user_id],
-    (err, results) => {
-      if (err) {
-        console.log(err);
-        return res.status(500).send({ status: 500, data: "伺服器查詢失敗" });
+  const profile = await new Promise((resolve, reject) => {
+    return conn.execute(
+      `SELECT h.*,u.cat_helper FROM mission_helper_info h LEFT JOIN userinfo u ON u.user_id = h.user_id WHERE h.user_id = ?`,
+      [user_id],
+      (err, results) => {
+        if (err) {
+          console.log(err);
+
+          reject({ status: 500, data: "資料庫查詢失敗" });
+        }
+        resolve(results);
       }
-      return res.send({ status: 200, data: results });
-    }
-  );
+    );
+  });
+  const images = await new Promise((resolve, reject) => {
+    return conn.execute(
+      `SELECT * FROM image_helper WHERE group_id =?`,
+      [user_id],
+      (err, results) => {
+        if (err) {
+          console.log(err);
+          reject({ status: 500, data: "資料庫查詢失敗" });
+        }
+        resolve(results);
+      }
+    );
+  });
+  return res.send({ status: 200, profile, images });
 });
 router.patch("/helper/valid", async (req, res) => {
   const { user_id, valid } = req.body;
@@ -40,7 +57,7 @@ router.patch("/helper/valid", async (req, res) => {
   // 驗證使用者是否存在
   const checkUser = await new Promise((resolve, reject) => {
     return conn.execute(
-      `SELECT * FROM users WHERE user_id = ?`,
+      `SELECT * FROM userinfo WHERE user_id = ?`,
       [user_id],
       (err, results) => {
         if (err) {
@@ -126,7 +143,7 @@ router.patch("/helper/valid", async (req, res) => {
       const { name, phone, city, email } = await new Promise(
         (resolve, reject) => {
           return conn.execute(
-            `SELECT ui.*,u.email FROM userinfo ui LEFT JOIN users u ON u.user_id = ui.user_id WHERE ui.user_id = ?`,
+            `SELECT ui.*FROM userinfo WHERE ui.user_id = ?`,
             [user_id],
             (err, results) => {
               if (err) {
@@ -198,7 +215,7 @@ router.patch("/helper/valid", async (req, res) => {
     );
   }
 });
-router.put("/helper", upload.array("helper-image"), async (req, res) => {
+router.put("/helper", upload.array("newImages"), async (req, res) => {
   try {
     const {
       user_id,
@@ -214,9 +231,9 @@ router.put("/helper", upload.array("helper-image"), async (req, res) => {
       feed_service,
       house_service,
       beauty_service,
+      oldImages,
     } = req.body;
-    console.log(req.body);
-    console.log(req.files);
+    // console.log(req.body);
 
     // 更新小幫手資料
     const updateResult = await new Promise((resolve, reject) => {
@@ -229,9 +246,9 @@ router.put("/helper", upload.array("helper-image"), async (req, res) => {
           phone,
           job_description,
           service_county,
-          Boolean(feed_service),
-          Boolean(house_service),
-          Boolean(beauty_service),
+          parseBoolean(feed_service),
+          parseBoolean(house_service),
+          parseBoolean(beauty_service),
           feed_price,
           house_price,
           beauty_price,
@@ -246,18 +263,17 @@ router.put("/helper", upload.array("helper-image"), async (req, res) => {
       );
     });
 
-    // 先刪除舊的小幫手照片
+    // 先刪除舊的被使用者移除的小幫手照片
+    const placeholders = oldImages.map((image) => "?").join(","); //依舊相片數量動態產生佔位符陣列，再用join將陣列中的?用逗點區隔成一個字串
+    const sql = `DELETE FROM image_helper WHERE image_helper.group_id = ? AND image_helper.file_path NOT IN(${placeholders})`;
+    const params = [user_id, ...oldImages];
     const deleteImageResult = await new Promise((resolve, reject) => {
-      conn.execute(
-        "DELETE FROM image_helper WHERE `image_helper`.`group_id` = ?",
-        [user_id],
-        (err, results) => {
-          if (err) {
-            reject({ status: 500, error: "查詢錯誤" });
-          }
-          resolve(results);
+      conn.execute(sql, params, (err, results) => {
+        if (err) {
+          reject({ status: 500, error: "查詢錯誤" });
         }
-      );
+        resolve(results);
+      });
     });
 
     // 再增加新的小幫手照片
@@ -286,7 +302,6 @@ router.put("/helper", upload.array("helper-image"), async (req, res) => {
     }
 
     // 將更新後的資料回傳至client端
-
     const infoPromise = new Promise((resolve, reject) => {
       conn.execute(
         `SELECT * FROM mission_helper_info WHERE user_id = ?`,
@@ -302,7 +317,7 @@ router.put("/helper", upload.array("helper-image"), async (req, res) => {
     });
     const imagesPromise = new Promise((resolve, reject) => {
       conn.execute(
-        `SELECT file_path FROM image_helper WHERE group_id = ?`,
+        `SELECT * FROM image_helper WHERE group_id = ?`,
         [user_id],
         (err, result) => {
           if (err) {
@@ -479,3 +494,11 @@ const transferDate = (date) => {
   const newDay = dayjs(date).format("YYYY-MM-DD");
   return newDay;
 };
+
+function parseBoolean(str) {
+  if (str === "true" || str === "1") {
+    return true;
+  } else if (str === "false" || str === "0") {
+    return false;
+  }
+}
