@@ -144,7 +144,7 @@ export default function ProductList() {
     };
 
 
-   //廠商與價錢篩選
+    //廠商與價錢篩選
     const handleFilterSubmit = () => {
         // 在事件處理程序中構建請求資料
         const requestData = {
