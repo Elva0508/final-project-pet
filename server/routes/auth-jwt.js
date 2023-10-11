@@ -100,7 +100,7 @@ router.post("/login", upload.none(), async (req, res) => {
 
 router.post("/logout", checkToken,(req,res)=>{
   console.log(req.decoded) //解碼後的資料-終端機
-  const currentUser = req.decoded.email;
+  const currentUser = req.decoded.id;
   db.query('SELECT * FROM users WHERE email = ?', [currentUser], (err, results) => {
     if(err){
       console.error('資料庫-查詢錯誤：', err);
