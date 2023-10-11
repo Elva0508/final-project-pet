@@ -83,20 +83,71 @@ const ImageSwiper = ({ missionImages }) => {
 };
 
 export const MissionDetailSticky = () => {
-    const [isFavorite, setIsFavorite] = useState(false); // 初始狀態為未收藏
-    const toggleFavorite = () => {
-        setIsFavorite(!isFavorite); // 切換收藏狀態
+    // 收藏
+    const [isFavorite, setIsFavorite] = useState(false);
+    const router = useRouter();
+    const { mission_id } = router.query;
+
+    useEffect(() => {
+        // 在組件加載時從後端獲取已收藏的任務
+        const fetchFavoriteMissions = async () => {
+            try {
+              const response = await axios.get(`http://localhost:3005/api/mission/fav?userId=${userId}`);
+      
+              // 根據已收藏的任務和當前任務列表來初始化 isFavorites 數組
+              const initialFavorites = currentData.map((mission) =>
+                favoriteMissionIds.includes(mission.mission_id)
+              );
+              setIsFavorites(initialFavorites);
+            } catch (error) {
+              console.error('前端請求錯誤：', error);
+            }
+          };
+
+        // fetchFavoriteMissions();
+    }, []);
+
+    
+
+    const toggleFavorite = async (mission_id) => {  // 接受 mission_id 作為參數
+        // 檢查用戶是否已登入
+        if (!userId) {
+            alert('請先登入會員');
+            return;
+        }
+
+        try {
+            // const newFavorites = [...isFavorites];
+            // newFavorites[index] = !newFavorites[index];
+            setIsFavorite(!isFavorite); // 立即更新圖標狀態
+
+            // const missionId = currentData[index].mission_id;
+            console.log(missionId)
+
+            // if (!isFavorites) {
+            //     // 如果任務未被收藏，發送加入收藏的請求
+            //     await axios.put(`http://localhost:3005/api/mission/add-fav?userId=${userId}`, { missionId });
+            //     console.log('已加入收藏');
+            // } else {
+            //     // 如果任務已被收藏，發送取消收藏的請求
+            //     await axios.delete(`http://localhost:3005/api/mission/delete-fav?userId=${userId}`, { data: { missionId } });
+            //     console.log('已取消收藏');
+            // }
+
+        } catch (error) {
+            console.error(error);
+        }
     };
 
     return (
         <>
             <section className="ask-and-apply d-flex justify-content-center align-items-center">
                 <div className='position-absolute fav' onClick={toggleFavorite}>
-                    {isFavorite ? (
-                        <div className='d-flex flex-column justify-content-end align-items-cnter'><FaHeart className='size-4 heart-icon' /><span>取消</span></div>
-                    ) : (
-                        <div className='d-flex flex-column justify-content-end align-items-cnter '><FaRegHeart className='size-4 heart-icon' /><span>收藏</span></div>
-                    )}
+                    <img
+                        src={isFavorite ? "/heart-clicked.svg" : "/heart.svg"}
+                        alt={isFavorite ? "已收藏" : "未收藏"}
+                        onClick={toggleFavorite}
+                    />
                 </div>
                 <button className="ask-and-apply-btn btn-outline-confirm d-flex align-items-center justify-content-center">
                     <PiWechatLogoThin />
@@ -215,7 +266,7 @@ export default function MissionDetail() {
         }
     }, [mission_id]);
 
-    
+
     // 彈跳視窗(確認送出)
     const handleConfirmSubmit = async () => {
         setSelectedMissionId(mission_id)
