@@ -8,11 +8,13 @@ import Pagination from '@/components/pagination';
 import { HiOutlineFilter } from 'react-icons/hi';
 import LoadingOverlay from '@/components/product/loadingoverlay'; //加載畫面尚未成功
 import { BiSearchAlt } from "react-icons/bi";
+import jwt_decode from 'jwt-decode';
 
 export default function ProductList() {
 
     // 用於儲存解析後的userID
     const [userId, setUserId] = useState(null);
+    console.log(userId);
 
     // 利用token拿到當前登入的userID
     useEffect(() => {

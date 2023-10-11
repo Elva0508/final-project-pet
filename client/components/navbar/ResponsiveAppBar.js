@@ -75,7 +75,7 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
 
 const pages = [
   { path: "/testLink/brand", name: "品牌介紹", id: 1 },
-  { path: "/testLink/allproducts", name: "全部商品", id: 2 },
+  { path: "/product", name: "全部商品", id: 2 },
   { path: "/work/find-mission", name: "小貓上工", id: 3 },
   { path: "/testLink/catknowledge", name: "小貓兩三知", id: 4 },
   { path: "/testLink/qa", name: "常見問題", id: 5 },

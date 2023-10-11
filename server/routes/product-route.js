@@ -137,6 +137,7 @@ router.get("/recommend", (req, res) => {
 //查看購物車內有甚麼商品
 router.get("/cart", (req, res) => {
     const userId = req.query.userId; // 從請求的 URL 中獲取用戶 token OK
+    console.log("會員"+ userId);
     connection.execute(
         `SELECT cart.*, 
         p.product_name AS name,
@@ -158,7 +159,6 @@ router.get("/cart", (req, res) => {
 router.put("/cart", (req, res) => {
     const userId = req.query.userId; // 從請求的 URL 中獲取用戶 token OK
     const { product_id, product_type_id, quantity } = req.body; // 從請求主體中獲取 quantity 參數
-    console.log(product_id, product_type_id, quantity)
     connection.execute(
         `INSERT INTO cart(user_id, product_id, product_type_id, quantity) VALUES (?, ?, ?, ?);`,
         [userId,product_id, product_type_id, quantity], // 將 quantity 參數傳遞到 SQL 查詢中

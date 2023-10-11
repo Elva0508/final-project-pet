@@ -10,6 +10,7 @@ import ProductCard3 from '@/components/product/product-card3';
 import { useCart } from "@/hooks/useCart"
 import { FiPlus } from 'react-icons/fi';
 import { FiMinus } from 'react-icons/fi';
+import jwt_decode from "jwt-decode";
 
 //next裡innerhtml語法
 function ProductDescription({ htmlContent }) {
@@ -27,7 +28,7 @@ export default function ProductDetail() {
 
     // 用於儲存解析後的userID
     const [userId, setUserId] = useState(null);
-
+    console.log(userId);
     // 利用token拿到當前登入的userID
     useEffect(() => {
         const token = localStorage.getItem("token");
@@ -162,7 +163,7 @@ export default function ProductDetail() {
     //儲存選中的type_id-selectedTypeId
     const [selectedTypeId, setSelectedTypeId] = useState('');
     const getCart = () => {
-        axios.get("http://localhost:3005/api/product/cart?userId=${userId}")
+        axios.get(`http://localhost:3005/api/product/cart?userId=${userId}`)
             .then((response) => {
                 const data = response.data.result;
                 const newData = data.map((v) => {
@@ -189,9 +190,9 @@ export default function ProductDetail() {
             try {
                 // 發送HTTP請求將商品添加到購物車
                 const response = await axios.put(
-                    `http://localhost:3005/api/product/car?userId=${userId}`,
+                    `http://localhost:3005/api/product/cart?userId=${userId}`,
                     { product_id, product_type_id, quantity },
-                    console.log(product_id, product_type_id, quantity),
+                    console.log(userId,product_id, product_type_id, quantity),
                     console.log('我是會員'+ userId)
                 );
             } catch (error) {
@@ -222,11 +223,10 @@ export default function ProductDetail() {
     };
 
     // 添加商品到收藏的函式
-   
     //儲存選中的type_id-selectedTypeId 加到購物車時已經有寫了
     // const [selectedTypeId, setSelectedTypeId] = useState('');
     const getCollection = () => {
-        axios.get("http://localhost:3005/api/product/collections?userId=${userId}")
+        axios.get(`http://localhost:3005/api/product/cart?userId=${userId}`)
             .then((response) => {
                 setCollection(response.data.result);
                 console.log(response.data.result)
@@ -250,7 +250,8 @@ export default function ProductDetail() {
                 // 發送HTTP請求將商品添加到購物車
                 const response = await axios.put(
                     `http://localhost:3005/api/product/collections?userId=${userId}`,
-                    { product_id, product_type }
+                    { product_id, product_type },
+                    console.log(userId, product_id, product_type)
                 );
             } catch (error) {
                 console.error("錯誤：", error);
