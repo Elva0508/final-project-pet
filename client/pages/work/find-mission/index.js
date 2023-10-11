@@ -28,7 +28,7 @@ import { Cascader } from "antd";
 import cityData from "@/data/CityCountyData.json";
 
 // 搜尋
-const Search = ({ placeholder, color, onClick, search, setSearch, inputValue, setInputValue, setActivePage }) => {
+const Search = ({ placeholder, color, onClick, search, setSearch, inputValue, setInputValue, setActivePage, setMissionType, setUpdateDate, setMissionCity, setMissionArea, setSortOrder, setSortBy, setButtonText1, setButtonText2, setSelectedCity, setSelectedArea }) => {
   const rippleBtnRef = useRef(null);
   const inputRef = useRef(null);
   const handleRipple = () => {
@@ -40,7 +40,19 @@ const Search = ({ placeholder, color, onClick, search, setSearch, inputValue, se
   };
 
   const handleSearch = () => {
-    setSearch(inputValue)
+    // 清空篩選的資料
+    setMissionType(null);
+    setUpdateDate(null);
+    setMissionCity(null);
+    setMissionArea(null);
+    setButtonText1('任務類型');
+    setButtonText2('更新時間');
+    setSelectedCity(null);
+    setSelectedArea(null);
+    setSortOrder('asc');
+    setSortBy('post_date');
+    // 依據input進行搜尋
+    setSearch(inputValue);
     // 清空輸入框的值
     setInputValue("");
     console.log("按了搜尋按鈕的inputValue是" + inputValue)
@@ -80,14 +92,7 @@ const Search = ({ placeholder, color, onClick, search, setSearch, inputValue, se
 };
 
 // 最終版篩選
-const MyFilter = ({ missionType, setMissionType, missionCity, setMissionCity, missionArea, setMissionArea, updateDate, setUpdateDate, sortOrder, setSortOrder, sortBy, setSortBy, setActivePage }) => {
-  // 按鈕文字的狀態
-  const [buttonText1, setButtonText1] = useState('任務類型');
-  const [buttonText2, setButtonText2] = useState('更新時間');
-
-  // 地區狀態
-  const [selectedCity, setSelectedCity] = useState(null);
-  const [selectedArea, setSelectedArea] = useState(null);
+const MyFilter = ({ missionType, setMissionType, missionCity, setMissionCity, missionArea, setMissionArea, updateDate, setUpdateDate, sortOrder, setSortOrder, sortBy, setSortBy, setActivePage, buttonText1, setButtonText1, buttonText2, setButtonText2, selectedCity, setSelectedCity, selectedArea, setSelectedArea }) => {
 
   // 三：處理任務city下拉選單項的點擊事件
   const handleCityChange = (city) => {
@@ -764,12 +769,21 @@ const MissionCard = ({ missionType, missionCity, missionArea, setMissionType, up
 };
 
 export default function MissionList() {
+  // 篩選
   const [missionType, setMissionType] = useState(null);
   const [updateDate, setUpdateDate] = useState(null);
   const [missionCity, setMissionCity] = useState("");
   const [missionArea, setMissionArea] = useState(null);
+  // 篩選按鈕文字的狀態
+  const [buttonText1, setButtonText1] = useState('任務類型');
+  const [buttonText2, setButtonText2] = useState('更新時間');
+  // 篩選地區文字的狀態
+  const [selectedCity, setSelectedCity] = useState(null);
+  const [selectedArea, setSelectedArea] = useState(null);
+  // 排序
   const [sortOrder, setSortOrder] = useState("asc");
   const [sortBy, setSortBy] = useState('post_date');
+  // 搜尋
   const [inputValue, setInputValue] = useState('');
   const [search, setSearch] = useState("");
 
@@ -838,8 +852,22 @@ export default function MissionList() {
     setSearch("");
     // setSelectedCity(null); // 重置城市选择为 null 或默认值
     // setSelectedArea(null); // 重置地区选择为 null 或默认值
-    console.log(`重載後是+http://localhost:3005/api/mission/all-missions?missionType=${missionType}&updateDate=${updateDate}&missionCity=${missionCity}&missionArea=${missionArea}&sortOrder=${sortOrder}&sortBy=${sortBy}`);
+    console.log(`重載後是+http://localhost:3005/api/mission/all-missions?missionType=${missionType}&updateDate=${updateDate}&missionCity=${missionCity}&missionArea=${missionArea}&sortOrder=${sortOrder}&sortBy=${sortBy}&missionSearch=${search}`);
   }, []);
+
+  const clearSettings = () => {
+    setMissionType(null);
+    setUpdateDate(null);
+    setMissionCity(""); // 確保將其重置為空字符串
+    setMissionArea(null);
+    setSortOrder('asc');
+    setSortBy('post_date');
+    setInputValue('');
+    setSearch("");
+    // 任何其他你想要重置的狀態變數
+    console.log("狀態變數已重置為預設值");
+  };
+
 
 
   return (
@@ -851,20 +879,36 @@ export default function MissionList() {
               <Link href="/">首頁</Link>
             </li>
             <li class="breadcrumb-item" aria-current="page">
-              <Link href="/work/find-mission">任務總覽</Link>
+              <Link href="/work/find-mission" onclick={clearSettings}>任務總覽</Link>
             </li>
+            {search ? (
+              <>
+                <li class="breadcrumb-item" aria-current="page">
+                  搜尋結果
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">
+                  {search}
+                </li>
+              </>
+            ) : (
+              <>
+                <li class="breadcrumb-item" aria-current="page">
+                  所有
+                </li>
+              </>
+            )}
           </ol>
         </nav>
 
         <div className="d-flex flex-column flex-md-row justify-content-between mt-3">
           <RoleSelection defaultActive="mission" />
-          <Search placeholder="搜尋任務" search={search} setSearch={setSearch} setActivePage={setActivePage} inputValue={inputValue} setInputValue={setInputValue} />
+          <Search placeholder="搜尋任務" search={search} setSearch={setSearch} setActivePage={setActivePage} inputValue={inputValue} setInputValue={setInputValue} setMissionType={setMissionType} setUpdateDate={setUpdateDate} setMissionCity={setMissionCity} setMissionArea={setMissionArea} setSortOrder={setSortOrder} setSortBy={setSortBy} setButtonText1={setButtonText1} setButtonText2={setButtonText2} setSelectedCity={setSelectedCity} setSelectedArea={setSelectedArea} />
         </div>
         <div className='d-flex justify-content-between align-items-center mt-md-3 mb-md-4 position-relative'>
           <div className='filters d-flex justify-content-center align-items-center '>
             {/* <MobileFilter missionType={missionType} /> */}
             <MyFilter missionType={missionType} setMissionType={setMissionType} missionCity={missionCity} setMissionCity={setMissionCity} missionArea={missionArea} setMissionArea={setMissionArea}
-              updateDate={updateDate} setUpdateDate={setUpdateDate} sortOrder={sortOrder} setSortOrder={setSortOrder} sortBy={sortBy} setSortBy={setSortBy} setActivePage={setActivePage} />
+              updateDate={updateDate} setUpdateDate={setUpdateDate} sortOrder={sortOrder} setSortOrder={setSortOrder} sortBy={sortBy} setSortBy={setSortBy} setActivePage={setActivePage} buttonText1={buttonText1} setButtonText1={setButtonText1} buttonText2={buttonText2} setButtonText2={setButtonText2} selectedCity={selectedCity} setSelectedCity={setSelectedCity} selectedArea={selectedArea} setSelectedArea={setSelectedArea} />
           </div>
           <Link href="/work/create-mission" className="position-absolute add-mission-btn-pc-link">
             <button className="add-mission-btn-pc  d-none d-lg-block btn-confirm ">
