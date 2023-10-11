@@ -20,7 +20,7 @@ export default function ChatList() {
     setDecodedToken(decodedToken);
 
     // 解token後，拿到user_id
-    getChatList(decodedToken.user_id);
+    getChatList(decodedToken.id);
   }, []);
 
   const decodeToken = (token) => {

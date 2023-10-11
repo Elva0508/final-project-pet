@@ -31,7 +31,7 @@ export default function ChatDemo() {
       // 建立要傳送的數據
       const requestData = {
         chatlist_userId1: userId,
-        chatlist_userId2: 2, // 放要對話的 targetID 變數
+        chatlist_userId2: 31, // 放要對話的 targetID 變數
       };
 
       try {
