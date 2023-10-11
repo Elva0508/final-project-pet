@@ -49,7 +49,7 @@ function Pay(props) {
 
   return (
     <>
-      <div className='container my-5'>
+      <div className='container my-5 pay'>
         <h2>訂單明細</h2>
         <p>訂單編號: {orderNumber}</p>
         <p>總金額: {orderPrice}元</p>
