@@ -16,7 +16,7 @@ import Badge from "@mui/material/Badge";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import Image from "next/image";
 import Link from "next/link";
-
+import { useActivePage } from "@/hooks/useActivePage";
 import { useAuth } from "@/context/fakeAuthContext";
 
 //logo-icon
@@ -107,6 +107,8 @@ function ResponsiveAppBar() {
     setAnchorElUser(null);
   };
 
+  const {setActiveButton}=useActivePage()
+
   const router = useRouter();
   //登入登出
   const handleLogout = () => {
@@ -114,6 +116,9 @@ function ResponsiveAppBar() {
     localStorage.removeItem("helperFav"); //移除小幫手收藏
     localStorage.removeItem("data");
     localStorage.removeItem("token");
+    localStorage.removeItem("id");
+    setActiveButton(0)
+
     router.push("/");
   };
 

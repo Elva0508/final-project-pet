@@ -43,10 +43,11 @@ export default function Orderdetail() {
   };
 
 
-  const getDetail = async (oid) => {
+  const getDetail = async (oid,id) => {
+    console.log(oid,id)
     try {
       const res = await fetch(
-        "http://localhost:3005/api/member-order-detail/" + oid
+        `http://localhost:3005/api/member-order-detail/${oid}/${id}`
       );
 
       const data = await res.json();
@@ -67,12 +68,23 @@ export default function Orderdetail() {
   };
 
   useEffect(() => {
+    const token = localStorage.getItem("token");
+    const id=localStorage.getItem("id")
+    // 沒有token
+    if (!token) {
+      console.log("user沒登入");
+      return;
+    }
+    console.log(id);
+    console.log(token);
+
+
     if (router.isReady) {
       // 確保能得到router.query有值
       const { oid } = router.query;
       console.log(oid);
       // 有pid後，向伺服器要求資料，設定到狀態中
-      getDetail(oid);
+      getDetail(oid,id);
     }
     // eslint-disable-next-line
   }, [router.query]);

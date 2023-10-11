@@ -50,11 +50,11 @@ function AuthProvider({ children }) {
   const [userId, setUserId] = useState(null);
 
   useEffect(() => {
-    const data = localStorage.getItem("data");
+    const data = localStorage.getItem("id");
     const token = localStorage.getItem("token");
 
     if (data && token) {
-      setUserId(data.id);
+      setUserId(data);
       dispatch({ type: "login", payload: jwt(token) });
     }
   }, []);
