@@ -670,7 +670,7 @@ function ImageWithEqualDimensions({ file_path }) {
 }
 
 // 任務卡片（這邊的參數如果忘記設定會讓卡片出不來）
-const MissionCard = ({ missionType, missionCity, missionArea, setMissionType, updateDate, setUpdateDate, sortOrder, setSortOrder, sortBy, setSortBy, allMissions, currentData, userId, setUserId, isFavorites }) => {
+const MissionCard = ({ missionType, missionCity, missionArea, setMissionType, updateDate, setUpdateDate, sortOrder, setSortOrder, sortBy, setSortBy, allMissions, currentData, userId, setUserId, isFavorites, toggleFavorite }) => {
 
   // 格式化日期
   function formatDate(dateString) {
@@ -964,7 +964,7 @@ export default function MissionList() {
             <div className="row d-flex mb-3 g-3 g-md-4">
               {/* 使用g-3 不用justify-content-between 預設是start 卡片就會照順序排列 */}
               <MissionCard sortOrder={sortOrder} sortBy={sortBy} missionType={missionType} setMissionType={setMissionType} missionCity={missionCity} setMissionCity={setMissionCity} missionArea={missionArea} setMissionArea={setMissionArea}
-                updateDate={updateDate} setUpdateDate={setUpdateDate} allMissions={allMissions} currentData={currentData} userId={userId} setUserId={setUserId} isFavorites={isFavorites} />
+                updateDate={updateDate} setUpdateDate={setUpdateDate} allMissions={allMissions} currentData={currentData} userId={userId} setUserId={setUserId} isFavorites={isFavorites} toggleFavorite={toggleFavorite} />
             </div>
           </div>
         </section>
