@@ -80,7 +80,7 @@ const [viewPwd,SetViewPwd]=useState(false)
             <Field
               className="form-input center-input"
               type="email"
-              id="email"
+              //id="email"
               name="email"
               placeholder="請輸入email"
             />
@@ -93,11 +93,11 @@ const [viewPwd,SetViewPwd]=useState(false)
             <Field
               className="form-input center-input "
               type={viewPwd ? 'text':'password'}
-              id="password"
+              //id="password"
               name="password"
               placeholder="請輸入密碼"
-              value={pwd}
-              onChange={e => setPwd(e.target.value)}
+              //value={pwd}
+              //onChange={e => setPwd(e.target.value)}
             />
             <Image
             className="eye"
