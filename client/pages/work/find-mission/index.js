@@ -357,7 +357,7 @@ const Sort = ({ missionType, setMissionType, missionCity, setMissionCity, missio
 
 
 // 最新任務（電腦版）
-const LatestMission = () => {
+const LatestMission = ({ userId }) => {
 
   const [latestMissions, setLatestMissions] = useState([])
 
@@ -392,7 +392,7 @@ const LatestMission = () => {
     // 在組件加載時從後端獲取已收藏的任務
     const fetchFavoriteMissions = async () => {
       try {
-        const response = await axios.get('http://localhost:3005/api/mission/fav');
+        const response = await axios.get(`http://localhost:3005/api/mission/fav?userId=${userId}`);
         const favoriteMissionIds = response.data.result.map((fav) => fav.mission_id);
 
         // 根據已收藏的任務和當前任務列表來初始化 isFavorites 數組
@@ -409,6 +409,11 @@ const LatestMission = () => {
   }, [latestMissions]);
 
   const toggleFavorite = async (index) => {
+    // 檢查用戶是否已登入
+    if (!userId) {
+      alert('請先登入會員');
+      return;
+    }
     try {
       const newFavorites = [...isFavorites];
       newFavorites[index] = !newFavorites[index];
@@ -419,11 +424,11 @@ const LatestMission = () => {
 
       if (!isFavorites[index]) {
         // 如果任務未被收藏，發送加入收藏的請求
-        await axios.put('http://localhost:3005/api/mission/add-fav', { missionId });
+        await axios.put(`http://localhost:3005/api/mission/add-fav?userId=${userId}`, { missionId });
         console.log('已加入收藏');
       } else {
         // 如果任務已被收藏，發送取消收藏的請求
-        await axios.delete('http://localhost:3005/api/mission/delete-fav', { data: { missionId } });
+        await axios.delete(`http://localhost:3005/api/mission/delete-fav?userId=${userId}`, { data: { missionId } });
         console.log('已取消收藏');
       }
 
@@ -464,7 +469,7 @@ const LatestMission = () => {
 }
 
 // 最新任務（手機版）
-const MobileLatestMission = () => {
+const MobileLatestMission = ({ userId }) => {
   const [latestMissions, setLatestMissions] = useState([]);
   const [activeIndex, setActiveIndex] = useState(0);
   // 追蹤動畫狀態 防止多次快速點擊上一張或下一張按鈕 導致卡片重疊
@@ -540,7 +545,7 @@ const MobileLatestMission = () => {
     // 在組件加載時從後端獲取已收藏的任務
     const fetchFavoriteMissions = async () => {
       try {
-        const response = await axios.get('http://localhost:3005/api/mission/fav');
+        const response = await axios.get(`http://localhost:3005/api/mission/fav?userId=${userId}`);
         const favoriteMissionIds = response.data.result.map((fav) => fav.mission_id);
 
         // 根據已收藏的任務和當前任務列表來初始化 isFavorites 數組
@@ -557,6 +562,11 @@ const MobileLatestMission = () => {
   }, [latestMissions]);
 
   const toggleFavorite = async (index) => {
+    // 檢查用戶是否已登入
+    if (!userId) {
+      alert('請先登入會員');
+      return;
+    }
     try {
       const newFavorites = [...isFavorites];
       newFavorites[index] = !newFavorites[index];
@@ -567,11 +577,11 @@ const MobileLatestMission = () => {
 
       if (!isFavorites[index]) {
         // 如果任務未被收藏，發送加入收藏的請求
-        await axios.put('http://localhost:3005/api/mission/add-fav', { missionId });
+        await axios.put(`http://localhost:3005/api/mission/add-fav?userId=${userId}`, { missionId });
         console.log('已加入收藏');
       } else {
         // 如果任務已被收藏，發送取消收藏的請求
-        await axios.delete('http://localhost:3005/api/mission/delete-fav', { data: { missionId } });
+        await axios.delete(`http://localhost:3005/api/mission/delete-fav?userId=${userId}`, { data: { missionId } });
         console.log('已取消收藏');
       }
 
@@ -836,6 +846,12 @@ export default function MissionList() {
   }, [currentData]);
 
   const toggleFavorite = async (index) => {
+    // 檢查用戶是否已登入
+    if (!userId) {
+      alert('請先登入會員');
+      return;
+    }
+
     try {
       const newFavorites = [...isFavorites];
       newFavorites[index] = !newFavorites[index];
@@ -954,12 +970,12 @@ export default function MissionList() {
           {/* 最新任務桌機 */}
           <div className="latest-mission latest-mission-pc d-none d-lg-flex flex-column">
             <h3 className="size-4  ">最新任務</h3>
-            <LatestMission />
+            <LatestMission userId={userId} />
           </div>
           {/* 最新任務手機 */}
           <div className="latest-mission latest-mission-mobile d-lg-none mb-3 mt-1">
             <h3 className="size-4">最新任務</h3>
-            <MobileLatestMission />
+            <MobileLatestMission userId={userId} />
           </div>
           {/* 任務列表 */}
           <div className='mission-list d-lg-flex  justify-content-center align-items-start'>
