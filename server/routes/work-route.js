@@ -260,7 +260,7 @@ router.get("/helpers/search", async (req, res) => {
 
 router.get("/helpers/favorite", async (req, res) => {
   let { collection } = req.query;
-  console.log(collection);
+  // console.log(collection);
   if (collection) {
     collection = collection.reverse();
     console.log(collection);
@@ -282,11 +282,14 @@ router.get("/helpers/favorite", async (req, res) => {
           });
         })
       );
+      console.log("異步查詢結束");
       return res.send({ status: 200, results });
     } catch (e) {
       console.log(e);
       return res.status(500).send(e);
     }
+  } else {
+    return res.send({ status: 200, results: [] });
   }
 });
 
