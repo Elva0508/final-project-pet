@@ -16,9 +16,8 @@ import Badge from "@mui/material/Badge";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from 'next/router';
 
-import {useAuth} from "@/context/fakeAuthContext"
+import { useAuth } from "@/context/fakeAuthContext";
 
 //logo-icon
 import catLogo from "@/assets/catLogo.svg";
@@ -27,8 +26,8 @@ import McatLogo from "@/assets/McatLogo.svg";
 import ShoppingCart from "@/assets/shoppingCart.svg";
 
 //cart
-import { useCart } from '@/hooks/useCart';
-
+import { useCart } from "@/hooks/useCart";
+import { useRouter } from "next/router";
 
 const theme = createTheme({
   // 自定義色調
@@ -90,7 +89,6 @@ function ResponsiveAppBar() {
   //會員狀態
   const { Token, isAuthenticated, login, logout } = useAuth();
 
-
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
@@ -112,15 +110,17 @@ function ResponsiveAppBar() {
   const router = useRouter();
   //登入登出
   const handleLogout = () => {
-    logout()
-    router.push('/');
-  }
-
+    logout();
+    localStorage.removeItem("helperFav"); //移除小幫手收藏
+    localStorage.removeItem("data");
+    localStorage.removeItem("token");
+    router.push("/");
+  };
 
   const { cart, setCart } = useCart();
-  const goCart=()=>{
-    router.push('/product/cart')
-  }
+  const goCart = () => {
+    router.push("/product/cart");
+  };
 
   return (
     <ThemeProvider theme={theme}>
@@ -240,26 +240,25 @@ function ResponsiveAppBar() {
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
               >
-              {isAuthenticated  ? (
-                <>
-                <MenuItem onClick={handleLogout}>
+                {isAuthenticated ? (
+                  <>
+                    <MenuItem onClick={handleLogout}>
                       <Typography textAlign="center">登出</Typography>
                     </MenuItem>
-                    <Link href="/article" >
-                    <MenuItem >
-                      <Typography textAlign="center">來聊聊</Typography>
-                    </MenuItem>
-                  </Link>
+                    <Link href="/article">
+                      <MenuItem>
+                        <Typography textAlign="center">來聊聊</Typography>
+                      </MenuItem>
+                    </Link>
                   </>
-              ) : (
-                <Link href="http://localhost:3000/member/login" >
-                    <MenuItem >
+                ) : (
+                  <Link href="http://localhost:3000/member/login">
+                    <MenuItem>
                       <Typography textAlign="center">登入</Typography>
                     </MenuItem>
                   </Link>
-
-              )}
-                  {/* <Link href="/login" >
+                )}
+                {/* <Link href="/login" >
                     <MenuItem onClick={handleCloseUserMenu}>
                       <Typography textAlign="center">登入</Typography>
                     </MenuItem>
@@ -270,7 +269,6 @@ function ResponsiveAppBar() {
                       <Typography textAlign="center">登出</Typography>
                     </MenuItem>
                   </Link> */}
-             
               </Menu>
             </Box>
           </Toolbar>

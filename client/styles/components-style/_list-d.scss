@@ -40,6 +40,17 @@
   button{
     border:0;
     background: transparent;
+
+  }
+  button:hover{
+    background: rgb(248, 239, 233);
+
+  }
+  .active {
+    color: rgb(255, 122, 14);
+  }
+  .aaa{
+    color: rgb(255, 122, 14);
   }
 }
 

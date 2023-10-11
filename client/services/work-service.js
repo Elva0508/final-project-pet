@@ -20,21 +20,29 @@ class WorkService {
   getSearchHelper(search) {
     return axios.get(API_URL + "helpers/search", { params: { search } });
   }
-
+  getFavHelpers(collection) {
+    // console.log(collection);
+    return axios.get(API_URL + "helpers/favorite", { params: { collection } });
+  }
   // detail頁
   getHelperDetail(uid) {
     console.log(uid);
-    return axios.get(API_URL + "/helpers/detail/" + uid);
+    return axios.get(API_URL + "helpers/detail/" + uid);
   }
   getPetInfo(uid) {
     return axios.get(API_URL + "helpers/detail/petInfo", { params: { uid } });
   }
   createReqOrder(requestData) {
-    return axios.post(API_URL + "/helpers/request", requestData);
+    return axios.post(API_URL + "helpers/request", requestData);
+  }
+  getFilterReview(uid, star) {
+    return axios.get(API_URL + "helpers/detail/review", {
+      params: { uid, star },
+    });
   }
   // createMission頁
   createMission(formData) {
-    return axios.post(API_URL + "/mission", formData, {
+    return axios.post(API_URL + "mission", formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },

@@ -60,16 +60,75 @@ body {
 a {
   text-decoration: none;
   color: $text-main;
-  border-bottom: 4px solid transparent;
-  &:hover {
-    border-bottom: 4px solid $hover;
-  }
+  // border-bottom: 4px solid transparent;
+  // &:hover {
+  //   border-bottom: 4px solid $hover;
+  // }
 }
 ul {
   list-style: none;
   padding: 0;
 }
+.active-hover {
+  position: relative;
+  // transition: all 0.2s ease-in-out;
+  &::before {
+    content: "";
+    position: absolute;
+    width: 0;
+    height: 4px; /* 下底線高度 */
+    bottom: -5px;
+    left: 50%; /* 讓下底線置中 */
+    transform: translate(-50%, 0%); /* 讓下底線置中 */
+    background-color: $hover;
+    transition: width 0.2s ease-in-out; /* 動畫過渡效果 */
+  }
+  &:hover::before {
+    width: 100%;
+  }
+}
 
+.animate-button-one {
+  border-radius: 2px;
+  background-color: $main-bg;
+  border: 1px solid $hover;
+  color: $text-main;
+  text-align: center;
+  font-size: 28px;
+  padding: 10px;
+  width: 90px;
+  transition: all 0.4s;
+  cursor: pointer;
+  margin: 5px;
+  & > * {
+    // cursor: pointer;
+    position: relative;
+    transition: all 0.4s;
+    &::after {
+      content: "\00bb";
+      // height: 35px;
+      font-size: 30px;
+      color: $cos-white;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      opacity: 0;
+      right: -20px;
+      transition: all 0.4s;
+    }
+  }
+  &:hover > * {
+    padding-right: 18px;
+    color: $cos-white;
+    &::after {
+      opacity: 1;
+      right: 0;
+    }
+  }
+  &:hover {
+    background-color: $hover;
+  }
+}
 // ↓↓↓ components scss styles放下面
 
 // 主要樣式組件(header、footer、商品卡片等等...)
@@ -99,10 +158,10 @@ ul {
 @import "@/styles/product/_product_cart.scss";
 @import "@/styles/product/_product_cart._checkout.scss";
 @import "@/styles/components-style/_product-list-offcanvas.scss";
+@import "@/styles/product/_pay.scss";
 
 //會員頁面
 @import "@/styles/components-style/_list-d.scss";
-@import "@/styles/components-style/_list-m.scss";
 @import "@/styles/components-style/_list-user-m.scss";
 @import "@/styles/components-style/work/_member-helper.scss";
 @import "@/styles/components-style/_member-order-detail.scss";

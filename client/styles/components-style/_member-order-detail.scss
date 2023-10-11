@@ -1,6 +1,7 @@
 @import "@/styles/variable";
 .order-detail {
-  background: $content-bg;
+  background: #fff;
+  border-radius: 10px 10px 10px 10px;
   color:$text-main;
   line-height: 2;
   @media screen and (max-width: 768px) {
