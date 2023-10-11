@@ -6,6 +6,7 @@ import { CartProvider } from "@/hooks/useCart";
 import { HelperProvider } from "@/context/helperContext";
 import BreadCrumb from "@/components/breadCrumb";
 import { useRouter } from "next/router";
+import { ActivePageProvider } from "@/hooks/useActivePage";
 
 export default function App({ Component, pageProps }) {
   const { pathname, query } = useRouter();
@@ -18,8 +19,10 @@ export default function App({ Component, pageProps }) {
       <CartProvider>
         <HelperProvider>
           <Layout>
-            {pathname === "/work/find-helper" ? "" : <BreadCrumb />}
-            <Component {...pageProps} />
+            <ActivePageProvider>
+              {pathname === "/work/find-helper" ? "" : <BreadCrumb />}
+              <Component {...pageProps} />
+            </ActivePageProvider>
           </Layout>
         </HelperProvider>
       </CartProvider>

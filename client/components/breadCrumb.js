@@ -8,8 +8,8 @@ import Link from 'next/link'
 
 function BreadCrumb(props) {
     const { pathname,query } = useRouter();
-    console.log(pathname);
-    console.log(query);
+    // console.log(pathname);
+    // console.log(query);
     const [product, setProduct] = useState([])
     const [article, setArticle] = useState([])
     const [mission, setMission] = useState([])
@@ -112,6 +112,8 @@ const getSubcategory =  () => {
       // 第一個 與 id類(數字類型)的最後結尾params會忽略, 首頁不需要
       if (i === 0 || v === '') return ''
 
+
+
       // 最後一個
       if (i === array.length - 1) {
         return (
@@ -144,7 +146,7 @@ const getSubcategory =  () => {
         <nav aria-label="breadcrumb " className='my-4 container'>
         <ol className="breadcrumb">
 
-          {pathname=="/" ||pathname=="/product/cart/checkout" ||pathname=="/chatlist/[id]" || pathname=="/product/cart/checkout/pay" || pathname=="/pay-confirm"?
+          {pathname=="/" ||pathname=="/product/cart/checkout" ||pathname=="/chatlist/[id]" || pathname=="/product/cart/checkout/pay" || pathname=="/pay-confirm" || pathname=="/product/cart/checkout/cash-on-delivery" || pathname=="/work/find-mission"?
           ("")
           :
           (<><li className="breadcrumb-item">

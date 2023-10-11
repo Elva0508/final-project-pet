@@ -1,6 +1,7 @@
 @import "@/styles/variable";
 .wishlist{
-    background: $content-bg;
+    border-radius: 10px 10px 10px 10px;
+    background: #fff;
     color:$text-main;
     @media screen and (max-width: 768px) {
         background: $main-bg;
@@ -31,4 +32,7 @@
     .offcanvas{
         max-width:350px;
     }
+    .big{
+        font-weight: 600;
+    } 
 }

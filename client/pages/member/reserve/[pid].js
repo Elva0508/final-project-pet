@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import ListD from "@/components/member/list-d";
-import ListM from "@/components/member/list-m";
 import ListUserM from "@/components/member/list-user-m";
 import Link from "next/link";
 import { useRouter } from "next/router";

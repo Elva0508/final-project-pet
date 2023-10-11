@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import ListD from "@/components/member/list-d";
-import ListM from "@/components/member/list-m";
 import ListUserM from "@/components/member/list-user-m";
 import HelperInfo from "@/components/member/helper-info";
 import Link from "next/link";

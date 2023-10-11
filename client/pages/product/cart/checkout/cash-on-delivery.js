@@ -1,11 +1,9 @@
-import axios from 'axios'
 import { useState ,useEffect} from 'react'
-import { confirmAlert } from 'react-confirm-alert'
 import 'react-confirm-alert/src/react-confirm-alert.css'
 import { useRouter } from 'next/router';
 import {BsCheckCircle} from 'react-icons/bs';
 
-function Pay(props) {
+function cashOnDelivery(props) {
   const router = useRouter();
   const [orderPrice, setOrderPrice] = useState(0)
   const [orderNumber, setOrderNumber] = useState(0)
@@ -15,8 +13,8 @@ function Pay(props) {
   const [sale,setSale]=useState(0)
 
   useEffect(() => {
-    const newFinalCart = localStorage.getItem('newFinalCart');
-    setFinalCart(JSON.parse(newFinalCart))  
+    const lastCart = localStorage.getItem('finalCart');
+    setFinalCart(JSON.parse(lastCart))  
     setOrderPrice(parseInt(localStorage.getItem('totalPrice')))
     setOrderNumber(localStorage.getItem('orderNumber'))
     setAllPrice(parseInt(localStorage.getItem('allPrice')))
@@ -24,34 +22,14 @@ function Pay(props) {
     setSale(parseInt(localStorage.getItem('sale')))
 }, [router.isReady]);
 
-  const handleLinePay = () => {
-    confirmAlert({
-      title: '確認付款',
-      message: '確認要導向至LINE Pay進行付款？',
-      buttons: [
-        {
-          label: '確定',
-          onClick: () => {
-
-            // 在本window直接導至node付款(reverse)url，之後會導向至line pay
-            window.location.href =
-            'http://localhost:3005/api/pay/reserve'  +
-              '?orderId=' +
-              orderNumber
-          },
-        },
-        {
-          label: '取消',
-          onClick: () => {},
-        },
-      ],
-    })
+  const handleOrder = () => {
     localStorage.removeItem("orderNumber");
     localStorage.removeItem("totalPrice");
     localStorage.removeItem("freight");
     localStorage.removeItem("newFinalCart");
     localStorage.removeItem("sale");
     localStorage.removeItem("allPrice");
+    router.push("/member/order")
   }
   return (
     <>
@@ -68,13 +46,10 @@ function Pay(props) {
         </div>
 
         <div className='d-flex justify-content-center mb-5'>
-        <img src="/LINEPay.png" alt="LINE Pay" className='me-3'></img>
         <button
             className='btn btn-confirm'
-            onClick={handleLinePay}
-            // 限制有orderId產生後才能點按
-            disabled={!orderNumber}
-        >前往付款
+            onClick={handleOrder}
+        >查看我的訂單
         </button>
         </div>
 
@@ -85,7 +60,7 @@ function Pay(props) {
                     <table  className='col-12  d-none d-sm-block cart-d-content '>
                         <thead >
                           <tr>
-                            <th colSpan="4" className='size-6'>訂單明細({finalCart[finalCart.length-1].product_id==0?(finalCart.length-1):(finalCart.length)})</th>             
+                            <th colSpan="4" className='size-6'>訂單明細({finalCart.length})</th>             
                           </tr>
                         </thead>
                         <tbody>
@@ -115,7 +90,7 @@ function Pay(props) {
                     <table className='d-sm-none d-block cart-m-content col-11'>
                         <thead>
                           <tr>
-                            <th colSpan="4">訂單明細({finalCart[finalCart.length-1].product_id==0?(finalCart.length-1):(finalCart.length)})</th>             
+                            <th colSpan="4">訂單明細({finalCart.length})</th>             
                           </tr>
                         </thead>
                         <tbody>
@@ -170,4 +145,4 @@ function Pay(props) {
   )
 }
 
-export default Pay
+export default cashOnDelivery

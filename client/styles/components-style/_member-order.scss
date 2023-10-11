@@ -1,6 +1,7 @@
 @import "@/styles/variable";
 .order{
-    background: $content-bg;
+    border-radius: 10px 10px 10px 10px;
+    background: $main-bg;
     color:$text-main;
     @media screen and (max-width: 768px) {
         background: $main-bg;
@@ -25,11 +26,13 @@
         // width: 200px;
         height: 50px;
         border: 0px;
+        border-bottom: 1px solid $light-gray;
         border-radius: 10px 10px 0px 0px;
         // background: #f9f4dc;
         // background: #e5e8dc;
         // background: #edf3ec;
-        background: rgb(248, 247, 247);
+        // background: rgb(248, 239, 233);
+        background: #fff;
         border-top:1px solid $light-gray ;
         border-right: 1px solid $light-gray;
     }
@@ -39,12 +42,14 @@
     }
 
     button.pressed{
-        background:$content-bg;
+        // background: #E3AC85;
+        background: #D8E3E5;
+        border-bottom:#D8E3E5 1px solid;
 
         
     }
     .bg{
-        background: $content-bg;
+        background:#fff;
         
     }
     span{
@@ -53,4 +58,7 @@
       .title{
         font-weight: 600;
       }
+    .big{
+        font-weight: 600;
+    }  
 }

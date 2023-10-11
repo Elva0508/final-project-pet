@@ -12,15 +12,18 @@ import { FaChartLine } from "react-icons/fa";
 import { FaIdBadge } from "react-icons/fa";
 import { FaRegCalendarCheck } from "react-icons/fa";
 import Link from "next/link";
-import axios from "axios";
+import { useActivePage } from "@/hooks/useActivePage";
 import { useRouter } from "next/router";
+
 export default function ListD() {
   //無法從localStorage取得資料 所以使用特定使用者api
   // const userData = localStorage.getItem("data");
   // const parseData = JSON.parse(userData);
 
   const [memberData, setMemberData] = useState(null);
+  const { activeButton, setActiveButton } = useActivePage();
   const router = useRouter();
+
   useEffect(() => {
     fetch("http://localhost:3005/api/user/user-info")
       .then((response) => response.json())
@@ -46,7 +49,7 @@ export default function ListD() {
                     className="mt-5"
                   ></img>
                 </div>
-                <p className="size-5 my-3 text-center">
+                <p className="size-5 my-3 text-center title">
                   Hi,{memberData ? memberData.name : "loading..."}
                 </p>
                 <Link className="size-7" href="">
@@ -64,20 +67,23 @@ export default function ListD() {
               </Link>
             </div>
           </div>
-          <ul className="mt-2 ms-5">
+          <ul className="mt-2 text-center">
             <li>
               <div className="py-2">
-                <p className="size-5 title">小貓商城</p>
+                <p className="size-5 title">小 貓 商 城</p>
               </div>
             </li>
-            <li>
+            <li className="">
               <button
-                className="size-6"
+                className={`size-6 col-12  ${
+                  activeButton === 1 ? "active" : ""
+                }`}
                 onClick={() => {
-                  window.location.href = "http://localhost:3000/member/order";
+                  setActiveButton(1);
+                  router.push("/member/order");
                 }}
               >
-                <div className="ms-5 my-3">
+                <div className="my-3">
                   <RiFileList3Fill />
                   <span className="ms-2">我的訂單</span>
                 </div>
@@ -85,13 +91,15 @@ export default function ListD() {
             </li>
             <li>
               <button
-                className="size-6"
+                className={`size-6 col-12 ${
+                  activeButton === 2 ? "active" : ""
+                }`}
                 onClick={() => {
-                  window.location.href =
-                    "http://localhost:3000/member/purchast";
+                  setActiveButton(2);
+                  router.push("/member/purchast");
                 }}
               >
-                <div className="ms-5 my-3">
+                <div className="my-3">
                   <BiSolidShoppingBag />
                   <span className="ms-2">購買紀錄</span>
                 </div>
@@ -99,13 +107,15 @@ export default function ListD() {
             </li>
             <li>
               <button
-                className="size-6"
+                className={`size-6 col-12 ${
+                  activeButton === 3 ? "active" : ""
+                }`}
                 onClick={() => {
-                  window.location.href =
-                    "http://localhost:3000/member/wishlist";
+                  setActiveButton(3);
+                  router.push("/member/wishlist");
                 }}
               >
-                <div className="ms-5 my-3">
+                <div className="my-3">
                   <FaList />
                   <span className="ms-2">追蹤清單</span>
                 </div>
@@ -113,43 +123,52 @@ export default function ListD() {
             </li>
             <li>
               <button
-                className="size-6"
+                className={`size-6 col-12 ${
+                  activeButton === 4 ? "active" : ""
+                }`}
                 onClick={() => {
-                  window.location.href = "";
+                  setActiveButton(4);
+                  router.push("/member/coupon");
                 }}
               >
-                <div className="ms-5 my-3">
+                <div className="my-3">
                   <MdDiscount />
-                  <span className="ms-2">我的優惠券</span>
+                  <span className="ms-2">優惠票券</span>
                 </div>
               </button>
             </li>
             <li>
               <div className="p-2">
-                <p className="size-5 title">小貓上工</p>
+                <p className="size-5 title">小 貓 上 工</p>
               </div>
             </li>
             <li>
               <button
-                className="size-6"
+                className={`size-6 col-12 ${
+                  activeButton === 5 ? "active" : ""
+                }`}
                 onClick={() => {
+                  setActiveButton(5);
                   router.push("/member/helper");
                 }}
               >
-                <div className="ms-5 my-3">
+                <div className="my-3">
                   <FaIdBadge />
-                  <span className="ms-2">小幫手資料</span>
+                  <span className="ms-2">幫手資料</span>
                 </div>
               </button>
             </li>
             <li>
               <button
-                className="size-6"
+                className={`size-6 col-12 ${
+                  activeButton === 6 ? "active" : ""
+                }`}
                 onClick={() => {
-                  window.location.href = "http://localhost:3000/member/joblist";
+                  setActiveButton(6);
+                  router.push("/member/joblist");
                 }}
               >
-                <div className="ms-5 my-3">
+                <div className="my-3">
                   <LiaListAltSolid />
                   <span className="ms-2">任務清單</span>
                 </div>
@@ -157,12 +176,15 @@ export default function ListD() {
             </li>
             <li>
               <button
-                className="size-6"
+                className={`size-6 col-12 ${
+                  activeButton === 7 ? "active" : ""
+                }`}
                 onClick={() => {
-                  window.location.href = "http://localhost:3000/member/history";
+                  setActiveButton(7);
+                  router.push("/member/history");
                 }}
               >
-                <div className="ms-5 my-3">
+                <div className="my-3">
                   <HiClipboardList />
                   <span className="ms-2">刊登紀錄</span>
                 </div>
@@ -170,12 +192,15 @@ export default function ListD() {
             </li>
             <li>
               <button
-                className="size-6"
+                className={`size-6 col-12 ${
+                  activeButton === 8 ? "active" : ""
+                }`}
                 onClick={() => {
+                  setActiveButton(8);
                   router.push("/member/selling");
                 }}
               >
-                <div className="ms-5 my-3">
+                <div className="my-3">
                   <FaChartLine />
                   <span className="ms-2">銷售紀錄</span>
                 </div>
@@ -183,12 +208,15 @@ export default function ListD() {
             </li>
             <li>
               <button
-                className="size-6"
+                className={`size-6 col-12 ${
+                  activeButton === 9 ? "active" : ""
+                }`}
                 onClick={() => {
+                  setActiveButton(9);
                   router.push("/member/reserve");
                 }}
               >
-                <div className="ms-5 mt-3 pb-3">
+                <div className="mt-3 pb-3">
                   <FaRegCalendarCheck />
                   <span className="ms-2">預約紀錄</span>
                 </div>
