@@ -259,7 +259,7 @@ export default function Wishlist() {
                       >
                         繼續購物
                       </button>
-                      <button type="button" className="btn btn-confirm  ms-5">
+                      <button type="button" className="btn btn-confirm  ms-5" >
                         前往結帳
                       </button>
                     </div>
