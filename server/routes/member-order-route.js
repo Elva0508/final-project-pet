@@ -17,7 +17,7 @@ router.get("/", (req, res) => {
          FROM order_details AS od
          JOIN products AS p ON od.product_id = p.product_id
          GROUP BY od.order_id  -- 這裡使用 GROUP BY，以每筆訂單為基準選擇一項產品
-     ) AS p ON o.order_id = p.order_id
+     ) AS p ON o.oid = p.order_id
      JOIN order_status AS os ON o.status_id = os.status_id 
      JOIN order_payment AS op ON o.order_payment = op.id 
      JOIN order_shipment AS oship ON o.order_shipment = oship.id 
