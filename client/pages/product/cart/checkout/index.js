@@ -144,14 +144,23 @@ export default function Checkout() {
         }
         setCart(nobuyCart)
         localStorage.removeItem("discount");
-        localStorage.removeItem("sale");
-        localStorage.removeItem("allPrice");
         localStorage.removeItem("cart");
+        localStorage.setItem('orderNumber', orderNumber);
+        localStorage.setItem('totalPrice',totalPrice );
+        localStorage.setItem('finalCart',JSON.stringify(finalCart) );
 
     }
 
     const createOrder = async() => {
-        const products = finalCart.map((item) => {
+        let newFinalCart=[]
+        if(sale>0){
+          newFinalCart = [...finalCart, { product_id: 0, product_name: '優惠券', quantity: 1, newprice: -sale }];
+        }else{
+          newFinalCart=finalCart
+        }
+        console.log(newFinalCart);
+
+        const products = newFinalCart.map((item) => {
             return {
               id: item.product_id,
               name: item.product_name,
@@ -219,11 +228,9 @@ export default function Checkout() {
         setCart(nobuyCart)
         localStorage.setItem('orderNumber', orderNumber);
         localStorage.setItem('totalPrice',totalPrice );
+        localStorage.setItem('newFinalCart',JSON.stringify(newFinalCart) );
         localStorage.removeItem("discount");
-        localStorage.removeItem("sale");
-        localStorage.removeItem("allPrice");
         localStorage.removeItem("cart");
-
       }
       
 
@@ -244,6 +251,7 @@ export default function Checkout() {
             router.push('/product/cart/checkout/pay')
         }else if(payment==3){
             checkout();
+            router.push('/product/cart/checkout/cash-on-delivery')
         }
     }
 

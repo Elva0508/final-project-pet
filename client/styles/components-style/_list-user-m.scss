@@ -1,24 +1,41 @@
 @import "@/styles/variable";
 
 .listuserm{
-        
-    img{
+    background:#fff ;
+    border-radius: 10px 10px 10px 10px;
+  .useravatar{
+    background:linear-gradient(to bottom, $header-bg 0%,rgb(248, 247, 247) 80%,#fff 100%); 
+    border-radius: 10px 10px 10px 10px;
+  }
+  img{
     width: 80px;
     height: 80px;
     border-radius: 50%;
-} 
-h6{
-    color: $text-main;
-  }
-  p{
-    color: $price;
-    border:1px solid
+}
+ 
+  .lv{
+    border:1px solid $price;
+    border-radius: 20px 20px 20px 20px ;
+    background:$price;
   }
   .level{
-    color: $price;
-    border:1px solid;
-    background:$main-bg;
-    
+    color:$main-bg ;
   }
-}
+
+  .bg{
+    background: $cos-white;
+    border-radius: 10px 10px 10px 10px ;
+
+  }
+  .title{
+    font-weight: 600;
+  }
+  button{
+    border:0;
+    background: transparent;
+  }
+  .active {
+    color: rgb(255, 122, 14);
+  }
+ }
 

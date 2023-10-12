@@ -8,7 +8,13 @@ import useRWD from "@/hooks/useRWD";
 import { register } from "swiper/element/bundle";
 import { Carousel } from "@trendyol-js/react-carousel";
 import { AiOutlineLeftCircle, AiOutlineRightCircle } from "react-icons/ai";
-import { BsArrowBarRight } from "react-icons/bs";
+import {
+  BsArrowBarRight,
+  BsFillHeartFill,
+  BsHeart,
+  BsTrashFill,
+  BsTrash,
+} from "react-icons/bs";
 import WorkService from "@/services/work-service";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
@@ -17,11 +23,17 @@ import Rating from "@mui/material/Rating";
 import StarIcon from "@mui/icons-material/Star";
 import { Pagination } from "antd";
 import { BiSearchAlt } from "react-icons/bi";
+import "animate.css";
+import { useAuth } from "@/context/fakeAuthContext";
+import { useRouter } from "next/router";
 register();
 // Import Swiper styles
 import "swiper/css";
 import "swiper/css/navigation";
-
+import { Tune } from "@mui/icons-material";
+import { SideSheet, Button } from "@douyinfe/semi-ui";
+import workService from "@/services/work-service";
+import { useHelper } from "@/context/helperContext";
 const Search = ({
   handleSearch,
   placeholder,
@@ -49,6 +61,9 @@ const Search = ({
         onChange={(e) => {
           console.log(e.target.value);
           setSearch(e.target.value);
+        }}
+        onKeyDown={(e) => {
+          console.log(e);
         }}
       />
       <button
@@ -179,24 +194,59 @@ const MobileFilter = ({
     </Swiper>
   );
 };
-const FamousHelperCard = ({ ...helper }) => {
-  const [isFavorite, setIsFavorite] = useState(false); // 初始狀態為未收藏
+const FamousHelperCard = ({ helper, collection, setCollection }) => {
+  // const [isFavorite, setIsFavorite] = useState(false); // 初始狀態為未收藏
+  const [isFavHovered, setIsFavHovered] = useState(false);
+  const { isAuthenticated } = useAuth();
+  const router = useRouter();
   const service = [
     { label: "到府代餵", value: parseInt(helper.feed_service) },
     { label: "安親寄宿", value: parseInt(helper.house_service) },
     { label: "到府美容", value: parseInt(helper.beauty_service) },
   ];
-  const toggleFavorite = () => {
-    setIsFavorite(!isFavorite); // 切換收藏狀態
+  const handleFav = (e) => {
+    if (isAuthenticated) {
+      if (!collection.find((item) => item === helper.user_id)) {
+        e.currentTarget.classList.add(
+          "animate__animated",
+          "animate__heartBeat"
+        );
+        setCollection((prev) => {
+          return [...prev, helper.user_id];
+        });
+      } else {
+        e.currentTarget.classList.remove(
+          "animate__animated",
+          "animate__heartBeat"
+        );
+        setCollection((prev) => {
+          const newArr = prev.filter((item) => item !== helper.user_id);
+          console.log(newArr);
+          return newArr;
+        });
+      }
+    } else {
+      alert("請先登入會員");
+      router.push("/member/login");
+    }
   };
   return (
     <>
-      <div className="famous-helper-card d-flex align-items-center">
-        <img
-          className="famous-helper-card-img"
-          src={helper?.cover_photo}
-          alt="任務"
-        />
+      <div
+        className={`famous-helper-card d-flex align-items-center ${
+          collection.find((item) => item === helper.user_id)
+            ? ""
+            : "active-fav-in-fam-card"
+        }`}
+      >
+        <div className="img-wrapper">
+          <img
+            className="famous-helper-card-img"
+            src={helper?.cover_photo}
+            alt="任務"
+          />
+        </div>
+
         <div className="helper-content ms-2">
           <div className="title size-6">{helper?.name}</div>
           <div className="ranking d-flex">
@@ -228,17 +278,37 @@ const FamousHelperCard = ({ ...helper }) => {
                 服務時間：<span>周一至周日</span>
               </p>
             </div>
-            <img
-              src={isFavorite ? "/heart-clicked.svg" : "/heart.svg"}
-              alt={isFavorite ? "已收藏" : "未收藏"}
-              onClick={toggleFavorite}
-            />
+            <div className="fav-icon">
+              {isFavHovered ||
+              collection.find((item) => item === helper.user_id) ? (
+                <BsFillHeartFill
+                  className="fav-icon-fill"
+                  onClick={handleFav}
+                  onMouseEnter={() => {
+                    setIsFavHovered(true);
+                  }}
+                  onMouseLeave={() => {
+                    setIsFavHovered(false);
+                  }}
+                />
+              ) : (
+                <BsHeart
+                  className="fav-icon-hollow"
+                  onMouseEnter={() => {
+                    setIsFavHovered(true);
+                  }}
+                  onMouseLeave={() => {
+                    setIsFavHovered(false);
+                  }}
+                />
+              )}
+            </div>
           </div>
           <div className="d-flex justify-content-between align-items-end price">
             <div>
               單次<span className="size-6"> NT$140</span>
             </div>
-            <button className="size-6 btn-confirm">
+            <button className="size-6 animate-button-one">
               <Link href={`/work/find-helper/${helper.user_id}`}>洽詢</Link>
             </button>
           </div>
@@ -247,76 +317,130 @@ const FamousHelperCard = ({ ...helper }) => {
     </>
   );
 };
-const MobileFamousHelper = ({ famous, setFamous }) => {
-  const settings = {
-    // dots: true,
-    infinite: false,
-    speed: 500,
-    slidesToShow: 1.5,
-    slidesToScroll: 1,
-    nextArrow: <AiOutlineRightCircle />,
-    prevArrow: <AiOutlineLeftCircle />,
-    responsive: [
-      {
-        breakpoint: 569,
-        settings: {
-          slidesToShow: 1.2,
-        },
-      },
-      {
-        breakpoint: 425,
-        settings: {
-          slidesToShow: 1,
-        },
-      },
-    ],
-  };
+const MobileFamousHelper = ({
+  famous,
+  setFamous,
+  collection,
+  setCollection,
+}) => {
+  const swiperRef = useRef(null);
+  useEffect(() => {
+    const swiperContainer = swiperRef.current;
+    const params = {
+      navigation: true,
+      injectStyles: [
+        `
+          .swiper-button-next,
+          .swiper-button-prev {
+            background-color: #FFFDFB;
+            width:32px;
+            height:32px;
+            border-radius: 50%;
+            color: #F8CB9F;
+            box-shadow: 0 0 9px rgba(0, 0, 0, 0.5);
+            background-position: center;
+            background-size: 18px;
+            background-repeat: no-repeat; 
+            // opacity:0.5;          
+          }
+          
+          .swiper-button-prev {
+            background-image: url("/caret-left.svg");
+
+          }
+          .swiper-button-next {
+            background-image: url("/caret-right.svg");    
+          }
+          .swiper-button-next svg,
+          .swiper-button-prev svg {
+            color: transparent;
+          }
+      `,
+      ],
+    };
+
+    Object.assign(swiperContainer, params);
+    swiperContainer.initialize();
+  }, []);
   return (
     <>
-      {/* <Carousel
-        show={1.5}
-        slide={1}
-        transition={0.5}
-        leftArrow={<AiOutlineLeftCircle />}
-        rightArrow={<AiOutlineRightCircle />}
-        className="famous-carousel"
-
-        // // responsive={true}
-      >
-        {famous.map((helper) => (
-          <FamousHelperCard {...helper} />
-        ))}
-        <FamousHelperCard />
-        <FamousHelperCard />
-        <FamousHelperCard />
-      </Carousel> */}
-      <div>
-        <Slider {...settings}>
+      {/* <Slider {...settings}>
           {famous.map((helper) => (
             <FamousHelperCard {...helper} />
           ))}
-        </Slider>
-      </div>
+        </Slider> */}
+      <>
+        <swiper-container
+          ref={swiperRef}
+          navigation="true"
+          space-between="20"
+          slides-per-view="auto"
+          next-el=".custom-next-button"
+          prev-el=".custom-prev-button"
+          init="false"
+        >
+          {famous.map((helper) => (
+            <swiper-slide>
+              <FamousHelperCard
+                helper={helper}
+                collection={collection}
+                setCollection={setCollection}
+              />
+            </swiper-slide>
+          ))}
+        </swiper-container>
+      </>
     </>
   );
 };
-
-const SingleHelperCard = ({ ...helper }) => {
-  const [isFavorite, setIsFavorite] = useState(false); // 初始狀態為未收藏
-  const toggleFavorite = () => {
-    setIsFavorite(!isFavorite); // 切換收藏狀態
-  };
-
+const SingleHelperCard = ({ helper, collection, setCollection }) => {
+  // const [isFavorite, setIsFavorite] = useState(false); // 初始狀態為未收藏
+  const [isFavHovered, setIsFavHovered] = useState(false);
+  const { isAuthenticated } = useAuth();
+  const router = useRouter();
+  // useEffect(() => {
+  //   setIsFavorite(collection.find((item) => helper.user_id === item));
+  // }, [collection]);
   const service = [
     { label: "到府代餵", value: parseInt(helper.feed_service) },
     { label: "安親寄宿", value: parseInt(helper.house_service) },
     { label: "到府美容", value: parseInt(helper.beauty_service) },
   ];
-  const servicePrice = [];
-  console.log(service);
+  const handleFav = (e) => {
+    if (isAuthenticated) {
+      if (!collection.find((item) => item === helper.user_id)) {
+        e.currentTarget.classList.add(
+          "animate__animated",
+          "animate__heartBeat"
+        );
+        setCollection((prev) => {
+          return [...prev, helper.user_id];
+        });
+      } else {
+        e.currentTarget.classList.remove(
+          "animate__animated",
+          "animate__heartBeat"
+        );
+        setCollection((prev) => {
+          const newArr = prev.filter((item) => item !== helper.user_id);
+          console.log(newArr);
+          return newArr;
+        });
+      }
+    } else {
+      alert("請先登入會員");
+      router.push("/member/login");
+    }
+  };
   return (
     <>
-      <div className="single-card d-flex flex-column align-items-center">
+      <div
+        className={`single-card d-flex flex-column align-items-center ${
+          collection.find((item) => item === helper.user_id)
+            ? ""
+            : "active-fav-in-card"
+        }`}
+      >
         <img
           className="single-card-img"
           src={helper.cover_photo}
@@ -356,24 +480,170 @@ const SingleHelperCard = ({ ...helper }) => {
                 服務時間：<span>周一至周日</span>
               </p>
             </div>
-            <img
-              src={isFavorite ? "/heart-clicked.svg" : "/heart.svg"}
-              alt={isFavorite ? "已收藏" : "未收藏"}
-              onClick={toggleFavorite}
-            />
+
+            <div className="fav-icon">
+              {isFavHovered ||
+              collection.find((item) => item === helper.user_id) ? (
+                <BsFillHeartFill
+                  className="fav-icon-fill"
+                  uid={helper.user_id}
+                  onClick={handleFav}
+                  onMouseEnter={() => {
+                    setIsFavHovered(true);
+                  }}
+                  onMouseLeave={() => {
+                    setIsFavHovered(false);
+                  }}
+                />
+              ) : (
+                <BsHeart
+                  className="fav-icon-hollow"
+                  onMouseEnter={() => {
+                    setIsFavHovered(true);
+                  }}
+                  onMouseLeave={() => {
+                    setIsFavHovered(false);
+                  }}
+                />
+              )}
+            </div>
           </div>
 
           <div className="d-flex justify-content-between align-items-end price">
             <div>
               單次<span className="size-6"> NT$140</span>
             </div>
-            <button className="size-6 btn-confirm">
+            <button className="size-6 animate-button-one">
               <Link href={`/work/find-helper/${helper.user_id}`}>洽詢</Link>
             </button>
           </div>
         </div>
       </div>
     </>
+  );
+};
+const Collection = ({ collection, setCollection }) => {
+  const [visible, setVisible] = useState(false);
+  const [favInfo, setFavInfo] = useState([]);
+  const change = () => {
+    setVisible(!visible);
+  };
+  useEffect(() => {
+    WorkService.getFavHelpers(collection)
+      .then((response) => {
+        console.log(response.data.results);
+        if (response.data.results.length > 0) {
+          setFavInfo(response.data.results);
+        } else {
+          setFavInfo(response.data.results);
+          setVisible(false);
+        }
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  }, [collection]);
+
+  return (
+    <>
+      <Button onClick={change}>Open SideSheet</Button>
+      <SideSheet
+        className="favorite-helper-sidesheet"
+        title="滑动侧边栏"
+        visible={visible}
+        onCancel={change}
+      >
+        {favInfo.map((helper) => (
+          <FavCard
+            helper={helper}
+            collection={collection}
+            setCollection={setCollection}
+          />
+        ))}
+      </SideSheet>
+    </>
+  );
+};
+const FavCard = ({ helper, collection, setCollection }) => {
+  const [isHovered, setIsHovered] = useState(false);
+  const service = [
+    { label: "到府代餵", value: parseInt(helper.feed_service) },
+    { label: "安親寄宿", value: parseInt(helper.house_service) },
+    { label: "到府美容", value: parseInt(helper.beauty_service) },
+  ];
+  return (
+    <div className={`famous-helper-card d-flex align-items-center`}>
+      <div className="img-wrapper">
+        <img
+          className="famous-helper-card-img"
+          src={helper?.cover_photo}
+          alt="任務"
+        />
+      </div>
+
+      <div className="helper-content ms-2">
+        <div className="title size-6">{helper?.name}</div>
+        <div className="ranking d-flex">
+          <Rating
+            name="half-rating-read"
+            value={parseFloat(helper?.average_star)}
+            precision={0.5}
+            readOnly
+            emptyIcon={<StarIcon style={{ opacity: 0.35 }} />}
+          />
+          <span className="ms-1 size-7">
+            ({helper.review_count ? helper.review_count : 0})
+          </span>
+        </div>
+        <div className="helper-content-info d-flex justify-content-between">
+          <div>
+            <p className="m-size-7">{helper?.service_county}</p>
+            <p className="m-size-7">
+              服務項目：
+              {service
+                .filter((item) => item.value != 0)
+                .map((item, index, arr) =>
+                  index < arr.length - 1 ? (
+                    <span>{item.label}、</span>
+                  ) : (
+                    <span>{item.label}</span>
+                  )
+                )}
+            </p>
+            <p className="m-size-7">
+              服務時間：<span>周一至周日</span>
+            </p>
+          </div>
+        </div>
+        <div className="d-flex justify-content-between align-items-end price">
+          <div>
+            單次<span className="size-6"> NT$140</span>
+          </div>
+        </div>
+      </div>
+      <div className="dlt-icon">
+        <BsTrash
+          className={isHovered ? "d-none dlt-icon-hollow" : "dlt-icon-hollow"}
+          onMouseEnter={() => {
+            setIsHovered(true);
+          }}
+          onClick={() => {}}
+        />
+        <BsTrashFill
+          className={!isHovered ? "d-none dlt-icon-fill" : "dlt-icon-fill"}
+          onMouseLeave={() => {
+            setIsHovered(false);
+          }}
+          onClick={() => {
+            setCollection((prev) => {
+              const newCol = prev.filter((item) => item != helper.user_id);
+              console.log(newCol);
+              return newCol;
+            });
+          }}
+        />
+      </div>
+    </div>
   );
 };
 const MissionHelperList = () => {
@@ -386,6 +656,8 @@ const MissionHelperList = () => {
   const [currentSearch, setCurrentSearch] = useState(null);
   const [currentPage, setPage] = useState(1);
   const [totalRows, setTotalRows] = useState(18);
+  const { collection, setCollection } = useHelper();
+  const { isAuthenticated } = useAuth();
   useEffect(() => {
     if (!currentSearch) {
       setPage(1);
@@ -453,6 +725,19 @@ const MissionHelperList = () => {
     }
   }, [currentPage]);
 
+  // useEffect(() => {
+  //   // 初次渲染時載入儲存在localStorage的收藏
+  //   if (localStorage.getItem("helperFav"))
+  //     setCollection(JSON.parse(localStorage.getItem("helperFav")));
+  // }, []);
+  useEffect(() => {
+    // 更新localStorage的收藏
+    if (collection.length === 0) {
+      localStorage.removeItem("helperFav");
+    } else {
+      localStorage.setItem("helperFav", JSON.stringify(collection));
+    }
+  }, [collection]);
   const handleBack = () => {
     setFilterType("all");
     setPage(1);
@@ -489,15 +774,21 @@ const MissionHelperList = () => {
   };
 
   return (
-    <div className="mission-helper-list">
-      <nav className="breadcrumb-wrapper" aria-label="breadcrumb">
+    <div className="mission-helper-list container">
+      <nav className="breadcrumb-wrapper my-4 " aria-label="breadcrumb">
         <ol class="breadcrumb">
           <li class="breadcrumb-item">
-            <Link href="#">首頁</Link>
+            <Link href="/" className="active-hover">
+              首頁
+            </Link>
           </li>
           <li class="breadcrumb-item" aria-current="page">
-            <Link href="" onClick={handleBack}>
-              小幫手總覽
+            <Link
+              href="/work/find-helper"
+              onClick={handleBack}
+              className="active-hover"
+            >
+              小貓上工(找幫手)
             </Link>
           </li>
           {currentSearch ? (
@@ -525,7 +816,7 @@ const MissionHelperList = () => {
         </ol>
       </nav>
 
-      <div className="search d-flex flex-md-row flex-column justify-content-between align-items-center">
+      <div className="search d-flex flex-md-row flex-column justify-content-between align-items-center ">
         <RoleSelection defaultActive="helper" />
         <Search
           placeholder={"搜尋小幫手"}
@@ -547,6 +838,10 @@ const MissionHelperList = () => {
           setCurrentSearch={setCurrentSearch}
         />
       </div>
+      {isAuthenticated && (
+        <Collection collection={collection} setCollection={setCollection} />
+      )}
+
       <div className="mb-2">
         <p className="size-6 d-flex justify-content-end align-items-center me-2">
           {order?.parentValue === "price" &&
@@ -587,21 +882,34 @@ const MissionHelperList = () => {
         </p>
       </div>
 
-      <div className="d-flex flex-md-row flex-column align-items-start justify-content-center">
+      <div className="d-flex flex-lg-row flex-column align-items-start justify-content-between gap-4">
         <section className="famous-helper">
           <p className="famous-helper-title size-5">熱門小幫手</p>
-          <div className="famous-helper-pc d-md-block d-none">
+          <div className="famous-helper-pc d-lg-block d-none">
             {famous.map((helper) => (
-              <FamousHelperCard {...helper} />
+              <FamousHelperCard
+                helper={helper}
+                collection={collection}
+                setCollection={setCollection}
+              />
             ))}
           </div>
-          <div className="famous-helper-mobile d-block d-md-none">
-            <MobileFamousHelper famous={famous} setFamous={setFamous} />
+          <div className="famous-helper-mobile d-block d-lg-none">
+            <MobileFamousHelper
+              famous={famous}
+              setFamous={setFamous}
+              collection={collection}
+              setCollection={setCollection}
+            />
           </div>
         </section>
         <section className="helper-list d-flex flex-wrap">
           {allHelpers?.map((helper) => (
-            <SingleHelperCard {...helper} />
+            <SingleHelperCard
+              helper={helper}
+              collection={collection}
+              setCollection={setCollection}
+            />
           ))}
         </section>
       </div>
