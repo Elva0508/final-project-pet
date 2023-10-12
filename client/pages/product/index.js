@@ -8,9 +8,10 @@ import { HiOutlineFilter } from 'react-icons/hi';
 import LoadingOverlay from '@/components/product/loadingoverlay'; //加載畫面尚未成功
 import { BiSearchAlt } from "react-icons/bi";
 import jwt_decode from 'jwt-decode';
+import { useCart } from "@/hooks/useCart"
 
 
-const Search = ({ placeholder, color, onClick, search, setSearch }) => {
+const Search = ({ handleSearch, placeholder, color, onClick, search, setSearch }) => {
     const rippleBtnRef = useRef(null);
     const inputRef = useRef(null);
     const handleRipple = () => {
@@ -19,24 +20,6 @@ const Search = ({ placeholder, color, onClick, search, setSearch }) => {
         setTimeout(() => {
             btn.classList.remove("ripple");
         }, 500); //動畫持續時間結束後移除動畫效果，讓動畫可以重複使用
-    };
-    const sendSearchRequest = () => {
-        const searchValue = inputRef.current.value;
-        handleRipple();
-
-        if (onClick) {
-            axios.get('http://localhost:3005/api/filter_sort', {
-                params: {
-                    search: searchValue,
-                }
-            })
-                .then(response => {
-                    
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
-        }
     };
 
     return (
@@ -52,12 +35,21 @@ const Search = ({ placeholder, color, onClick, search, setSearch }) => {
                     console.log(e.target.value);
                 }}
             />
-            <button onClick={sendSearchRequest} ref={rippleBtnRef}>
+            <button
+                onClick={() => {
+                    handleRipple();
+                    handleSearch(search);
+                    console.log("按鈕有被點到");
+                }}
+                ref={rippleBtnRef}
+            >
                 <BiSearchAlt className="job-search-icon" />
             </button>
         </div>
     );
 };
+
+
 
 export default function ProductList() {
 
@@ -163,7 +155,6 @@ export default function ProductList() {
                 minPrice,
                 maxPrice,
                 sortBy: selectedSort,
-                search,
             }
         })
             .then(response => {
@@ -175,7 +166,7 @@ export default function ProductList() {
                 console.error('Error:', error);
                 setIsLoading(false);
             });
-    }, [category, subcategory, vendor, minPrice, maxPrice, selectedSort, search]); 
+    }, [category, subcategory, vendor, minPrice, maxPrice, selectedSort]);
 
     // 當選擇不同的篩選條件時，更新相應的狀態
     // 透過 event.target.value 來找到用戶輸入的值
@@ -247,6 +238,26 @@ export default function ProductList() {
             setVendorData({ result: response.data.result });
         });
     }, []);
+    
+    //傳送search的到後端
+    const handleSearch = (search) => {
+        console.log("handleSearch 函数被使用，search結果:", search);
+        axios.get('http://localhost:3005/api/product/filter_sort', {
+            params: {
+                search,
+            }
+        })
+            .then(response => {
+                // 请求完成后隐藏加载蒙层
+                setIsLoading(false);
+                setProductData(response.data.result);
+                setSearch(''); //搜尋之後清空搜尋文字
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                setIsLoading(false);
+            });
+    };
 
 
 
@@ -268,7 +279,7 @@ export default function ProductList() {
                         </ol>
                     </nav> */}
                     <div className="search-sort d-flex flex-md-row flex-column justify-content-between align-items-center ms-3 me-3">
-                        <Search placeholder={"請輸入商品或品牌關鍵字"}  search={search} setSearch={setSearch} />
+                        <Search placeholder={"請輸入商品或品牌關鍵字"} search={search} setSearch={setSearch} handleSearch={handleSearch} />
                         {/* created_at和specialoffer排序 */}
                         <div className='sort ' >
                             <div className='sort-btn d-flex   justify-content-center text-align-center'>
