@@ -3,6 +3,7 @@ import BlockOne from "@/components/home/block-one";
 import BlockTwo from "@/components/home/block-two";
 import BlockTwoMobile from "@/components/home/block-two-mobile";
 import BlockThree from "@/components/home/block-three";
+import BlockFourMobile from "@/components/home/block-four-mobile";
 import BlockFive from "@/components/home/block-five";
 import BlockFiveMobile from "@/components/home/block-five-mobile";
 import BlockSix from "@/components/home/block-six";
@@ -141,7 +142,7 @@ export default function Index() {
               本週排行榜
             </div>
             <div className="my-5">
-              <BlockTwoMobile />
+              <BlockFourMobile />
             </div>
           </div>
 
