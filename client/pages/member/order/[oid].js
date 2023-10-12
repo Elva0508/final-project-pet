@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import ListM from "@/components/member/list-m";
 import ListD from "@/components/member/list-d";
 import ListUserM from "@/components/member/list-user-m";
 import { RiFileList3Fill } from "react-icons/ri";
@@ -9,7 +8,6 @@ import axios from "axios";
 // import moment from "moment"
 
 export default function Orderdetail() {
-
 
   const [showCommentForm, setShowCommentForm] = useState(false);
   const [currentProductId, setCurrentProductId] = useState(null);
@@ -45,10 +43,11 @@ export default function Orderdetail() {
   };
 
 
-  const getDetail = async (oid) => {
+  const getDetail = async (oid,id) => {
+    console.log(oid,id)
     try {
       const res = await fetch(
-        "http://localhost:3005/api/member-order-detail/" + oid
+        `http://localhost:3005/api/member-order-detail/${oid}/${id}`
       );
 
       const data = await res.json();
@@ -69,12 +68,22 @@ export default function Orderdetail() {
   };
 
   useEffect(() => {
+    const token = localStorage.getItem("token");
+    const id=localStorage.getItem("id")
+    // 沒有token
+    if (!token) {
+      window.location.href="/"
+    }
+    console.log(id);
+    console.log(token);
+
+
     if (router.isReady) {
       // 確保能得到router.query有值
       const { oid } = router.query;
       console.log(oid);
       // 有pid後，向伺服器要求資料，設定到狀態中
-      getDetail(oid);
+      getDetail(oid,id);
     }
     // eslint-disable-next-line
   }, [router.query]);
@@ -87,21 +96,17 @@ const back =(id)=>{
   return (
     <>
       <div className="my-3">
-        <div className="d-flex justify-content-end me-3">
-          <ListM />
-        </div>
         <ListUserM />
         <div className="d-flex py-2 justify-content-around">
           <ListD />
 
-          <div className="d-flex flex-column col-8 order-detail">
+          <div className="d-flex flex-column col-md-8 col-12 order-detail">
 
-              <h5 className="size-5 mt-3 ms-md-5 ms-3">
-                <RiFileList3Fill />
+              <h5 className="size-5 mt-3 ms-md-5 ms-3 title">
                 我的訂單
               </h5>
-              <div className="px-5">
-              <p className="size-6 title mt-2"><span>訂單編號：</span>{detail[0].oid}</p>
+              <div className="px-md-5 px-3">
+              <p className="size-6  mt-2"><span>訂單編號：</span>{detail[0].oid}</p>
               <p className="size-7"><span>訂單時間：</span>{detail[0].created_at}</p>
               <p className="size-7"><span>訂單狀態：</span>{detail[0].status_name}</p>
               <p className="size-7"><span>付款資訊：</span>{detail[0].payment}</p>

@@ -1,19 +1,18 @@
 import React from "react";
-import ListM from "@/components/member/list-m";
 import ListD from "@/components/member/list-d";
 import ListUserM from "@/components/member/list-user-m";
 import { RiFileList3Fill } from "react-icons/ri";
 import { useState, useEffect} from "react";
 import axios from "axios";
 import OrderStatus from "@/components/member/order-status";
-
+import { useAuth } from "@/context/fakeAuthContext";
 
 export default function Order() {
-
   const [currentScreen, setCurrentScreen] = useState("1");
   const [order, setOrder] = useState([])
-  const getOrder = async() => {
-    await axios.get("http://localhost:3005/api/member-order")
+
+  const getOrder = async(userId) => {
+    await axios.get(`http://localhost:3005/api/member-order/${userId}`)
       .then((response) => {
         const data = response.data.result;
         console.log(data);
@@ -23,10 +22,21 @@ export default function Order() {
         console.error("Error:", error);
     });
   }
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const id=localStorage.getItem("id")
+    // 沒有token
+    if (!token) {
+      window.location.href="/";
+    }
+    console.log(id);
+    console.log(token);
+    getOrder(id);
+  }, []);
 
-useEffect(() => {
-    getOrder()
-  }, [])
+// useEffect(() => {
+//     getOrder(id)
+//   }, [])
 
   const handleButtonClick = (screenName) => {
     setCurrentScreen(screenName);
@@ -36,17 +46,13 @@ useEffect(() => {
 
   return (
       <div className="my-3">
-        <div className="d-flex justify-content-end me-3">
-          <ListM />
-        </div>
         <ListUserM />
-        
           <div className="d-flex justify-content-around py-2">
             <ListD />
-            <div className="d-flex flex-column col-md-8 col-12 order ">
+            <div className="d-flex flex-column col-md-8 col-12 order">
   
-                <h5 className="size-5 mt-3 ms-md-5 ms-3">
-                  <p className=""><RiFileList3Fill />我的訂單</p>
+                <h5 className="size-4 mt-3">
+                  <p className="big">我的訂單</p>
                 </h5>
 
               <div className="col-12">

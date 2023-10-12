@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import { useRouter } from "next/router";
 import axios from "axios"
 import Link from "next/link";
+import { GoogleMap, LoadScript, MarkerF, InfoWindowF, OverlayView } from '@react-google-maps/api';
 import { IoPaperPlaneOutline } from "react-icons/io5";
 import { PiWechatLogoThin } from "react-icons/pi";
 import { FaRegHeart, FaHeart } from "react-icons/fa";
@@ -112,11 +113,38 @@ export const MissionDetailSticky = () => {
 function CustomHTMLRenderer({ htmlContent }) {
     return (
         <div className="item">
-            <div className="item-title size-5">詳細說明</div>
+            <div className="item-title size-5 mb-3">詳細說明</div>
             <ul className="item-content size-6" dangerouslySetInnerHTML={{ __html: htmlContent }} />
         </div>
     );
 }
+
+const MapComponent = ({ lat, lng }) => {
+    const mapContainerStyle = {
+        width: '90%',
+        height: '50vh',
+    };
+
+    const center = {
+        lat,
+        lng,
+    };
+    console.log('center.lat是:', center.lat);
+    console.log('center.lng是:', center.lng);
+
+    return (
+        <LoadScript googleMapsApiKey="AIzaSyD3M4Wt4xdyN-LrJyCVDwGSUkQ1B8KpKT8">
+            <GoogleMap
+                mapContainerStyle={mapContainerStyle}
+                center={center}
+                zoom={16}
+            >
+                <MarkerF position={center} />
+            </GoogleMap>
+        </LoadScript>
+    );
+};
+
 
 export default function MissionDetail() {
     // const [inputValue, setInputValue] = useState('');
@@ -126,10 +154,22 @@ export default function MissionDetail() {
     // };
 
     const router = useRouter();
+
     const { mission_id } = router.query;
 
     const [missionDetail, setMissionDetail] = useState([])
     const [missionImages, setMissionImages] = useState([])
+
+    // GOOGLE地圖API：初始狀態
+    const [missionLocation, setMissionLocation] = useState({
+        lat: 0, // 设置初始值为0或者其他合适的默认值
+        lng: 0,
+    });
+
+    // 彈跳視窗
+    const [selectedMissionId, setSelectedMissionId] = useState(null);
+    const [recommendation, setRecommendation] = useState('');
+    const [autoSend, setAutoSend] = useState(false);
 
     const getMissionDetail = async (mission_id) => {  // 接受 mission_id 作為參數
         try {
@@ -143,15 +183,11 @@ export default function MissionDetail() {
     }
 
     useEffect(() => {
-        console.log("Effect called with mission_id:", mission_id);
         if (mission_id) {
+            // 顯示詳細資料
             getMissionDetail(mission_id);
-        }
-    }, [mission_id])
 
-    // 使用useEffect發起第二個API請求，供ImageSwiper使用
-    useEffect(() => {
-        if (mission_id) {
+            // 使用useEffect發起第二個API請求，供ImageSwiper使用
             axios.get(`http://localhost:3005/api/mission/mission-details-img/${mission_id}`)
                 .then((response) => {
                     // 將第二個API的數據儲存到missionImages狀態中
@@ -160,7 +196,49 @@ export default function MissionDetail() {
                 .catch((error) => {
                     console.error('Error fetching data from API 2:', error);
                 });
+
+            // 使用useEffect發起第三個API請求，供GOOGLE地圖使用
+            axios.get(`http://localhost:3005/api/mission/mission-details-map/${mission_id}`)
+                .then((response) => {
+                    // 將第三個API的數據儲存到missionLocation狀態中
+                    // GOOGLE地圖API：從後端獲取經緯度，更新狀態
+                    setMissionLocation({
+                        lat: response.data.data.location.lat,
+                        lng: response.data.data.location.lng,
+                    });
+                    console.log("lat是:" + response.data.data.location.lat + "lng是:" + response.data.data.location.lng)
+                })
+                .catch((error) => {
+                    console.error('Error fetching data from API 3:', error);
+                });
         }
+    }, [mission_id]);
+
+    
+    // 彈跳視窗(確認送出)
+    const handleConfirmSubmit = async () => {
+        setSelectedMissionId(mission_id)
+        try {
+            // 使用 selectedMissionId 作為 missionId
+            const requestData = {
+                missionId: selectedMissionId,
+                recommendation,
+                autoSend,
+            };
+
+            // 發送 POST 請求將數據發送到後端 API
+            const response = await axios.post('http://localhost:3005/api/mission/add-record', requestData);
+            console.log('成功添加到應徵紀錄', response.data);
+            // 導到聊天室
+            // router.push('/chatlist');
+        } catch (error) {
+            console.error('添加到應徵紀錄出錯', error);
+        }
+    };
+
+    // 第一次點擊送出就加入應徵紀錄 而非第二次才加
+    useEffect(() => {
+        handleConfirmSubmit();
     }, [mission_id]);
 
     // 格式化日期
@@ -175,8 +253,8 @@ export default function MissionDetail() {
     return (
         <>
             {/* Modal */}
-            <div className="modal fade apply-modal" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div className="modal-dialog">
+            <div className={`modal fade apply-modal`} id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div className="modal-dialog modal-dialog-centered">
                     <div className="modal-content">
                         <div className="modal-header">
                             <h5 className="modal-title size-4" id="exampleModalLabel">立即應徵</h5>
@@ -199,10 +277,10 @@ export default function MissionDetail() {
                             </div>
                             <div className='recommend mt-4'>
                                 <div className='size-5 mb-2'>自我推薦</div>
-                                <textarea className='recommend-content'></textarea>
+                                <textarea className='recommend-content' value={recommendation} onChange={(e) => setRecommendation(e.target.value)} ></textarea>
 
                                 <div className='auto-send d-flex my-4 align-items-center'>
-                                    <input type="checkbox" className='checkbox' />
+                                    <input type="checkbox" className='checkbox' checked={autoSend} onChange={() => setAutoSend(!autoSend)} />
                                     <div className='size-6 ms-2'>自動發送小幫手履歷<span className='size-7' >（需開啟小幫手資料）</span></div>
                                 </div>
                             </div>
@@ -210,7 +288,8 @@ export default function MissionDetail() {
 
                         <div className="modal-footer justify-content-center py-4">
                             <button type="button" className=" btn-outline-confirm" data-bs-dismiss="modal">取消</button>
-                            <button type="button" className=" btn-second">確認送出</button>
+                            <button type="button" className=" btn-second" onClick={handleConfirmSubmit} data-bs-dismiss="modal">確認送出</button>
+                            {/* 在這邊也要加上data-bs-dismiss="modal"才能在送出後關閉modal 才不會到聊天室之後 後面畫面還是灰暗的 */}
                         </div>
                     </div>
                 </div>
@@ -259,7 +338,9 @@ export default function MissionDetail() {
                                 </div>
                                 <p className="size-6 d-flex align-items-center ms-4 ms-sm-0">{v.city}{v.area}{v.location_detail}</p>
                             </div>
-                            <div><iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d28912.322574287376!2d121.48607389999998!3d25.066622449999997!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3442a8de05921eb3%3A0xe818cd4640a88cc6!2zMjQx5paw5YyX5biC5LiJ6YeN5Y2A!5e0!3m2!1szh-TW!2stw!4v1695367764015!5m2!1szh-TW!2stw" referrerpolicy="no-referrer-when-downgrade"></iframe></div>
+                            <div className='d-flex justify-content-center'>
+                                <MapComponent key={`map-${missionLocation.lat}-${missionLocation.lng}`} lat={missionLocation.lat} lng={missionLocation.lng} />
+                            </div>
 
                             <CustomHTMLRenderer htmlContent={v.description} />
 

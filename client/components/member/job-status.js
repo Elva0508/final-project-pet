@@ -69,7 +69,7 @@ export default function JobStatusTwo({job,currentScreen}) {
       {currentData.map((v,i) => {
         return (
           <>
-          <div className="d-md-none d-flex mt-3 ms-3">
+          <div className="d-md-none d-flex pt-3 ps-3 bg">
                   <p className="size-6 title"><span>任務主題：</span>{v.title}
                    {v.mission_status==0?(
                     <>
@@ -85,10 +85,10 @@ export default function JobStatusTwo({job,currentScreen}) {
                   </p>
 
             </div>
-            <div className="d-flex border-bottom py-md-3 justify-content-between" key={i}>
+            <div className="d-flex border-bottom py-md-3 justify-content-between px-md-5 ps-3 bg" key={i}>
               <div className=" d-flex ">
                 {/* 1 */}
-                <div className="ms-md-5 ms-3">
+                <div className="">
                 <div className="d-md-flex d-none">
                   <p className="size-6 title"><span>任務主題：</span>{v.title}</p>
                   {v.mission_status==0?(
@@ -124,7 +124,7 @@ export default function JobStatusTwo({job,currentScreen}) {
                 </div>
               </div>
               {/* 2 */}
-              <div className="me-1 me-md-4 d-flex align-items-center justify-content-center col-md-2 col-4">
+              <div className="me-1 me-md-0 d-flex align-items-center justify-content-center col-md-2 col-4">
               <div className="">
               {v.mission_status==0?(
                 (v.record_mission_id==null?(
@@ -142,7 +142,10 @@ export default function JobStatusTwo({job,currentScreen}) {
               ):(
                 (v.record_mission_id==null?(
                   <>
-                  <p className="size-6 text-center apply px-3 py-2">未應徵</p>
+                  <button className="btn-confirm size-6 text-center px-3 py-2"
+                  onClick={()=>{
+                    window.location.href=`/work/find-mission/${v.mission_id}`
+                  }}>立即應徵</button>
                   </>
                 ):(
                   <>

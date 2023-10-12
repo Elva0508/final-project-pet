@@ -1,0 +1,141 @@
+@import "@/styles/variable";
+.pay{
+    color: $text-main;
+    .cart-d-content{
+        th{
+            line-height: 2.5;
+        }
+        td:nth-child(1) {
+            width: 15%;
+        }
+        td:nth-child(2) {
+            width: 45%;
+        }
+        td:nth-child(3) {
+            width: 20%;
+        }
+        td:nth-child(4) {
+            width: 20%;
+        }
+        td:nth-child(5) {
+            width: 20%;
+        }
+        @media screen and (max-width: 960px) {
+            /* 当屏幕宽度小于等于1024px时应用的样式 */
+            td:nth-child(1) {
+                width: 25%;
+            }
+            td:nth-child(2) {
+                width: 30%;
+            }
+            td:nth-child(3) {
+                width: 20%;
+            }
+            td:nth-child(4) {
+                width: 20%;
+            }
+            td:nth-child(5) {
+                width: 20%;
+            }
+          }
+        tbody{
+            tr{
+                border-bottom: .1px solid $light-gray ;
+                td{
+                    padding-top: 10px;
+                    padding-bottom: 10px;
+                }
+                img{
+                    width: 120px;
+                    height: 120px;
+                }
+                .type{
+                    color: $hover;
+                }
+            }
+        }
+    }
+    .cart-m-content{
+        tbody{
+            tr{
+                border-bottom: .1px solid $light-gray ;
+                td{
+                    padding-top: 10px;
+                    padding-bottom: 10px;
+                }
+                td:nth-child(1) {
+                    width: 25%;
+                }
+                td:nth-child(2) {
+                    width: 40%;
+                }
+                td:nth-child(3) {
+                    width: 20%;
+                }
+                td:nth-child(4) {
+                    width: 20%;
+                }
+                img{
+                    width: 70px;
+                    height: 70px;
+                }
+                .type{
+                    color: $hover;
+                }
+            }   
+        }
+    }
+    
+    .detail{
+        border: 1px $text-main solid;
+        border-radius: 2px;
+        .cal{
+            border-bottom:2px solid $text-main ;
+        }
+        @media screen and (max-width: 576px) {
+            /* 当屏幕宽度小于等于1024px时应用的样式 */
+            border: 0px ;
+        }
+    }
+    .price{
+        color: $light-gray;
+        text-decoration: line-through
+    }
+    .newprice{
+        color: $price;
+    }  
+    
+    .ischeck{
+        // color: $hover;
+        color: #08BF5B;
+        height: 100px;
+        width: 100px;
+    }
+    p{
+        line-height: 1.5;
+        margin: 0;
+    }
+    .title{
+        display: inline-block;
+    }
+    span{
+        color: black;
+    }
+
+}
+
+.pay-confirm{
+    height: calc(100vh - 477px);
+    color: $text-main;
+    overflow: auto;
+
+}    
+@media screen and (max-width: 895px) {
+       .pay-confirm{
+        height: calc(100vh - 430px);
+            img{
+            width: 200px;
+            height: 200px;
+       };
+       }
+      }

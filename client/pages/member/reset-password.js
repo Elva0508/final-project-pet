@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import ListD from "@/components/member/list-d";
-import ListM from "@/components/member/list-m";
 import ListUserM from "@/components/member/list-user-m";
 import Image from "next/image";
 import myProfile from "@/assets/myProfile.svg";
@@ -85,8 +84,6 @@ const ResetUserPassword = () => {
     <div className="my-3">
       <div className="d-flex justify-content-around pt-2">
         {/* mobile版的左側tab */}
-        <ListM />
-
         <ListUserM />
         <ListD />
 

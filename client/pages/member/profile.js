@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import ListD from "@/components/member/list-d";
-import ListM from "@/components/member/list-m";
 import ListUserM from "@/components/member/list-user-m";
 import useRWD from "@/hooks/useRWD";
 import Image from "next/image";
@@ -160,8 +159,6 @@ const ProfilePage = () => {
     <div className=" my-3">
       <div className="d-flex justify-content-around pt-2">
         {/* mobile版的左側tab */}
-        <ListM />
-
         <ListUserM />
         <ListD />
         {/* <UserForm /> */}

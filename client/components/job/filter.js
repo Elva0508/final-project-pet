@@ -30,12 +30,7 @@ const Filter = ({ items, src, onClick, order, filterType }) => {
           <img src={src} />
         </div>
         {items.title || "選項"}
-        <BiSolidDownArrow
-          className={`icon icon-down ${!anchorEl ? "" : "d-none"}`}
-        />
-        <BiSolidUpArrow
-          className={`icon icon-up ${anchorEl ? "" : "d-none"}`}
-        />
+        <BiSolidDownArrow className={`icon icon-down `} />
       </button>
       <Menu
         id="simple-menu"

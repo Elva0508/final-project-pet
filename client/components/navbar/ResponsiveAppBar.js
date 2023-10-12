@@ -16,8 +16,7 @@ import Badge from "@mui/material/Badge";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/router";
-
+import { useActivePage } from "@/hooks/useActivePage";
 import { useAuth } from "@/context/fakeAuthContext";
 
 //logo-icon
@@ -28,6 +27,7 @@ import ShoppingCart from "@/assets/shoppingCart.svg";
 
 //cart
 import { useCart } from "@/hooks/useCart";
+import { useRouter } from "next/router";
 
 const theme = createTheme({
   // 自定義色調
@@ -107,20 +107,28 @@ function ResponsiveAppBar() {
     setAnchorElUser(null);
   };
 
-  const router = useRouter();
-  //登入登出
-  const handleLogout = () => {
-    //清除localStorage token
-    localStorage.removeItem("token");
-    logout();
-    router.push("/");
-  };
-
+  const {setActiveButton}=useActivePage()
   const { cart, setCart } = useCart();
-
   const goCart = () => {
     router.push("/product/cart");
   };
+
+  const router = useRouter();
+  //登入登出
+  const handleLogout = () => {
+    logout();
+    localStorage.removeItem("helperFav"); //移除小幫手收藏
+    localStorage.removeItem("data");
+    localStorage.removeItem("token");
+    localStorage.removeItem("id");
+    setActiveButton(0)
+
+    localStorage.clear();
+    setCart([])
+    router.push("/");
+  };
+
+
 
   return (
     <ThemeProvider theme={theme}>
@@ -219,9 +227,12 @@ function ResponsiveAppBar() {
                 </IconButton>
                 <IconButton onClick={goCart} sx={{ p: 0 }} className="cartNum">
                   <Image src={ShoppingCart} alt="shoppingCart" />
+                  {Token && cart.length!==0?(
                   <div className="cartNumber size-7 ">
                     <p className="">{cart.length}</p>
                   </div>
+                  ):("")}
+
                 </IconButton>
               </Tooltip>
               <Menu

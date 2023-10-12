@@ -1,4 +1,11 @@
-import { createContext, useContext,  useReducer } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useReducer,
+  useState,
+} from "react";
+import jwt from "jwt-decode";
 // import jwt from "jwt-decode";
 // const appKey = "secretkey";
 
@@ -7,7 +14,6 @@ const AuthContext = createContext();
 const initialState = {
   Token: null,
   isAuthenticated: false,
-  
 };
 
 function reducer(state, action) {
@@ -16,15 +22,14 @@ function reducer(state, action) {
       // localStorage.setItem("user", JSON.stringify(action.payload.user));
       // localStorage.setItem("token", JSON.stringify(action.payload.token));
 
-      return { ...state, 
-       
-        Token: action.payload, 
-        isAuthenticated: true };
+      return {
+        ...state,
+
+        Token: action.payload,
+        isAuthenticated: true,
+      };
     case "logout":
-  
-      return { ...state, 
-        Token: null, 
-        isAuthenticated: false };
+      return { ...state, Token: null, isAuthenticated: false };
     default:
       throw new Error("Unknown action");
   }
@@ -38,24 +43,33 @@ function reducer(state, action) {
 // };
 
 function AuthProvider({ children }) {
-  const [{ Token, isAuthenticated}, dispatch] = useReducer(
+  const [{ Token, isAuthenticated }, dispatch] = useReducer(
     reducer,
     initialState
   );
+  const [userId, setUserId] = useState(null);
 
+  useEffect(() => {
+    const data = localStorage.getItem("id");
+    const token = localStorage.getItem("token");
 
-function login(token) {
-  dispatch({ type: "login", payload: token });
-  
-}
-function logout() {
-  dispatch({ type: "logout" });
-}
+    if (data && token) {
+      setUserId(data);
+      dispatch({ type: "login", payload: jwt(token) });
+    }
+  }, []);
 
-
+  function login(token) {
+    dispatch({ type: "login", payload: token });
+  }
+  function logout() {
+    dispatch({ type: "logout" });
+  }
 
   return (
-    <AuthContext.Provider value={{ Token, isAuthenticated, login, logout }}>
+    <AuthContext.Provider
+      value={{ Token, isAuthenticated, login, logout, userId }}
+    >
       {children}
     </AuthContext.Provider>
   );

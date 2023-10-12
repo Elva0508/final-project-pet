@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import ListD from "@/components/member/list-d";
-import ListM from "@/components/member/list-m";
 import ListUserM from "@/components/member/list-user-m";
 import SingleCoupon from "@/components/user/SingleCoupon";
 import SingleCouponFree from "@/components/user/singleCouponFree";
@@ -67,7 +66,6 @@ const UserCouponPage = () => {
     <div className="d-flex justify-content-around pt-2">
       <div className="d-flex justify-content-end">
         {/* mobile版的左側tab */}
-        <ListM />
       </div>
       <ListUserM />
       <ListD />

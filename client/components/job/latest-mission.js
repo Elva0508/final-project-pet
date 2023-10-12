@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from "axios"
 import Link from "next/link";
-import { CiHeart } from "react-icons/Ci";
-import { BiSolidHeart, BiSolidCart } from "react-icons/bi";
 
 // pc版（默認導出）
 export default function LatestMission() {
