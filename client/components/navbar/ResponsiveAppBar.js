@@ -16,7 +16,7 @@ import Badge from "@mui/material/Badge";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import Image from "next/image";
 import Link from "next/link";
-
+import { useActivePage } from "@/hooks/useActivePage";
 import { useAuth } from "@/context/fakeAuthContext";
 
 //logo-icon
@@ -107,6 +107,7 @@ function ResponsiveAppBar() {
     setAnchorElUser(null);
   };
 
+  const {setActiveButton}=useActivePage()
   const { cart, setCart } = useCart();
   const goCart = () => {
     router.push("/product/cart");
@@ -120,6 +121,8 @@ function ResponsiveAppBar() {
     localStorage.removeItem("data");
     localStorage.removeItem("token");
     localStorage.removeItem("id");
+    setActiveButton(0)
+
     localStorage.clear();
     setCart([])
     router.push("/");
