@@ -34,6 +34,8 @@ import { Tune } from "@mui/icons-material";
 import { SideSheet, Button } from "@douyinfe/semi-ui";
 import workService from "@/services/work-service";
 import { useHelper } from "@/context/helperContext";
+import { motion, useAnimationControls } from "framer-motion";
+
 const Search = ({
   handleSearch,
   placeholder,
@@ -88,6 +90,8 @@ const MobileFilter = ({
   setPage,
   setTotalRows,
   setCurrentSearch,
+  controller,
+  handleHelperAnimate,
 }) => {
   const [titleContent, setTitleContent] = useState("服務類型");
   const handleType = (value) => {
@@ -144,6 +148,8 @@ const MobileFilter = ({
           onClick={handleType}
           order={order}
           filterType={filterType}
+          controller={controller}
+          handleHelperAnimate={handleHelperAnimate}
         />
       </SwiperSlide>
       <SwiperSlide>
@@ -159,6 +165,8 @@ const MobileFilter = ({
           src={"/job-icon/Heart-price.svg"}
           onClick={handleOrder}
           order={order}
+          controller={controller}
+          handleHelperAnimate={handleHelperAnimate}
         />
       </SwiperSlide>
       <SwiperSlide>
@@ -174,6 +182,8 @@ const MobileFilter = ({
           src={"/job-icon/Discovery-date.svg"}
           onClick={handleOrder}
           order={order}
+          controller={controller}
+          handleHelperAnimate={handleHelperAnimate}
         />
       </SwiperSlide>
       <SwiperSlide>
@@ -189,6 +199,8 @@ const MobileFilter = ({
           src={"/job-icon/Discovery-date.svg"}
           onClick={handleOrder}
           order={order}
+          controller={controller}
+          handleHelperAnimate={handleHelperAnimate}
         />
       </SwiperSlide>
     </Swiper>
@@ -393,14 +405,16 @@ const MobileFamousHelper = ({
     </>
   );
 };
-const SingleHelperCard = ({ helper, collection, setCollection }) => {
+const SingleHelperCard = ({
+  helper,
+  collection,
+  setCollection,
+  controller,
+}) => {
   // const [isFavorite, setIsFavorite] = useState(false); // 初始狀態為未收藏
   const [isFavHovered, setIsFavHovered] = useState(false);
   const { isAuthenticated } = useAuth();
   const router = useRouter();
-  // useEffect(() => {
-  //   setIsFavorite(collection.find((item) => helper.user_id === item));
-  // }, [collection]);
   const service = [
     { label: "到府代餵", value: parseInt(helper.feed_service) },
     { label: "安親寄宿", value: parseInt(helper.house_service) },
@@ -434,21 +448,27 @@ const SingleHelperCard = ({ helper, collection, setCollection }) => {
   };
   return (
     <>
-      <div
+      <motion.div
+        layout
+        // initial={{ opacity: 0 }}
+        animate={controller}
         className={`single-card d-flex flex-column align-items-center ${
           collection.find((item) => item === helper.user_id)
             ? ""
             : "active-fav-in-card"
         }`}
       >
-        <img
+        <motion.img
+          layout
           className="single-card-img"
           src={helper.cover_photo}
           alt="貓頭貼"
         />
-        <div className="single-card-content">
-          <div className="single-card-title size-6">{helper.name}</div>
-          <div className="ranking d-flex align-items-center mb-1">
+        <motion.div layout className="single-card-content">
+          <motion.div layout className="single-card-title size-6">
+            {helper.name}
+          </motion.div>
+          <motion.div layout className="ranking d-flex align-items-center mb-1">
             <Rating
               name="half-rating-read"
               value={parseFloat(helper.average_star)}
@@ -457,10 +477,10 @@ const SingleHelperCard = ({ helper, collection, setCollection }) => {
               emptyIcon={<StarIcon style={{ opacity: 0.35 }} />}
             />
 
-            <span className="ms-1 size-7">
+            <span layout className="ms-1 size-7">
               ({helper.review_count === null ? "0" : helper.review_count})
             </span>
-          </div>
+          </motion.div>
           <div className="single-card-info d-flex justify-content-between">
             <div>
               <p className="m-size-7">{helper.service_county}</p>
@@ -517,8 +537,8 @@ const SingleHelperCard = ({ helper, collection, setCollection }) => {
               <Link href={`/work/find-helper/${helper.user_id}`}>洽詢</Link>
             </button>
           </div>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
     </>
   );
 };
@@ -666,6 +686,9 @@ const MissionHelperList = () => {
   const [totalRows, setTotalRows] = useState(18);
   const { collection, setCollection } = useHelper();
   const { isAuthenticated, userId } = useAuth();
+  const [isActive, setIsActive] = useState(false);
+  const controller = useAnimationControls();
+
   useEffect(() => {
     if (!currentSearch) {
       setPage(1);
@@ -678,7 +701,9 @@ const MissionHelperList = () => {
         )
           .then((response) => {
             console.log(response);
-            setAllHelpers(response?.data?.data);
+            setTimeout(() => {
+              setAllHelpers(response?.data?.data);
+            }, [200]);
             setTotalRows(response?.data?.totalRows);
           })
           .catch((e) => {
@@ -686,17 +711,19 @@ const MissionHelperList = () => {
           });
       } else {
         WorkService.getAllHelpers(filterType, 1)
-          .then((res) => {
-            setAllHelpers(res.data.data);
-            setTotalRows(res?.data?.totalRows);
+          .then((response) => {
+            setTimeout(() => {
+              setAllHelpers(response?.data?.data);
+            }, [200]);
+            setTotalRows(response?.data?.totalRows);
           })
           .catch((e) => {
             console.log(e);
           });
       }
       WorkService.getFamousHelper(filterType)
-        .then((res) => {
-          setFamous(res?.data.famous);
+        .then((response) => {
+          setFamous(response?.data.famous);
           // console.log(res?.data.data);
         })
         .catch((e) => {
@@ -715,7 +742,9 @@ const MissionHelperList = () => {
       )
         .then((response) => {
           console.log(response);
-          setAllHelpers(response?.data?.data);
+          setTimeout(() => {
+            setAllHelpers(response?.data?.data);
+          }, [200]);
           setTotalRows(response?.data?.totalRows);
         })
         .catch((e) => {
@@ -723,9 +752,11 @@ const MissionHelperList = () => {
         });
     } else {
       WorkService.getAllHelpers(filterType, currentPage)
-        .then((res) => {
-          setAllHelpers(res.data.data);
-          setTotalRows(res?.data?.totalRows);
+        .then((response) => {
+          setTimeout(() => {
+            setAllHelpers(response?.data?.data);
+          }, [200]);
+          setTotalRows(response?.data?.totalRows);
         })
         .catch((e) => {
           console.log(e);
@@ -754,8 +785,10 @@ const MissionHelperList = () => {
     setOrder(null);
     setCurrentSearch(null);
     WorkService.getAllHelpers(filterType, currentPage)
-      .then((res) => {
-        setAllHelpers(res?.data?.data);
+      .then((response) => {
+        setTimeout(() => {
+          setAllHelpers(response?.data?.data);
+        }, [200]);
       })
       .catch((e) => {
         console.log(e);
@@ -770,7 +803,9 @@ const MissionHelperList = () => {
       .then((response) => {
         // 查詢時，清除各種state設定值
         // console.log(response);
-        setAllHelpers(response?.data.data);
+        setTimeout(() => {
+          setAllHelpers(response?.data?.data);
+        }, [200]);
         setPage(1);
         setTotalRows(response?.data?.totalRows);
         setCurrentSearch(search);
@@ -781,6 +816,29 @@ const MissionHelperList = () => {
       .catch((e) => {
         console.log(e);
       });
+  };
+
+  const handleHelperAnimate = async () => {
+    controller.start({
+      opacity: 0,
+      x: 15,
+      transition: {
+        duration: 0.3,
+        ease: "easeIn",
+      },
+    });
+    await controller.start({
+      x: 120,
+      transition: {
+        duration: 0.4,
+        ease: "easeOut",
+      },
+    });
+    await controller.start({
+      opacity: 1,
+      x: 0,
+      transition: { duration: 1, ease: "easeIn" },
+    });
   };
 
   return (
@@ -846,6 +904,8 @@ const MissionHelperList = () => {
           setPage={setPage}
           setTotalRows={setTotalRows}
           setCurrentSearch={setCurrentSearch}
+          controller={controller}
+          handleHelperAnimate={handleHelperAnimate}
         />
       </div>
       {isAuthenticated && (
@@ -919,6 +979,7 @@ const MissionHelperList = () => {
               helper={helper}
               collection={collection}
               setCollection={setCollection}
+              controller={controller}
             />
           ))}
         </section>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { forwardRef, useEffect, useRef } from "react";
 // import Icon from "./Icon";
 // import CatImage from "/cat.svg";
 function Icon() {
@@ -628,14 +628,21 @@ function Icon() {
     </svg>
   );
 }
-const CatLoading = () => {
+const CatLoading = forwardRef((props, ref) => {
+  const loadingRef = useRef();
+  // useEffect(() => {
+  //   console.log(document.body);
+  //   setTimeout(() => {
+  //     console.log(loadingRef.current);
+  //   }, [3000]);
+  // }, []);
   return (
-    <div className="cat-loading-wrapper">
+    <div className="cat-loading-wrapper" ref={loadingRef}>
       <div className="catloading">
         <Icon />
       </div>
     </div>
   );
-};
+});
 
 export default CatLoading;

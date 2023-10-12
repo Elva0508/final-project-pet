@@ -12,41 +12,220 @@
 
 $detail-block-width: 9px; //標題左側直槓槓
 .helper-detail {
-  width: calc(100% - 80px);
-  margin: auto;
-  header,
+  // width: calc(100% - 80px);
+  // margin: auto;
+  // display: flex;
+  // align-items: start;
   section {
-    background-color: $content-bg;
-    margin: 1rem auto;
-    padding: 1rem 1rem 1.5rem 1rem;
+    background-color: white;
+    margin: 0 1rem;
+    // padding: 1rem 1rem 1.5rem 1rem;
+    box-shadow: 0px 0px 10px rgba(128, 128, 128, 0.452);
+    border-radius: 2px;
   }
-  .avatar {
+  .left-block {
+    padding: 1rem;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    justify-content: start;
     align-items: center;
-    overflow: hidden;
-    $size: 220px;
-    background-color: $light-gray;
-    width: $size;
-    height: $size;
-    border-radius: 50%;
-    margin-right: 2rem;
-    img {
-      height: $size;
+    .avatar {
+      // display: flex;
+      // justify-content: center;
+      // align-items: center;
+      overflow: hidden;
+      $size: 220px;
+      background-color: $light-gray;
+      border: 4px solid $hover;
+      max-width: 220px;
+      max-height: 220px;
+      min-width: 150px;
+      height: 150px;
+      width: 20vw;
+      height: 20vw;
+      border-radius: 50%;
+      // margin-right: 2rem;
+      img {
+        width: 100%;
+        height: 100%;
+      }
+    }
+    .profile-info {
+      margin: 0 0 1rem 0;
+      & :first-child {
+        color: $text-main;
+        opacity: 0.8;
+        font-weight: bold;
+      }
+      & :last-child {
+        color: $text-mark;
+      }
+    }
+  }
+  .right-block {
+    padding: 0;
+    margin-bottom: 2rem;
+    .photo {
+      width: 100%;
+      border-radius: 2px 2px 0 0;
+      overflow: hidden;
+      img {
+        width: 100%;
+      }
+    }
+    .filter-btns {
+      margin: 2rem 1rem 0 1rem;
+      display: flex;
+      gap: 10px;
+      & > * {
+        // margin: 0 15px;
+        border: 2px solid rgba(152, 152, 152, 0.6);
+        border-radius: 8px;
+        padding: 3px 10px;
+        background-color: $cos-white;
+        box-shadow: 0px 0px 5px rgba(142, 142, 142, 0.145);
+        color: lighten($text-dark, 25%);
+        &:hover {
+          border-color: $header-bg;
+          color: $hover;
+          // font-weight: 600;
+        }
+      }
+      .filter-btns-focus {
+        border-color: $header-bg;
+        color: $hover;
+      }
+    }
+    .review-card {
+      cursor: grab;
+      $avatar-width: 70px;
+      background-color: darken($cos-white, 0.5%);
+      padding: 15px 25px;
+      margin: 20px auto;
+      width: calc(100% - 40px);
+      border-radius: 2px;
+      box-shadow: 0px 3px 5px rgba(107, 107, 107, 0.267);
+      &-avatar {
+        width: $avatar-width;
+        height: $avatar-width;
+        background-color: $price;
+        border-radius: 50%;
+      }
+      &-info {
+        width: calc(100% - $avatar-width);
+        height: $avatar-width;
+        img {
+          width: 20px;
+        }
+        .username,
+        .date {
+          color: $text-mark;
+        }
+      }
+      &-body {
+        text-align: justify;
+        // min-height: 120px;
+      }
+    }
+    .item {
+      // width: calc(100% - 100px);
+      margin: 1rem 1rem 4rem 1rem;
+      // &-title {
+      //   display: flex;
+      //   align-items: center;
+      //   margin-bottom: 0.5rem;
+      //   // &::before {
+      //   //   content: "";
+      //   //   display: inline-block;
+      //   //   background-color: $hover;
+      //   //   width: $detail-block-width;
+      //   //   height: 32px;
+      //   //   margin-right: 0.4rem;
+      //   // }
+      // }
+      & p {
+        margin: 0;
+      }
+      &-divider {
+        margin: 0.2rem 0 1rem 0;
+        color: darken($light-gray, 30%);
+        height: 2px;
+      }
+      &-content {
+        // margin-left: $detail-block-width + 5px;
+        color: $text-mark;
+        // font-weight: 500;
+        text-align: justify;
+      }
+    }
+  }
+  .evaluation-bar {
+    $block-width: calc(100% - 3px);
+    width: calc(100% - 80px);
+    display: flex;
+    height: auto;
+    margin: 1rem auto;
+    &-left {
+      width: calc($block-width * 0.5);
+
+      .ranking svg {
+        font-size: 42px;
+      }
+    }
+    &-divider {
+      width: 2px;
+      height: 200px;
+      background-color: darken($light-gray, 30%);
+    }
+    &-right {
+      width: calc($block-width * 0.5);
+
+      display: flex;
+      flex-direction: column;
+      // justify-content: center;
+      align-items: center;
+      .bar-group {
+        display: flex;
+        // justify-content: center;
+        align-items: center;
+        // margin-left: 4rem;
+      }
+      .percentage {
+        width: 260px;
+        height: 10px;
+        display: flex;
+        margin-left: 0.8rem;
+        background-color: $light-gray;
+        --width: 5%; //評論總數的百分比
+        .have {
+          // width: var(--width);
+          background-color: $hover;
+          border-radius: 0 2px 2px 0;
+        }
+      }
+    }
+    @media screen and (max-width: 900px) and (min-width: 768px) {
+      .evaluation-bar-left {
+        width: calc($block-width * 0.4);
+      }
+
+      .evaluation-bar-right {
+        width: calc($block-width * 0.6);
+      }
     }
   }
   .profile {
-    width: 70%;
+    // width: 70%;
     text-align: justify;
     img {
       width: 28px;
       height: 28px;
       margin-right: 0.1rem;
     }
-    .intro {
-      color: $text-mark;
-      font-weight: 500;
-    }
+    // .intro {
+    //   color: $text-mark;
+    //   font-weight: 500;
+    // }
     .icon {
       font-size: 26px;
       color: #faaf00;
@@ -55,29 +234,7 @@ $detail-block-width: 9px; //標題左側直槓槓
       @extend %helper-button-style;
     }
   }
-  .item {
-    width: calc(100% - 100px);
-    margin: 4rem auto;
-    &-title {
-      display: flex;
-      align-items: center;
-      margin-bottom: 0.5rem;
-      &::before {
-        content: "";
-        display: inline-block;
-        background-color: $hover;
-        width: $detail-block-width;
-        height: 32px;
-        margin-right: 0.4rem;
-      }
-    }
-    &-content {
-      margin-left: $detail-block-width + 5px;
-      color: $text-dark;
-      font-weight: 500;
-      text-align: justify;
-    }
-  }
+
   .item-image {
     margin-top: 1rem;
 
@@ -114,59 +271,7 @@ $detail-block-width: 9px; //標題左側直槓槓
       margin-bottom: 1.2rem;
       color: $text-mark;
     }
-    .review-card {
-      cursor: grab;
-      $avatar-width: 70px;
-      background-color: $cos-white;
-      padding: 15px 25px;
-      margin: 20px 0;
-      width: 340px !important;
-      border-radius: 2px;
-      box-shadow: 5px 6px 10px rgba(128, 128, 128, 0.145);
-      &-avatar {
-        width: $avatar-width;
-        height: $avatar-width;
-        background-color: $price;
-        border-radius: 50%;
-      }
-      &-info {
-        width: calc(100% - $avatar-width);
-        height: $avatar-width;
-        img {
-          width: 20px;
-        }
-        .username,
-        .date {
-          color: $text-mark;
-        }
-      }
-      &-body {
-        text-align: justify;
-        min-height: 120px;
-      }
-    }
-    .filter-btns {
-      display: flex;
-      gap: 10px;
-      & > * {
-        // margin: 0 15px;
-        border: 2px solid rgba(152, 152, 152, 0.6);
-        border-radius: 8px;
-        padding: 3px 10px;
-        background-color: $cos-white;
-        box-shadow: 0px 0px 5px rgba(142, 142, 142, 0.145);
-        color: lighten($text-dark, 25%);
-        &:hover {
-          border-color: $header-bg;
-          color: $hover;
-          // font-weight: 600;
-        }
-      }
-      .filter-btns-focus {
-        border-color: $header-bg;
-        color: $hover;
-      }
-    }
+
     .slick-slider {
       width: 92%;
       margin: auto;
@@ -336,61 +441,6 @@ $detail-block-width: 9px; //標題左側直槓槓
 //   }
 // }
 
-s .evaluation-bar {
-  $block-width: calc(100% - 3px);
-  width: calc(100% - 80px);
-  display: flex;
-  height: auto;
-  margin: 2rem auto;
-  &-left {
-    width: calc($block-width * 0.5);
-
-    .ranking svg {
-      font-size: 42px;
-    }
-  }
-  &-divider {
-    width: 3px;
-    height: 250px;
-    background-color: $text-mark;
-  }
-  &-right {
-    width: calc($block-width * 0.5);
-
-    display: flex;
-    flex-direction: column;
-    // justify-content: center;
-    align-items: center;
-    .bar-group {
-      display: flex;
-      // justify-content: center;
-      align-items: center;
-      // margin-left: 4rem;
-    }
-    .percentage {
-      width: 260px;
-      height: 10px;
-      display: flex;
-      margin-left: 0.8rem;
-      background-color: $light-gray;
-      --width: 5%; //評論總數的百分比
-      .have {
-        // width: var(--width);
-        background-color: $hover;
-        border-radius: 0 2px 2px 0;
-      }
-    }
-  }
-  @media screen and (max-width: 900px) and (min-width: 768px) {
-    .evaluation-bar-left {
-      width: calc($block-width * 0.4);
-    }
-
-    .evaluation-bar-right {
-      width: calc($block-width * 0.6);
-    }
-  }
-}
 .get-price {
   overflow-x: hidden;
   height: 80px;
