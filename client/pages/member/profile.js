@@ -214,10 +214,11 @@ const ProfilePage = () => {
               </div>
             </div>
 
-            <div className="ws20 gender mb-5 d-flex justify-content-center">
+            <div className="ws20 gender mb-5 d-flex justify-content-center gender-radio">
               <label className={`fs3 ${userRfs}`}>性別</label>
-              <div className="fs11">
-                <input
+              <div className="fs11 d-flex align-items-center">
+              <div>
+              <input
                   type="radio"
                   name="gender"
                   id="male"
@@ -228,7 +229,9 @@ const ProfilePage = () => {
                   aria-label="..."
                 />
                 男
-                <input
+              </div>
+               <div>
+               <input
                   type="radio"
                   name="gender"
                   id="female"
@@ -239,6 +242,8 @@ const ProfilePage = () => {
                   aria-label="..."
                 />
                 女
+               </div>
+              
               </div>
             </div>
 

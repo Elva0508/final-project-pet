@@ -84,7 +84,7 @@ const ResetUserPassword = () => {
         <ListUserM />
         <ListD />
 
-        <div className="reset-password  row col-lg-8 col-md-8 col-12">
+        <div className="reset-password  col-lg-8 col-md-8 col-12">
         
             <div className="title">
               <p className=" size-4">
