@@ -910,27 +910,27 @@ export default function MissionList() {
 
   return (
     <>
-      <div className="container pb-5 my-3 find-mission">
+      <div className="container my-4 find-mission">
         <nav className="breadcrumb-wrapper" aria-label="breadcrumb">
-          <ol class="breadcrumb">
-            <li class="breadcrumb-item">
+          <ol className="breadcrumb">
+            <li className="breadcrumb-item">
               <Link href="/">首頁</Link>
             </li>
-            <li class="breadcrumb-item" aria-current="page">
+            <li className="breadcrumb-item" aria-current="page">
               <Link href="/work/find-mission" onClick={clearSettings}>小貓上工(找任務)</Link>
             </li>
             {search ? (
               <>
-                <li class="breadcrumb-item" aria-current="page">
+                <li className="breadcrumb-item" aria-current="page">
                   搜尋結果
                 </li>
-                <li class="breadcrumb-item active" aria-current="page">
+                <li className="breadcrumb-item active" aria-current="page">
                   {search}
                 </li>
               </>
             ) : (
               <>
-                <li class="breadcrumb-item active" aria-current="page">
+                <li className="breadcrumb-item active" aria-current="page">
                   所有任務
                 </li>
               </>
