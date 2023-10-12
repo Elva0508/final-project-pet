@@ -76,35 +76,34 @@ margin: 4.5rem 0;
    }
 
   }
+/* 隱藏 radio 輸入框 */
+// .radio-box input[type="radio"] {
+//   display: none; 
+// }
 
-  .gender-radio{
-    input[type="radio"] {
-      appearance: none;
-      background-color: #fff;
-      margin: 0;
-      font: inherit;
-      color: currentColor;
-      width: 1.15em;
-      height: 1.15em;
-      border: 0.15em solid currentColor;
-      border-radius: 50%;
-      transform: translateY(-0.075em);
-    }
-    input[type="radio"]::before {
-      content: "";
-      width: 0.65em;
-      height: 0.65em;
-      border-radius: 50%;
-      transform: scale(0);
-      transition: 120ms transform ease-in-out;
-      box-shadow: inset 1em 1em #ff80ff;
-    }
-    
-    input[type="radio"]:checked::before {
-      transform: scale(1);
-    }
+/* 當 radio 被選擇時，改變相鄰按鈕的樣式 */
+.radio-box input:checked + button {
+  background-color: #d7965b; /* 背景顏色設為 #d7965b */
+  color: #fff; /* 文字顏色設為 #fff */
+}
 
-  }
+/* 共用按鈕樣式 */
+.radio-box .gender-btn {
+  display: inline-block; /* 設為行內元素以在同一行顯示 */
+  margin: 0 5px 5px 0; /* 外邊距設置 */
+  padding: 5px 25px; /* 內邊距設置 */
+  background: #f7f7f7; /* 背景色設為 #f7f7f7 */
+  color: #333; /* 文字顏色設為 #333 */
+  cursor: pointer; /* 游標設為手指形狀 */
+}
+
+.radio-box .gender-btn:hover {
+  background: #bbb; /* 懸停時背景色設為 #bbb */
+  color: #fff; /* 懸停時文字顏色設為 #fff */
+}
+.radio-box .round {
+  border-radius: 2px; /* 設置圓角半徑為 2px */
+}
 
 
 

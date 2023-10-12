@@ -1,6 +1,6 @@
 import React from 'react'
 import Image from "next/image";
-import Cat1 from "@/assets/cat-01.png";
+import Cat3 from "@/assets/cat-03.png";
 
 export default function SingleCouponFree() {
   return (
@@ -8,7 +8,7 @@ export default function SingleCouponFree() {
   <div id="container-coupon">
   <div id="error-box">
     
-    <Image src={Cat1} width={80} height={80} className="cat1" />
+    <Image src={Cat3} width={80} height={80} className="cat1" alt='cat3' />
     <div className="shadow move" />
     <div className="message-coupon">
       <h1 className="priceCode">免運!</h1>
