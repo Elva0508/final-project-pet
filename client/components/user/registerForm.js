@@ -141,25 +141,32 @@ const [viewPwdConf,SetViewPwdConf]=useState(false)
               component="div"
             />
           </div>
-          <div className="d-flex justify-content-center">
-          <div className="mb-3 ">
+          <div className="d-flex justify-content-center align-items-center flex-column">
+          <div className="mb-3 register-checkbox-style" 
+          style={{ marginBottom: '0'}}
+          >
             <Field
               className="register-checkbox"
               type="checkbox"
               name="confirm"
               id="confirm"
-              style={{ width: '15px'}}
-            />
-            <label htmlFor="confirm">已閱讀會員
+         
+            /> 
+            <label htmlFor="confirm" 
+            style={{ paddingLeft: '5px'}}
+            >已閱讀會員
             <a href="#">條款</a>
             </label>
-            <ErrorMessage
+          
+          </div>
+          <div >
+          <ErrorMessage
               className="form-alert"
               name="confirm"
               component="div"
-           
+  
             />
-          </div>
+            </div>
           </div>
           <div className="u-form-group">
             <button type="submit" className="btn-brown">
