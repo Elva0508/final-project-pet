@@ -2,14 +2,16 @@ const router = require("express").Router();
 const connection=require("../db");
 
 //拿取order中所有買過的商品
-router.get("/", (req, res) => {
+router.get("/:id", (req, res) => {
+  const userId=req.params.id
     connection.execute(
       `SELECT o.*,p.product_name AS product_name,pt.type_name AS type ,p.specialoffer AS price,p.images_one AS image,p.product_id AS product_id,pt.type_id AS type_id
       FROM orders AS o 
       JOIN order_details AS od ON o.oid=od.order_id
       JOIN products AS p ON p.product_id=od.product_id
       JOIN product_type AS pt ON pt.type_id=od.product_type AND pt.product_id=p.product_id
-      WHERE o.user_id = 1`,
+      WHERE o.user_id = ?`,
+      [userId],
       (error, result) => {
         res.json({ result });
       }

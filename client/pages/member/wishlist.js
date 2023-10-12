@@ -78,9 +78,9 @@ export default function Wishlist() {
     }
   };
 
-  const getWishlist = async () => {
+  const getWishlist = async (id) => {
     await axios
-      .get("http://localhost:3005/api/member-wishlist")
+      .get(`http://localhost:3005/api/member-wishlist/${id}`)
       .then((response) => {
         const data = response.data.result;
         console.log(data);
@@ -91,9 +91,9 @@ export default function Wishlist() {
       });
   };
 
-  const getWishlistType = async () => {
+  const getWishlistType = async (id) => {
     await axios
-      .get("http://localhost:3005/api/member-wishlist/type")
+      .get(`http://localhost:3005/api/member-wishlist/type/${id}`)
       .then((response) => {
         const data = response.data.result;
         console.log(data);
@@ -104,8 +104,8 @@ export default function Wishlist() {
       });
   };
 
-  const getCart =  () => {
-    axios.get("http://localhost:3005/api/product/cart")
+  const getCart =  (id) => {
+    axios.get(`http://localhost:3005/api/product/cart/${id}`)
         .then((response) => {
         const data = response.data.result;
         const newData=data.map((v)=>{
@@ -119,8 +119,18 @@ export default function Wishlist() {
 }
 
   useEffect(() => {
-    getWishlistType();
-    getWishlist();
+  const token = localStorage.getItem("token");
+  const id=localStorage.getItem("id")
+  // 沒有token
+  if (!token) {
+    console.log("user沒登入");
+    return;
+  }
+  console.log(id);
+  console.log(token);
+    getWishlistType(id);
+    getWishlist(id);
+    getCart(id)
   }, []);
 
 

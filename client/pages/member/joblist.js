@@ -13,9 +13,9 @@ export default function Joblist() {
 
 
 
-  const getJob = async () => {
+  const getJob = async (id) => {
     await axios
-      .get("http://localhost:3005/api/member-joblist")
+      .get(`http://localhost:3005/api/member-joblist/${id}`)
       .then((response) => {
         const data = response.data.result;
         console.log(data);
@@ -29,8 +29,17 @@ export default function Joblist() {
 
 
 
-  useEffect(() => {
-    getJob();
+  useEffect(() => {    
+  const token = localStorage.getItem("token");
+  const id=localStorage.getItem("id")
+  // 沒有token
+  if (!token) {
+    console.log("user沒登入");
+    return;
+  }
+  console.log(id);
+  console.log(token)
+    getJob(id);
 
   }, []);
 

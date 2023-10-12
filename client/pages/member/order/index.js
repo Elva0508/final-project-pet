@@ -27,8 +27,7 @@ export default function Order() {
     const id=localStorage.getItem("id")
     // 沒有token
     if (!token) {
-      console.log("user沒登入");
-      return;
+      window.location.href="/";
     }
     console.log(id);
     console.log(token);

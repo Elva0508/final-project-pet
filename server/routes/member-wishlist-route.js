@@ -2,15 +2,18 @@ const router = require("express").Router();
 const connection=require("../db");
 
 //收藏清單
-router.get("/", (req, res) => {
+router.get("/:id", (req, res) => {
+  const userid=req.params.id
+  console.log(userid);
     connection.execute(
       `SELECT pc.*, p.product_name AS product_name,pt.type_name AS type_name,p.images_one AS images,p.specialoffer AS price
       FROM product_collections AS pc 
       JOIN users AS u ON pc.user_id=u.user_id 
       JOIN products AS p ON pc.product_id = p.product_id 
       JOIN product_type AS pt ON pc.product_id=pt.product_id
-      WHERE pc.user_id = 1
+      WHERE pc.user_id = ?
       GROUP BY pc.product_id;`,
+      [userid],
       (error, result) => {
         res.json({ result });
       }
@@ -18,9 +21,12 @@ router.get("/", (req, res) => {
   });
 
 //收藏商品規格
-router.get("/type", (req, res) => {
+router.get("/type/:id", (req, res) => {
+  const userid=req.params.id
+  console.log(userid);
   connection.execute(
-    `SELECT pt.type_name AS type_name,pt.type_id AS type_id,pc.product_id FROM product_collections AS pc JOIN users AS u ON pc.user_id=u.user_id JOIN product_type AS pt ON pc.product_id=pt.product_id WHERE pc.user_id = 1`,
+    `SELECT pt.type_name AS type_name,pt.type_id AS type_id,pc.product_id FROM product_collections AS pc JOIN users AS u ON pc.user_id=u.user_id JOIN product_type AS pt ON pc.product_id=pt.product_id WHERE pc.user_id = ?`,
+    [userid],
     (error, result) => {
       res.json({ result });
     }

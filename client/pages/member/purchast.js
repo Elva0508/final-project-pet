@@ -16,9 +16,9 @@ export default function Purchast() {
   const currentData = product.slice(startIndex, endIndex);
 
 
-  const getProduct = () => {
+  const getProduct = (id) => {
     axios
-      .get("http://localhost:3005/api/member-purchast")
+      .get(`http://localhost:3005/api/member-purchast/${id}`)
       .then((response) => {
         const data = response.data.result;
         console.log(data);
@@ -62,9 +62,9 @@ export default function Purchast() {
   };
 
 
-  const getWishlist = async () => {
+  const getWishlist = async (id) => {
     await axios
-      .get("http://localhost:3005/api/member-purchast/wishlist")
+      .get(`http://localhost:3005/api/member-purchast/wishlist/${id}`)
       .then((response) => {
         const data = response.data.result;
         console.log(data);
@@ -112,7 +112,7 @@ export default function Purchast() {
 
 
   const getCart = () => {
-    axios.get("http://localhost:3005/api/product/cart")
+    axios.get(`http://localhost:3005/api/product/cart/${id}`)
       .then((response) => {
         const data = response.data.result;
         const newData = data.map((v) => {
@@ -127,8 +127,18 @@ export default function Purchast() {
 
 
   useEffect(() => {
-    getProduct();
-    getWishlist()
+    const token = localStorage.getItem("token");
+    const id=localStorage.getItem("id")
+    // 沒有token
+    if (!token) {
+      console.log("user沒登入");
+      return;
+    }
+    console.log(id);
+    console.log(token);
+    getProduct(id);
+    getWishlist(id)
+    getCart(id)
   }, []);
 
   return (
