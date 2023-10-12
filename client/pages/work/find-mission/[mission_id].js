@@ -392,19 +392,19 @@ export default function MissionDetail() {
                                 <div className="item-title size-5">
                                     預算金額：
                                 </div>
-                                <p className="size-6 d-flex align-items-center ms-4 ms-sm-0 salary">NT$ {v.price} / 次</p>
+                                <p className="size-5 d-flex align-items-center ms-4 ms-sm-0 salary mt-2 mt-sm-0">NT$ {v.price} / 次</p>
                             </div>
                             <div className="item d-flex flex-column flex-sm-row">
                                 <div className="item-title size-5">
                                     任務日期：
                                 </div>
-                                <p className="size-6 d-flex align-items-center ms-4 ms-sm-0">{v.start_date === v.end_date ? formatDate(v.start_date) : `${formatDate(v.start_date)}～${formatDate(v.end_date)}`}</p>
+                                <p className="size-6 d-flex align-items-center ms-4 ms-sm-0 mt-2 mt-sm-0">{v.start_date === v.end_date ? formatDate(v.start_date) : `${formatDate(v.start_date)}～${formatDate(v.end_date)}`}</p>
                             </div>
-                            <div className="item d-flex flex-column flex-sm-row">
+                            <div className="item d-flex flex-column flex-sm-row mission-place">
                                 <div className="item-title size-5">
                                     任務地點：
                                 </div>
-                                <p className="size-6 d-flex align-items-center ms-4 ms-sm-0">{v.city}{v.area}{v.location_detail}</p>
+                                <p className="size-6 d-flex align-items-center ms-4 ms-sm-0 mt-2 mt-sm-0">{v.city}{v.area}{v.location_detail}</p>
                             </div>
                             <div className='d-flex justify-content-center'>
                                 <MapComponent key={`map-${missionLocation.lat}-${missionLocation.lng}`} lat={missionLocation.lat} lng={missionLocation.lng} />
@@ -416,7 +416,7 @@ export default function MissionDetail() {
                                 <div className="item-title size-5">
                                     任務類型：
                                 </div>
-                                <p className="size-6 d-flex align-items-center ms-4 ms-sm-0"> {(() => {
+                                <p className="size-6 d-flex align-items-center ms-4 ms-sm-0 mt-2 mt-sm-0"> {(() => {
                                     switch (v.mission_type) {
                                         case 1:
                                             return '到府照顧';
@@ -437,7 +437,7 @@ export default function MissionDetail() {
                                 <div className="item-title size-5">
                                     支付方式：
                                 </div>
-                                <p className="size-6 d-flex align-items-center ms-4 ms-sm-0">{(() => {
+                                <p className="size-6 d-flex align-items-center ms-4 ms-sm-0 mt-2 mt-sm-0">{(() => {
                                     switch (v.payment_type) {
                                         case 1:
                                             return '現金';
@@ -449,8 +449,8 @@ export default function MissionDetail() {
                                 })()}</p>
                             </div>
                             <div className="item">
-                                <div className="item-title size-5">相片/影片：</div>
-                                <div className="item-image item-content">
+                                <div className="item-title size-5">相片/影片</div>
+                                <div className="item-image mt-4">
                                     <ImageSwiper missionImages={missionImages} />
                                 </div>
                             </div>

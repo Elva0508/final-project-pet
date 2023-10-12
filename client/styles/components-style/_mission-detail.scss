@@ -84,7 +84,8 @@
     }
 
     &-image {
-      margin-top: 1rem;
+      padding-left: 1rem;
+      padding-right: 1rem;
 
       img {
         width: 300px;
@@ -103,6 +104,31 @@
     height: 300px;
     border: 0;
     padding: 0 12%;
+  }
+  @media screen and (max-width: 991px){
+    .item {
+      width: calc(100% - 50px);
+      &-title {
+        &::before {
+          width:10px;
+          height: 40px;
+        }
+      }
+    }
+    .mission-place{
+      margin: 0.8rem auto;
+    }
+  }
+  @media screen and (max-width: 575px){
+    .item {
+      width: calc(100% - 40px);
+      &-title {
+        &::before {
+          width:9px;
+          height: 30px;
+        }
+      }
+    }
   }
 }
 
