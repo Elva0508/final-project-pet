@@ -32,7 +32,7 @@ export default function Wishlist() {
   };
 
 
-  const addCart = async (id, type) => {
+  const addCart = async (user_id,id, type) => {
 
     const have =cart.find((v) => v.product_id == id && v.product_type_id == type);
     
@@ -43,39 +43,40 @@ export default function Wishlist() {
 
       try {
         const response = await axios.put(
-          `http://localhost:3005/api/member-wishlist/cart`,
+          `http://localhost:3005/api/member-wishlist/cart/${user_id}`,
           { id, type }
         );
       } catch (error) {
         console.error("Error:", error);
       }
-      getCart();
+      getCart(user_id);
     } else {
       try {
         const newQuantity = have.quantity + 1;
         console.log(newQuantity);
         console.log(id);
         const response = await axios.put(
-          `http://localhost:3005/api/member-wishlist/cartplus`,
+          `http://localhost:3005/api/member-wishlist/cartplus/${user_id}`,
           { id, newQuantity, type }
         );
       } catch (error) {
         console.error("Error:", error);
       }
-      getCart();
+      getCart(user_id);
     }
   };
 
-  const deleteWishlist = async (id) => {
+  const deleteWishlist = async (user_id,id) => {
     try {
       const response = await axios.delete(
-        `http://localhost:3005/api/member-wishlist/${id}`
+        `http://localhost:3005/api/member-wishlist/${id}/${user_id}`
       );
-      const newWishlist = wishlist.filter((v) => v.collection_id !== id);
-      setWishlist(newWishlist);
+      // const newWishlist = wishlist.filter((v) => v.collection_id !== id);
+      // setWishlist(newWishlist);
     } catch (error) {
       console.error("Error:", error);
     }
+    getWishlist(user_id)
   };
 
   const getWishlist = async (id) => {
@@ -123,8 +124,7 @@ export default function Wishlist() {
   const id=localStorage.getItem("id")
   // 沒有token
   if (!token) {
-    console.log("user沒登入");
-    return;
+    window.location.href="/"
   }
   console.log(id);
   console.log(token);
@@ -188,7 +188,7 @@ export default function Wishlist() {
                           data-bs-toggle="offcanvas" 
                           data-bs-target="#offcanvasRight" 
                           aria-controls="offcanvasRight"
-                          onClick={() => addCart(v.product_id, v.product_type)}
+                          onClick={() => addCart(v.user_id,v.product_id, v.product_type)}
                         >
                           立即購買
                         </button>
@@ -196,7 +196,7 @@ export default function Wishlist() {
                           className="btn btn-outline-confirm size-6 m-size-7 my-2"
                           onClick={() => {
                             // 這裡作刪除的動作
-                            deleteWishlist(v.collection_id);
+                            deleteWishlist(v.user_id,v.collection_id);
                           }}
                         >
                           取消追蹤
@@ -209,7 +209,7 @@ export default function Wishlist() {
                             className="delete btn btn-outline-confirm size-6 m-size-7 m-2"
                             onClick={() => {
                               // 這裡作刪除的動作
-                              deleteWishlist(v.collection_id);
+                              deleteWishlist(v.user_id,v.collection_id);
                             }}
                           >
                             取消追蹤

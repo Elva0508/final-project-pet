@@ -33,11 +33,12 @@ router.get("/type/:id", (req, res) => {
   );
 });
 //刪除收藏清單
-router.delete("/:id",(req,res)=>{
+router.delete("/:id/:user_id",(req,res)=>{
     const deleteId=req.params.id
+    const userid=req.params.user_id
     connection.execute(
-        `DELETE FROM product_collections WHERE product_collections.collection_id=?`,
-        [deleteId]
+        `DELETE FROM product_collections WHERE product_collections.collection_id=? && user_id=?`,
+        [deleteId,userid]
         ,(error, result) => {
             if (error) {
               console.error("Error:", error);
@@ -60,23 +61,26 @@ router.get("/cart",(req,res)=>{
     )
 })
   //用來新增購物車裡沒有的商品
-  router.put("/cart",(req,res)=>{
+  router.put("/cart/:user_id",(req,res)=>{
+    const userid=req.params.user_id
+    console.log(userid);
     const {id ,type}=req.body  
     connection.execute(
-        `INSERT INTO cart(user_id, product_id,  product_type_id,quantity) VALUES (1,?,?,1);`,
-        [id,type]
+        `INSERT INTO cart(user_id, product_id,  product_type_id,quantity) VALUES (?,?,?,1);`,
+        [userid,id,type]
         ,(error,result)=>{
             res.json({result})
         }    
     )
 })
 //用來修改購物車裡已經有的商品數量
-router.put("/cartplus",(req,res)=>{
-    console.log(req);
+router.put("/cartplus/:user_id",(req,res)=>{
+  const userid=req.params.user_id
+    console.log(userid);
     const {id ,newQuantity,type}=req.body
     connection.execute(
-        `UPDATE cart SET quantity=? WHERE user_id=1 AND product_id=? AND product_type_id=?`,
-        [ newQuantity,id,type]
+        `UPDATE cart SET quantity=? WHERE user_id=? AND product_id=? AND product_type_id=?`,
+        [ newQuantity,userid,id,type]
         ,(error,result)=>{
             res.json({result})
         }    
