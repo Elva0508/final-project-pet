@@ -9,6 +9,8 @@ import { GoogleMap, LoadScript, MarkerF, InfoWindowF, OverlayView } from '@react
 import { IoPaperPlaneOutline } from "react-icons/io5";
 import { PiWechatLogoThin } from "react-icons/pi";
 import { BsGenderFemale, BsGenderMale } from "react-icons/bs";
+import { BiSolidTimeFive } from "react-icons/bi";
+import { MdEmail } from "react-icons/md";
 import { FaRegHeart, FaHeart } from "react-icons/fa";
 // swiper:
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -214,6 +216,7 @@ export default function MissionDetail() {
         lng: 0,
     });
     // 聊天室:
+    const [postUserId, setPostUserId] = useState(null); // 聊天室的第二個對象
     const [message, setMessage] = useState(""); // 儲存返回後的消息
     const [isLoading, setIsLoading] = useState(false);
 
@@ -228,6 +231,10 @@ export default function MissionDetail() {
             const data = response.data.data;
             console.log("data是" + data);
             setMissionDetail(data);
+            // 聊天室
+            const post_user_id = response.data.data[0].post_user_id; // 注意這裡要取[0]！因為是陣列
+            console.log("post_user_id是" + post_user_id);
+            setPostUserId(post_user_id); // 本來這邊是寫在handleButtonClick 但因為異步 要按第二次按鈕 chatlist_userId2才有讀到 所以移到這
         } catch (error) {
             console.error("Error:", error);
         }
@@ -339,6 +346,54 @@ export default function MissionDetail() {
         }
     };
 
+    // 跟案主線上聊聊
+    const handleButtonClick = async () => {
+        // setIsLoading(true);
+
+        // 檢查是否有有效的 userId
+        //如果放入targetID 變數 這邊也要把targetID 變數放進來檢查
+        if (userId) {
+            // 建立要傳送的數據
+            const requestData = {
+                chatlist_userId1: userId,
+                chatlist_userId2: postUserId, // 放要對話的 targetID 變數
+            };
+            console.log("userId1是" + userId)
+            console.log("userId2是" + postUserId)
+
+            try {
+                const response = await axios.post(
+                    "http://localhost:3005/api/chatlist/creatchat",
+                    requestData
+                );
+
+                if (response.status === 201) {
+                    // 請求成功
+                    setMessage("請求成功");
+                    const chatUrl = response.data.chatUrl;
+                    console.log("chatUrl" + chatUrl);
+                    // 在這裡導向到 chatUrl
+                    window.location.href = chatUrl;
+                } else if (response.status === 200) {
+                    // 消息已存在
+                    // setMessage("消息已存在");
+                    const chatUrl = response.data.chatUrl;
+                    console.log("已存在chatUrl" + chatUrl);
+                    // 在這裡導向到 chatUrl
+                    window.location.href = chatUrl;
+                } else {
+                    // 請求失敗
+                    // setMessage("請求失敗: " + response.data.error);
+                }
+            } catch (error) {
+                // 處理錯誤
+                // setMessage(error.message || "發生錯誤");
+            } finally {
+                // setIsLoading(false);
+            }
+        }
+    };
+
     // 彈跳視窗(確認送出)
     const handleConfirmSubmit = async () => {
         setSelectedMissionId(mission_id)
@@ -437,7 +492,7 @@ export default function MissionDetail() {
                                 </li>
                             </ol>
                         </nav>
-                        <main className="d-flex flex-column flex-lg-row row">
+                        <main className="d-flex flex-column flex-lg-row row justify-content-between g-lg-5">
                             <div className='left col-12 col-lg-3'>
                                 <aside className='post-user'>
                                     <div className='mt-3 p-4 position-relative'>
@@ -453,20 +508,29 @@ export default function MissionDetail() {
                                                 {v.gender === '女' ? <BsGenderFemale /> : <BsGenderMale />}
                                             </div>
                                         </div>
-                                        <div className='ms-3'>
-                                            <p className='size-7 '>聯絡時段</p>
+                                        <div className='ms-3 mb-3'>
+                                            <p className='size-7 mb-1'><BiSolidTimeFive /><span className='ms-1'>聯絡時段</span></p>
                                             <p>
-                                                {v.morning === 1 && '09:00~12:00 '}
-                                                {v.noon === 1 && '13:00~18:00 '}
-                                                {v.night === 1 && '19:00~21:00 '}
-                                                {v.morning === 0 && v.noon === 0 && v.night === 0 && '沒有可連絡時段'}
+                                                {v.contact_morning === 1 && '09:00~12:00 '}
+                                                {v.contact_noon === 1 && '13:00~18:00 '}
+                                                {v.contact_night === 1 && '19:00~21:00 '}
+                                                {v.contact_morning === 0 && v.contact_noon === 0 && v.contact_night === 0 && '案主未填'}
                                             </p>
-
                                         </div>
+                                        <div className='ms-3 mb-3'>
+                                            <p className='size-7 mb-1'><MdEmail /><span className='ms-1'>E-mail</span></p>
+                                            <p className='poster-email'>
+                                                {v.email}
+                                            </p>
+                                        </div>
+                                        <button className="chat-btn btn-outline-confirm " onClick={handleButtonClick} >
+                                            <PiWechatLogoThin />
+                                            線上詢問
+                                        </button>
                                     </div>
                                 </aside>
                             </div>
-                            <div className='right col-12 col-lg-8'>
+                            <div className='right col-12 col-lg-9'>
                                 <header className='mt-3 p-4 position-relative'>
                                     <div className=' d-flex '>
                                         <p>案件編號：{v.pid}</p>

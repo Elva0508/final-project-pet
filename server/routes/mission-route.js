@@ -229,7 +229,7 @@ router.get("/mission-details/:mission_id", (req, res) => {
   const mission_id = req.params.mission_id; // 從路由參數中獲取 mission_id
   conn.execute(
     `
-    SELECT md.*, u.*, GROUP_CONCAT(DISTINCT im.file_path ORDER BY im.image_id) AS file_paths
+    SELECT md.*, u.name, u.gender, u.cover_photo, u.email, GROUP_CONCAT(DISTINCT im.file_path ORDER BY im.image_id) AS file_paths
     FROM mission_detail AS md 
     JOIN userinfo AS u ON md.post_user_id = u.user_id 
     JOIN image_mission AS im ON md.mission_id = im.mission_id

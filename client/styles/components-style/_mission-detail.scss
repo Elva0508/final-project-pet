@@ -23,6 +23,13 @@
       .poster-gender{
         font-size: 1.2rem;
       }
+      .poster-email{
+        word-wrap: break-word; // 避免email超出框框範圍
+      }
+      .chat-btn{
+        box-shadow: 1px 5px 7px rgba(0, 0, 0, 0.25);
+        margin: 0.5rem auto;
+      }
   }
   
 
