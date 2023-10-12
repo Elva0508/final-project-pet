@@ -159,6 +159,7 @@ export default function ProductList() {
                 // 请求完成后隐藏加载蒙层
                 setIsLoading(false);
                 setProductData(response.data.result);
+                
             })
             .catch(error => {
                 console.error('Error:', error);

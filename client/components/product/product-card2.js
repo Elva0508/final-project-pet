@@ -56,7 +56,7 @@ export default function ProductCard2({ productData, mainPic, setMainPic }) {
                     <div className="card-text-vendor size-7 m-size-7">{v.vendor}</div>
                     {/* 類別按鈕顏色已建好 btn-color-1 一直到btn-color-7 再依需求調整className即可 */}
                     {/* 顏色設定如果需要再調整，可以到以下檔案調整 \final-project-pet\client\styles\components-style\_product-card.scss */}
-                    <div className={`btn ${getButtonColorClass(v.category_name)} d-flex align-items-center `}>{v.category_name}</div>
+                    {/* <div className={`btn ${getButtonColorClass(v.category_name)} d-flex align-items-center `}>{v.category_name}</div> */}
                     <img className="card-herat" src={isFavorites[i] ? "/heart-clicked.svg" : "/heart.svg"} alt={isFavorites[i] ? "已收藏" : "未收藏"} onClick={() => toggleFavorite(i)} />
                   </div>
                   <Link href={`/product/${v.product_id}`} >

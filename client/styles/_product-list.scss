@@ -39,8 +39,6 @@
      .button-subcategory:hover{
         border-bottom: 2px solid $light-gray;
     }
-    
-   
    }
 }
 
@@ -65,10 +63,13 @@
 
 .sort-btn{
     // border: 3px solid;
-    border-radius: 20px;
-    background-color: $cos-white;
-    width: 200px;
-    width: 100%;
+    // border-radius: 20px;
+    // background-color: $cos-white;
+    // width: 200px;
+    // width: 100%;
+    .form-label{
+        margin-bottom: 0;
+    }
     
     button{
         border: none;
