@@ -7,7 +7,7 @@ import dayjs from "dayjs";
 import Pagination from '@/components/pagination'
 
 
-export default function JobStatusTwo({job,currentScreen}) {
+export default function JobStatusTwo({job,currentScreen,getJob,idCounts}) {
  
   const itemsPerPage = 5
   const [activePage, setActivePage] = useState(1)
@@ -62,6 +62,16 @@ export default function JobStatusTwo({job,currentScreen}) {
   }
 
 
+  const deletefav = async (user_id,id) => {
+    try {
+      const response = await axios.delete(
+        `http://localhost:3005/api/member-joblist/${id}`
+      );
+    } catch (error) {
+      console.error("Error:", error);
+    }
+    getJob(user_id)
+  };
 
 
   return (
@@ -120,12 +130,15 @@ export default function JobStatusTwo({job,currentScreen}) {
                   </>
                   )}
                     </p>
-                    <p className="size-7 follow">6-10人追蹤</p>
+                    <p className="size-7 follow">{idCounts[v.mission_id]==undefined?("0"):(idCounts[v.mission_id])}人追蹤</p>
                 </div>
               </div>
               {/* 2 */}
-              <div className="me-1 me-md-0 d-flex align-items-center justify-content-center col-md-2 col-4">
-              <div className="">
+              <div className="me-1 me-md-0 d-flex flex-column align-items-center justify-content-center col-md-2 col-4">
+              <button className="btn-outline-confirm size-6 text-center px-3 py-2 mb-2"
+              onClick={()=>{
+                deletefav(v.user_id,v.mission_fav_id)
+              }}>取消追蹤</button>
               {v.mission_status==0?(
                 (v.record_mission_id==null?(
                   <>
@@ -156,10 +169,6 @@ export default function JobStatusTwo({job,currentScreen}) {
                   </>
                 ))
               )}
-            </div>
-
-
-
               </div>
             </div>
             

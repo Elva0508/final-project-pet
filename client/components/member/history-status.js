@@ -1,11 +1,9 @@
-import React, { useState } from "react";
-import { GrFormPrevious } from "react-icons/gr";
-import { GrFormNext } from "react-icons/gr";
+import React, { useState  } from "react";
 import dayjs from "dayjs";
 import axios from "axios";
 import Pagination from '@/components/pagination'
 
-export default function HistoryStatusOne({ history ,getHistory ,currentScreen}) {
+export default function HistoryStatusOne({ history ,getHistory ,currentScreen,idCounts}) {
 
   const [activePage, setActivePage] = useState(1)
   const itemsPerPage = 5;
@@ -51,6 +49,9 @@ export default function HistoryStatusOne({ history ,getHistory ,currentScreen}) 
     getHistory(userid)
   };
 
+  console.log(idCounts);
+
+
 
 
   return (
@@ -85,7 +86,7 @@ export default function HistoryStatusOne({ history ,getHistory ,currentScreen}) 
                   )}
                 </p>
 
-                <p className="size-7 follow">6-10人追蹤</p>
+                <p className="size-7 follow">{idCounts[v.mission_id]==undefined?("0"):(idCounts[v.mission_id])}人追蹤</p>
               </div>
               <div className="d-flex align-items-center col-4 col-md-3 ps-md-5 ms-md-5 ms-0">
                 {v.mission_status === 1 ? (

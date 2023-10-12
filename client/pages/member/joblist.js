@@ -9,6 +9,7 @@ import axios from "axios";
 export default function Joblist() {
   const [currentScreen, setCurrentScreen] = useState(4);
   const [job, setJob] = useState([]);
+  const [count,setCount]=useState([])
 
 
 
@@ -27,11 +28,35 @@ export default function Joblist() {
   };
 
 
+  const getCount = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:3005/api/member-history/count/count`,
+      );
+      const data = response.data.result
+      console.log(data);
+       setCount(data)
+    } catch (error) {
+      console.error("Error:", error);
+    }
+   
+  };
+
+  let idCounts = [];
+  count.forEach(v => {
+    const mission_id = v.mission_id;
+    if (idCounts[mission_id]) {
+        idCounts[mission_id]++; // 如果 ID 已经存在，增加计数
+    } else {
+        idCounts[mission_id] = 1; // 如果 ID 不存在，初始化计数为 1
+    }
+  });
 
 
+  let id
   useEffect(() => {    
   const token = localStorage.getItem("token");
-  const id=localStorage.getItem("id")
+  id=localStorage.getItem("id")
   // 沒有token
   if (!token) {
     window.location.href="/"
@@ -39,7 +64,7 @@ export default function Joblist() {
   console.log(id);
   console.log(token)
     getJob(id);
-
+    getCount()
   }, []);
 
  
@@ -112,7 +137,7 @@ export default function Joblist() {
                 
              
 
-                  <JobStatus job={job} currentScreen ={currentScreen }/>
+                  <JobStatus job={job} currentScreen ={currentScreen } getJob={getJob} idCounts={idCounts}/>
 
             </div>
           </div>

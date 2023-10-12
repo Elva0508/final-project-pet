@@ -10,6 +10,7 @@ import axios from "axios";
 export default function History() {
   const [currentScreen, setCurrentScreen] = useState("2");
   const [history , setHistory]=useState([])
+  const [count,setCount]=useState([])
 
   const handleButtonClick = (screenName) => {
     setCurrentScreen(screenName);
@@ -27,6 +28,30 @@ export default function History() {
     });
   }
 
+  const getCount = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:3005/api/member-history/count/count`,
+      );
+      const data = response.data.result
+      console.log(data);
+       setCount(data)
+    } catch (error) {
+      console.error("Error:", error);
+    }
+   
+  };
+
+  let idCounts = [];
+  count.forEach(v => {
+    const mission_id = v.mission_id;
+    if (idCounts[mission_id]) {
+        idCounts[mission_id]++; // 如果 ID 已经存在，增加计数
+    } else {
+        idCounts[mission_id] = 1; // 如果 ID 不存在，初始化计数为 1
+    }
+  });
+
 useEffect(() => {
   const token = localStorage.getItem("token");
   const id=localStorage.getItem("id")
@@ -37,6 +62,7 @@ useEffect(() => {
   console.log(id);
   console.log(token);
   getHistory(id)
+  getCount()
   }, [])
 
   return (
@@ -82,9 +108,9 @@ useEffect(() => {
                   已下架
                 </button>
               </div>
-              {currentScreen === "2" && <HistoryStatusAll history={history} getHistory={getHistory}/>}
-              {currentScreen === "0" && <HistoryStatus history={history} getHistory={getHistory} currentScreen={currentScreen}/>}
-              {currentScreen === "1" && <HistoryStatus history={history} getHistory={getHistory} currentScreen={currentScreen}/>}
+              {currentScreen === "2" && <HistoryStatusAll history={history} getHistory={getHistory} idCounts={idCounts}/>}
+              {currentScreen === "0" && <HistoryStatus history={history} getHistory={getHistory} currentScreen={currentScreen} idCounts={idCounts}/>}
+              {currentScreen === "1" && <HistoryStatus history={history} getHistory={getHistory} currentScreen={currentScreen} idCounts={idCounts}/>}
 
             </div>
           </div>
