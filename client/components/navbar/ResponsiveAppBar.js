@@ -107,6 +107,11 @@ function ResponsiveAppBar() {
     setAnchorElUser(null);
   };
 
+  const { cart, setCart } = useCart();
+  const goCart = () => {
+    router.push("/product/cart");
+  };
+
   const router = useRouter();
   //登入登出
   const handleLogout = () => {
@@ -114,13 +119,13 @@ function ResponsiveAppBar() {
     localStorage.removeItem("helperFav"); //移除小幫手收藏
     localStorage.removeItem("data");
     localStorage.removeItem("token");
+    localStorage.removeItem("id");
+    localStorage.clear();
+    setCart([])
     router.push("/");
   };
 
-  const { cart, setCart } = useCart();
-  const goCart = () => {
-    router.push("/product/cart");
-  };
+
 
   return (
     <ThemeProvider theme={theme}>
@@ -219,9 +224,12 @@ function ResponsiveAppBar() {
                 </IconButton>
                 <IconButton onClick={goCart} sx={{ p: 0 }} className="cartNum">
                   <Image src={ShoppingCart} alt="shoppingCart" />
+                  {Token && cart.length!==0?(
                   <div className="cartNumber size-7 ">
                     <p className="">{cart.length}</p>
                   </div>
+                  ):("")}
+
                 </IconButton>
               </Tooltip>
               <Menu

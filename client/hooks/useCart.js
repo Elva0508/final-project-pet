@@ -1,15 +1,19 @@
 import { createContext, useState, useContext,useEffect } from 'react'
+import { useRouter } from 'next/router';
+// import { useAuth } from '@/context/fakeAuthContext';
 import axios from "axios";
 // 習慣上都以null作為初始化值
 const cartContext = createContext(null)
 
 export function CartProvider({ children }) {
-
+    const router = useRouter();
     const [cart, setCart] = useState([])
+    const [id, setId] = useState(null);
+
 
     //抓購物車內所有商品 ，並增加屬性
-    const getCart =  () => {
-        axios.get("http://localhost:3005/api/product/cart")
+    const getCart =  (id) => {
+        axios.get(`http://localhost:3005/api/product/cart/${id}`)
             .then((response) => {
             const data = response.data.result;
             const newData=data.map((v)=>{
@@ -22,8 +26,19 @@ export function CartProvider({ children }) {
         });
     }
     useEffect(() => {
-        getCart()
-      }, []) 
+
+        const userId = parseInt(localStorage.getItem('id'));
+        setId(userId);
+
+
+    }, [router.isReady]);
+
+    useEffect(() => {
+      
+      if(id){
+        getCart(id)
+     }
+    }, [id]) 
 
 
   return (
