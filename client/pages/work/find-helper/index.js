@@ -15,6 +15,9 @@ import {
   BsTrashFill,
   BsTrash,
 } from "react-icons/bs";
+
+import { FaUserClock } from "react-icons/fa";
+import { ImLocation2 } from "react-icons/Im";
 import WorkService from "@/services/work-service";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
@@ -457,6 +460,9 @@ const SingleHelperCard = ({
             ? ""
             : "active-fav-in-card"
         }`}
+        onClick={() => {
+          router.push(`/work/find-helper/${helper.user_id}`);
+        }}
       >
         <motion.img
           layout
@@ -469,35 +475,31 @@ const SingleHelperCard = ({
             {helper.name}
           </motion.div>
           <motion.div layout className="ranking d-flex align-items-center mb-1">
-            <Rating
-              name="half-rating-read"
-              value={parseFloat(helper.average_star)}
-              precision={0.5}
-              readOnly
-              emptyIcon={<StarIcon style={{ opacity: 0.35 }} />}
-            />
-
-            <span layout className="ms-1 size-7">
+            {/* <span layout className="ms-1 size-7">
               ({helper.review_count === null ? "0" : helper.review_count})
-            </span>
+            </span> */}
           </motion.div>
           <div className="single-card-info d-flex justify-content-between">
             <div>
-              <p className="m-size-7">{helper.service_county}</p>
-              <p className="service-items m-size-7">
-                服務項目：
+              <div className="service-items m-size-7">
                 {service
                   .filter((item) => item.value != 0)
                   .map((item, index, arr) =>
                     index < arr.length - 1 ? (
-                      <span>{item.label}、</span>
+                      <span className="tag-btns">{item.label}</span>
                     ) : (
-                      <span>{item.label}</span>
+                      <span className="tag-btns">{item.label}</span>
                     )
                   )}
-              </p>
+              </div>
               <p className="service-time m-size-7">
+                <FaUserClock />
                 服務時間：<span>周一至周日</span>
+              </p>
+
+              <p className="m-size-7 service-county">
+                <ImLocation2 />
+                {helper.service_county}
               </p>
             </div>
 
@@ -529,15 +531,24 @@ const SingleHelperCard = ({
             </div>
           </div>
 
-          <div className="d-flex justify-content-between align-items-end price">
-            <div>
-              單次<span className="size-6"> NT$140</span>
-            </div>
-            <button className="size-6 animate-button-one">
+          <div className="d-flex justify-content-between align-items-end ">
+            {/* <button className="size-6 animate-button-one">
               <Link href={`/work/find-helper/${helper.user_id}`}>洽詢</Link>
-            </button>
+            </button> */}
           </div>
+          <Rating
+            name="half-rating-read"
+            value={parseFloat(helper.average_star)}
+            precision={0.5}
+            readOnly
+            emptyIcon={<StarIcon style={{ opacity: 0.35 }} />}
+          />
         </motion.div>
+        <div className="single-card-footer">
+          <p className="price d-flex justify-content-end align-items-center">
+            單次<span className="size-6"> NT$140</span>
+          </p>
+        </div>
       </motion.div>
     </>
   );

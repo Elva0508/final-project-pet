@@ -1,21 +1,52 @@
 %helper-button-style {
   font-size: 1.2rem;
-  // font-weight: bold;
-  width: 150px;
-  height: 45px;
+  width: 40px;
+  height: 40px;
+  border-radius: 100px 100px 100px 100px;
+  background-color: white;
+  border: none;
+  box-shadow: 1px 1px 10px rgba(79, 79, 79, 0.719);
+  position: absolute;
+  // display: flex;
+  // justify-content: center;
+  // align-items: center;
+  transition: all 0.3s linear;
+  top: 15px;
+  left: 45px;
+
+  &:hover {
+    width: 56px + 28px + 30px;
+    & > span {
+      right: 60px;
+      color: $price;
+    }
+    svg {
+      color: $price;
+    }
+  }
   svg {
+    position: absolute;
+    top: 50%;
+    left: 6px;
+    transform: translateY(-50%);
     font-size: 28px;
-    margin-right: 0.2rem;
-    // height: 40px;
+    color: $hover;
+  }
+  & > span {
+    width: 56px;
+    position: absolute;
+    font-size: 14px;
+    left: 46px;
+    top: 50%;
+    transform: translateY(-50%);
   }
 }
 
 $detail-block-width: 9px; //標題左側直槓槓
 .helper-detail {
-  // width: calc(100% - 80px);
-  // margin: auto;
-  // display: flex;
-  // align-items: start;
+  // & * {
+  //   padding: 0;
+  // }
   section {
     background-color: white;
     margin: 0 1rem;
@@ -24,19 +55,19 @@ $detail-block-width: 9px; //標題左側直槓槓
     border-radius: 2px;
   }
   .left-block {
-    padding: 1rem;
     display: flex;
     flex-direction: column;
     justify-content: start;
     align-items: center;
+    position: sticky;
+    top: 24px;
     .avatar {
-      // display: flex;
-      // justify-content: center;
-      // align-items: center;
       overflow: hidden;
+      margin-top: 1rem;
       $size: 220px;
-      background-color: $light-gray;
-      border: 4px solid $hover;
+      // background-color: $light-gray;
+      // border: 4px solid
+      //   linear-gradient(to bottom, #f0c3969b, lighten($hover, 15%));
       max-width: 220px;
       max-height: 220px;
       min-width: 150px;
@@ -45,13 +76,46 @@ $detail-block-width: 9px; //標題左側直槓槓
       height: 20vw;
       border-radius: 50%;
       // margin-right: 2rem;
+      /* 创建一个带有渐变边框的元素 */
+      position: relative;
+      // width: 200px;
+      // height: 200px;
+      background: linear-gradient(to top, #f0c3969b, #f8cb9f);
+      // .border-gradient {
+      // }
+
+      /* 使用伪元素来创建边框 */
+      // &::before {
+      //   content: "";
+      //   position: absolute;
+      //   top: 4px;
+      //   right: 4px;
+      //   bottom: 4px;
+      //   left: 4px;
+      //   border: 4px solid transparent;
+      //   border-radius: 50%;
+      //   background-clip: content-box;
+      //   background: linear-gradient(to bottom, #f0c3969b, #f8cb9f);
+      // }
       img {
+        padding: 5px;
         width: 100%;
         height: 100%;
+        position: absolute;
+        z-index: 100;
+        border-radius: 50%;
       }
     }
+    .profile-divider {
+      width: 90%;
+      margin: auto;
+      margin-top: 1rem;
+      padding: 0.5rem 2rem;
+      color: darken($light-gray, 30%);
+      height: 2px;
+    }
     .profile-info {
-      margin: 0 0 1rem 0;
+      margin: 0.8rem 0;
       & :first-child {
         color: $text-main;
         opacity: 0.8;
@@ -59,6 +123,29 @@ $detail-block-width: 9px; //標題左側直槓槓
       }
       & :last-child {
         color: $text-mark;
+      }
+    }
+    &-btns-group {
+      margin-top: 1rem;
+      position: relative;
+      height: 120px;
+      // background-color: $header-bg;
+      background: linear-gradient(to bottom, #f0c3969b, lighten($hover, 15%));
+      padding: 0;
+      .btn-message,
+      .heart-icon,
+      .get-price-btn {
+        @extend %helper-button-style;
+      }
+
+      .heart-icon {
+        top: 70px;
+        .fill-icon {
+          color: $price;
+        }
+      }
+      .get-price-btn {
+        left: 180px;
       }
     }
   }
@@ -128,34 +215,93 @@ $detail-block-width: 9px; //標題左側直槓槓
       }
     }
     .item {
-      // width: calc(100% - 100px);
       margin: 1rem 1rem 4rem 1rem;
-      // &-title {
-      //   display: flex;
-      //   align-items: center;
-      //   margin-bottom: 0.5rem;
-      //   // &::before {
-      //   //   content: "";
-      //   //   display: inline-block;
-      //   //   background-color: $hover;
-      //   //   width: $detail-block-width;
-      //   //   height: 32px;
-      //   //   margin-right: 0.4rem;
-      //   // }
-      // }
       & p {
         margin: 0;
+      }
+      &-title {
+        color: $text-main;
+        opacity: 0.8;
+        font-weight: bold;
       }
       &-divider {
         margin: 0.2rem 0 1rem 0;
         color: darken($light-gray, 30%);
         height: 2px;
       }
-      &-content {
+      &-content > * {
         // margin-left: $detail-block-width + 5px;
+        margin-left: 0.2rem;
         color: $text-mark;
         // font-weight: 500;
         text-align: justify;
+      }
+    }
+    .price-intro-text {
+      color: $text-mark;
+    }
+    .price-intro-card {
+      width: 200px;
+      height: 110px;
+      padding: 12px 16px;
+      background-color: darken($cos-white, 0.5%);
+      border: 2px solid $header-bg;
+      border-radius: 2px;
+      box-shadow: 0px 3px 5px rgba(146, 146, 146, 0.267);
+      position: relative;
+      overflow: hidden;
+      // background: url("/job-icon/cat-tree.svg") center center no-repeat;
+      // background-size: 100% 100%;
+      // background-position: 10px 5px;
+      // opacity: 0.2;
+      .card-bg {
+        // color: #faaf00;
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        opacity: 0.2;
+        // right: -2px;
+        transform: rotate(347deg);
+      }
+      // &::after {
+      //   content: "";
+      //   display: block;
+
+      //   width: 64px;
+      //   height: 64px;
+      //   position: absolute;
+      //   top: 45px;
+      //   left: 15px;
+      //   transition: all 0.3s ease-in;
+      // }
+      .card-icon {
+        font-size: 24px;
+        margin-right: 0.3rem;
+        color: $hover;
+      }
+      .card-title {
+        font-weight: 600;
+        font-size: 16px;
+      }
+      .card-content {
+        p {
+          color: lighten($text-dark, 30%);
+          font-size: 18px;
+          // text-shadow: 0px 0px 1px rgb(199, 199, 199);
+        }
+        // height: calc(100% - 26px);
+        display: flex;
+        justify-content: center;
+        align-items: end;
+        position: absolute;
+        top: 60%;
+        left: 10%;
+      }
+      .price {
+        color: $price;
+        font-size: 1.6rem;
+        margin: 0 5px;
+        // font-weight: bold;
       }
     }
   }
@@ -214,26 +360,24 @@ $detail-block-width: 9px; //標題左側直槓槓
       }
     }
   }
-  .profile {
-    // width: 70%;
-    text-align: justify;
-    img {
-      width: 28px;
-      height: 28px;
-      margin-right: 0.1rem;
-    }
-    // .intro {
-    //   color: $text-mark;
-    //   font-weight: 500;
-    // }
-    .icon {
-      font-size: 26px;
-      color: #faaf00;
-    }
-    .btn-message {
-      @extend %helper-button-style;
-    }
-  }
+  // .profile {
+  //   // width: 70%;
+  //   text-align: justify;
+  //   img {
+  //     width: 28px;
+  //     height: 28px;
+  //     margin-right: 0.1rem;
+  //   }
+  //   // .intro {
+  //   //   color: $text-mark;
+  //   //   font-weight: 500;
+  //   // }
+  //   .icon {
+  //     font-size: 26px;
+  //     color: #faaf00;
+  //   }
+
+  // }
 
   .item-image {
     margin-top: 1rem;
@@ -441,25 +585,27 @@ $detail-block-width: 9px; //標題左側直槓槓
 //   }
 // }
 
-.get-price {
-  overflow-x: hidden;
-  height: 80px;
-  background-color: $main-bg;
-  position: sticky;
-  bottom: 0;
-  z-index: 100;
-  box-shadow: 1px 0px 5px rgba(0, 0, 0, 0.25);
-  span {
-    color: $price;
-    font-weight: bold;
-  }
-  &-number {
-    color: $price;
-  }
-  &-btn {
-    @extend %helper-button-style;
-  }
-}
+// .get-price {
+//   overflow-x: hidden;
+//   height: 80px;
+//   background-color: $main-bg;
+//   position: sticky;
+//   bottom: 0;
+//   z-index: 100;
+//   box-shadow: 1px 0px 5px rgba(0, 0, 0, 0.25);
+//   span {
+//     color: $price;
+//     font-weight: bold;
+//   }
+//   &-number {
+//     color: $price;
+//   }
+
+//   // &-icon {
+//   //   // transform: rotate(20deg);
+//   //   color: $hover;
+//   // }
+// }
 
 @media screen and (max-width: 768px) {
   .evaluation-bar {

@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import ResponsiveAppBar from "@/components/navbar/ResponsiveAppBar";
 import Footer from "@/components/footer";
 import { MissionDetailSticky } from "@/pages/work/find-mission/[mission_id]";
-import { HelperDetailSticky } from "@/pages/work/find-helper/[uid]";
+// import { HelperDetailSticky } from "@/pages/work/find-helper/[uid]";
 import { HomeVedio } from "@/pages/index";
 import BreadCrumb from "./breadCrumb";
 import { useEffect, useRef, useState } from "react";
@@ -14,7 +14,7 @@ export default function Layout({ children }) {
   const { pathname, query } = useRouter();
   const loadingRef = useRef();
   // useEffect(() => {
-  //   // 讓頁面可以滾頓
+  //   // 讓頁面可以滾動，原本禁止有overflow-y軸
   //   setTimeout(() => {
   //     setIsLoading(false);
   //   }, [4800]);
@@ -43,9 +43,9 @@ export default function Layout({ children }) {
       ) : (
         ""
       )}
-      {pathname && pathname == "/work/find-helper/[uid]" ? (
+      {/* {pathname && pathname == "/work/find-helper/[uid]" ? (
         <HelperDetailSticky />
-      ) : null}
+      ) : null} */}
     </>
   );
 }
