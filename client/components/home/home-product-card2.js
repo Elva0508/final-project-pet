@@ -48,7 +48,7 @@ export default function HomeProductCard2() {
         return (
           <div className="col-6 col-md-3 col-lg-3 col-xl-3">
             <div className="product-card2" key={v.product_id}>
-              <div className="card">
+              <div className="card h-100">
                 <Link href={`/product/${v.product_id}`}>
                   <img src={v.images_one} className="card-img-top" alt="..." />
                 </Link>

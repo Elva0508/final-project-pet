@@ -11,13 +11,13 @@ $carousel-indicator-height: 5px;
 $breadcrumb-divider: quote(">");
 $offcanvas-horizontal-width: 50%;
 
-$dropdown-link-color:               #512f10;
-$dropdown-link-hover-color:         shade-color($dropdown-link-color, 10%);
-$dropdown-link-hover-bg:            #f8cb9f;
+$dropdown-link-color: #512f10;
+$dropdown-link-hover-color: shade-color($dropdown-link-color, 10%);
+$dropdown-link-hover-bg: #f8cb9f;
 $dropdown-link-active-color: #512f10;
 $dropdown-link-active-bg: #f8cb9f;
-$dropdown-bg:                       #fffdfb;
-$dropdown-border-width:             0;
+$dropdown-bg: #fffdfb;
+$dropdown-border-width: 0;
 
 // ↑↑↑  變數覆蓋(Variable overrides) 要寫在這行"上面"  ↑↑↑
 // 導入所有 bootstrap 樣式
@@ -182,6 +182,7 @@ ul {
 // 首頁
 @import "@/styles/_home.scss";
 @import "@/styles/components-style/home/_block-one.scss";
+@import "@/styles/components-style/home/_block-two.scss";
 @import "@/styles/components-style/home/_block-three.scss";
 @import "@/styles/components-style/home/_block-five.scss";
 @import "@/styles/components-style/home/_block-six.scss";

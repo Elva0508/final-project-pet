@@ -106,10 +106,10 @@ export default function Index() {
       <div className="home">
         <div className="container my-5">
           <div className="block-two my-5">
-            <div className="size-2 home-tilte d-flex justify-content-center mb-5">
+            <div className="size-2 home-tilte d-flex justify-content-center mb-3">
               新品推薦
             </div>
-            <div className="row gy-5">
+            <div className="home-product-card row gy-5">
               <HomeProductCard2 />
             </div>
           </div>
@@ -128,10 +128,10 @@ export default function Index() {
           </div>
 
           <div className="block-four my-5">
-            <div className="size-2 home-tilte d-flex justify-content-center mb-5">
+            <div className="size-2 home-tilte d-flex justify-content-center mb-3">
               本週排行榜
             </div>
-            <div className="row gy-5">
+            <div className="home-product-card row gy-5">
               <HomeProductCardHot />
             </div>
           </div>

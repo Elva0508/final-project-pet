@@ -4,7 +4,7 @@ import axios from "axios";
 import { useEffect } from "react";
 import Link from "next/link";
 
-export default function HomeProductCard2() {
+export default function HomeProductCardHot() {
   // 讀取資料庫資料
   const [productData, setProductData] = useState({ result: [] }); // 初始化為一個帶有 result 屬性的物件
 
@@ -50,7 +50,7 @@ export default function HomeProductCard2() {
         return (
           <div className="col-6 col-md-3 col-lg-3 col-xl-3">
             <div className="product-card2" key={v.product_id}>
-              <div className="card">
+              <div className="card h-100">
                 <Link href={`/product/${v.product_id}`}>
                   <img src={v.images_one} className="card-img-top" alt="..." />
                 </Link>
