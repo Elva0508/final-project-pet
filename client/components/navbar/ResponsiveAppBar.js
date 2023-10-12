@@ -16,7 +16,7 @@ import Badge from "@mui/material/Badge";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import Image from "next/image";
 import Link from "next/link";
-
+import { useActivePage } from "@/hooks/useActivePage";
 import { useAuth } from "@/context/fakeAuthContext";
 
 //logo-icon
@@ -74,11 +74,11 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
 }));
 
 const pages = [
-  { path: "/testLink/brand", name: "品牌介紹", id: 1 },
-  { path: "/testLink/allproducts", name: "全部商品", id: 2 },
-  { path: "/work/find-mission", name: "小貓上工", id: 3 },
-  { path: "/testLink/catknowledge", name: "小貓兩三知", id: 4 },
-  { path: "/testLink/qa", name: "常見問題", id: 5 },
+  { path: "http://localhost:3000/about", name: "品牌介紹", id: 1 },
+  { path: "http://localhost:3000/product/category", name: "全部商品", id: 2 },
+  { path: "http://localhost:3000/work/find-helper", name: "小貓上工", id: 3 },
+  { path: "http://localhost:3000/article", name: "小貓兩三知", id: 4 },
+  { path: "http://localhost:3000/support", name: "常見問題", id: 5 },
 ];
 const settings = [
   { path: "/register", name: "註冊", id: 1 },
@@ -107,6 +107,7 @@ function ResponsiveAppBar() {
     setAnchorElUser(null);
   };
 
+  const {setActiveButton}=useActivePage()
   const { cart, setCart } = useCart();
   const goCart = () => {
     router.push("/product/cart");
@@ -120,6 +121,8 @@ function ResponsiveAppBar() {
     localStorage.removeItem("data");
     localStorage.removeItem("token");
     localStorage.removeItem("id");
+    setActiveButton(0)
+
     localStorage.clear();
     setCart([])
     router.push("/");
@@ -253,6 +256,11 @@ function ResponsiveAppBar() {
                     <MenuItem onClick={handleLogout}>
                       <Typography textAlign="center">登出</Typography>
                     </MenuItem>
+                    <Link href="http://localhost:3000/member/profile">
+                      <MenuItem>
+                        <Typography textAlign="center">會員中心</Typography>
+                      </MenuItem>
+                    </Link>
                     <Link href="/article">
                       <MenuItem>
                         <Typography textAlign="center">來聊聊</Typography>

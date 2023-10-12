@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from "react";
 import ListD from "@/components/member/list-d";
 import ListUserM from "@/components/member/list-user-m";
-import { BiSolidShoppingBag } from "react-icons/bi";
 import { useCart } from "@/hooks/useCart"
 import axios from "axios";
 import Pagination from '@/components/pagination'
-import { useRouter } from 'next/router';
 
 export default function Purchast() {
   const [product, setProduct] = useState([]);
@@ -17,11 +15,10 @@ export default function Purchast() {
   const endIndex = startIndex + itemsPerPage;
   const currentData = product.slice(startIndex, endIndex);
 
-  const router = useRouter();
 
-  const getProduct = () => {
+  const getProduct = (id) => {
     axios
-      .get("http://localhost:3005/api/member-purchast")
+      .get(`http://localhost:3005/api/member-purchast/${id}`)
       .then((response) => {
         const data = response.data.result;
         console.log(data);
@@ -33,7 +30,7 @@ export default function Purchast() {
   };
 
 
-  const addCart = async (id, type) => {
+  const addCart = async (user_id,id, type) => {
     const have = cart.find(
       (v) => v.product_id == id && v.product_type_id == type
     );
@@ -41,33 +38,33 @@ export default function Purchast() {
     if (have === undefined) {
       try {
         const response = await axios.put(
-          `http://localhost:3005/api/member-purchast/cart`,
+          `http://localhost:3005/api/member-purchast/cart/${user_id}`,
           { id, type }
         );
       } catch (error) {
         console.error("Error:", error);
       }
-      getCart()
+      getCart(user_id)
     } else {
       try {
         const newQuantity = have.quantity + 1;
         console.log(newQuantity);
         console.log(id);
         const response = await axios.put(
-          `http://localhost:3005/api/member-purchast/cartplus`,
+          `http://localhost:3005/api/member-purchast/cartplus/${user_id}`,
           { id, newQuantity, type }
         );
       } catch (error) {
         console.error("Error:", error);
       }
-      getCart()
+      getCart(user_id)
     }
   };
 
 
-  const getWishlist = async () => {
+  const getWishlist = async (id) => {
     await axios
-      .get("http://localhost:3005/api/member-purchast/wishlist")
+      .get(`http://localhost:3005/api/member-purchast/wishlist/${id}`)
       .then((response) => {
         const data = response.data.result;
         console.log(data);
@@ -79,7 +76,7 @@ export default function Purchast() {
       });
   };
 
-  const addWishlist = async (id) => {
+  const addWishlist = async (user_id,id) => {
     const have = wishlist.find(
       (v) => v.product_id === id
     );
@@ -87,35 +84,35 @@ export default function Purchast() {
     if (have === undefined) {
       try {
         const response = await axios.put(
-          `http://localhost:3005/api/member-purchast/addwishlist`,
+          `http://localhost:3005/api/member-purchast/addwishlist/${user_id}`,
           { id }
         );
       } catch (error) {
         console.error("Error:", error);
       }
-      getWishlist()
+      getWishlist(user_id)
     }
   };
 
   
-  const deleteWishlist = async (id) => {
+  const deleteWishlist = async (user_id,id) => {
 
     console.log(id);
     try {
       const response = await axios.delete(
-        `http://localhost:3005/api/member-purchast/deletewishlist`,
+        `http://localhost:3005/api/member-purchast/deletewishlist/${user_id}`,
         { data: { id } }
       );
     } catch (error) {
       console.error("Error:", error);
     }
-    getWishlist()
+    getWishlist(user_id)
   };
 
 
 
-  const getCart = () => {
-    axios.get("http://localhost:3005/api/product/cart")
+  const getCart = (id) => {
+    axios.get(`http://localhost:3005/api/product/cart/${id}`)
       .then((response) => {
         const data = response.data.result;
         const newData = data.map((v) => {
@@ -130,8 +127,17 @@ export default function Purchast() {
 
 
   useEffect(() => {
-    getProduct();
-    getWishlist()
+    const token = localStorage.getItem("token");
+    const id=localStorage.getItem("id")
+    // 沒有token
+    if (!token) {
+      window.location.href="/"
+    }
+    console.log(id);
+    console.log(token);
+    getProduct(id);
+    getWishlist(id)
+    getCart(id)
   }, []);
 
   return (
@@ -168,7 +174,7 @@ export default function Purchast() {
                           data-bs-toggle="offcanvas"
                           data-bs-target="#offcanvasRight"
                           aria-controls="offcanvasRight"
-                          onClick={() => addCart(v.product_id, v.type_id)}
+                          onClick={() => addCart(v.user_id,v.product_id, v.type_id)}
                         >
                           再次購買
                         </button>
@@ -176,14 +182,14 @@ export default function Purchast() {
                         {wishlist.find((w) => w.product_id === v.product_id) === undefined ? (
                           <button className="btn btn-outline-confirm m-2 size-6 m-size-7"
                             data-bs-toggle="modal" data-bs-target="#exampleModal"
-                            onClick={() => addWishlist(v.product_id)}
+                            onClick={() => addWishlist(v.user_id,v.product_id)}
                           >
                             加入追蹤
                           </button>
                         ) : (
                           <button className="btn btn-outline-confirm m-2 size-6 m-size-7"
                           data-bs-toggle="modal" data-bs-target="#exampleModal1"
-                          onClick={() =>{deleteWishlist(v.product_id)} }
+                          onClick={() =>{deleteWishlist(v.user_id,v.product_id)} }
                           >
                             取消追蹤
                           </button>
@@ -267,7 +273,7 @@ export default function Purchast() {
                       繼續購物
                     </button>
                     <button type="button" className="btn btn-confirm ms-5"onClick={()=>{
-                        router.push("/product/cart")
+                        window.location.href=("/product/cart")
                       }}>
                       前往結帳
                     </button>
