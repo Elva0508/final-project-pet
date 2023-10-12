@@ -21,13 +21,19 @@
 
     img {
       cursor: pointer;
-      width: 50px;
+      width: 60px;
       top: 10px;
       right: 10px;
     }
 
     img:hover {
       content: url("/heart-clicked.svg");
+    }
+
+    @media screen and (max-width: 576px) {
+      img {
+        width: 50px;
+      }
     }
   }
 
