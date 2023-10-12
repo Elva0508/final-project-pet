@@ -172,7 +172,7 @@ router.get("/latest-missions", (req, res) => {
   );
 });
 
-//先取得收藏的任務有哪些
+// 列表頁：先取得收藏的任務有哪些
 router.get("/fav", (req, res) => {
   const userId = req.query.userId; // 從請求的 URL 中獲取用戶 token
   conn.execute(
@@ -187,7 +187,7 @@ router.get("/fav", (req, res) => {
   );
 });
 
-// 任務加入收藏
+// 列表頁：任務加入收藏
 router.put("/add-fav", (req, res) => {
   const { missionId } = req.body; // 從請求體中獲取任務的 missionId  
   console.log("req.body:", req.body);
@@ -206,7 +206,7 @@ router.put("/add-fav", (req, res) => {
   );
 });
 
-// 任務取消收藏
+// 列表頁：任務取消收藏
 router.delete("/delete-fav", (req, res) => {
   const { missionId } = req.body;
   const userId = req.query.userId; // 從請求的 URL 中獲取用戶 token
@@ -231,7 +231,7 @@ router.get("/mission-details/:mission_id", (req, res) => {
     `
     SELECT md.*, u.*, GROUP_CONCAT(DISTINCT im.file_path ORDER BY im.image_id) AS file_paths
     FROM mission_detail AS md 
-    JOIN users AS u ON md.post_user_id = u.user_id 
+    JOIN userinfo AS u ON md.post_user_id = u.user_id 
     JOIN image_mission AS im ON md.mission_id = im.mission_id
     WHERE md.mission_id = ?
     GROUP BY md.mission_id;
@@ -300,7 +300,7 @@ router.delete("/delete-fav/:mission_id", (req, res) => {
 
 // 任務詳細頁：GOOGLE地圖API
 const googleMapsClient = require('@google/maps').createClient({
-  key: 'AIzaSyD3M4Wt4xdyN-LrJyCVDwGSUkQ1B8KpKT8' // 你的 Google 地图 API 密钥
+  key: 'AIzaSyD3M4Wt4xdyN-LrJyCVDwGSUkQ1B8KpKT8' 
 });
 router.get("/mission-details-map/:mission_id", (req, res) => {
   const mission_id = req.params.mission_id; // 從路由參數中獲取 mission_id
@@ -389,6 +389,5 @@ router.post("/add-record", (req, res) => {
     }
   );
 });
-
 
 module.exports = router;

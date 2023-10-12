@@ -12,6 +12,20 @@
     border-bottom: 0;
   }
 
+  aside{
+    background-color: $content-bg;
+      img{
+        width: 10rem;
+        height: 10rem;
+        object-fit: cover;
+        border-radius: 50%;
+      }
+      .poster-gender{
+        font-size: 1.2rem;
+      }
+  }
+  
+
   header {
     background-color: $content-bg;
 
@@ -43,9 +57,9 @@
   }
 
   .item {
-    $block-width: 12px;
+    $block-width: 10px;
     width: calc(100% - 100px);
-    margin: 2rem auto;
+    margin: 1.5rem auto;
 
     &-title {
       display: flex;
@@ -58,7 +72,7 @@
         display: inline-block; //與標題文字水平排列
         background-color: $hover;
         width: $block-width;
-        height: 46px;
+        height: 40px;
         margin-right: 0.5rem;
       }
     }

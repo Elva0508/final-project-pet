@@ -8,6 +8,7 @@ import jwt_decode from "jwt-decode";
 import { GoogleMap, LoadScript, MarkerF, InfoWindowF, OverlayView } from '@react-google-maps/api';
 import { IoPaperPlaneOutline } from "react-icons/io5";
 import { PiWechatLogoThin } from "react-icons/pi";
+import { BsGenderFemale, BsGenderMale } from "react-icons/bs";
 import { FaRegHeart, FaHeart } from "react-icons/fa";
 // swiper:
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -84,11 +85,65 @@ const ImageSwiper = ({ missionImages }) => {
     );
 };
 
-export const MissionDetailSticky = () => {
+export const MissionDetailSticky = ({ userId, mission_id }) => {
+    const handleButtonClick = async () => {
+        // setIsLoading(true);
+        if (mission_id) {
+            try {
+                const response = await axios.get(`http://localhost:3005/api/mission/mission-details/${mission_id}`);
+                const post_user_id = response.data.post_user_id;
+                console.log("post_user_id是" + post_user_id);
+            } catch (error) {
+                console.error("Error:", error);
+            }
+        }
+        // 檢查是否有有效的 userId
+        //如果放入targetID 變數 這邊也要把targetID 變數放進來檢查
+        if (userId) {
+            // 建立要傳送的數據
+            const requestData = {
+                chatlist_userId1: userId,
+                chatlist_userId2: 31, // 放要對話的 targetID 變數
+            };
+            console.log("userId1是" + userId)
+            console.log("userId2是" + userId)
+
+            try {
+                const response = await axios.post(
+                    "http://localhost:3005/api/chatlist/creatchat",
+                    requestData
+                );
+
+                if (response.status === 201) {
+                    // 請求成功
+                    setMessage("請求成功");
+                    const chatUrl = response.data.chatUrl;
+                    console.log("chatUrl" + chatUrl);
+                    // 在這裡導向到 chatUrl
+                    // window.location.href = chatUrl;
+                } else if (response.status === 200) {
+                    // 消息已存在
+                    // setMessage("消息已存在");
+                    const chatUrl = response.data.chatUrl;
+                    console.log("已存在chatUrl" + chatUrl);
+                    // 在這裡導向到 chatUrl
+                    // window.location.href = chatUrl;
+                } else {
+                    // 請求失敗
+                    // setMessage("請求失敗: " + response.data.error);
+                }
+            } catch (error) {
+                // 處理錯誤
+                // setMessage(error.message || "發生錯誤");
+            } finally {
+                // setIsLoading(false);
+            }
+        }
+    };
     return (
         <>
             <section className="ask-and-apply d-flex justify-content-center align-items-center">
-                <button className="ask-and-apply-btn btn-outline-confirm d-flex align-items-center justify-content-center">
+                <button className="ask-and-apply-btn btn-outline-confirm d-flex align-items-center justify-content-center" onClick={handleButtonClick} >
                     <PiWechatLogoThin />
                     線上詢問
                 </button>
@@ -104,7 +159,7 @@ export const MissionDetailSticky = () => {
 function CustomHTMLRenderer({ htmlContent }) {
     return (
         <div className="item">
-            <div className="item-title size-5 mb-3">詳細說明</div>
+            <div className="item-title size-6 mb-3">詳細說明</div>
             <ul className="item-content size-6" dangerouslySetInnerHTML={{ __html: htmlContent }} />
         </div>
     );
@@ -112,8 +167,8 @@ function CustomHTMLRenderer({ htmlContent }) {
 
 const MapComponent = ({ lat, lng }) => {
     const mapContainerStyle = {
-        width: '90%',
-        height: '50vh',
+        width: '85%',
+        height: '35vh',
     };
 
     const center = {
@@ -158,6 +213,9 @@ export default function MissionDetail() {
         lat: 0, // 设置初始值为0或者其他合适的默认值
         lng: 0,
     });
+    // 聊天室:
+    const [message, setMessage] = useState(""); // 儲存返回後的消息
+    const [isLoading, setIsLoading] = useState(false);
 
     // 彈跳視窗
     const [selectedMissionId, setSelectedMissionId] = useState(null);
@@ -379,90 +437,124 @@ export default function MissionDetail() {
                                 </li>
                             </ol>
                         </nav>
-                        <header className='mt-3 p-4 position-relative'>
-                            <div className=' d-flex '>
-                                <p>案件編號：{v.pid}</p>
-                                <img className='position-absolute' src={isFavorite ? "/heart-clicked.svg" : "/heart.svg"} alt={isFavorite ? "已收藏" : "未收藏"} onClick={toggleFavorite} />
-                            </div>
+                        <main className="d-flex flex-column flex-lg-row row">
+                            <div className='left col-12 col-lg-3'>
+                                <aside className='post-user'>
+                                    <div className='mt-3 p-4 position-relative'>
+                                        <div className=' d-flex '>
+                                            <p className='size-6'>案主資訊</p>
+                                        </div>
+                                        <div className='poster-img text-center my-2'>
+                                            <img src={v.cover_photo} />
+                                        </div>
+                                        <div className='my-2 d-flex justify-content-center align-items-center'>
+                                            <p className='size-7 me-1'>{v.name}</p>
+                                            <div className='poster-gender'>
+                                                {v.gender === '女' ? <BsGenderFemale /> : <BsGenderMale />}
+                                            </div>
+                                        </div>
+                                        <div className='ms-3'>
+                                            <p className='size-7 '>聯絡時段</p>
+                                            <p>
+                                                {v.morning === 1 && '09:00~12:00 '}
+                                                {v.noon === 1 && '13:00~18:00 '}
+                                                {v.night === 1 && '19:00~21:00 '}
+                                                {v.morning === 0 && v.noon === 0 && v.night === 0 && '沒有可連絡時段'}
+                                            </p>
 
-                            <h2 className='size-3'>{v.title}</h2>
-                            <p className='size-6 mt-3'>刊登日期：{formatDate(v.post_date)}</p>
-                            <p className='size-6 mt-2'>最後更新：{formatDate(v.update_date)}</p>
-                        </header>
-                        <section className='description my-4 py-1 '>
-                            <div className="item d-flex flex-column flex-sm-row ">
-                                <div className="item-title size-5">
-                                    預算金額：
-                                </div>
-                                <p className="size-5 d-flex align-items-center ms-4 ms-sm-0 salary mt-2 mt-sm-0">NT$ {v.price} / 次</p>
+                                        </div>
+                                    </div>
+                                </aside>
                             </div>
-                            <div className="item d-flex flex-column flex-sm-row">
-                                <div className="item-title size-5">
-                                    任務日期：
-                                </div>
-                                <p className="size-6 d-flex align-items-center ms-4 ms-sm-0 mt-2 mt-sm-0">{v.start_date === v.end_date ? formatDate(v.start_date) : `${formatDate(v.start_date)}～${formatDate(v.end_date)}`}</p>
-                            </div>
-                            <div className="item d-flex flex-column flex-sm-row mission-place">
-                                <div className="item-title size-5">
-                                    任務地點：
-                                </div>
-                                <p className="size-6 d-flex align-items-center ms-4 ms-sm-0 mt-2 mt-sm-0">{v.city}{v.area}{v.location_detail}</p>
-                            </div>
-                            <div className='d-flex justify-content-center'>
-                                <MapComponent key={`map-${missionLocation.lat}-${missionLocation.lng}`} lat={missionLocation.lat} lng={missionLocation.lng} />
-                            </div>
+                            <div className='right col-12 col-lg-8'>
+                                <header className='mt-3 p-4 position-relative'>
+                                    <div className=' d-flex '>
+                                        <p>案件編號：{v.pid}</p>
+                                        <img className='position-absolute' src={isFavorite ? "/heart-clicked.svg" : "/heart.svg"} alt={isFavorite ? "已收藏" : "未收藏"} onClick={toggleFavorite} />
+                                    </div>
 
-                            <CustomHTMLRenderer htmlContent={v.description} />
+                                    <h2 className='size-5'>{v.title}</h2>
+                                    <p className='size-7 mt-3'>刊登日期：{formatDate(v.post_date)}</p>
+                                    <p className='size-7 mt-2'>最後更新：{formatDate(v.update_date)}</p>
+                                </header>
+                                <section className='description my-4 py-1 '>
+                                    <div className="item d-flex flex-column flex-sm-row ">
+                                        <div className="item-title size-6">
+                                            預算金額&emsp;
+                                        </div>
+                                        <p className="size-6 d-flex align-items-center ms-4 ms-sm-0 salary mt-2 mt-sm-0">NT$ {v.price} / 次</p>
+                                    </div>
+                                    <div className="item d-flex flex-column flex-sm-row">
+                                        <div className="item-title size-6">
+                                            任務日期&emsp;
+                                        </div>
+                                        <p className="size-6 d-flex align-items-center ms-4 ms-sm-0 mt-2 mt-sm-0">{v.start_date === v.end_date ? formatDate(v.start_date) : `${formatDate(v.start_date)}～${formatDate(v.end_date)}`}</p>
+                                    </div>
+                                    <div className="item d-flex flex-column flex-sm-row mission-place">
+                                        <div className="item-title size-6">
+                                            任務地點&emsp;
+                                        </div>
+                                        <p className="size-6 d-flex align-items-center ms-4 ms-sm-0 mt-2 mt-sm-0">{v.city}{v.area}{v.location_detail}</p>
+                                    </div>
+                                    <div className='d-flex justify-content-center'>
+                                        <MapComponent key={`map-${missionLocation.lat}-${missionLocation.lng}`} lat={missionLocation.lat} lng={missionLocation.lng} />
+                                    </div>
 
-                            <div className="item d-flex flex-column flex-sm-row">
-                                <div className="item-title size-5">
-                                    任務類型：
-                                </div>
-                                <p className="size-6 d-flex align-items-center ms-4 ms-sm-0 mt-2 mt-sm-0"> {(() => {
-                                    switch (v.mission_type) {
-                                        case 1:
-                                            return '到府照顧';
-                                        case 2:
-                                            return '安親寄宿';
-                                        case 3:
-                                            return '到府美容';
-                                        case 4:
-                                            return '行為訓練';
-                                        case 5:
-                                            return '醫療護理';
-                                        default:
-                                            return '其他';
-                                    }
-                                })()}</p>
+                                    <CustomHTMLRenderer htmlContent={v.description} />
+
+                                    <div className="item d-flex flex-column flex-sm-row">
+                                        <div className="item-title size-6">
+                                            任務類型&emsp;
+                                        </div>
+                                        <p className="size-6 d-flex align-items-center ms-4 ms-sm-0 mt-2 mt-sm-0"> {(() => {
+                                            switch (v.mission_type) {
+                                                case 1:
+                                                    return '到府照顧';
+                                                case 2:
+                                                    return '安親寄宿';
+                                                case 3:
+                                                    return '到府美容';
+                                                case 4:
+                                                    return '行為訓練';
+                                                case 5:
+                                                    return '醫療護理';
+                                                default:
+                                                    return '其他';
+                                            }
+                                        })()}</p>
+                                    </div>
+                                    <div className="item d-flex flex-column flex-sm-row">
+                                        <div className="item-title size-6">
+                                            支付方式&emsp;
+                                        </div>
+                                        <p className="size-6 d-flex align-items-center ms-4 ms-sm-0 mt-2 mt-sm-0">{(() => {
+                                            switch (v.payment_type) {
+                                                case 1:
+                                                    return '現金';
+                                                case 2:
+                                                    return '轉帳匯款';
+                                                default:
+                                                    return '其他';
+                                            }
+                                        })()}</p>
+                                    </div>
+                                    <div className="item">
+                                        <div className="item-title size-6">相片/影片</div>
+                                        <div className="item-image mt-4">
+                                            <ImageSwiper missionImages={missionImages} />
+                                        </div>
+                                    </div>
+                                </section>
                             </div>
-                            <div className="item d-flex flex-column flex-sm-row">
-                                <div className="item-title size-5">
-                                    支付方式：
-                                </div>
-                                <p className="size-6 d-flex align-items-center ms-4 ms-sm-0 mt-2 mt-sm-0">{(() => {
-                                    switch (v.payment_type) {
-                                        case 1:
-                                            return '現金';
-                                        case 2:
-                                            return '轉帳匯款';
-                                        default:
-                                            return '其他';
-                                    }
-                                })()}</p>
-                            </div>
-                            <div className="item">
-                                <div className="item-title size-5">相片/影片</div>
-                                <div className="item-image mt-4">
-                                    <ImageSwiper missionImages={missionImages} />
-                                </div>
-                            </div>
-                        </section>
+                        </main>
+
+
                     </div>
                 )
             })
             }
             <Footer />
-            <MissionDetailSticky />
+            <MissionDetailSticky userId={userId} mission_id={mission_id} setMessage={setMessage} isLoading={isLoading} setIsLoading={setIsLoading} message={message} />
         </>
     )
 }
