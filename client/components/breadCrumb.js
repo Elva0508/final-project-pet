@@ -143,7 +143,7 @@ function BreadCrumb(props) {
 
   return (
     <>
-      {pathname == "/" || pathname == "/product/cart/checkout" || pathname == "/chatlist/[id]" || pathname == "/product/cart/checkout/pay" || pathname == "/pay-confirm" || pathname == "/product/cart/checkout/cash-on-delivery" || pathname == "/work/find-mission" ?
+      {pathname == "/" || pathname == "/product/cart/checkout" || pathname == "/chatlist/[id]" || pathname == "/product/cart/checkout/pay" || pathname == "/pay-confirm" || pathname == "/product/cart/checkout/cash-on-delivery" || pathname == "/work/find-mission" || pathname == "/work/find-mission/[mission_id]" ?
         ("")
         :
         (<>

@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useRouter } from "next/router";
+import ResponsiveAppBar from "@/components/navbar/ResponsiveAppBar";
+import Footer from "@/components/footer";
 import axios from "axios"
 import Link from "next/link";
 import jwt_decode from "jwt-decode";
@@ -361,22 +363,22 @@ export default function MissionDetail() {
 
             {missionDetail.map((v, i) => {
                 return (
-                    <div className='container mission-detail my-3'>
-                        {/* <nav className="breadcrumb-wrapper" aria-label="breadcrumb">
+                    <div className='container mission-detail my-4'>
+                        <nav className="breadcrumb-wrapper" aria-label="breadcrumb">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item">
                                     <Link href="/">首頁</Link>
                                 </li>
                                 <li class="breadcrumb-item" aria-current="page">
                                     <Link href="/work/find-mission" >
-                                        任務總覽
+                                        小貓上工(找任務)
                                     </Link>
                                 </li>
-                                <li class="breadcrumb-item" aria-current="page">
+                                <li class="breadcrumb-item active" aria-current="page">
                                     {v.title}
                                 </li>
                             </ol>
-                        </nav> */}
+                        </nav>
                         <header className='mt-3 p-4 position-relative'>
                             <div className=' d-flex '>
                                 <p>案件編號：{v.pid}</p>
@@ -459,7 +461,8 @@ export default function MissionDetail() {
                 )
             })
             }
-
+            <Footer />
+            <MissionDetailSticky />
         </>
     )
 }
