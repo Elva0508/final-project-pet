@@ -20,23 +20,23 @@ export default function OrderStatusOne({order ,currentScreen}) {
       
         {currentData.map((v,i)=>{
                     return(
-                      <div key={i}>
-                        <p className='date my-3 size-7'>{v.created_at} 訂單編號 :{v.oid}</p>
-                        <div className='d-flex justify-content-between border-bottom pb-3'>
-                          <div>
-                            <p className='size-7'>狀態 : {v.status_name}</p>
-                            <p className='size-7'>付款方式 : {v.payment}</p>
-                            <p className='size-7'>寄送方式 : {v.shipment}</p>
-                            <img src={v.image} className='d-sm-none d-block' alt='產品圖片'></img>
-                            <p className='size-6 price'>訂單金額 : NT${v.total_amount}</p>
-                          </div>
-                          <div className='d-flex align-self-end'>
-                            <img src={v.image} className='d-sm-block d-none' alt='產品圖片'></img>
-                            <div className='d-flex align-self-center'>
-                            <Link className="btn btn-outline-confirm m-2 size-6" href={`/member/order/${v.oid}`}>查看明細</Link>
+                      <div key={i} className='bg mx-md-5 border-bottom '>
 
-                            </div>
+                        <div className='d-flex justify-content-between ms-3 ms-md-0'>
+                          <div className=''>
+                            <p className='size-6 pt-3 title'><span>訂單編號：</span>{v.oid}</p>
+                            <p className='size-7 '><span>訂單時間：</span>{v.created_at}</p>
+                            <p className='size-7'><span>訂單狀態：</span>{v.status_name}</p>
+                            <p className='size-7'><span>付款方式：</span>{v.payment}</p>
+                            <p className='size-7'><span>寄送方式：</span>{v.shipment}</p>
+                            <img src={v.image} className='' alt='產品圖片'></img>
+                            <p className='size-6 price pb-3'><span>訂單金額：</span>NT${v.total_amount}</p>
                           </div>
+                          <div className='d-flex align-items-center me-3 me-md-0'>
+                            <Link className="btn btn-outline-confirm  size-6" href={`/member/order/${v.oid}`}>查看明細</Link>
+                          </div>
+                           
+                 
                         </div>
                       </div>
                       

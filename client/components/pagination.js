@@ -39,7 +39,7 @@ export default function Pagination({itemsPerPage,total,activePage,setActivePage}
       }
   return (   
     <>
-        <div className="pagination size-7 d-flex justify-content-center mt-3">
+        <div className="pagination size-7 d-flex justify-content-center my-3">
             {activePage===1?(
               <div className='noclick prev me-1 d-flex justify-content-center align-items-center' ><MdNavigateBefore className='nocolor' /></div>
             ):(
