@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ListD from "@/components/member/list-d";
 import ListUserM from "@/components/member/list-user-m";
 import Image from "next/image";
 import myProfile from "@/assets/myProfile.svg";
 import useRWD from "@/hooks/useRWD";
+import jwt_decode from "jwt-decode";
 
 const ResetUserPassword = () => {
   //RWD
@@ -13,6 +14,26 @@ const ResetUserPassword = () => {
   const [password, setPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [newPasswordCheck, setNewPasswordCheck] = useState("");
+
+  //設置id狀態 解token
+  const [userId, setUserId] =useState(null)
+  useEffect(()=>{
+    const u = localStorage.getItem("id");
+    setUserId(u)
+    //const token = localStorage.getItem("token");
+    // if(token){
+    //   try{
+    //     const decodeToken = jwt_decode(token);
+    //     const currentUserId =decodeToken.id;
+    //     console.log(userId)
+
+    //     //更新userId狀態
+    //     setUserId(currentUserId)
+    //   }catch(error){
+    //     console.error("token解析錯誤",error)
+    //   }
+    // }
+  },[userId])
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -24,7 +45,7 @@ const ResetUserPassword = () => {
     }
     try {
       const response = await fetch(
-        "http://localhost:3005/api/user/change-password",
+        `http://localhost:3005/api/user/change-password/${userId}`,
         {
           method: "PUT",
           headers: {
@@ -37,7 +58,7 @@ const ResetUserPassword = () => {
         }
       );
       const data = await response.json();
-      alert(data.message);
+      //alert(data.message);
       setPassword("");
       setNewPassword("");
       setNewPasswordCheck("");
