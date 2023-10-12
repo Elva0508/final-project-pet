@@ -33,10 +33,6 @@ const MemberReserve = () => {
     <>
       {isAuthenticated && (
         <>
-          <div className="d-flex justify-content-end">
-            {/* mobile版的左側tab */}
-            <ListM />
-          </div>
           <ListUserM />
           <div className="d-flex container-fluid flex-column justify-content-around flex-md-row my-3">
             {/* <ListUserM /> */}

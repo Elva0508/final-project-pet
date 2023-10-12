@@ -18,10 +18,6 @@ const HelperInfoPage = () => {
     <>
       {isAuthenticated && (
         <>
-          <div className="d-flex justify-content-end">
-            {/* mobile版的左側tab */}
-            <ListM />
-          </div>
           <div className="d-flex container-fluid flex-column justify-content-around flex-md-row my-3">
             <ListD />
             <HelperInfo user_id={userId} />

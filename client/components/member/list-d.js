@@ -161,6 +161,22 @@ export default function ListD() {
             <li>
               <button
                 className={`size-6 col-12 ${
+                  activeButton === 8 ? "active" : ""
+                }`}
+                onClick={() => {
+                  setActiveButton(8);
+                  router.push("/member/selling");
+                }}
+              >
+                <div className="my-3">
+                  <FaChartLine />
+                  <span className="ms-2">幫手訂單</span>
+                </div>
+              </button>
+            </li>
+            <li>
+              <button
+                className={`size-6 col-12 ${
                   activeButton === 6 ? "active" : ""
                 }`}
                 onClick={() => {
@@ -190,22 +206,7 @@ export default function ListD() {
                 </div>
               </button>
             </li>
-            <li>
-              <button
-                className={`size-6 col-12 ${
-                  activeButton === 8 ? "active" : ""
-                }`}
-                onClick={() => {
-                  setActiveButton(8);
-                  router.push("/member/selling");
-                }}
-              >
-                <div className="my-3">
-                  <FaChartLine />
-                  <span className="ms-2">銷售紀錄</span>
-                </div>
-              </button>
-            </li>
+
             <li>
               <button
                 className={`size-6 col-12 ${
