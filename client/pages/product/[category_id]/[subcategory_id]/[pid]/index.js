@@ -1,3 +1,4 @@
+// 商品細節頁pid
 import React, { useState } from 'react';
 import Counter from '@/components/product/quantity-counter';
 import { AiFillStar } from 'react-icons/ai';

@@ -48,7 +48,7 @@ export default function ProductCard2({ productData, mainPic, setMainPic }) {
           <div className="col-6 col-md-4 col-lg-6 col-xl-4">
             <div className="product-card2" key={v.product_id}>
               <div className="card" >
-                <Link href={`/product/${v.product_id}`} >
+                <Link href={`/product/${v.category_id}/${v.subcategory_id}/${v.product_id}`} >
                   <img src={v.images_one} className="card-img-top" alt="..." />
                 </Link>
                 <div className="card-body p-0" >

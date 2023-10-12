@@ -1,3 +1,4 @@
+//商品列表頁
 import { React, useState, useRef } from 'react';
 import ProductCard2 from '@/components/product/product-card2';
 import { useEffect } from 'react';
@@ -151,9 +152,6 @@ export default function ProductList() {
             params: {
                 category,
                 subcategory,
-                vendor,
-                minPrice,
-                maxPrice,
                 sortBy: selectedSort,
             }
         })
@@ -166,7 +164,7 @@ export default function ProductList() {
                 console.error('Error:', error);
                 setIsLoading(false);
             });
-    }, [category, subcategory, vendor, minPrice, maxPrice, selectedSort]);
+    }, [category, subcategory, selectedSort]);
 
     // 當選擇不同的篩選條件時，更新相應的狀態
     // 透過 event.target.value 來找到用戶輸入的值
@@ -208,27 +206,27 @@ export default function ProductList() {
     };
 
 
-    //廠商與價錢篩選
-    const handleFilterSubmit = () => {
-        // 在事件處理程序中構建請求資料
-        const requestData = {
-            vendor: vendor,
-            minPrice: minPrice,
-            maxPrice: maxPrice
-        };
+    // //廠商與價錢篩選
+    // const handleFilterSubmit = () => {
+    //     // 在事件處理程序中構建請求資料
+    //     const requestData = {
+    //         vendor: vendor,
+    //         minPrice: minPrice,
+    //         maxPrice: maxPrice
+    //     };
 
-        // 使用 Axios 或其他方式將資料送到後端
-        axios.post('http://localhost:3005/api/product/filter_sort', requestData)
-            .then(response => {
-                // 處理後端返回的資料
-                console.log('後端回應:', response.data);
-                // 更新產品資料或其他操作
-                setProductData(response.data.result);
-            })
-            .catch(error => {
-                console.error('錯誤:', error);
-            });
-    };
+    //     // 使用 Axios 或其他方式將資料送到後端
+    //     axios.post('http://localhost:3005/api/product/filter_sort', requestData)
+    //         .then(response => {
+    //             // 處理後端返回的資料
+    //             console.log('後端回應:', response.data);
+    //             // 更新產品資料或其他操作
+    //             setProductData(response.data.result);
+    //         })
+    //         .catch(error => {
+    //             console.error('錯誤:', error);
+    //         });
+    // };
 
     //篩選重複的廠商
     const [vendorData, setVendorData] = useState({ result: [] });
@@ -252,6 +250,30 @@ export default function ProductList() {
                 setIsLoading(false);
                 setProductData(response.data.result);
                 setSearch(''); //搜尋之後清空搜尋文字
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                setIsLoading(false);
+            });
+    };
+
+    //傳送vendor, minPrice, maxPrice的到後端
+    const handlePriceVendorfilter = (vendor, minPrice, maxPrice) => {
+        console.log("handlePriceVendorfilter 函数被使用，search結果:", vendor, minPrice, maxPrice);
+        axios.get('http://localhost:3005/api/product/filter_sort', {
+            params: {
+                vendor, 
+                minPrice, 
+                maxPrice
+            }
+        })
+            .then(response => {
+                // 请求完成后隐藏加载蒙层
+                setIsLoading(false);
+                setProductData(response.data.result);
+                setVendor(''); //搜尋之後清空搜尋文字
+                setMinPrice('');
+                setMaxPrice('');
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -417,7 +439,10 @@ export default function ProductList() {
                                             <button
                                                 type="button"
                                                 className="btn btn-brown col-12 mt-3"
-                                                onClick={handleFilterSubmit} // 點擊按鈕時觸發事件處理程序
+                                                onClick={() => {
+                                                    handlePriceVendorfilter(vendor, minPrice, maxPrice);
+                                                    console.log("價錢與品牌按鈕有被點到");
+                                                }} // 點擊按鈕時觸發事件處理程序
                                             >
                                                 確定
                                             </button>
@@ -509,7 +534,7 @@ export default function ProductList() {
                                                 </div>
                                             </div>
                                         </div>
-                                        {/* vendor篩選 */}
+                                        {/*  */}
                                         <div className="col-12 mt-2">
                                             <label for="brand size-6" className="form-label">品牌</label>
                                             {/* <input type="text" className="form-control" id="brand" placeholder="請輸入品牌關鍵字">
@@ -530,7 +555,10 @@ export default function ProductList() {
                                         <button
                                             type="button"
                                             className="btn btn-brown col-12 mt-3"
-                                            onClick={handleFilterSubmit} // 點擊按鈕時觸發事件處理程序
+                                            onClick={() => {
+                                                handlePriceVendorfilter(vendor, minPrice, maxPrice);
+                                                console.log("價錢與品牌按鈕有被點到");
+                                            }} // 點擊按鈕時觸發事件處理程序
                                         >
                                             確定
                                         </button>
