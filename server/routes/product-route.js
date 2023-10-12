@@ -190,8 +190,10 @@ router.put("/cartplus", (req, res) => {
 
 //產品列表頁大類小類篩選＋價格篩選＋上架時間與價格排序
 router.get("/filter_sort", (req, res) => {
-    const { productname, vendor, subcategory, category, minPrice, maxPrice, sortBy } = req.query;
+    const { search, vendor, subcategory, category, minPrice, maxPrice, sortBy } = req.query;
+    console.log(req.query)
 
+    
     // 創建查詢參數數組，將參數添加到數組中
     const queryParams = [];
 
@@ -216,11 +218,10 @@ router.get("/filter_sort", (req, res) => {
         sqlQuery += 'AND vendor LIKE ? ';
         queryParams.push(`%${vendor}%`);
     }
-    if (productname != null) {
-        sqlQuery += 'AND product_name LIKE ? ';
-        queryParams.push(`%${productname}%`);
+    if (search != null) {
+        sqlQuery += 'AND (product_name LIKE ? OR vendor LIKE ?) ';
+        queryParams.push(`%${search}%`, `%${search}%`);
     }
-
     // 如果指定了最小價格和最大價格，將價格篩選條件添加到 SQL 查詢中
     if (minPrice && maxPrice) {
         sqlQuery += `AND p.specialoffer BETWEEN ? AND ? `;
@@ -282,7 +283,7 @@ router.get("/vendor", (req, res) => {
 //加入收藏
 //查看收藏內有甚麼商品
 router.get("/collections", (req, res) => {
-    const userId = req.query.userId; // 從請求的 URL 中獲取用戶 token   這裡有問題!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    const userId = req.query.userId; // 從請求的 URL 中獲取用戶 token   
     connection.execute(
         `SELECT product_collections.*
         FROM product_collections

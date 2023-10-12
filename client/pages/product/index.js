@@ -1,5 +1,4 @@
-import { React, useState } from 'react';
-import Search from '@/components/job/search';
+import { React, useState, useRef } from 'react';
 import ProductCard2 from '@/components/product/product-card2';
 import { useEffect } from 'react';
 import axios from 'axios';
@@ -9,6 +8,56 @@ import { HiOutlineFilter } from 'react-icons/hi';
 import LoadingOverlay from '@/components/product/loadingoverlay'; //加載畫面尚未成功
 import { BiSearchAlt } from "react-icons/bi";
 import jwt_decode from 'jwt-decode';
+
+
+const Search = ({ placeholder, color, onClick, search, setSearch }) => {
+    const rippleBtnRef = useRef(null);
+    const inputRef = useRef(null);
+    const handleRipple = () => {
+        const btn = rippleBtnRef.current;
+        btn.classList.add("ripple");
+        setTimeout(() => {
+            btn.classList.remove("ripple");
+        }, 500); //動畫持續時間結束後移除動畫效果，讓動畫可以重複使用
+    };
+    const sendSearchRequest = () => {
+        const searchValue = inputRef.current.value;
+        handleRipple();
+
+        if (onClick) {
+            axios.get('http://localhost:3005/api/filter_sort', {
+                params: {
+                    search: searchValue,
+                }
+            })
+                .then(response => {
+                    
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+    };
+
+    return (
+        <div className="job-search">
+            <input
+                id="search-input"
+                type="text"
+                placeholder={placeholder || "Search"}
+                ref={inputRef}
+                value={search}
+                onChange={(e) => {
+                    setSearch(e.target.value);
+                    console.log(e.target.value);
+                }}
+            />
+            <button onClick={sendSearchRequest} ref={rippleBtnRef}>
+                <BiSearchAlt className="job-search-icon" />
+            </button>
+        </div>
+    );
+};
 
 export default function ProductList() {
 
@@ -89,7 +138,7 @@ export default function ProductList() {
         });
     }, [])
 
-    //篩選＋排序
+    //篩選＋排序+關鍵字
     // 狀態變數，用於存儲商品數據、加載狀態和其他篩選選項
     //category會導致card的category不見！！！！！！！！！！！！！！！！！！
     const [category, setCategory] = useState(null);
@@ -99,8 +148,9 @@ export default function ProductList() {
     const [maxPrice, setMaxPrice] = useState(null);
     const [sortBy, setSortBy] = useState(null);
     const [isLoading, setIsLoading] = useState(false); // 加載畫面
-    // 定義一個狀態用於存儲排序方式，預設為空字串
-    const [selectedSort, setSelectedSort] = useState('');
+    const [selectedSort, setSelectedSort] = useState(''); // 定義一個狀態用於存儲排序方式，預設為空字串
+    const [search, setSearch] = useState(null);
+
 
     // 根據篩選條件發送請求到後端 API
     useEffect(() => {
@@ -112,8 +162,9 @@ export default function ProductList() {
                 vendor,
                 minPrice,
                 maxPrice,
-                sortBy: selectedSort, // 使用選擇的排序方式
-            },
+                sortBy: selectedSort,
+                search,
+            }
         })
             .then(response => {
                 // 请求完成后隐藏加载蒙层
@@ -124,7 +175,7 @@ export default function ProductList() {
                 console.error('Error:', error);
                 setIsLoading(false);
             });
-    }, [category, subcategory, vendor, minPrice, maxPrice, selectedSort]);
+    }, [category, subcategory, vendor, minPrice, maxPrice, selectedSort, search]); 
 
     // 當選擇不同的篩選條件時，更新相應的狀態
     // 透過 event.target.value 來找到用戶輸入的值
@@ -176,7 +227,7 @@ export default function ProductList() {
         };
 
         // 使用 Axios 或其他方式將資料送到後端
-        axios.post('http://localhost:3005/api/product/filter', requestData)
+        axios.post('http://localhost:3005/api/product/filter_sort', requestData)
             .then(response => {
                 // 處理後端返回的資料
                 console.log('後端回應:', response.data);
@@ -199,7 +250,6 @@ export default function ProductList() {
 
 
 
-
     return (
         <>
 
@@ -218,7 +268,7 @@ export default function ProductList() {
                         </ol>
                     </nav> */}
                     <div className="search-sort d-flex flex-md-row flex-column justify-content-between align-items-center ms-3 me-3">
-                        <Search />
+                        <Search placeholder={"請輸入商品或品牌關鍵字"}  search={search} setSearch={setSearch} />
                         {/* created_at和specialoffer排序 */}
                         <div className='sort ' >
                             <div className='sort-btn d-flex   justify-content-center text-align-center'>
@@ -228,7 +278,7 @@ export default function ProductList() {
                                 <button className={`size-7 m-1 p-1 ${isPriceIconVisible ? 'active' : ''}`} onClick={togglePriceIcon}>
                                     價格 {isPriceIconVisible ? <FaCaretUp /> : <FaCaretDown />}
                                 </button> */}
-                                <div className="col-12 mt-2">
+                                <div className="col-12 mt-2 d-flex">
                                     <label htmlFor="specialoffer-sort" className="form-label">排序依據</label>
                                     <select
                                         id="specialoffer-sort"
@@ -239,6 +289,8 @@ export default function ProductList() {
                                         <option value="">請選擇</option>
                                         <option value="price_desc">價格由高到低</option>
                                         <option value="price_asc">價格由低到高</option>
+                                        {/* <option value="created_at_desc">上架由新到舊</option>
+                                        <option value="created_at_asc">上架由舊到新</option> */}
                                     </select>
                                 </div>
                             </div>
