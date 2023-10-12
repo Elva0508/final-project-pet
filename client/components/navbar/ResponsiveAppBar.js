@@ -108,6 +108,10 @@ function ResponsiveAppBar() {
   };
 
   const {setActiveButton}=useActivePage()
+  const { cart, setCart } = useCart();
+  const goCart = () => {
+    router.push("/product/cart");
+  };
 
   const router = useRouter();
   //登入登出
@@ -119,13 +123,12 @@ function ResponsiveAppBar() {
     localStorage.removeItem("id");
     setActiveButton(0)
 
+    localStorage.clear();
+    setCart([])
     router.push("/");
   };
 
-  const { cart, setCart } = useCart();
-  const goCart = () => {
-    router.push("/product/cart");
-  };
+
 
   return (
     <ThemeProvider theme={theme}>
@@ -224,9 +227,12 @@ function ResponsiveAppBar() {
                 </IconButton>
                 <IconButton onClick={goCart} sx={{ p: 0 }} className="cartNum">
                   <Image src={ShoppingCart} alt="shoppingCart" />
+                  {Token && cart.length!==0?(
                   <div className="cartNumber size-7 ">
                     <p className="">{cart.length}</p>
                   </div>
+                  ):("")}
+
                 </IconButton>
               </Tooltip>
               <Menu
