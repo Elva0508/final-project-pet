@@ -13,6 +13,7 @@
     }
     .price{
         font-weight: 600;
+        color: $price;
     }
     img{
         width: 100px;
@@ -60,5 +61,8 @@
       }
     .big{
         font-weight: 600;
+    }
+    .my{
+        color: $hover;
     }  
 }

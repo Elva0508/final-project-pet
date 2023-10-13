@@ -5,12 +5,11 @@ import axios from "axios";
 // 中文路徑對照陣列，移出到config/index.js中設定
 import { pathnameLocale } from '@/config/index'
 import Link from 'next/link'
-import { QueueRounded } from '@mui/icons-material';
 
 function BreadCrumb(props) {
     const { pathname,query } = useRouter();
     // console.log(pathname);
-    // console.log(query);
+    console.log(query);
     const [product, setProduct] = useState([])
     const [article, setArticle] = useState([])
     const [mission, setMission] = useState([])
@@ -116,6 +115,7 @@ const getSubcategory =  () => {
 
       // 最後一個
       if (i === array.length - 1) {
+        console.log(query.oid);
         return (
           <li
             key={i}
