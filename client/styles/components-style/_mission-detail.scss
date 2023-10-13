@@ -8,24 +8,6 @@
 }
 
 .mission-detail {
-  .MuiCard-root{
-    width: 100%;
-    margin: 1rem auto;
-    background-color: $cos-white;
-    align-items: center;
-  }
-  .MuiTypography-root{
-    color: $text-main;
-    font-weight: normal;
-  }
-  .MuiChip-root{
-    border: 1px solid $hover;
-    color: $hover;
-  }
-  .MuiTypography-body-sm{
-    display: flex;
-    justify-content: space-between;
-  }
   nav a {
     border-bottom: 0;
   }
@@ -53,6 +35,40 @@
     .chat-btn {
       box-shadow: 1px 5px 7px rgba(0, 0, 0, 0.25);
       margin: 0.5rem auto;
+    }
+  }
+
+  // 熱門任務
+  .MuiCard-root{
+    width: 100%;
+    margin: 1rem auto;
+    background-color: $cos-white;
+    align-items: center;
+    border: 0;
+  }
+  .MuiAspectRatio-content{
+    background-color: transparent;
+  }
+  .MuiTypography-root{
+    color: $text-main;
+    font-weight: normal;
+  }
+  .MuiChip-root{
+    border: 1px solid $hover;
+    color: $hover;
+  }
+  .MuiTypography-body-sm{
+    display: flex;
+    justify-content: space-between;
+  }
+  .popular-cards{
+    width: 100%;
+    gap: 1rem;
+    .popular-card-content{
+      width: 9rem;
+      .popular-card-title{
+        min-height: 2rem;
+      }
     }
   }
 

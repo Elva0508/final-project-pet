@@ -393,13 +393,30 @@ router.post("/add-record", (req, res) => {
 // 根據應徵紀錄找出「熱門任務」
 router.get("/popular", (req, res) => {
   conn.execute(    // 算出每個mission_id有多少個不同的user_id 並從中選出有最多不同user_id的mission_id
-    `SELECT md.*, COUNT(DISTINCT mr.user_id) AS user_count
+    `SELECT md.*, im.file_path AS file_path, COUNT(DISTINCT mr.user_id) AS user_count
     FROM mission_detail AS md
     JOIN mission_record AS mr ON md.mission_id = mr.mission_id
+    JOIN (${commonSubquery}) AS min_ids ON md.mission_id = min_ids.mission_id
+    JOIN image_mission AS im ON min_ids.mission_id = im.mission_id AND min_ids.min_image_id = im.image_id
     GROUP BY md.mission_id
     ORDER BY user_count DESC
     LIMIT 5    
     ;`,
+    (error, result) => {
+      res.json({ result });
+    }
+  );
+});
+
+// 詳細頁：算已應徵人數
+router.get("/record-count/:mission_id", (req, res) => {
+  const mission_id = req.params.mission_id; // 從路由參數中獲取 mission_id
+  conn.execute(    // 算出每個mission_id有多少個不同的user_id 並從中選出有最多不同user_id的mission_id
+    `SELECT mission_id, COUNT(DISTINCT user_id) AS user_count
+    FROM mission_record
+    WHERE mission_id = ?
+    ;`,
+    [mission_id],  // 使用 mission_id 進行查詢
     (error, result) => {
       res.json({ result });
     }

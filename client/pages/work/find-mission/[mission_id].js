@@ -107,62 +107,52 @@ import Typography from '@mui/joy/Typography';
 //         </div>
 //     );
 // }
-function InteractiveCard({ setPopularMissions }) {
-    const getPopularMissions = async () => {
-        try {
-            let apiUrl = `http://localhost:3005/api/mission/popular`;
-            const response = await axios.get(apiUrl);
-            const data = response.data.data;
-            setPopularMissions(data);
-            console.log("現在的popularMissions是" + popularMissions);
-        } catch (error) {
-            console.error("Error:", error);
-        }
-    };
-
-    useEffect(() => {
-        getPopularMissions()
-    }, [])
-
-
-
+function InteractiveCard({ popularMissions, setPopularMissions }) {
     return (
-        <Card
-            variant="outlined"
-            orientation="horizontal"
-            sx={{
-                width: 320,
-                '&:hover': { boxShadow: 'md', borderColor: 'neutral.outlinedHoverBorder' },
-            }}
-        >
-            <AspectRatio ratio="1" sx={{ width: 60 }}>
-                <img
-                    src="https://images.unsplash.com/photo-1507833423370-a126b89d394b?auto=format&fit=crop&w=90"
-                    srcSet="https://images.pexels.com/photos/977935/pexels-photo-977935.jpeg?auto=compress&cs=tinysrgb&dpr=1&fit=crop&h=200&w=280"
-                    loading="lazy"
-                    alt=""
-                />
-            </AspectRatio>
-            <Link href={`/work/find-mission`}>
-
-                <CardContent>
-                    <Typography level="title-lg" id="card-description">
-                        桃園10/30~11/02貓咪代餵
-                    </Typography>
-                    <Typography level="body-sm" aria-describedby="card-description" mb={1}>
-                        台北市
-                        <Chip
-                            variant="outlined"
-                            color="primary"
-                            size="sm"
-                            sx={{ pointerEvents: 'none' }}
-                        >
-                            NT$ 800 / 次
-                        </Chip>
-                    </Typography>
-                </CardContent>
-            </Link>
-        </Card>
+        <>
+            {popularMissions.map((v, i) => {
+                return (
+                    <Card
+                        variant="outlined"
+                        orientation="horizontal"
+                        sx={{
+                            width: 320,
+                            '&:hover': { boxShadow: 'md', borderColor: 'neutral.outlinedHoverBorder' },
+                        }}
+                        className='d-flex flex-column'
+                    >
+                        <div className='d-flex align-items-center justify-content-between popular-cards'>
+                            <AspectRatio ratio="1" sx={{ width: 80 }}>
+                                <img
+                                    src={v.file_path}
+                                    // srcSet={v.file_path}
+                                    loading="lazy"
+                                    alt=""
+                                />
+                            </AspectRatio>
+                            <Link href={`/work/find-mission/${v.mission_id}`}>
+                                <CardContent className='popular-card-content'>
+                                    <Typography level="title-lg" id="card-description" className='size-7 popular-card-title'>
+                                        {v.title}
+                                    </Typography>
+                                    <Typography level="body-sm" aria-describedby="card-description" mb={1}>
+                                        {v.city}
+                                        <Chip
+                                            variant="outlined"
+                                            color="primary"
+                                            size="sm"
+                                            sx={{ pointerEvents: 'none' }}
+                                        >
+                                            NT$ {v.price} / 次
+                                        </Chip>
+                                    </Typography>
+                                </CardContent>
+                            </Link>
+                        </div>
+                    </Card>
+                );
+            })}
+        </>
     );
 }
 
@@ -353,6 +343,8 @@ export default function MissionDetail() {
 
     // 熱門任務
     const [popularMissions, setPopularMissions] = useState([]);
+    // 算應徵人數
+    const [recordCount, setRecordCount] = useState(0);
 
     // GOOGLE地圖API：初始狀態
     const [missionLocation, setMissionLocation] = useState({
@@ -548,7 +540,7 @@ export default function MissionDetail() {
         if (!userId) {
             alert('請先登入會員');
             return;
-          }
+        }
         // setIsLoading(true);
 
         // 檢查是否有有效的 userId
@@ -675,55 +667,86 @@ export default function MissionDetail() {
         return `${year}/${month}/${day}`;
     }
 
+    // 熱門任務
+    const getPopularMissions = async () => {
+        try {
+            const response = await axios.get(`http://localhost:3005/api/mission/popular`);
+            const data = response.data.result;  //注意這裡是result
+            console.log("data是" + data);
+            setPopularMissions(data);
+            console.log("現在的popularMissions是" + popularMissions);
+        } catch (error) {
+            console.error("Error:", error);
+        }
+    };
+
+    // 算應徵人數
+    const getRecordCount = async () => {
+        try {
+            const response = await axios.get(`http://localhost:3005/api/mission/record-count//${mission_id}`);
+            const data = response.data.result;  //注意這裡是result
+            setRecordCount(data);
+        } catch (error) {
+            console.error("Error:", error);
+        }
+    };
+
+    useEffect(() => {
+        getPopularMissions();
+        getRecordCount();
+    }, [])
+    console.log("recordCount:", recordCount);
+
     return (
         <>
             {/* Modal */}
             {/* {userId && ( */}
-                <div className={`modal fade apply-modal`} id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div className="modal-dialog modal-dialog-centered">
-                        <div className="modal-content">
-                            <div className="modal-header">
-                                <h5 className="modal-title size-4" id="exampleModalLabel">立即應徵</h5>
-                                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div className='modal-body'>
-                                <div className="profile d-flex justify-content-center align-items-center">
-                                    <div className="avatar">
-                                        <img src="/kitten.jpg" />
-                                    </div>
-                                    <div className="justify-content-center">
-                                        <div className="size-4">
-                                            雅晴
-                                        </div>
-                                        <p className="size-6 mt-1">
-                                            25歲
-                                        </p>
-                                        <p className='size-6 mt-1'>新北市三重區</p>
-                                    </div>
+            {/* 本來是想讓有userId時才跳modal 但一直報錯 */}
+            <div className={`modal fade apply-modal`} id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div className="modal-dialog modal-dialog-centered">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <h5 className="modal-title size-4" id="exampleModalLabel">立即應徵</h5>
+                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div className='modal-body'>
+                            <div className="profile d-flex justify-content-center align-items-center">
+                                <div className="avatar">
+                                    <img src="/kitten.jpg" />
                                 </div>
-                                <div className='recommend mt-4'>
-                                    <div className='size-5 mb-2'>自我推薦</div>
-                                    <textarea className='recommend-content' value={msgInputValue}
-                                        onChange={(e) => setMsgInputValue(e.target.value)} ></textarea>
-
-                                    <div className='auto-send d-flex my-4 align-items-center'>
-                                        <input type="checkbox" className='checkbox' checked={autoSend} onChange={() => setAutoSend(!autoSend)} />
-                                        <div className='size-6 ms-2'>自動發送小幫手履歷<span className='size-7' >（需開啟小幫手資料）</span></div>
+                                <div className="justify-content-center">
+                                    <div className="size-4">
+                                        雅晴
                                     </div>
+                                    <p className="size-6 mt-1">
+                                        25歲
+                                    </p>
+                                    <p className='size-6 mt-1'>新北市三重區</p>
                                 </div>
                             </div>
+                            <div className='recommend mt-4'>
+                                <div className='size-5 mb-2'>自我推薦</div>
+                                <textarea className='recommend-content' value={msgInputValue}
+                                    onChange={(e) => setMsgInputValue(e.target.value)} ></textarea>
 
-                            <div className="modal-footer justify-content-center py-4">
-                                <button type="button" className=" btn-outline-confirm" data-bs-dismiss="modal">取消</button>
-                                <button type="button" className=" btn-second" onClick={() => {
-                                    handleConfirmSubmit();  //寫進應徵紀錄
-                                    handleSendClick();  // 處理訊息送出事件+跟案主聊(導到聊天室)
-                                }} data-bs-dismiss="modal">確認送出</button>
-                                {/* 在這邊也要加上data-bs-dismiss="modal"才能在送出後關閉modal 才不會到聊天室之後 後面畫面還是灰暗的 */}
+                                <div className='auto-send d-flex my-4 align-items-center'>
+                                    <input type="checkbox" className='checkbox' checked={autoSend} onChange={() => setAutoSend(!autoSend)} />
+                                    <div className='size-6 ms-2'>自動發送小幫手履歷<span className='size-7' >（需開啟小幫手資料）</span></div>
+                                </div>
                             </div>
+                        </div>
+
+                        <div className="modal-footer justify-content-center py-4">
+                            <button type="button" className=" btn-outline-confirm" data-bs-dismiss="modal">取消</button>
+                            <button type="button" className=" btn-second" onClick={() => {
+                                handleConfirmSubmit();  //寫進應徵紀錄
+                                handleSendClick();  // 處理訊息送出事件+跟案主聊(導到聊天室)
+                            }} data-bs-dismiss="modal">確認送出</button>
+                            {/* 在這邊也要加上data-bs-dismiss="modal"才能在送出後關閉modal 才不會到聊天室之後 後面畫面還是灰暗的 */}
                         </div>
                     </div>
                 </div>
+            </div>
             {/* )} */}
 
             {missionDetail.map((v, i) => {
@@ -779,19 +802,27 @@ export default function MissionDetail() {
                                             <PiWechatLogoThin />
                                             線上詢問
                                         </button>
-                                        <button className="chat-btn btn-second d-flex align-items-center justify-content-center" data-bs-toggle="modal" data-bs-target="#exampleModal" onClick={handleApplyClick}>
-                                            <IoPaperPlaneOutline />
-                                            立即應徵
-                                        </button>
+                                        {userId && (    // 會員有登入時顯示這顆
+                                            <button className="chat-btn btn-second d-flex align-items-center justify-content-center" data-bs-toggle="modal" data-bs-target="#exampleModal" onClick={handleApplyClick}>
+                                                <IoPaperPlaneOutline />
+                                                立即應徵
+                                            </button>
+                                        )}
+                                        {!userId && (   // 會員沒登入時顯示這顆
+                                            <button className="chat-btn btn-second d-flex align-items-center justify-content-center" onClick={handleApplyClick}>
+                                                <IoPaperPlaneOutline />
+                                                立即應徵
+                                            </button>
+                                        )}
                                     </div>
                                 </aside>
-                                <aside className='post-user'>
+                                <aside className='post-user mt-4'>
                                     <div className='mt-3 p-4'>
                                         <div className=' d-flex '>
                                             <p className='size-6'>熱門任務</p>
                                         </div>
                                         <div>
-                                            <InteractiveCard setPopularMissions={setPopularMissions} />
+                                            <InteractiveCard popularMissions={popularMissions} setPopularMissions={setPopularMissions} />
                                         </div>
                                     </div>
                                 </aside>
@@ -806,7 +837,11 @@ export default function MissionDetail() {
 
                                     <h2 className='size-5'>{v.title}</h2>
                                     <p className='size-7 mt-3'>刊登日期：{formatDate(v.post_date)}</p>
-                                    <p className='size-7 mt-2'>最後更新：{formatDate(v.update_date)}</p>
+                                    <div className='d-flex mt-2 justify-content-between'>
+                                        <p className='size-7 '>最後更新：{formatDate(v.update_date)}</p>
+                                        <p className='size-7 '>已有 {recordCount.user_count} 人應徵</p>
+                                    </div>
+
                                 </header>
                                 <section className='description my-4 py-1 '>
                                     <div className="item d-flex flex-column flex-sm-row ">
