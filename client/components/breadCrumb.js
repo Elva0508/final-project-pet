@@ -5,7 +5,6 @@ import axios from "axios";
 // 中文路徑對照陣列，移出到config/index.js中設定
 import { pathnameLocale } from '@/config/index'
 import Link from 'next/link'
-import { QueueRounded } from '@mui/icons-material';
 
 function BreadCrumb(props) {
     const { pathname,query } = useRouter();
