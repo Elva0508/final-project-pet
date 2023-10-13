@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import ListD from "@/components/member/list-d";
-import ListUserM from "@/components/member/list-user-m";
 import { BsCalendarDateFill } from "react-icons/bs";
 import { RecordTemplate } from "@/components/member/Record-template";
 import memberService from "@/services/member-service";
@@ -10,16 +9,21 @@ import { useRouter } from "next/router";
 const MemberReserve = () => {
   const [requests, setRequests] = useState([]);
   const [status, setStatus] = useState(2);
-  const { isAuthenticated, userId } = useAuth();
+  const { isAuthenticated, userId: user_id } = useAuth();
   const router = useRouter();
   useEffect(() => {
-    if (!isAuthenticated) {
-      router.push("/member/login");
+    // 初始狀態時isAuthenticated為null，等到isAuthenticated有值時(true or false)才做驗證判斷
+    if (isAuthenticated === null) {
+      return;
+    } else {
+      if (isAuthenticated === false) {
+        router.push("/member/login");
+      }
     }
   }, [isAuthenticated]);
   useEffect(() => {
     memberService
-      .getReserve(status)
+      .getReserve(user_id, status)
       .then((response) => {
         console.log(response);
         setRequests(response?.data?.data);
@@ -33,9 +37,7 @@ const MemberReserve = () => {
     <>
       {isAuthenticated && (
         <>
-          <ListUserM />
           <div className="d-flex container-fluid flex-column justify-content-around flex-md-row my-3">
-            {/* <ListUserM /> */}
             <ListD />
             <div className="col-12 col-sm-8 sales-and-request">
               <RecordTemplate
