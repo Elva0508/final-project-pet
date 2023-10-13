@@ -783,7 +783,13 @@ const HelperDetail = () => {
   const [filterReview, setFilterReview] = useState([]);
   const [star, setStar] = useState("all");
   const contentRef = useRef();
+  const [totalRows, setTotalRows] = useState(null);
   const { collection, setCollection } = useHelper();
+  const [fiveStar, setFiveStar] = useState(0);
+  const [fourStar, setFourStar] = useState(0);
+  const [threeStar, setThreeStar] = useState(0);
+  const [twoStar, setTwoStar] = useState(0);
+  const [oneStar, setOneStar] = useState(0);
   // const uid = parseInt(router.query.uid);
   const handleFav = (e) => {
     if (isAuthenticated) {
@@ -824,29 +830,82 @@ const HelperDetail = () => {
     setPage(page);
   };
   useEffect(() => {
-    document.addEventListener("scroll", () => {
-      const scrollY = document.scrollY;
-      const windowHeight = document.innerHeight;
+    const handleScroll = () => {
+      const leftBlock = document.querySelector(".left-block");
+      const scrollY = window.scrollY;
+      const windowHeight = window.innerHeight;
       const documentHeight = document.documentElement.scrollHeight;
       const distanceToBottom = documentHeight - (scrollY + windowHeight);
-      console.log(distanceToBottom);
-      // if(window.scrollY > 2400)
-    });
+      console.log(scrollY, windowHeight, documentHeight);
+      // console.log(leftBlock);
+      if (distanceToBottom < 145) {
+        leftBlock.style.position = "relative";
+        leftBlock.style.top = `${scrollY - 325}px`;
+      } else {
+        leftBlock.style.position = "sticky";
+        leftBlock.style.top = "10px";
+      }
+    };
+    // 添加事件
+    window.addEventListener("scroll", handleScroll);
+
+    // 移除事件
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
   }, []);
+
   useEffect(() => {
     if (uid) {
       workService
-        .getHelperDetail(uid)
+        .getHelperDetail(uid, currentPage)
         .then((response) => {
-          setProfile(response?.data?.data.profile[0]);
-          setReviews(response?.data?.data.reviews);
-          setImages(response?.data?.data.images);
+          const data = response?.data?.data;
+          console.log(response);
+          setTotalRows(data.allReviews?.totalRows);
+          setProfile(data.profile[0]);
+          setReviews(data.reviews);
+          setImages(data.images);
+
+          // 計算每個星數的評論數
+          data.allReviews?.result.map((review) => {
+            switch (parseInt(review.star_rating)) {
+              case 5:
+                setFiveStar((pre) => {
+                  console.log(pre);
+                  return pre + 1;
+                });
+
+                break;
+              case 4:
+                setFourStar((pre) => {
+                  return pre + 1;
+                });
+                break;
+              case 3:
+                setThreeStar((pre) => {
+                  return pre + 1;
+                });
+                break;
+              case 2:
+                setTwoStar((pre) => {
+                  return pre + 1;
+                });
+                break;
+              case 1:
+                setOneStar((pre) => {
+                  return pre + 1;
+                });
+                break;
+            }
+          });
         })
         .catch((e) => {
           console.log(e);
         });
     }
   }, [uid]);
+
   useEffect(() => {
     if (profile?.job_description) {
       contentRef.current.innerHTML = profile.job_description;
@@ -855,6 +914,7 @@ const HelperDetail = () => {
   useEffect(() => {
     console.log(isAuthenticated);
   }, []);
+
   useEffect(() => {
     if (uid) {
       workService
@@ -863,39 +923,13 @@ const HelperDetail = () => {
           console.log(response.data);
           console.log(response.data.reviews);
           setFilterReview(response.data.reviews);
-          // if (sliderRef.current) {
-          //   sliderRef.current.slickGoTo(0);
-          // }
         })
         .catch((e) => {
           console.log(e);
         });
     }
   }, [uid, star]);
-  let fiveStar = 0;
-  let fourStar = 0;
-  let threeStar = 0;
-  let twoStar = 0;
-  let oneStar = 0;
-  reviews.map((review) => {
-    switch (review.star_rating) {
-      case 5:
-        fiveStar++;
-        break;
-      case 4:
-        fourStar++;
-        break;
-      case 3:
-        threeStar++;
-        break;
-      case 2:
-        twoStar++;
-        break;
-      case 1:
-        oneStar++;
-        break;
-    }
-  });
+
   return (
     <>
       <div className="helper-detail container">
@@ -1033,7 +1067,7 @@ const HelperDetail = () => {
               <div className="d-flex align-items-center">
                 <div className="item-title size-6">服務評價</div>
                 <p className="m-size-7">
-                  (共<span>{reviews.length}</span>則相關評論)
+                  (共<span>{totalRows}</span>則相關評論)
                 </p>
               </div>
               <hr className="item-divider" />
@@ -1124,7 +1158,7 @@ const HelperDetail = () => {
                   onClick={handleChangeStar}
                   className="filter-btns-focus"
                 >
-                  全部評論({reviews.length})
+                  全部評論({totalRows})
                 </button>
                 <button value={5}>
                   5星(<span>{fiveStar}</span>)
@@ -1179,8 +1213,8 @@ const HelperDetail = () => {
                 ""
               )}
               <Pagination
-                // current={currentPage}
-                total={30}
+                current={currentPage}
+                total={reviews?.review_count}
                 pageSize="10"
                 showSizeChanger={false}
                 rootClassName="cos-pagination"

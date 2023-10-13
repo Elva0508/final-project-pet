@@ -26,9 +26,9 @@ class WorkService {
     return axios.get(API_URL + "helpers/favorite", { params: { collection } });
   }
   // detail頁
-  getHelperDetail(uid) {
+  getHelperDetail(uid, page) {
     console.log(uid);
-    return axios.get(API_URL + "helpers/detail/" + uid);
+    return axios.get(API_URL + "helpers/detail/" + uid, { params: { page } });
   }
   getPetInfo(uid) {
     return axios.get(API_URL + "helpers/detail/petInfo", { params: { uid } });

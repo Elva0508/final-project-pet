@@ -150,7 +150,8 @@ $detail-block-width: 9px; //標題左側直槓槓
     }
   }
   .stop-sticky {
-    position: static;
+    position: relative;
+    bottom: 200px;
   }
   .right-block {
     padding: 0;
@@ -308,6 +309,20 @@ $detail-block-width: 9px; //標題左側直槓槓
       }
     }
   }
+
+  .item-image {
+    margin-top: 1rem;
+
+    swiper-slide {
+      $image_size: 300px;
+      width: $image_size + 50px;
+      height: $image_size;
+      img {
+        width: $image_size + 50px;
+        height: $image_size;
+      }
+    }
+  }
   .evaluation-bar {
     $block-width: calc(100% - 3px);
     width: calc(100% - 80px);
@@ -363,39 +378,6 @@ $detail-block-width: 9px; //標題左側直槓槓
       }
     }
   }
-  // .profile {
-  //   // width: 70%;
-  //   text-align: justify;
-  //   img {
-  //     width: 28px;
-  //     height: 28px;
-  //     margin-right: 0.1rem;
-  //   }
-  //   // .intro {
-  //   //   color: $text-mark;
-  //   //   font-weight: 500;
-  //   // }
-  //   .icon {
-  //     font-size: 26px;
-  //     color: #faaf00;
-  //   }
-
-  // }
-
-  .item-image {
-    margin-top: 1rem;
-
-    swiper-slide {
-      $image_size: 300px;
-      width: $image_size + 50px;
-      height: $image_size;
-      img {
-        width: $image_size + 50px;
-        height: $image_size;
-      }
-    }
-  }
-
   .review-card-group {
     & > :nth-child(1) {
       margin: 0 2.5rem;
@@ -475,6 +457,7 @@ $detail-block-width: 9px; //標題左側直槓槓
     }
   }
 }
+
 .req-quotation {
   .divider {
     width: 100%;

@@ -220,6 +220,7 @@ const FamousHelperCard = ({ helper, collection, setCollection }) => {
     { label: "到府美容", value: parseInt(helper.beauty_service) },
   ];
   const handleFav = (e) => {
+    e.stopPropagation();
     if (isAuthenticated) {
       if (!collection.find((item) => item === helper.user_id)) {
         e.currentTarget.classList.add(
@@ -253,6 +254,9 @@ const FamousHelperCard = ({ helper, collection, setCollection }) => {
             ? ""
             : "active-fav-in-fam-card"
         }`}
+        onClick={() => {
+          router.push(`/work/find-helper/${helper.user_id}`);
+        }}
       >
         <div className="img-wrapper">
           <img
@@ -262,36 +266,43 @@ const FamousHelperCard = ({ helper, collection, setCollection }) => {
           />
         </div>
 
-        <div className="helper-content ms-2">
-          <div className="title size-6">{helper?.name}</div>
-          <div className="ranking d-flex">
-            <Rating
-              name="half-rating-read"
-              value={parseFloat(helper?.average_star)}
-              precision={0.5}
-              readOnly
-              emptyIcon={<StarIcon style={{ opacity: 0.35 }} />}
-            />
-            <span className="ms-1 size-7">({helper.review_count})</span>
+        <div className="famous-helper-content ms-2">
+          <div className="famous-helper-content-title size-6">
+            {helper?.name}
           </div>
-          <div className="helper-content-info d-flex justify-content-between">
+
+          <div className="famous-helper-content-info d-flex justify-content-between">
             <div>
-              <p className="m-size-7">{helper?.service_county}</p>
-              <p className="m-size-7">
-                服務項目：
+              <div className="service-items m-size-7">
                 {service
                   .filter((item) => item.value != 0)
                   .map((item, index, arr) =>
                     index < arr.length - 1 ? (
-                      <span>{item.label}、</span>
+                      <span className="tag-btns">{item.label}</span>
                     ) : (
-                      <span>{item.label}</span>
+                      <span className="tag-btns">{item.label}</span>
                     )
                   )}
-              </p>
-              <p className="m-size-7">
+              </div>
+              <p className="service-time m-size-7">
+                <FaUserClock />
                 服務時間：<span>周一至周日</span>
               </p>
+
+              <p className="m-size-7 service-county">
+                <ImLocation2 />
+                {helper.service_county}
+              </p>
+              <div className="ranking d-flex">
+                <Rating
+                  name="half-rating-read"
+                  value={parseFloat(helper?.average_star)}
+                  precision={0.5}
+                  readOnly
+                  emptyIcon={<StarIcon style={{ opacity: 0.35 }} />}
+                />
+                <span className="ms-1 size-7">({helper.review_count})</span>
+              </div>
             </div>
             <div className="fav-icon">
               {isFavHovered ||
@@ -319,13 +330,9 @@ const FamousHelperCard = ({ helper, collection, setCollection }) => {
               )}
             </div>
           </div>
-          <div className="d-flex justify-content-between align-items-end price">
-            <div>
-              單次<span className="size-6"> NT$140</span>
-            </div>
-            <button className="size-6 animate-button-one">
-              <Link href={`/work/find-helper/${helper.user_id}`}>洽詢</Link>
-            </button>
+          <div className="d-flex align-items-end price">
+            <span className="size-5">NT$140</span>
+            <span>起</span>
           </div>
         </div>
       </div>
@@ -424,6 +431,7 @@ const SingleHelperCard = ({
     { label: "到府美容", value: parseInt(helper.beauty_service) },
   ];
   const handleFav = (e) => {
+    e.stopPropagation();
     if (isAuthenticated) {
       if (!collection.find((item) => item === helper.user_id)) {
         e.currentTarget.classList.add(
@@ -455,7 +463,7 @@ const SingleHelperCard = ({
         layout
         // initial={{ opacity: 0 }}
         animate={controller}
-        className={`single-card d-flex flex-column align-items-center ${
+        className={`single-card d-flex flex-column align-items-center justify-content-between ${
           collection.find((item) => item === helper.user_id)
             ? ""
             : "active-fav-in-card"
@@ -470,7 +478,10 @@ const SingleHelperCard = ({
           src={helper.cover_photo}
           alt="貓頭貼"
         />
-        <motion.div layout className="single-card-content">
+        <motion.div
+          layout
+          className="single-card-content d-flex flex-column justify-content-between"
+        >
           <motion.div layout className="single-card-title size-6">
             {helper.name}
           </motion.div>
@@ -531,23 +542,27 @@ const SingleHelperCard = ({
             </div>
           </div>
 
-          <div className="d-flex justify-content-between align-items-end ">
+          <div className="d-flex justify-content-start align-items-end ">
             {/* <button className="size-6 animate-button-one">
               <Link href={`/work/find-helper/${helper.user_id}`}>洽詢</Link>
             </button> */}
+            <Rating
+              name="half-rating-read"
+              value={parseFloat(helper.average_star)}
+              precision={0.5}
+              readOnly
+              emptyIcon={<StarIcon style={{ opacity: 0.35 }} />}
+            />
+            <span layout className="ms-1 size-7">
+              ({helper.review_count === null ? "0" : helper.review_count})
+            </span>
           </div>
-          <Rating
-            name="half-rating-read"
-            value={parseFloat(helper.average_star)}
-            precision={0.5}
-            readOnly
-            emptyIcon={<StarIcon style={{ opacity: 0.35 }} />}
-          />
         </motion.div>
         <div className="single-card-footer">
-          <p className="price d-flex justify-content-end align-items-center">
-            單次<span className="size-6"> NT$140</span>
-          </p>
+          <div className="d-flex align-items-end price">
+            <span className="size-5">NT$140</span>
+            <span>起</span>
+          </div>
         </div>
       </motion.div>
     </>
@@ -637,27 +652,25 @@ const FavCard = ({ helper, collection, setCollection }) => {
         <div className="helper-content-info d-flex justify-content-between">
           <div>
             <p className="m-size-7">{helper?.service_county}</p>
-            <p className="m-size-7">
-              服務項目：
+            <div className="service-items m-size-7">
               {service
                 .filter((item) => item.value != 0)
                 .map((item, index, arr) =>
                   index < arr.length - 1 ? (
-                    <span>{item.label}、</span>
+                    <span className="tag-btns">{item.label}</span>
                   ) : (
-                    <span>{item.label}</span>
+                    <span className="tag-btns">{item.label}</span>
                   )
                 )}
-            </p>
+            </div>
             <p className="m-size-7">
               服務時間：<span>周一至周日</span>
             </p>
           </div>
         </div>
-        <div className="d-flex justify-content-between align-items-end price">
-          <div>
-            單次<span className="size-6"> NT$140</span>
-          </div>
+        <div className="d-flex align-items-end price">
+          <span className="size-5">NT$140</span>
+          <span>起</span>
         </div>
       </div>
       <div className="dlt-icon">

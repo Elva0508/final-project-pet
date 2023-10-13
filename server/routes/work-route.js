@@ -451,7 +451,35 @@ router.get("/helpers/detail/review", async (req, res) => {
 });
 router.get("/helpers/detail/:uid", async (req, res) => {
   const { uid } = req.params;
-  console.log(uid);
+  const { page } = req.query;
+  console.log(uid, page);
+  const pageSize = 10;
+  const limitRows = (page - 1) * 10;
+  let totalRows;
+  const allReviewsPromise = new Promise((resolve, reject) => {
+    conn.execute(
+      `SELECT COUNT(*) AS totalRows FROM mission_helper_reviews WHERE helper_id = ?`,
+      [uid],
+      (err, result) => {
+        if (err) {
+          console.log(err);
+          reject(err);
+        }
+        const { totalRows } = result[0];
+        conn.execute(
+          `SELECT r.*,u.cover_photo,u.name FROM mission_helper_reviews r LEFT JOIN userinfo u ON r.user_id = u.user_id WHERE r.helper_id = ?`,
+          [uid],
+          (err, result) => {
+            if (err) {
+              console.log(err);
+              reject(err);
+            }
+            resolve({ result, totalRows });
+          }
+        );
+      }
+    );
+  });
   const profilePromise = new Promise((resolve, reject) => {
     conn.execute(
       `SELECT  h.*, r.review_count, r.average_star,u.cover_photo,u.cat_helper FROM mission_helper_info h LEFT JOIN (SELECT helper_id, COUNT(*) AS review_count, SUM(star_rating) / COUNT(*) AS average_star FROM mission_helper_reviews GROUP BY helper_id) r ON h.user_id = r.helper_id LEFT JOIN userinfo u ON h.user_id = u.user_id WHERE h.user_id = ?`,
@@ -467,8 +495,8 @@ router.get("/helpers/detail/:uid", async (req, res) => {
   });
   const reviewsPromise = new Promise((resolve, reject) => {
     conn.execute(
-      `SELECT r.*,u.cover_photo,u.name FROM mission_helper_reviews r LEFT JOIN userinfo u ON r.user_id = u.user_id WHERE r.helper_id = ?`,
-      [uid],
+      `SELECT r.*,u.cover_photo,u.name FROM mission_helper_reviews r LEFT JOIN userinfo u ON r.user_id = u.user_id WHERE r.helper_id = ? LIMIT ?,?`,
+      [uid, limitRows, pageSize],
       (err, result) => {
         if (err) {
           console.log(err);
@@ -493,7 +521,8 @@ router.get("/helpers/detail/:uid", async (req, res) => {
   });
   try {
     // 使用 Promise.all 等待所有查詢完成
-    let [profile, reviews, images] = await Promise.all([
+    let [allReviews, profile, reviews, images] = await Promise.all([
+      allReviewsPromise,
       profilePromise,
       reviewsPromise,
       imagesPromise,
@@ -505,7 +534,7 @@ router.get("/helpers/detail/:uid", async (req, res) => {
       return { ...review, review_date: newDate };
     });
     // 成功執行 res.send
-    res.send({ status: 200, data: { profile, reviews, images } });
+    res.send({ status: 200, data: { allReviews, profile, reviews, images } });
   } catch (err) {
     // reject則捕捉錯誤
     console.log(err);
