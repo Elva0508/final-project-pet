@@ -55,6 +55,12 @@ router.get("/userinfo/:uid", (req, res) => {
 router.post("/sendchat", (req, res) => {
   console.log("接收到消息請求");
   const { chatlist_id, talk_userId, chat_content } = req.body;
+  // 把 chatlist_id 轉換為整數
+  const chatlistIdAsInt = parseInt(chatlist_id, 10);
+  console.log("chatlist_id:", chatlist_id);
+  console.log("talk_userId:", talk_userId);
+  console.log("chat_content:", chat_content);
+
   const timestamp = new Date(); // 建立時間戳記
 
   // 檢查是否有聊天內容
@@ -65,7 +71,7 @@ router.post("/sendchat", (req, res) => {
   connection.execute(
     `INSERT INTO chat_content(chatlist_id, talk_userId, chat_content, timestamp)
     VALUES (?, ?, ?, ?);`,
-    [chatlist_id, talk_userId, chat_content, timestamp],
+    [chatlistIdAsInt, talk_userId, chat_content, timestamp],
     (error, result) => {
       if (error) {
         console.error("傳送訊息時出錯", error);
