@@ -7,6 +7,7 @@ import Image from "next/image";
 import memberCat1 from "@/assets/membership-01.png";
 import memberCat2 from '@/assets/membership-02.png';
 import memberCat3 from '@/assets/membership-03.png';
+import { ThemeProvider, createTheme, styled } from "@mui/material/styles";
 
 const style = {
   position: "absolute",
@@ -14,19 +15,30 @@ const style = {
   left: "50%",
   transform: "translate(-50%, -50%)",
   width: 800,
-  bgcolor: "background.paper",
-
+  backgroundColor: "#fbf5ef",
+//   bgcolor: "background.paper",
   boxShadow: 24,
   p: 4,
 };
+
+const theme = createTheme({
+    // 自定義色調
+    palette: {
+      primary: {
+        main: "#512f10",
+         // 主色调
+      },
+    },
+
+  });
 
 export default function Membership() {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   return (
-    <div>
-      <Button onClick={handleOpen}>查看會員等級優惠</Button>
+    <ThemeProvider theme={theme}>
+      <Button  onClick={handleOpen}>查看會員等級優惠</Button>
       <Modal
         open={open}
         onClose={handleClose}
@@ -99,6 +111,6 @@ export default function Membership() {
           </div>
         </Box>
       </Modal>
-    </div>
+      </ThemeProvider>
   );
 }
