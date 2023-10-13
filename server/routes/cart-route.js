@@ -1,28 +1,33 @@
 const router = require("express").Router();
 const connection=require("../db");
 
-router.get("/",(req,res)=>{    
+router.get("/:id",(req,res)=>{   
+  console.log(req);
+  const id= req.params.id;  
+  console.log(req.params);
     connection.execute(
         `SELECT c.*,p.product_name AS product_name,p.price AS price,p.specialoffer AS newprice,p.images_one AS images,t.type_name AS type
         FROM cart AS c 
         JOIN products AS p ON c.product_id = p.product_id 
         JOIN product_type AS t ON c.product_id = t.product_id AND t.type_id=c.product_type_id
-        WHERE c.user_id=1  `
+        WHERE c.user_id=?  `
+        ,[id]
         ,(error,result)=>{
         res.json({result})
         }
 )})
 
-router.get("/coupon",(req,res)=>{
+router.get("/coupon/coupon",(req,res)=>{
   // console.log(req);
   const allPrice= req.query.allPrice; 
+  const id= req.query.id; 
     connection.execute(
          `
         SELECT u.*,c.title AS title,c.discount_type AS type,c.usage_min AS min,c.discount_amount AS amount,c.discount AS discount 
         FROM users_coupon AS u 
         JOIN coupon AS c on c.coupon_id=u.coupon_id
-        WHERE u.valid=1 AND u.user_id=1 AND c.usage_min < ?`
-        ,[allPrice]
+        WHERE u.valid=1 AND u.user_id=? AND c.usage_min < ?`
+        ,[id,allPrice]
         ,(error,result)=>{
         res.json({result})
         }

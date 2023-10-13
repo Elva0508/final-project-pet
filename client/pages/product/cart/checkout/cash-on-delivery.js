@@ -1,5 +1,4 @@
 import { useState ,useEffect} from 'react'
-import 'react-confirm-alert/src/react-confirm-alert.css'
 import { useRouter } from 'next/router';
 import {BsCheckCircle} from 'react-icons/bs';
 

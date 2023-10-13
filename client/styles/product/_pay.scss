@@ -125,7 +125,7 @@
 }
 
 .pay-confirm{
-    height: calc(100vh - 477px);
+    height: calc(100vh - 404px);
     color: $text-main;
     overflow: auto;
 
@@ -138,4 +138,8 @@
             height: 200px;
        };
        }
-      }
+}
+
+.credit-card{
+    height: calc(100vh - 332px); 
+}

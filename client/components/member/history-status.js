@@ -37,7 +37,8 @@ export default function HistoryStatusOne({ history ,getHistory ,currentScreen}) 
     return newDay;
   };
 
-  const removetype = async (id) => {
+  const removetype = async (userid,id) => {
+    console.log(userid);
     console.log(id);
     try {
       const response = await axios.put(
@@ -47,7 +48,7 @@ export default function HistoryStatusOne({ history ,getHistory ,currentScreen}) 
     } catch (error) {
       console.error("Error:", error);
     }
-    getHistory()
+    getHistory(userid)
   };
 
 
@@ -89,7 +90,7 @@ export default function HistoryStatusOne({ history ,getHistory ,currentScreen}) 
               <div className="d-flex align-items-center col-4 col-md-3 ps-md-5 ms-md-5 ms-0">
                 {v.mission_status === 1 ? (
                   <button className=" btn-confirm m-2 size-6" 
-                  onClick={() =>{removetype(v.mission_id)}}
+                  onClick={() =>{removetype(v.post_user_id,v.mission_id)}}
                   >下架任務</button>
                 ) : (
                   <div className="m-2 size-6 remove px-4 py-2">已下架</div>

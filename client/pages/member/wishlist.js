@@ -1,12 +1,9 @@
 import React, { useState, useEffect } from "react";
 import ListD from "@/components/member/list-d";
 import ListUserM from "@/components/member/list-user-m";
-import { FaList } from "react-icons/fa";
-import { RiDeleteBin5Line } from "react-icons/ri";
 import {useCart} from "@/hooks/useCart"
 import axios from "axios";
 import Pagination from '@/components/pagination'
-import { useRouter } from 'next/router';
 
 
 export default function Wishlist() {
@@ -18,8 +15,6 @@ export default function Wishlist() {
   const startIndex = (activePage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentData = wishlist.slice(startIndex, endIndex);
-
-  const router = useRouter();
 
 
   const handleSelectChange = (pid, v) => {
@@ -37,7 +32,7 @@ export default function Wishlist() {
   };
 
 
-  const addCart = async (id, type) => {
+  const addCart = async (user_id,id, type) => {
 
     const have =cart.find((v) => v.product_id == id && v.product_type_id == type);
     
@@ -48,44 +43,45 @@ export default function Wishlist() {
 
       try {
         const response = await axios.put(
-          `http://localhost:3005/api/member-wishlist/cart`,
+          `http://localhost:3005/api/member-wishlist/cart/${user_id}`,
           { id, type }
         );
       } catch (error) {
         console.error("Error:", error);
       }
-      getCart();
+      getCart(user_id);
     } else {
       try {
         const newQuantity = have.quantity + 1;
         console.log(newQuantity);
         console.log(id);
         const response = await axios.put(
-          `http://localhost:3005/api/member-wishlist/cartplus`,
+          `http://localhost:3005/api/member-wishlist/cartplus/${user_id}`,
           { id, newQuantity, type }
         );
       } catch (error) {
         console.error("Error:", error);
       }
-      getCart();
+      getCart(user_id);
     }
   };
 
-  const deleteWishlist = async (id) => {
+  const deleteWishlist = async (user_id,id) => {
     try {
       const response = await axios.delete(
-        `http://localhost:3005/api/member-wishlist/${id}`
+        `http://localhost:3005/api/member-wishlist/${id}/${user_id}`
       );
-      const newWishlist = wishlist.filter((v) => v.collection_id !== id);
-      setWishlist(newWishlist);
+      // const newWishlist = wishlist.filter((v) => v.collection_id !== id);
+      // setWishlist(newWishlist);
     } catch (error) {
       console.error("Error:", error);
     }
+    getWishlist(user_id)
   };
 
-  const getWishlist = async () => {
+  const getWishlist = async (id) => {
     await axios
-      .get("http://localhost:3005/api/member-wishlist")
+      .get(`http://localhost:3005/api/member-wishlist/${id}`)
       .then((response) => {
         const data = response.data.result;
         console.log(data);
@@ -96,9 +92,9 @@ export default function Wishlist() {
       });
   };
 
-  const getWishlistType = async () => {
+  const getWishlistType = async (id) => {
     await axios
-      .get("http://localhost:3005/api/member-wishlist/type")
+      .get(`http://localhost:3005/api/member-wishlist/type/${id}`)
       .then((response) => {
         const data = response.data.result;
         console.log(data);
@@ -109,8 +105,8 @@ export default function Wishlist() {
       });
   };
 
-  const getCart =  () => {
-    axios.get("http://localhost:3005/api/product/cart")
+  const getCart =  (id) => {
+    axios.get(`http://localhost:3005/api/product/cart/${id}`)
         .then((response) => {
         const data = response.data.result;
         const newData=data.map((v)=>{
@@ -124,8 +120,17 @@ export default function Wishlist() {
 }
 
   useEffect(() => {
-    getWishlistType();
-    getWishlist();
+  const token = localStorage.getItem("token");
+  const id=localStorage.getItem("id")
+  // 沒有token
+  if (!token) {
+    window.location.href="/"
+  }
+  console.log(id);
+  console.log(token);
+    getWishlistType(id);
+    getWishlist(id);
+    getCart(id)
   }, []);
 
 
@@ -183,7 +188,7 @@ export default function Wishlist() {
                           data-bs-toggle="offcanvas" 
                           data-bs-target="#offcanvasRight" 
                           aria-controls="offcanvasRight"
-                          onClick={() => addCart(v.product_id, v.product_type)}
+                          onClick={() => addCart(v.user_id,v.product_id, v.product_type)}
                         >
                           立即購買
                         </button>
@@ -191,7 +196,7 @@ export default function Wishlist() {
                           className="btn btn-outline-confirm size-6 m-size-7 my-2"
                           onClick={() => {
                             // 這裡作刪除的動作
-                            deleteWishlist(v.collection_id);
+                            deleteWishlist(v.user_id,v.collection_id);
                           }}
                         >
                           取消追蹤
@@ -204,7 +209,7 @@ export default function Wishlist() {
                             className="delete btn btn-outline-confirm size-6 m-size-7 m-2"
                             onClick={() => {
                               // 這裡作刪除的動作
-                              deleteWishlist(v.collection_id);
+                              deleteWishlist(v.user_id,v.collection_id);
                             }}
                           >
                             取消追蹤
@@ -263,7 +268,7 @@ export default function Wishlist() {
                         繼續購物
                       </button>
                       <button type="button" className="btn btn-confirm  ms-5" onClick={()=>{
-                        router.push("/product/cart")
+                        window.location.href=("/product/cart")
                       }}>
                         前往結帳
                       </button>

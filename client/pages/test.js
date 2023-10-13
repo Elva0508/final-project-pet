@@ -10,35 +10,34 @@ import React from "react";
 // import SalesRecordDetail from "@/components/member/sales-record-detail";
 // import SalesRecord from "@/components/member/sales-record";
 // import RequestRecord from "@/components/member/request-record";
-// import RequestRecordDetail from "@/components/member/request-record-detail";
+// import RequestRecordDetail from "@/components/member/request-record-detail";//
 // import Filter from "@/components/job/filter";
 
-//nono
-// import HomeProductCard2 from "@/components/home/home-product-card2";
+// nono
+// import { HomeVedio } from "@/pages/index";
 // const Test = () => {
 //   return (
 //     <>
-//       <div className="container row gy-5">
-//         <HomeProductCard2 />
-//       </div>
-//     </>
-//   );
-// };
-//佳瑜
+//       <HomeVedio />
+//       </>
+//   )}
+// 佳瑜
 // import LoginForm from "@/components/user/loginForm";
 // import UserForm from "@/components/user/userForm";
 // import UserCoupon from "@/components/user-coupon/userCoupon";
 // import ResetPassword from "@/components/user/resetPassword";
+// import SingleCouponFree from "@/components/user/singleCouponFree";
 
-//家綺
+// 家綺
 // import ProductListOffcanvas from "@/components/product/product-list-offcanvas";
 
-// const Test = () => {
-//   return (
-//     <>
-//       <Filter />
-//     </>
-//   );
-// };
+const Test = () => {
+  return (
+    <>
+      {/* <Filter /> */}
+      <SingleCouponFree />
+    </>
+  );
+};
 
 export default Test;
