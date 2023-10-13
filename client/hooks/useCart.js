@@ -42,7 +42,7 @@ export function CartProvider({ children }) {
 
 
   return (
-    <cartContext.Provider value={{cart, setCart }}>
+    <cartContext.Provider value={{ cart, setCart }}>
       {children}
     </cartContext.Provider>
   )

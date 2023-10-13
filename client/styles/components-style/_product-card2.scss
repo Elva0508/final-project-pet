@@ -1,91 +1,184 @@
-.product-card2{   
+.product-card2 {   
     width: 100%;
-     a{
-                border-bottom: 0;
-            }
-    .card{
+
+    & a {
+        border-bottom: 0;
+    }
+
+    .card {
         width: 100%;
         border: none;
-        .card-body{
+
+        .card-body {
             background-color: $main-bg;
 
-            .heart-icon-container{
+            .heart-icon-container {
                 position: relative;
             }
-            .heart-icon-red{
-                color:$hover;
+
+            .heart-icon-red {
+                color: $hover;
             }
-            .heart-icon-red-line{
+
+            .heart-icon-red-line {
                 font-size: 18px;
                 position: absolute;
                 top: 5px;
                 left: -1px;
             }
-            .btn{
+
+            .btn {
                 padding: 0px 7px;
                 font-size: 1rem;
                 margin: 7px 0px;
-                
             }
+
             // 食物
-            .btn-color-1{
+            .btn-color-1 {
                 background-color: #FACDA0;
                 color: $text-main;
             }
+
             // 用品
-            .btn-color-2{
-                background-color:$text-mark;
-                color: $main-bg
+            .btn-color-2 {
+                background-color: $text-mark;
+                color: $main-bg;
             }
-            //清潔
-            .btn-color-3{
-                background-color:$star;
-                color: $text-main
+
+            // 清潔
+            .btn-color-3 {
+                background-color: $star;
+                color: $text-main;
             }
-            //保健
-            .btn-color-4{
-                background-color:#EDC7D0;
-                color: $text-main
+
+            // 保健
+            .btn-color-4 {
+                background-color: #EDC7D0;
+                color: $text-main;
             }
-            //護理
-            .btn-color-5{
+
+            // 護理
+            .btn-color-5 {
                 background-color: $price;
-                color:$main-bg;     
+                color: $main-bg;
             }
-            .btn-color-6{
+
+            .btn-color-6 {
                 background-color: #B4A29C;
-                color:#34251F;     
+                color: #34251F;
             }
-            .btn-color-7{
+
+            .btn-color-7 {
                 background-color: #34251F;
-                color:#B4A29C;     
+                color: #B4A29C;
             }
-            .card-text{
+
+            .card-text {
                 color: #34251F;
                 height: auto;
             }
-            .btn-confirm{
+
+            .btn-confirm {
                 width: 100%;
             }
-            .product-sale-price{
+
+            .product-sale-price {
                 color: rgb(189, 189, 189);
-                // font-weight: bold;
-                margin: 0;
-                .cart{
+
+                .cart {
                     background-color: #E9A790;
-                    .cart{
+
+                    .cart {
                         color: white;
                     }
                 }
-                .price{
+
+                .price {
                     color: $price;
                 }
             }
-            .card-herat{
+
+            .card-heart {
                 width: 38px;
             }
-         
-           
+        } 
+    }
+    // 彈跳視窗容器大小
+    .modal-dialog{
+        max-width: 50%;
+    }
+    .modal-header{
+        border-bottom: 0;
+    }
+
+   // product-itembox
+//product-pic
+.product-pic {
+  max-width: 50%; /* 容器的最大寬度為600px */
+  width: 100%;     /* 容器的寬度為其父元素的100% */
+  text-align: center;
+}
+
+.main-pic {
+  width: 100%;
+  img {
+    max-width: 100%; /* 圖片的最大寬度為其容器的100% */
+    width: 100%;
+    max-width: 50%;
+    height: auto; /* 自動調整高度以保持圖片比例 */
+  }
+}
+.other-pic {
+  width: 100%;
+  img {
+    max-width: 100%; /* 圖片的最大寬度為其容器的100% */
+     width: 100%;
+     max-width: 25%;
+    height: auto; /* 自動調整高度以保持圖片比例 */
+  }
+}
+
+    .product-itembox {
+        .pricebox_detail {
+            display: flex;
+            align-items: center;
+
+            .priceBlock,
+            .font-big {
+                color: $price;
+            }
+        }
+
+        .font-delete {
+            text-decoration: line-through;
+            vertical-align: middle;
+            color: $text-mark;
+        }
+
+        .name,
+        .brand,
+        .price-wrapper,
+        .type,
+        .quantity-counter {
+            margin-top: 20px;
+        }
+
+        .add-to-cart {
+            margin-top: 20px;
+
+            button {
+                max-width: 648px;
+                width: 100%;
+            }
+        }
+
+        .add-to-favorites {
+            margin-top: 20px;
+
+            button {
+                max-width: 648px;
+                width: 100%;
+            }
         }
     }
 }
