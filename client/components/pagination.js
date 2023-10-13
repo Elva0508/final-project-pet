@@ -3,6 +3,7 @@ import { MdNavigateNext } from 'react-icons/md';
 import {MdNavigateBefore} from 'react-icons/md';
 
 export default function Pagination({itemsPerPage,total,activePage,setActivePage}) {
+    console.log(total)
       const totalPages = Math.ceil(total.length / itemsPerPage); 
       let startPage
       let endPage
@@ -22,6 +23,7 @@ export default function Pagination({itemsPerPage,total,activePage,setActivePage}
           startPage = Math.max(1, endPage - 4);
         }
       }
+    console.log(totalPages)
 
       const pageButtons = [];
       for (let i = startPage; i <= endPage; i++) {
