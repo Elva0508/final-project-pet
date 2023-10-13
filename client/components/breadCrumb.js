@@ -1,4 +1,4 @@
-import React ,{useState,useEffect}from 'react'
+import React, { useState, useEffect } from 'react'
 import { useRouter } from "next/router";
 import axios from "axios";
 
@@ -15,17 +15,17 @@ function BreadCrumb(props) {
     const [mission, setMission] = useState([])
     const [subcategory, setSubcategory] = useState([])
 
-    const getProduct =  () => {
-      axios.get("http://localhost:3005/api/product")
-       .then((response) => {
-         const data = response.data.result;
-         setProduct(data)     
-       })
-       .catch((error) => {
-         console.error("Error:", error);
-     });
-   }
-   const getArticle =  () => {
+  const getProduct = () => {
+    axios.get("http://localhost:3005/api/product")
+      .then((response) => {
+        const data = response.data.result;
+        setProduct(data)
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  }
+  const getArticle = () => {
     axios.get("http://localhost:3005/api/breadcrumb/article")
      .then((response) => {
        const data = response.data.result;
@@ -54,7 +54,7 @@ const getSubcategory =  () => {
 
     let pathArray=[]
 
-    const formatTextLocale = (pathname) => {
+  const formatTextLocale = (pathname) => {
     pathArray = pathname.split('/')
 
     // console.log(pathArray);
@@ -220,7 +220,7 @@ const getSubcategory =  () => {
           </li>{formatTextLocale(pathname)}</ol>
         </nav></>)}
     </>
-)
+  )
 }
 
 export default BreadCrumb
