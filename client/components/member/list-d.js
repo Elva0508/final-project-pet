@@ -52,7 +52,7 @@ export default function ListD() {
                 <p className="size-5 my-3 text-center title">
                   Hi,{memberData ? memberData.name : "loading..."}
                 </p>
-                <Link className="size-7" href="/pages/member/profile.js">
+                <Link className="size-7" href="/member/profile">
                   <span className="me-2">管理個人資料</span>
                   <FaPencilAlt />
                 </Link>
@@ -62,9 +62,9 @@ export default function ListD() {
               <div className="lv">
                 <p className="size-7 level text-center px-2">Level.1 幼貓</p>
               </div>
-              <Link className="size-7 ms-3" href="">
+              <button className="size-7 ms-3" >
                 查看會員等級優惠
-              </Link>
+              </button>
             </div>
           </div>
           <ul className="mt-2 text-center">

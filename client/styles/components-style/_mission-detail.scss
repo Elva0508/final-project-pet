@@ -4,31 +4,92 @@
   // font-weight: bold;
   width: 150px;
   height: 45px;
-  box-shadow: 1px 5px 7px rgba(0, 0, 0, 0.25);
+  // box-shadow: 1px 5px 7px rgba(0, 0, 0, 0.25);
 }
 
 .mission-detail {
+  .MuiCard-root{
+    width: 100%;
+    margin: 1rem auto;
+    background-color: $cos-white;
+  }
+  .MuiTypography-root{
+    color: $text-main;
+    font-weight: normal;
+  }
+  .MuiChip-root{
+    border: 1px solid $hover;
+    color: $hover;
+  }
   nav a {
     border-bottom: 0;
   }
 
-  header {
-    background-color: $content-bg;
+  aside {
+    // background-color: $content-bg;
+    background-color: $cos-white;
+    box-shadow: 0 0 10px rgba(128, 128, 128, 0.452);
 
-    h2 {
-      font-weight: bold;
+    img {
+      width: 10rem;
+      height: 10rem;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+
+    .poster-gender {
+      font-size: 1.2rem;
+    }
+
+    .poster-email {
+      word-wrap: break-word; // 避免email超出框框範圍
+    }
+
+    .chat-btn {
+      box-shadow: 1px 5px 7px rgba(0, 0, 0, 0.25);
+      margin: 0.5rem auto;
+    }
+  }
+
+
+  header {
+    // background-color: $content-bg;
+    background-color: $cos-white;
+    box-shadow: 0 0 10px rgba(128, 128, 128, 0.452);
+
+    // h2 {
+    //   font-weight: bold;
+    // }
+
+    img {
+      cursor: pointer;
+      width: 60px;
+      top: 10px;
+      right: 10px;
+    }
+
+    img:hover {
+      content: url("/heart-clicked.svg");
+    }
+
+    @media screen and (max-width: 576px) {
+      img {
+        width: 50px;
+      }
     }
   }
 
   .description {
-    background-color: $content-bg;
+    // background-color: $content-bg;
+    background-color: $cos-white;
+    box-shadow: 0 0 10px rgba(128, 128, 128, 0.452);
     // padding: 1rem 0;
   }
 
   .item {
-    $block-width: 12px;
+    $block-width: 9px;
     width: calc(100% - 100px);
-    margin: 2rem auto;
+    margin: 1.5rem auto;
 
     &-title {
       display: flex;
@@ -41,7 +102,7 @@
         display: inline-block; //與標題文字水平排列
         background-color: $hover;
         width: $block-width;
-        height: 46px;
+        height: 35px;
         margin-right: 0.5rem;
       }
     }
@@ -67,7 +128,8 @@
     }
 
     &-image {
-      margin-top: 1rem;
+      padding-left: 1rem;
+      padding-right: 1rem;
 
       img {
         width: 300px;
@@ -86,6 +148,36 @@
     height: 300px;
     border: 0;
     padding: 0 12%;
+  }
+
+  @media screen and (max-width: 991px) {
+    .item {
+      width: calc(100% - 50px);
+
+      &-title {
+        &::before {
+          width: 10px;
+          height: 40px;
+        }
+      }
+    }
+
+    .mission-place {
+      margin: 0.8rem auto;
+    }
+  }
+
+  @media screen and (max-width: 575px) {
+    .item {
+      width: calc(100% - 40px);
+
+      &-title {
+        &::before {
+          width: 9px;
+          height: 30px;
+        }
+      }
+    }
   }
 }
 

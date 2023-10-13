@@ -1,4 +1,4 @@
-import React ,{useState,useEffect}from 'react'
+import React, { useState, useEffect } from 'react'
 import { useRouter } from "next/router";
 import axios from "axios";
 
@@ -15,17 +15,17 @@ function BreadCrumb(props) {
     const [mission, setMission] = useState([])
     const [subcategory, setSubcategory] = useState([])
 
-    const getProduct =  () => {
-      axios.get("http://localhost:3005/api/product")
-       .then((response) => {
-         const data = response.data.result;
-         setProduct(data)     
-       })
-       .catch((error) => {
-         console.error("Error:", error);
-     });
-   }
-   const getArticle =  () => {
+  const getProduct = () => {
+    axios.get("http://localhost:3005/api/product")
+      .then((response) => {
+        const data = response.data.result;
+        setProduct(data)
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  }
+  const getArticle = () => {
     axios.get("http://localhost:3005/api/breadcrumb/article")
      .then((response) => {
        const data = response.data.result;
@@ -35,16 +35,6 @@ function BreadCrumb(props) {
        console.error("Error:", error);
    });
  }
- const getMission =  () => {
-  axios.get("http://localhost:3005/api/breadcrumb/mission")
-   .then((response) => {
-     const data = response.data.result;
-     setMission(data)     
-   })
-   .catch((error) => {
-     console.error("Error:", error);
- });
-}
 const getSubcategory =  () => {
   axios.get("http://localhost:3005/api/breadcrumb/subcategory")
    .then((response) => {
@@ -59,13 +49,12 @@ const getSubcategory =  () => {
     useEffect(() => {
       getProduct()
       getArticle()
-      getMission()
       getSubcategory()
       }, []) 
 
     let pathArray=[]
 
-    const formatTextLocale = (pathname) => {
+  const formatTextLocale = (pathname) => {
     pathArray = pathname.split('/')
 
     // console.log(pathArray);
@@ -77,7 +66,6 @@ const getSubcategory =  () => {
       if (v == "[oid]") return '訂單明細'
       const pid=query.pid
       const aid=query.id
-      const mid=query.mission_id
       const sid=query.subcategory_id
       //產品
       if (v == "[pid]" && Number(query.pid)) return product[pid-1].product_name
@@ -95,12 +83,6 @@ const getSubcategory =  () => {
       if (v == "[article_category_id]" && query.article_category_id==2) return '毛孩知識'
       if (v == "[article_category_id]" && query.article_category_id==3) return '好物研究'
       if (v == "[id]" && query.id) return article[aid-1].title
-      //小貓上工
-      if (v == "work") return ''
-     
-      //幫手
-      //任務
-      if (v == "[mission_id]" && query.mission_id) return mission[mid-1].title
 
       //結帳
       if (v == "checkout") return ''
@@ -229,18 +211,16 @@ const getSubcategory =  () => {
   }
   return (
     <>
-        <nav aria-label="breadcrumb " className='my-4 container'>
-        <ol className="breadcrumb">
-          {pathname=="/" ||pathname=="/product/cart/checkout" ||pathname=="/chatlist/[id]" || pathname=="/product/cart/checkout/pay" || pathname=="/pay-confirm" || pathname=="/product/cart/checkout/cash-on-delivery" || pathname=="/work/find-mission" ||pathname=="/product/cart/checkout/creditCard" ||pathname=="/member/login"?
+        {pathname=="/" ||pathname=="/product/cart/checkout" ||pathname=="/chatlist/[id]"  ||pathname=="/chatlist"|| pathname=="/product/cart/checkout/pay" || pathname=="/pay-confirm" || pathname=="/product/cart/checkout/cash-on-delivery" || pathname=="/work/find-mission" ||pathname=="/product/cart/checkout/creditCard" ||pathname=="/member/login" || pathname == "/work/find-mission/[mission_id]"?
           ("")
           :
-          (<><li className="breadcrumb-item">
+          (<><nav aria-label="breadcrumb " className='my-4 container'>
+        <ol className="breadcrumb"><li className="breadcrumb-item">
             <Link href="/">首頁</Link>
-          </li>{formatTextLocale(pathname)}</>)}
-        </ol>
-        </nav>      
+          </li>{formatTextLocale(pathname)}</ol>
+        </nav></>)}
     </>
-)
+  )
 }
 
 export default BreadCrumb
