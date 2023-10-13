@@ -2,12 +2,15 @@ const router = require("express").Router();
 const connection=require("../db");
 
 
-router.get("/", (req, res) => {
+router.get("/:id", (req, res) => {
+const userid=req.params.id
+console.log(userid);
     connection.execute(
       `SELECT md.*
       FROM mission_detail AS md 
-      WHERE md.post_user_id = 1
+      WHERE md.post_user_id = ?
       ORDER BY md.post_date DESC;`,
+      [userid],
       (error, result) => {
         res.json({ result });
       }
@@ -32,6 +35,16 @@ router.put("/updatetype",(req,res)=>{
     }
   );
 })
+
+
+router.get("/count/count", (req, res) => {
+      connection.execute(
+        `SELECT * FROM mission_record;`,
+        (error, result) => {
+          res.json({ result });
+        }
+      );
+    });
 
 
 

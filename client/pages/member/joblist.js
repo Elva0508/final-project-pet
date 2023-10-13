@@ -4,18 +4,22 @@ import ListUserM from "@/components/member/list-user-m";
 import { LiaListAltSolid } from "react-icons/lia";
 import JobStatus from "@/components/member/job-status";
 import axios from "axios";
+import { useRouter } from 'next/router';
 
 
 export default function Joblist() {
   const [currentScreen, setCurrentScreen] = useState(4);
   const [job, setJob] = useState([]);
+  const [count,setCount]=useState([])
+  const router = useRouter();
+  const [activePage, setActivePage] = useState(1)
 
 
 
 
-  const getJob = async () => {
+  const getJob = async (id) => {
     await axios
-      .get("http://localhost:3005/api/member-joblist")
+      .get(`http://localhost:3005/api/member-joblist/${id}`)
       .then((response) => {
         const data = response.data.result;
         console.log(data);
@@ -27,11 +31,44 @@ export default function Joblist() {
   };
 
 
+  const getCount = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:3005/api/member-history/count/count`,
+      );
+      const data = response.data.result
+      console.log(data);
+       setCount(data)
+    } catch (error) {
+      console.error("Error:", error);
+    }
+   
+  };
+
+  let idCounts = [];
+  count.forEach(v => {
+    const mission_id = v.mission_id;
+    if (idCounts[mission_id]) {
+        idCounts[mission_id]++; // 如果 ID 已经存在，增加计数
+    } else {
+        idCounts[mission_id] = 1; // 如果 ID 不存在，初始化计数为 1
+    }
+  });
 
 
-  useEffect(() => {
-    getJob();
+  let id
+  useEffect(() => {    
+  const token = localStorage.getItem("token");
+  id=localStorage.getItem("id")
+  // 沒有token
+  if (!token) {
+    router.push("/")
 
+  }
+  console.log(id);
+  console.log(token)
+    getJob(id);
+    getCount()
   }, []);
 
  
@@ -44,9 +81,9 @@ export default function Joblist() {
           <ListD />
           <div className="d-flex flex-column col-md-8 col-12 joblist  ">
 
-              <h5 className="size-5 mt-3 ms-md-0 ms-3 big">
-                任務清單
-              </h5>
+          <p className="size-4 big mb-2">
+                 <span className="my">▍</span>任務清單
+                </p>
           
                 <div className="mt-3">
                   <button
@@ -55,6 +92,8 @@ export default function Joblist() {
                     }`}
                     onClick={() => {
                       setCurrentScreen(4);
+                      setActivePage(1)
+
                     }}
                   >
                     全部
@@ -65,6 +104,8 @@ export default function Joblist() {
                     }`}
                     onClick={() => {
                       setCurrentScreen(2);
+                      setActivePage(1)
+
                     }}
                   >
                     未應徵
@@ -75,6 +116,8 @@ export default function Joblist() {
                     }`}
                     onClick={() => {
                       setCurrentScreen(3);
+                      setActivePage(1)
+
                     }}
                   >
                     已應徵
@@ -85,6 +128,8 @@ export default function Joblist() {
                     }`}
                     onClick={() => {
                       setCurrentScreen(1);
+                      setActivePage(1)
+
                     }}
                   >
                     刊登中
@@ -95,6 +140,8 @@ export default function Joblist() {
                     }`}
                     onClick={() => {
                       setCurrentScreen(0);
+                      setActivePage(1)
+
                     }}
                   >
                     已關閉
@@ -104,7 +151,7 @@ export default function Joblist() {
                 
              
 
-                  <JobStatus job={job} currentScreen ={currentScreen }/>
+                  <JobStatus job={job} currentScreen ={currentScreen } getJob={getJob} idCounts={idCounts} activePage={activePage} setActivePage={setActivePage}/>
 
             </div>
           </div>

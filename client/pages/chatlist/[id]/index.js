@@ -35,7 +35,7 @@ export default function Chatroom() {
       // 解 token 拿到 user_id
       setDecodedToken(decodedToken);
       // 儲存user_id
-      setUserId(decodedToken.user_id);
+      setUserId(decodedToken.id);
     }
     // 如果 chatlist_id 存在，則調用 getChatContent
     if (chatlist_id) {
@@ -159,7 +159,7 @@ export default function Chatroom() {
 
   return (
     <>
-      <div className="chatroom vh-100">
+      <div className="chatroom">
         <div className="container shadow bg-body-tertiary rounded p-0">
           <div className="size-3 sticky-top size-3 m-size-5 p-3">
             <div className="target-user">

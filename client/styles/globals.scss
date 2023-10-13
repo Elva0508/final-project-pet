@@ -11,13 +11,13 @@ $carousel-indicator-height: 5px;
 $breadcrumb-divider: quote(">");
 $offcanvas-horizontal-width: 50%;
 
-$dropdown-link-color:               #512f10;
-$dropdown-link-hover-color:         shade-color($dropdown-link-color, 10%);
-$dropdown-link-hover-bg:            #f8cb9f;
+$dropdown-link-color: #512f10;
+$dropdown-link-hover-color: shade-color($dropdown-link-color, 10%);
+$dropdown-link-hover-bg: #f8cb9f;
 $dropdown-link-active-color: #512f10;
 $dropdown-link-active-bg: #f8cb9f;
-$dropdown-bg:                       #fffdfb;
-$dropdown-border-width:             0;
+$dropdown-bg: #fffdfb;
+$dropdown-border-width: 0;
 
 // ↑↑↑  變數覆蓋(Variable overrides) 要寫在這行"上面"  ↑↑↑
 // 導入所有 bootstrap 樣式
@@ -31,6 +31,8 @@ $dropdown-border-width:             0;
 
 // 英文字體
 @import "https://fonts.googleapis.com/css2?family=Poppins:wght@400&display=swap";
+
+@import "@/node_modules/react-credit-cards-2/dist/lib/styles.scss";
 
 // 定義中文字體用
 body {
@@ -56,6 +58,7 @@ body {
     "Apple Color Emoji",
     "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   background-color: $main-bg;
+  overflow-x: hidden;
 }
 a {
   text-decoration: none;
@@ -137,6 +140,7 @@ ul {
 @import "@/styles/components-style/_bread-crumb.scss";
 @import "@/styles/components-style/_ResponsiveAppBar.scss";
 @import "@/styles/components-style/home/_home-product-card.scss";
+@import "@/styles/_cat-loading.scss";
 
 // 小貓上工
 @import "@/styles/components-style/_create-mission.scss";
@@ -156,7 +160,7 @@ ul {
 @import "@/styles/components-style/_quantity-counter.scss";
 @import "@/styles/_product-list.scss";
 @import "@/styles/product/_product_cart.scss";
-@import "@/styles/product/_product_cart._checkout.scss";
+@import "@/styles/product/_product_cart_checkout.scss";
 @import "@/styles/components-style/_product-list-offcanvas.scss";
 @import "@/styles/product/_pay.scss";
 
@@ -182,6 +186,7 @@ ul {
 // 首頁
 @import "@/styles/_home.scss";
 @import "@/styles/components-style/home/_block-one.scss";
+@import "@/styles/components-style/home/_block-two.scss";
 @import "@/styles/components-style/home/_block-three.scss";
 @import "@/styles/components-style/home/_block-five.scss";
 @import "@/styles/components-style/home/_block-six.scss";

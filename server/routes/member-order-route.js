@@ -3,7 +3,9 @@ const connection=require("../db");
 
 
 //拿出我的訂單紀錄(僅顯示第一項商品資訊)
-router.get("/", (req, res) => {
+router.get("/:userId", (req, res) => {
+    const userId=req.params.userId
+    console.log(userId);
     connection.execute(
             `SELECT o.*, 
             p.images_one AS image, 
@@ -21,8 +23,8 @@ router.get("/", (req, res) => {
      JOIN order_status AS os ON o.status_id = os.status_id 
      JOIN order_payment AS op ON o.order_payment = op.id 
      JOIN order_shipment AS oship ON o.order_shipment = oship.id 
-     WHERE o.user_id = 1
-     ORDER BY o.created_at DESC;`
+     WHERE o.user_id = ?
+     ORDER BY o.created_at DESC;`,[userId]
           ,(error,result)=>{
           res.json({result})
           }
