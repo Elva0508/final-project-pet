@@ -11,6 +11,7 @@ import { PiWechatLogoThin } from "react-icons/pi";
 import { BsGenderFemale, BsGenderMale } from "react-icons/bs";
 import { BiSolidTimeFive } from "react-icons/bi";
 import { MdEmail } from "react-icons/md";
+import { FaPaw } from "react-icons/fa";
 import { FaRegHeart, FaHeart } from "react-icons/fa";
 // swiper:
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -24,6 +25,131 @@ register();
 import "swiper/css";
 import "swiper/css/scrollbar";
 import "swiper/css/navigation";
+// semi
+// import { Card, Avatar, Popover } from '@douyinfe/semi-ui';
+import { IconInfoCircle } from '@douyinfe/semi-icons';
+// mui
+import AspectRatio from '@mui/joy/AspectRatio';
+import Card from '@mui/joy/Card';
+import CardContent from '@mui/joy/CardContent';
+import Chip from '@mui/joy/Chip';
+import Typography from '@mui/joy/Typography';
+
+// function Demo() {
+//     const { Meta } = Card;
+
+//     return (
+//         <div>
+//             <Card 
+//                 shadows='hover'
+//                 style={{ maxWidth: 300 }} 
+//                 bodyStyle={{ 
+//                     display: 'flex',
+//                     alignItems: 'center',
+//                     justifyContent: 'space-between'
+//                 }}
+//             >
+//                 <Meta 
+//                     title="10/28到府清貓砂、餵貓、陪貓玩" 
+//                     avatar={
+//                         <Avatar 
+//                             alt='Card meta img'
+//                             size="default"
+//                             src='https://images.pexels.com/photos/3257811/pexels-photo-3257811.jpeg?auto=compress&cs=tinysrgb&w=800'
+//                         />
+//                     }
+//                 />
+//                 <Popover
+//                     position='top'
+//                     showArrow
+//                     content={
+//                         <article style={{ padding: 6 }}>
+//                             NT$ 800 / 次
+//                         </article>
+//                     }
+//                 >
+//                     <FaPaw style={{ color: '#d7965b' }}/>
+//                 </Popover>
+//             </Card>
+//             <br/>
+//             <Card 
+//                 shadows='always'
+//                 style={{ maxWidth: 360 }} 
+//                 bodyStyle={{ 
+//                     display: 'flex',
+//                     alignItems: 'center',
+//                     justifyContent: 'space-between'
+//                 }}
+//             >
+//                 <Meta 
+//                     title="Semi Doc" 
+//                     avatar={
+//                         <Avatar 
+//                             alt='Card meta img'
+//                             size="default"
+//                             src='https://lf3-static.bytednsdoc.com/obj/eden-cn/ptlz_zlp/ljhwZthlaukjlkulzlp/card-meta-avatar-docs-demo.jpg'
+//                         />
+//                     }
+//                 />
+//                 <Popover
+//                     position='top'
+//                     showArrow
+//                     content={
+//                         <article style={{ padding: 6 }}>
+//                             这是一个 Card
+//                         </article>
+//                     }
+//                 >
+//                     <BsGenderFemale style={{ color: 'var(--semi-color-primary)' }}/>
+//                 </Popover>
+//             </Card>
+//         </div>
+//     );
+// }
+function InteractiveCard() {
+    return (
+        <Card
+            variant="outlined"
+            orientation="horizontal"
+            sx={{
+                width: 320,
+                '&:hover': { boxShadow: 'md', borderColor: 'neutral.outlinedHoverBorder' },
+            }}
+        >
+            <AspectRatio ratio="1" sx={{ width: 90 }}>
+                <img
+                    src="https://images.unsplash.com/photo-1507833423370-a126b89d394b?auto=format&fit=crop&w=90"
+                    srcSet="https://images.pexels.com/photos/977935/pexels-photo-977935.jpeg?auto=compress&cs=tinysrgb&dpr=1&fit=crop&h=200&w=280"
+                    loading="lazy"
+                    alt=""
+                />
+            </AspectRatio>
+            <CardContent>
+                <Typography level="title-lg" id="card-description">
+                    桃園10/30~11/02貓咪代餵
+                </Typography>
+                <Typography level="body-sm" aria-describedby="card-description" mb={1}>
+                    <Link
+                        overlay
+                        underline="none"
+                        href="#interactive-card"
+                        sx={{ color: 'text.tertiary' }}
+                    >
+                        台北市信義區
+                    </Link>
+                </Typography>
+                <Chip
+                    variant="outlined"
+                    color="primary"
+                    size="sm"
+                    sx={{ pointerEvents: 'none' }}
+                >
+                    NT$ 800 / 次
+                </Chip>
+            </CardContent>
+        </Card>
+    );
+}
 
 const ImageSwiper = ({ missionImages }) => {
     const swiperRef = useRef(null);
@@ -529,9 +655,12 @@ export default function MissionDetail() {
                                         </button>
                                     </div>
                                 </aside>
+                                <div>
+                                    <InteractiveCard />
+                                </div>
                             </div>
                             <div className='right col-12 col-lg-9'>
-                                <header className='mt-3 p-4 position-relative'>
+                                <header className='mt-3 py-4 px-5 position-relative'>
                                     <div className=' d-flex '>
                                         <p>案件編號：{v.pid}</p>
                                         <img className='position-absolute' src={isFavorite ? "/heart-clicked.svg" : "/heart.svg"} alt={isFavorite ? "已收藏" : "未收藏"} onClick={toggleFavorite} />
@@ -608,6 +737,7 @@ export default function MissionDetail() {
                                             <ImageSwiper missionImages={missionImages} />
                                         </div>
                                     </div>
+                                    {/* <Demo /> */}
                                 </section>
                             </div>
                         </main>

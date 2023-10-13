@@ -4,41 +4,62 @@
   // font-weight: bold;
   width: 150px;
   height: 45px;
-  box-shadow: 1px 5px 7px rgba(0, 0, 0, 0.25);
+  // box-shadow: 1px 5px 7px rgba(0, 0, 0, 0.25);
 }
 
 .mission-detail {
+  .MuiCard-root{
+    width: 100%;
+    margin: 1rem auto;
+    background-color: $cos-white;
+  }
+  .MuiTypography-root{
+    color: $text-main;
+    font-weight: normal;
+  }
+  .MuiChip-root{
+    border: 1px solid $hover;
+    color: $hover;
+  }
   nav a {
     border-bottom: 0;
   }
 
-  aside{
-    background-color: $content-bg;
-      img{
-        width: 10rem;
-        height: 10rem;
-        object-fit: cover;
-        border-radius: 50%;
-      }
-      .poster-gender{
-        font-size: 1.2rem;
-      }
-      .poster-email{
-        word-wrap: break-word; // 避免email超出框框範圍
-      }
-      .chat-btn{
-        box-shadow: 1px 5px 7px rgba(0, 0, 0, 0.25);
-        margin: 0.5rem auto;
-      }
+  aside {
+    // background-color: $content-bg;
+    background-color: $cos-white;
+    box-shadow: 0 0 10px rgba(128, 128, 128, 0.452);
+
+    img {
+      width: 10rem;
+      height: 10rem;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+
+    .poster-gender {
+      font-size: 1.2rem;
+    }
+
+    .poster-email {
+      word-wrap: break-word; // 避免email超出框框範圍
+    }
+
+    .chat-btn {
+      box-shadow: 1px 5px 7px rgba(0, 0, 0, 0.25);
+      margin: 0.5rem auto;
+    }
   }
-  
+
 
   header {
-    background-color: $content-bg;
+    // background-color: $content-bg;
+    background-color: $cos-white;
+    box-shadow: 0 0 10px rgba(128, 128, 128, 0.452);
 
-    h2 {
-      font-weight: bold;
-    }
+    // h2 {
+    //   font-weight: bold;
+    // }
 
     img {
       cursor: pointer;
@@ -59,12 +80,14 @@
   }
 
   .description {
-    background-color: $content-bg;
+    // background-color: $content-bg;
+    background-color: $cos-white;
+    box-shadow: 0 0 10px rgba(128, 128, 128, 0.452);
     // padding: 1rem 0;
   }
 
   .item {
-    $block-width: 10px;
+    $block-width: 9px;
     width: calc(100% - 100px);
     margin: 1.5rem auto;
 
@@ -79,7 +102,7 @@
         display: inline-block; //與標題文字水平排列
         background-color: $hover;
         width: $block-width;
-        height: 40px;
+        height: 35px;
         margin-right: 0.5rem;
       }
     }
@@ -126,26 +149,31 @@
     border: 0;
     padding: 0 12%;
   }
-  @media screen and (max-width: 991px){
+
+  @media screen and (max-width: 991px) {
     .item {
       width: calc(100% - 50px);
+
       &-title {
         &::before {
-          width:10px;
+          width: 10px;
           height: 40px;
         }
       }
     }
-    .mission-place{
+
+    .mission-place {
       margin: 0.8rem auto;
     }
   }
-  @media screen and (max-width: 575px){
+
+  @media screen and (max-width: 575px) {
     .item {
       width: calc(100% - 40px);
+
       &-title {
         &::before {
-          width:9px;
+          width: 9px;
           height: 30px;
         }
       }
