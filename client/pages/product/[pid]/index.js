@@ -24,7 +24,7 @@ function ProductDescription({ htmlContent }) {
 export default function ProductDetail() {
 
     //用來儲存收藏
-    const [collection, setCollection ]  = useState([]);
+    const [collection, setCollection] = useState([]);
 
     // 用於儲存解析後的userID
     const [userId, setUserId] = useState(null);
@@ -51,7 +51,8 @@ export default function ProductDetail() {
     const handleDecrement = () => {
         if (count > 0) {
             setCount(count - 1);
-        } }; const handleIncrement = () => { setCount(count + 1); };
+        }
+    }; const handleIncrement = () => { setCount(count + 1); };
 
     //商品介紹和推薦跳頁
     const [activeSection, setActiveSection] = useState('product-description')
@@ -147,9 +148,9 @@ export default function ProductDetail() {
             })
             .catch((error) => {
                 console.error('Error fetching random products:', error);
-            });      
+            });
     }, []);
-    
+
     //查看收藏商品
     // getCollection()
 
@@ -157,8 +158,8 @@ export default function ProductDetail() {
     const { cart, setCart } = useCart();
     //儲存選中的type_id-selectedTypeId
     const [selectedTypeId, setSelectedTypeId] = useState('');
-    const getCart = () => {
-        axios.get(`http://localhost:3005/api/product/cart?userId=${userId}`)
+    const getCart = (id) => {
+        axios.get(`http://localhost:3005/api/product/cart/${id}`)
             .then((response) => {
                 const data = response.data.result;
                 const newData = data.map((v) => {
@@ -172,10 +173,11 @@ export default function ProductDetail() {
     }
 
     const addCart = async (product_id, product_type_id, quantity) => {
+        console.log(parseInt(product_type_id));
+        console.log(typeof (parseInt(product_type_id)));
         console.log(product_id, product_type_id, quantity)
-
         // 檢查購物車中是否已經存在具有相同 id 和類型的商品
-        const have = cart.find((v) => v.product_id == product_id && v.type_id == product_type_id);
+        const have = cart.find((v) => v.product_id == product_id && v.product_type_id == parseInt(product_type_id));
         console.log(have);
 
         // 如果購物車中沒有相同的商品
@@ -185,35 +187,34 @@ export default function ProductDetail() {
             try {
                 // 發送HTTP請求將商品添加到購物車
                 const response = await axios.put(
-                    `http://localhost:3005/api/product/cart?userId=${userId}`,
+                    `http://localhost:3005/api/product/cart1/${userId}`,
                     { product_id, product_type_id, quantity },
-                    console.log(userId,product_id, product_type_id, quantity),
-                    console.log('我是會員'+ userId)
+                    // console.log(userId,product_id, product_type_id, quantity),
+                    // console.log('我是會員'+ userId)
                 );
             } catch (error) {
                 console.error("錯誤：", error);
             }
 
             // 獲取最新的購物車資料
-            getCart();
+            getCart(userId);
         } else { // 如果購物車中已經存在相同的商品
             try {
                 // 計算新的商品數量（增加1）
-                const newQuantity = have.quantity + 1;
+                const newQuantity = have.quantity + quantity;
                 console.log(newQuantity);
-                console.log(id);
 
                 // 發送HTTP請求將商品數量更新為新數量
                 const response = await axios.put(
-                    `http://localhost:3005/api/product/cartplus`,
-                    { id, newQuantity, type }
+                    `http://localhost:3005/api/product/cart2/${userId}`,
+                    { product_id, newQuantity, product_type_id }
                 );
             } catch (error) {
                 console.error("錯誤：", error);
             }
 
             // 獲取最新的購物車資料
-            getCart();
+            getCart(userId);
         }
     };
 
@@ -221,7 +222,7 @@ export default function ProductDetail() {
     //儲存選中的type_id-selectedTypeId 加到購物車時已經有寫了
     // const [selectedTypeId, setSelectedTypeId] = useState('');
     const getCollection = () => {
-        axios.get(`http://localhost:3005/api/product/collections?userId=${userId}`)
+        axios.get(`http://localhost:3005/api/product/collections/${userId}`)
             .then((response) => {
                 setCollection(response.data.result);
                 console.log(response.data.result);
@@ -243,29 +244,66 @@ export default function ProductDetail() {
             try {
                 // 發送HTTP請求將商品添加到購物車
                 const response = await axios.put(
-                    `http://localhost:3005/api/product/collections?userId=${userId}`,
+                    `http://localhost:3005/api/product/collections/${userId}`,
                     { product_id }
                 );
-                console.log(userId, product_id);
-                // 獲取最新的收藏資料
-                getCollection();
+                alert('已加入收藏囉');
             } catch (error) {
                 console.error("錯誤：", error);
             }
+
+            getCollection(userId)
         } else { // 如果購物車中已經存在相同的商品
             try {
-                getCollection();
-                // 在这里执行具体的操作，例如显示警告
-                alert('已加入收藏');
-               
+                getCollection(userId);
+                //顯示警告
+                
+
             } catch (error) {
                 console.error("錯誤：", error);
             }
         }
     };
 
+    const deleteCollection = async (product_id) => {
+        console.log(product_id);
 
+        // 檢查收藏中是否已經存在具有相同 id 的商品
+        const have = collection.find((v) => v.product_id === product_id);
+        console.log(have);
 
+        // 如果購物車中沒有相同的商品
+        if (have) {
+            try {
+                // 發送HTTP請求將商品添加到購物車，product_id 放在 URL 中
+                const response = await axios.delete(
+                    `http://localhost:3005/api/product/collections/${userId}/${product_id}`
+                );
+                alert('已取消收藏');
+            } catch (error) {
+                console.error("錯誤：", error);
+            }
+
+            getCollection(userId);
+        } else { // 如果購物車中已經沒有存在相同的商品
+            try {
+                getCollection(userId);
+                //顯示警告
+                
+            } catch (error) {
+                console.error("錯誤：", error);
+            }
+        }
+    };
+
+    //款式按鈕
+    const handleButtonClick = (typeId) => {
+        setSelectedTypeId(typeId);
+    };
+
+    
+
+   
     return (
         <>
             <div className='product-detail'>
@@ -316,19 +354,28 @@ export default function ProductDetail() {
                                         <div className="type d-flex flex-column">
                                             <div className="type-chinese">規格</div>
                                             <div className="type-btn d-flex mt-1 ">
-                                                {v.type_names.split(',').map((typeName, i) => (
-                                                    <button
-                                                        key={i}
-                                                        type="button"
-                                                        className="btn-outline-brown me-4"
-                                                        onClick={() => {
-                                                            // 儲存選中的type_id
-                                                            setSelectedTypeId(v.type_ids.split(',')[i].trim());
-                                                        }}
-                                                    >
-                                                        {typeName.trim()}
-                                                    </button>
-                                                ))}
+                                                {v.type_names.split(',').map((typeName, i) => {
+                                                    const typeId = v.type_ids.split(',')[i].trim();
+                                                    const isSelected = typeId === selectedTypeId;
+                                                    return (
+                                                        <button
+                                                            key={i}
+                                                            type="button"
+                                                            style={{
+                                                                //選中/沒選中
+                                                                backgroundColor: isSelected ? '#512f10' : '#fffdfb',
+                                                                border: isSelected ? '1px solid #512f10' : '1px solid #6d6868',
+                                                                color: isSelected ? '#FFFDFB' : '#6d6868',
+                                                                borderRadius: isSelected ? '2px' : '2px',
+                                                                padding: isSelected ? '9px 20px' : '9px 20px',
+                                                                marginRight: isSelected ? '20px ' : '20px ',
+                                                            }}
+                                                            onClick={() => handleButtonClick(typeId)}
+                                                        >
+                                                            {typeName.trim()}
+                                                        </button>
+                                                    );
+                                                })}
                                             </div>
                                         </div>
                                         {/* 計算數量 */}
@@ -364,13 +411,24 @@ export default function ProductDetail() {
                                             <button
                                                 type="button"
                                                 className=" btn-second"
-                                                onClick={()=>{
-                                                    addCollection(v.product_id, selectedTypeId)
-                                                    console.log('收藏:',v.product_id, selectedTypeId)
+                                                onClick={() => {
+                                                    addCollection(v.product_id)
+                                                    console.log('收藏:', v.product_id)
                                                 }}
-                                               
-                                                >
+
+                                            >
                                                 加入收藏
+                                            </button>
+                                            <button
+                                                type="button"
+                                                className=" btn-second"
+                                                onClick={() => {
+                                                    deleteCollection(v.product_id)
+                                                    console.log('取消收藏:', v.product_id)
+                                                }}
+
+                                            >
+                                                取消收藏
                                             </button>
                                         </div>
                                         <div>
