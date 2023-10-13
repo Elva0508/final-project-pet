@@ -157,8 +157,8 @@ export default function ProductDetail() {
     const { cart, setCart } = useCart();
     //儲存選中的type_id-selectedTypeId
     const [selectedTypeId, setSelectedTypeId] = useState('');
-    const getCart = () => {
-        axios.get(`http://localhost:3005/api/product/cart?userId=${userId}`)
+    const getCart = (id) => {
+        axios.get(`http://localhost:3005/api/product/cart/${id}`)
             .then((response) => {
                 const data = response.data.result;
                 const newData = data.map((v) => {
@@ -172,10 +172,11 @@ export default function ProductDetail() {
     }
 
     const addCart = async (product_id, product_type_id, quantity) => {
+        console.log(parseInt(product_type_id));
+        console.log(typeof(parseInt(product_type_id)));
         console.log(product_id, product_type_id, quantity)
-
         // 檢查購物車中是否已經存在具有相同 id 和類型的商品
-        const have = cart.find((v) => v.product_id == product_id && v.type_id == product_type_id);
+        const have = cart.find((v) => v.product_id == product_id && v.product_type_id == parseInt(product_type_id) );
         console.log(have);
 
         // 如果購物車中沒有相同的商品
@@ -185,35 +186,34 @@ export default function ProductDetail() {
             try {
                 // 發送HTTP請求將商品添加到購物車
                 const response = await axios.put(
-                    `http://localhost:3005/api/product/cart?userId=${userId}`,
+                    `http://localhost:3005/api/product/cart1/${userId}`,
                     { product_id, product_type_id, quantity },
-                    console.log(userId,product_id, product_type_id, quantity),
-                    console.log('我是會員'+ userId)
+                    // console.log(userId,product_id, product_type_id, quantity),
+                    // console.log('我是會員'+ userId)
                 );
             } catch (error) {
                 console.error("錯誤：", error);
             }
 
             // 獲取最新的購物車資料
-            getCart();
+            getCart(userId);
         } else { // 如果購物車中已經存在相同的商品
             try {
                 // 計算新的商品數量（增加1）
-                const newQuantity = have.quantity + 1;
+                const newQuantity = have.quantity + quantity;
                 console.log(newQuantity);
-                console.log(id);
 
                 // 發送HTTP請求將商品數量更新為新數量
                 const response = await axios.put(
-                    `http://localhost:3005/api/product/cartplus`,
-                    { id, newQuantity, type }
+                    `http://localhost:3005/api/product/cart2/${userId}`,
+                    { product_id, newQuantity, product_type_id }
                 );
             } catch (error) {
                 console.error("錯誤：", error);
             }
 
             // 獲取最新的購物車資料
-            getCart();
+            getCart(userId);
         }
     };
 
