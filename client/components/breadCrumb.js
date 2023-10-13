@@ -5,7 +5,6 @@ import axios from "axios";
 // 中文路徑對照陣列，移出到config/index.js中設定
 import { pathnameLocale } from '@/config/index'
 import Link from 'next/link'
-import { QueueRounded } from '@mui/icons-material';
 
 function BreadCrumb(props) {
     const { pathname,query } = useRouter();
@@ -231,7 +230,7 @@ const getSubcategory =  () => {
     <>
         <nav aria-label="breadcrumb " className='my-4 container'>
         <ol className="breadcrumb">
-          {pathname=="/" ||pathname=="/product/cart/checkout" ||pathname=="/chatlist/[id]" || pathname=="/product/cart/checkout/pay" || pathname=="/pay-confirm" || pathname=="/product/cart/checkout/cash-on-delivery" || pathname=="/work/find-mission" ||pathname=="/product/cart/checkout/creditCard" ||pathname=="/member/login"?
+          {pathname=="/" ||pathname=="/product/cart/checkout" ||pathname=="/chatlist/[id]"  ||pathname=="/chatlist"|| pathname=="/product/cart/checkout/pay" || pathname=="/pay-confirm" || pathname=="/product/cart/checkout/cash-on-delivery" || pathname=="/work/find-mission" ||pathname=="/product/cart/checkout/creditCard" ||pathname=="/member/login"?
           ("")
           :
           (<><li className="breadcrumb-item">
