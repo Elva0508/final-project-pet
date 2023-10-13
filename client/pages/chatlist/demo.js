@@ -4,7 +4,6 @@ import axios from "axios";
 
 export default function ChatDemo() {
   const [message, setMessage] = useState(""); // 儲存返回後的消息
-  // const [chatContent, setChatContent] = useState([]); //內容設置的狀態
   const [isLoading, setIsLoading] = useState(false);
   const [userId, setUserId] = useState(null); // 用於儲存解析後的userID
   const [chatlistId, setChatlistId] = useState(null); // 用於儲存解析後的chatlistId
@@ -35,7 +34,7 @@ export default function ChatDemo() {
       // 建立要傳送的數據
       const requestData = {
         chatlist_userId1: userId,
-        chatlist_userId2: 5, // 放要對話的 targetID 變數
+        chatlist_userId2: 8, // 放要對話的 targetID 變數
       };
 
       try {
@@ -47,18 +46,12 @@ export default function ChatDemo() {
         if (response.status === 201) {
           // 請求成功
           setMessage("請求成功");
-          const chatUrl = response.data.chatUrl;
           const ChatlistId = response.data.chatlistId;
-          console.log("chatUrl" + chatUrl);
           console.log("ChatlistId" + ChatlistId);
 
           //把ChatlistId存到狀態裡後面送消息時使用
           setChatlistId(ChatlistId);
-
-          // 调用handleSendClick
-          handleSendClick(ChatlistId);
-          // 在這裡導向到 chatUrl
-          // window.location.href = chatUrl;
+          console.log("setChatlistId設置成功");
         } else if (response.status === 200) {
           // 消息已存在
           setMessage("消息已存在");
@@ -69,11 +62,7 @@ export default function ChatDemo() {
 
           //把ChatlistId存到狀態裡後面送消息時使用
           setChatlistId(ChatlistId);
-
-          // 调用handleSendClick
-          handleSendClick(ChatlistId);
-          // 在這裡導向到 chatUrl
-          // window.location.href = chatUrl;
+          console.log("setChatlistId設置成功");
         } else {
           // 請求失敗
           setMessage("請求失敗: " + response.data.error);
@@ -112,6 +101,9 @@ export default function ChatDemo() {
       if (response.ok) {
         // 清空輸入框的值
         setMsgInputValue("");
+        const chatUrl = `/chatlist/${chatlistId}`;
+        // 在這裡導向到 chatUrl
+        window.location.href = chatUrl;
       } else {
         console.error("發送消息時出錯");
       }
@@ -147,7 +139,7 @@ export default function ChatDemo() {
           className="btn-second mx-1"
           type="button"
           id="button-addon2"
-          onClick={handleButtonClick}
+          onClick={handleSendClick}
         >
           {isLoading ? "送出中..." : "送出"}
         </button>
