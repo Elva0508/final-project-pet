@@ -135,8 +135,8 @@ router.get("/recommend", (req, res) => {
 });
 
 //查看購物車內有甚麼商品
-router.get("/cart", (req, res) => {
-    const userId = req.query.userId; // 從請求的 URL 中獲取用戶 token OK
+router.get("/cart/:userId", (req, res) => {
+    const userId = req.params.userId; // 從請求的 URL 中獲取用戶 token OK
     console.log("會員:::::::"+ userId);
     connection.execute(
         `SELECT cart.*, 
