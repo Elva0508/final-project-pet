@@ -229,16 +229,16 @@ function BreadCrumb(props) {
   }
   return (
     <>
-        <nav aria-label="breadcrumb " className='my-4 container'>
-        <ol className="breadcrumb">
+        
           {pathname=="/" ||pathname=="/product/cart/checkout" ||pathname=="/chatlist/[id]" || pathname=="/product/cart/checkout/pay" || pathname=="/pay-confirm" || pathname=="/product/cart/checkout/cash-on-delivery" || pathname=="/work/find-mission" ||pathname=="/product/cart/checkout/creditCard" ||pathname=="/member/login" || pathname == "/work/find-mission/[mission_id]"?
           ("")
           :
-          (<><li className="breadcrumb-item">
+          (<><nav aria-label="breadcrumb " className='my-4 container'>
+        <ol className="breadcrumb"><li className="breadcrumb-item">
             <Link href="/">首頁</Link>
-          </li>{formatTextLocale(pathname)}</>)}
-        </ol>
-        </nav>      
+          </li>{formatTextLocale(pathname)}</ol>
+        </nav></>)}
+              
     </>
   )
 }
