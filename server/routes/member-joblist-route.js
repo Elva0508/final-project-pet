@@ -20,6 +20,18 @@ router.get("/:id", (req, res) => {
     );
   });
 
-
+  router.delete("/:id",(req,res)=>{
+    const deleteId=req.params.id
+    connection.execute(
+        `DELETE FROM mission_fav WHERE mission_fav.mission_fav_id=?`,
+        [deleteId]
+        ,(error, result) => {
+            if (error) {
+              console.error("Error:", error);
+              res.status(500).json({ error: "An error occurred" });
+            } else {
+              res.json({ result });
+            }}) 
+})
 
 module.exports = router;

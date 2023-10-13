@@ -6,9 +6,12 @@ import Swal from 'sweetalert2';
 import moment from "moment";
 import { useCart } from '@/hooks/useCart';
 import Pagination from '@/components/pagination'
-
+import { useAuth } from '@/context/fakeAuthContext';
 
 export default function Checkout() {
+    const {userId} = useAuth()
+    console.log(userId);
+    const userid=parseInt(userId)
     const router = useRouter();
     const {setCart} = useCart();
     const [city,setCity]=useState(0)
@@ -46,30 +49,30 @@ export default function Checkout() {
     const [currentCart,setCurrentCart]=useState([])
 
     let localCart
-
+ 
     useEffect(() => {
-            localCart = localStorage.getItem('cart');
+       if(!localStorage.getItem('allPrice')){
+            router.push("/")
+       }else{
+             localCart = localStorage.getItem('cart');
             setAllPrice(parseInt(localStorage.getItem('allPrice')))
             setFreight(parseInt(localStorage.getItem('freight')))
             setSale(parseInt(localStorage.getItem('sale')))
             setDiscount(localStorage.getItem('discount'))
 
-            const cartData = JSON.parse(localCart);
+            let cartData = JSON.parse(localCart);
             setFinalCart(cartData.filter((v)=>v.buy===true))
             setNobuyCart(cartData.filter((v)=>v.buy===false))
+       }
     }, [router.isReady]);
 
     useEffect(() => {
         setCurrentCart(finalCart.slice(startIndex, endIndex)) 
     }, [finalCart,activePage]);
 
-    
-
     const totalPrice=allPrice-sale+freight 
     const orderNumber = Date.now();
     const createtTime=moment().format("YYYY/MM/DD  HH:mm:ss")
-
-
 
     //縣市名字
     let cityName
@@ -104,7 +107,7 @@ export default function Checkout() {
 
 
 
-    //結帳-->寫進資料庫
+    //貨到付款結帳-->寫進資料庫
     const checkout=async () => {    
         const discountArray =discount.split(",")
         const coupon = discountArray[discountArray.length - 1];
@@ -116,7 +119,7 @@ export default function Checkout() {
             allAdress="小貓兩三隻門市"
         }   
         try {
-          const response = await axios.put(`http://localhost:3005/api/product/cart/checkout`,{ coupon,createtTime,totalPrice,orderNumber,allPrice ,sale,freight,payment,shipment,name,phone,allAdress});        
+          const response = await axios.put(`http://localhost:3005/api/product/cart/checkout`,{ coupon,id,createtTime,totalPrice,orderNumber,allPrice ,sale,freight,payment,shipment,name,phone,allAdress});        
         } catch (error) {
           console.error("Error:", error);
         }
@@ -133,8 +136,8 @@ export default function Checkout() {
 
         }
         //刪減購物車
-        for(let i=0;i<nobuyCart.length;i++){
-            const id=nobuyCart[i].cart_id            
+        for(let i=0;i<finalCart.length;i++){
+            const id=finalCart[i].cart_id            
             try {
                 const response = await axios.delete(`http://localhost:3005/api/product/cart/${id}`);         
             } catch (error) {
@@ -150,11 +153,15 @@ export default function Checkout() {
         localStorage.setItem('finalCart',JSON.stringify(finalCart) );
 
     }
-
+    //line pay付款結帳-->寫進資料庫
     const createOrder = async() => {
         let newFinalCart=[]
-        if(sale>0){
+        if(sale>0 && freight==0){
           newFinalCart = [...finalCart, { product_id: 0, product_name: '優惠券', quantity: 1, newprice: -sale }];
+        }else if(freight>0 && sale==0){
+            newFinalCart = [...finalCart, { product_id: 0, product_name: '運費', quantity: 1, newprice: freight }];
+        }else if(sale>0 && freight>0){
+            newFinalCart = [...finalCart, { product_id: 1000, product_name: '優惠券', quantity: 1, newprice: -sale },{ product_id: 0, product_name: '運費', quantity: 1, newprice: freight }];
         }else{
           newFinalCart=finalCart
         }
@@ -187,7 +194,7 @@ export default function Checkout() {
           {
             amount: totalPrice,
             coupon_id:coupon,
-            user_id:1,
+            user_id:userid,
             oid:orderNumber,
             created_at:createtTime,
             order_price:allPrice,
@@ -231,8 +238,7 @@ export default function Checkout() {
         localStorage.setItem('newFinalCart',JSON.stringify(newFinalCart) );
         localStorage.removeItem("discount");
         localStorage.removeItem("cart");
-      }
-      
+    }
 
     //結帳
     const goCheckout=()=>{
@@ -246,6 +252,9 @@ export default function Checkout() {
             }else if(address==""){
             showAlert("請填寫完整宅配地址")
             }
+        }else if(payment==1){
+            checkout();
+            router.push('/product/cart/checkout/creditCard')
         }else if(payment==2){
             createOrder()
             router.push('/product/cart/checkout/pay')
@@ -348,13 +357,13 @@ export default function Checkout() {
                                 setPayment(1)
                             }}/>
                             <label for="section3">信用卡</label>
-                            <div className="content col-lg-5 col-12 m-0">
+                            {/* <div className="content col-lg-5 col-12 m-0">
                                 <input type="text" placeholder="信用卡號碼" className="form-control mb-2" />
                                 <div className='d-flex'> 
                                     <input type="text" placeholder="到期日" className="form-control " />
                                     <input type="text" placeholder="安全驗證碼" className="form-control " />
                                 </div>
-                            </div>
+                            </div> */}
                         </div>
                         <div>
                             <input type="radio" name="paymentAccordion" id="section4" className='form-check-input mb-3' value={2} checked={payment==2} onChange={()=>{

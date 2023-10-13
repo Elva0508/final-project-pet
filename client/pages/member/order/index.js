@@ -6,10 +6,14 @@ import { useState, useEffect} from "react";
 import axios from "axios";
 import OrderStatus from "@/components/member/order-status";
 import { useAuth } from "@/context/fakeAuthContext";
+import { useRouter } from 'next/router';
+
 
 export default function Order() {
   const [currentScreen, setCurrentScreen] = useState("1");
   const [order, setOrder] = useState([])
+  const router = useRouter();
+  const [activePage, setActivePage] = useState(1)
 
   const getOrder = async(userId) => {
     await axios.get(`http://localhost:3005/api/member-order/${userId}`)
@@ -27,7 +31,7 @@ export default function Order() {
     const id=localStorage.getItem("id")
     // 沒有token
     if (!token) {
-      window.location.href="/";
+      router.push("/")
     }
     console.log(id);
     console.log(token);
@@ -51,9 +55,9 @@ export default function Order() {
             <ListD />
             <div className="d-flex flex-column col-md-8 col-12 order">
   
-                <h5 className="size-4 mt-3">
-                  <p className="big">我的訂單</p>
-                </h5>
+                <p className="size-4 big mb-2">
+                 <span className="my">▍</span>我的訂單
+                </p>
 
               <div className="col-12">
                 
@@ -61,6 +65,7 @@ export default function Order() {
                     className={` size-6 listbutton first ${currentScreen === "1" ? 'pressed' : ''}`}
                     onClick={() => {
                       handleButtonClick("1");
+                      setActivePage(1)
                     }}
                   >
                     待出貨
@@ -71,6 +76,8 @@ export default function Order() {
                     className={` size-6 listbutton ${currentScreen === "2" ? 'pressed' : ''}`}
                     onClick={() => {
                       handleButtonClick("2");
+                      setActivePage(1)
+
                     }}
                   >
                     運送中
@@ -79,6 +86,8 @@ export default function Order() {
                     className={` size-6 listbutton ${currentScreen === "3" ? 'pressed' : ''}`}
                     onClick={() => {
                       handleButtonClick("3");
+                      setActivePage(1)
+
                     }}
                   >
                     已完成
@@ -87,12 +96,14 @@ export default function Order() {
                     className={` size-6 listbutton  ${currentScreen === "4" ? 'pressed' : ''}`}
                     onClick={() => {
                       handleButtonClick("4");
+                      setActivePage(1)
+
                     }}
                   >
                     已取消
                   </button>
                 </div>
-                <OrderStatus order={order} currentScreen={currentScreen} />
+                <OrderStatus order={order} currentScreen={currentScreen} activePage={activePage} setActivePage={setActivePage} />
             </div>
           </div>
         </div>

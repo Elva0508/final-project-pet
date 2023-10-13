@@ -37,6 +37,16 @@ router.put("/updatetype",(req,res)=>{
 })
 
 
+router.get("/count/count", (req, res) => {
+      connection.execute(
+        `SELECT * FROM mission_record;`,
+        (error, result) => {
+          res.json({ result });
+        }
+      );
+    });
+
+
 
 
 

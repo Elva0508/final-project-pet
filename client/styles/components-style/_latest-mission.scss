@@ -73,6 +73,12 @@
 
 
 // 以下為 輪播 (Carousel)
+.carousel-control-prev{
+  left: -27px;
+}
+.carousel-control-next{
+  right: -27px;
+}
 .carousel-control-prev-icon,
 .carousel-control-next-icon {
   background-color: #fffdfb;
