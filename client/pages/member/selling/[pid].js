@@ -17,8 +17,13 @@ const SellingDetailPage = () => {
   const { isAuthenticated, userId } = useAuth();
 
   useEffect(() => {
-    if (!isAuthenticated) {
-      router.push("/member/login");
+    // 初始狀態時isAuthenticated為null，等到isAuthenticated有值時(true or false)才做驗證判斷
+    if (isAuthenticated === null) {
+      return;
+    } else {
+      if (isAuthenticated === false) {
+        router.push("/member/login");
+      }
     }
   }, [isAuthenticated]);
   useEffect(() => {
@@ -83,7 +88,6 @@ const SellingDetailPage = () => {
         <>
           <div className="d-flex justify-content-end">
             {/* mobile版的左側tab */}
-            <ListM />
           </div>
           <ListUserM />
           <div className="d-flex container-fluid flex-column justify-content-around flex-md-row my-3">

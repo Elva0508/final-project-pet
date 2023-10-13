@@ -67,6 +67,12 @@ export default function Cart() {
     //         getCart()
     //     }
     //   }, []) 
+
+    useEffect(() => {
+        if(!localStorage.getItem('id')){
+          router.push("/")
+        }
+    }, [router.isReady]);
     useEffect(() => {
         //判斷是否全選
         setIsChecked(allChange(cart,isChecked))

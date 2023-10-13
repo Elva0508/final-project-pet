@@ -1,4 +1,4 @@
-import React ,{useState,useEffect}from 'react'
+import React, { useState, useEffect } from 'react'
 import { useRouter } from "next/router";
 import axios from "axios";
 
@@ -15,46 +15,46 @@ function BreadCrumb(props) {
     const [mission, setMission] = useState([])
     const [subcategory, setSubcategory] = useState([])
 
-    const getProduct =  () => {
-      axios.get("http://localhost:3005/api/product")
-       .then((response) => {
-         const data = response.data.result;
-         setProduct(data)     
-       })
-       .catch((error) => {
-         console.error("Error:", error);
-     });
-   }
-   const getArticle =  () => {
+  const getProduct = () => {
+    axios.get("http://localhost:3005/api/product")
+      .then((response) => {
+        const data = response.data.result;
+        setProduct(data)
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  }
+  const getArticle = () => {
     axios.get("http://localhost:3005/api/breadcrumb/article")
-     .then((response) => {
-       const data = response.data.result;
-       setArticle(data)     
-     })
-     .catch((error) => {
-       console.error("Error:", error);
-   });
- }
- const getMission =  () => {
-  axios.get("http://localhost:3005/api/breadcrumb/mission")
-   .then((response) => {
-     const data = response.data.result;
-     setMission(data)     
-   })
-   .catch((error) => {
-     console.error("Error:", error);
- });
-}
-const getSubcategory =  () => {
-  axios.get("http://localhost:3005/api/breadcrumb/subcategory")
-   .then((response) => {
-     const data = response.data.result;
-     setSubcategory(data)     
-   })
-   .catch((error) => {
-     console.error("Error:", error);
- });
-}
+      .then((response) => {
+        const data = response.data.result;
+        setArticle(data)
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  }
+  const getMission = () => {
+    axios.get("http://localhost:3005/api/breadcrumb/mission")
+      .then((response) => {
+        const data = response.data.result;
+        setMission(data)
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  }
+  const getSubcategory = () => {
+    axios.get("http://localhost:3005/api/breadcrumb/subcategory")
+      .then((response) => {
+        const data = response.data.result;
+        setSubcategory(data)
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  }
 
     useEffect(() => {
       getProduct()
@@ -65,7 +65,7 @@ const getSubcategory =  () => {
 
     let pathArray=[]
 
-    const formatTextLocale = (pathname) => {
+  const formatTextLocale = (pathname) => {
     pathArray = pathname.split('/')
 
     // console.log(pathArray);
@@ -75,10 +75,10 @@ const getSubcategory =  () => {
  
       //訂單
       if (v == "[oid]") return '訂單明細'
-      const pid=query.pid
-      const aid=query.id
-      const mid=query.mission_id
-      const sid=query.subcategory_id
+      const pid = query.pid
+      const aid = query.id
+      const mid = query.mission_id
+      const sid = query.subcategory_id
       //產品
       if (v == "[pid]" && Number(query.pid)) return product[pid-1].product_name
       if (v == "[pid]" && query.pid=="category") return ""
@@ -91,16 +91,16 @@ const getSubcategory =  () => {
       if (v == "[subcategory_id]" && query.subcategory_id) return subcategory[sid-1].subcategory_name
 
       //文章ok
-      if (v == "[article_category_id]" && query.article_category_id==1) return '日常提案'
-      if (v == "[article_category_id]" && query.article_category_id==2) return '毛孩知識'
-      if (v == "[article_category_id]" && query.article_category_id==3) return '好物研究'
-      if (v == "[id]" && query.id) return article[aid-1].title
+      if (v == "[article_category_id]" && query.article_category_id == 1) return '日常提案'
+      if (v == "[article_category_id]" && query.article_category_id == 2) return '毛孩知識'
+      if (v == "[article_category_id]" && query.article_category_id == 3) return '好物研究'
+      if (v == "[id]" && query.id) return article[aid - 1].title
       //小貓上工
       if (v == "work") return ''
-     
+
       //幫手
       //任務
-      if (v == "[mission_id]" && query.mission_id) return mission[mid-1].title
+      if (v == "[mission_id]" && query.mission_id) return mission[mid - 1].title
 
       //結帳
       if (v == "checkout") return ''
@@ -231,7 +231,7 @@ const getSubcategory =  () => {
     <>
         <nav aria-label="breadcrumb " className='my-4 container'>
         <ol className="breadcrumb">
-          {pathname=="/" ||pathname=="/product/cart/checkout" ||pathname=="/chatlist/[id]" || pathname=="/product/cart/checkout/pay" || pathname=="/pay-confirm" || pathname=="/product/cart/checkout/cash-on-delivery" || pathname=="/work/find-mission" ||pathname=="/product/cart/checkout/creditCard" ||pathname=="/member/login"?
+          {pathname=="/" ||pathname=="/product/cart/checkout" ||pathname=="/chatlist/[id]" || pathname=="/product/cart/checkout/pay" || pathname=="/pay-confirm" || pathname=="/product/cart/checkout/cash-on-delivery" || pathname=="/work/find-mission" ||pathname=="/product/cart/checkout/creditCard" ||pathname=="/member/login" || pathname == "/work/find-mission/[mission_id]"?
           ("")
           :
           (<><li className="breadcrumb-item">
@@ -240,7 +240,7 @@ const getSubcategory =  () => {
         </ol>
         </nav>      
     </>
-)
+  )
 }
 
 export default BreadCrumb

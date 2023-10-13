@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useMemo, useRef } from "react";
 import Link from "next/link";
-import { useRouter } from "next/router";
 import { BiUpload } from "react-icons/bi";
 import { PiPawPrintFill, PiPawPrint } from "react-icons/pi";
 import { Switch, message } from "antd";
@@ -9,6 +8,8 @@ import { useForm } from "react-hook-form";
 import { Upload } from "@douyinfe/semi-ui";
 import { IconPlus } from "@douyinfe/semi-icons";
 import { CheckboxGroup, Checkbox, TextArea } from "@douyinfe/semi-ui";
+import { useAuth } from "@/context/fakeAuthContext";
+import { useRouter } from "next/router";
 const countyOption = [
   "台北市",
   "新北市",
@@ -41,6 +42,7 @@ const CheckboxInput = ({
   info,
   setInfo,
   checked,
+  user_id,
 }) => {
   const inputWrapperRef = useRef();
   const checkRef = useRef();
@@ -125,12 +127,13 @@ const CheckboxInput = ({
   );
 };
 
-const Close = ({ open, setOpen }) => {
+const Close = ({ open, setOpen, user_id }) => {
   const handleOpen = () => {
     console.log(open);
     if (!open) {
+      console.log(user_id);
       memberService
-        .handleHelperValid(open)
+        .handleHelperValid(open, user_id)
         .then((response) => {
           console.log(response.data);
           if (response?.data?.status === 200) {
@@ -151,7 +154,7 @@ const Close = ({ open, setOpen }) => {
   );
 };
 
-const Open = ({ open, setOpen, info, setInfo, images, setImages }) => {
+const Open = ({ open, setOpen, info, setInfo, images, setImages, user_id }) => {
   const [feedStatus, setFeedStatus] = useState({
     service: info?.feed_service,
     price: info?.feed_price,
@@ -211,8 +214,9 @@ const Open = ({ open, setOpen, info, setInfo, images, setImages }) => {
 
   const handleOpen = () => {
     if (open) {
+      console.log(user_id);
       memberService
-        .handleHelperValid(open)
+        .handleHelperValid(open, user_id)
         .then((response) => {
           console.log(response?.data);
           if (response?.data?.status === 200) {
@@ -269,7 +273,7 @@ const Open = ({ open, setOpen, info, setInfo, images, setImages }) => {
   const handleCancel = () => {
     console.log("有cancel");
     memberService
-      .getHelperInfo()
+      .getHelperInfo(user_id)
       .then((response) => {
         if (response?.data?.status === 200) {
           const profile = response?.data?.profile[0];
@@ -487,34 +491,37 @@ const Open = ({ open, setOpen, info, setInfo, images, setImages }) => {
     </>
   );
 };
-const HelperInfo = () => {
+const HelperInfo = ({ user_id }) => {
   const [open, setOpen] = useState(false);
   const [info, setInfo] = useState({});
   const [images, setImages] = useState([]);
+  // const { isAuthenticated, userId } = useAuth();
   let defaultInfo, defaultImages;
   useEffect(() => {
-    memberService
-      .getHelperInfo()
-      .then((response) => {
-        console.log(response);
-        const profile = response?.data?.profile[0];
-        setInfo(profile);
-        defaultInfo = profile;
-        if (profile.cat_helper) {
-          setOpen(true);
-        }
-        const tempImages = response?.data?.images;
-        setImages(() => {
-          return tempImages.map((image) => {
-            return { uid: image.image_id, url: image.file_path };
+    if (user_id) {
+      memberService
+        .getHelperInfo(user_id)
+        .then((response) => {
+          console.log(response);
+          const profile = response?.data?.profile[0];
+          setInfo(profile);
+          defaultInfo = profile;
+          if (profile.cat_helper) {
+            setOpen(true);
+          }
+          const tempImages = response?.data?.images;
+          setImages(() => {
+            return tempImages.map((image) => {
+              return { uid: image.image_id, url: image.file_path };
+            });
           });
+          defaultImages = images;
+        })
+        .catch((e) => {
+          console.log(e);
         });
-        defaultImages = images;
-      })
-      .catch((e) => {
-        console.log(e);
-      });
-  }, []);
+    }
+  }, [user_id]);
   if (process.client) {
     console.log("運行在客戶端");
   }
@@ -544,9 +551,10 @@ const HelperInfo = () => {
             setInfo={setInfo}
             images={images}
             setImages={setImages}
+            user_id={user_id}
           />
         ) : (
-          <Close open={open} setOpen={setOpen} />
+          <Close open={open} setOpen={setOpen} user_id={user_id} />
         )}
       </div>
     </>

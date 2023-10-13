@@ -10,7 +10,8 @@ import { useAuth } from '@/context/fakeAuthContext';
 
 export default function Checkout() {
     const {userId} = useAuth()
-    const id=parseInt(userId)
+    console.log(userId);
+    const userid=parseInt(userId)
     const router = useRouter();
     const {setCart} = useCart();
     const [city,setCity]=useState(0)
@@ -48,17 +49,21 @@ export default function Checkout() {
     const [currentCart,setCurrentCart]=useState([])
 
     let localCart
-
+ 
     useEffect(() => {
-            localCart = localStorage.getItem('cart');
+       if(!localStorage.getItem('allPrice')){
+            router.push("/")
+       }else{
+             localCart = localStorage.getItem('cart');
             setAllPrice(parseInt(localStorage.getItem('allPrice')))
             setFreight(parseInt(localStorage.getItem('freight')))
             setSale(parseInt(localStorage.getItem('sale')))
             setDiscount(localStorage.getItem('discount'))
 
-            const cartData = JSON.parse(localCart);
+            let cartData = JSON.parse(localCart);
             setFinalCart(cartData.filter((v)=>v.buy===true))
             setNobuyCart(cartData.filter((v)=>v.buy===false))
+       }
     }, [router.isReady]);
 
     useEffect(() => {
@@ -131,8 +136,8 @@ export default function Checkout() {
 
         }
         //刪減購物車
-        for(let i=0;i<nobuyCart.length;i++){
-            const id=nobuyCart[i].cart_id            
+        for(let i=0;i<finalCart.length;i++){
+            const id=finalCart[i].cart_id            
             try {
                 const response = await axios.delete(`http://localhost:3005/api/product/cart/${id}`);         
             } catch (error) {
@@ -189,7 +194,7 @@ export default function Checkout() {
           {
             amount: totalPrice,
             coupon_id:coupon,
-            user_id:id,
+            user_id:userid,
             oid:orderNumber,
             created_at:createtTime,
             order_price:allPrice,

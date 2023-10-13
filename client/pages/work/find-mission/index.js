@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import Link from "next/link";
+import jwt_decode from "jwt-decode";
 // components
 import RoleSelection from "@/components/job/role-selection";
 // 用 {} 導入的內容是命名導出的，而不加{}導入的內容是默認導出的。
@@ -28,7 +29,7 @@ import { Cascader } from "antd";
 import cityData from "@/data/CityCountyData.json";
 
 // 搜尋
-const Search = ({ placeholder, color, onClick, search, setSearch, setIsSearchTriggered, setActivePage }) => {
+const Search = ({ placeholder, color, onClick, search, setSearch, inputValue, setInputValue, setActivePage, setMissionType, setUpdateDate, setMissionCity, setMissionArea, setSortOrder, setSortBy, setButtonText1, setButtonText2, setSelectedCity, setSelectedArea }) => {
   const rippleBtnRef = useRef(null);
   const inputRef = useRef(null);
   const handleRipple = () => {
@@ -40,9 +41,23 @@ const Search = ({ placeholder, color, onClick, search, setSearch, setIsSearchTri
   };
 
   const handleSearch = () => {
-    setSearch(search)
+    // 清空篩選的資料
+    setMissionType(null);
+    setUpdateDate(null);
+    setMissionCity(null);
+    setMissionArea(null);
+    setButtonText1('任務類型');
+    setButtonText2('更新時間');
+    setSelectedCity(null);
+    setSelectedArea(null);
+    setSortOrder('asc');
+    setSortBy('post_date');
+    // 依據input進行搜尋
+    setSearch(inputValue);
+    // 清空輸入框的值
+    setInputValue("");
+    console.log("按了搜尋按鈕的inputValue是" + inputValue)
     console.log("按了搜尋按鈕的search是" + search)
-    setIsSearchTriggered(true);
     setActivePage(1);
   };
 
@@ -53,12 +68,12 @@ const Search = ({ placeholder, color, onClick, search, setSearch, setIsSearchTri
         type="text"
         placeholder={placeholder || ""}
         ref={inputRef}
-        value={search}
+        value={inputValue}
         onChange={(e) => {
           console.log(e.target.value);
-          // 不在這裡觸發搜尋，而是更新 search 狀態
-          setSearch(e.target.value);
-          console.log("輸入時的search是" + search)
+          // 不在這裡觸發搜尋，而是更新 inputValue 狀態
+          setInputValue(e.target.value);
+          console.log("輸入時的inputValue是" + inputValue)
         }}
       />
       <button
@@ -78,14 +93,7 @@ const Search = ({ placeholder, color, onClick, search, setSearch, setIsSearchTri
 };
 
 // 最終版篩選
-const MyFilter = ({ missionType, setMissionType, missionCity, setMissionCity, missionArea, setMissionArea, updateDate, setUpdateDate, sortOrder, setSortOrder, sortBy, setSortBy, setActivePage }) => {
-  // 按鈕文字的狀態
-  const [buttonText1, setButtonText1] = useState('任務類型');
-  const [buttonText2, setButtonText2] = useState('更新時間');
-
-  // 地區狀態
-  const [selectedCity, setSelectedCity] = useState(null);
-  const [selectedArea, setSelectedArea] = useState(null);
+const MyFilter = ({ missionType, setMissionType, missionCity, setMissionCity, missionArea, setMissionArea, updateDate, setUpdateDate, sortOrder, setSortOrder, sortBy, setSortBy, setActivePage, buttonText1, setButtonText1, buttonText2, setButtonText2, selectedCity, setSelectedCity, selectedArea, setSelectedArea }) => {
 
   // 三：處理任務city下拉選單項的點擊事件
   const handleCityChange = (city) => {
@@ -172,7 +180,7 @@ const MyFilter = ({ missionType, setMissionType, missionCity, setMissionCity, mi
 
   return (
     <>
-      <div className='filters d-flex justify-content-center align-items-center '>
+      <div className='filters d-sm-flex justify-content-center align-items-center d-none '>
         {/* 一：任務類型 */}
         <div className="btn-group mx-2">
           <button
@@ -289,6 +297,220 @@ const MyFilter = ({ missionType, setMissionType, missionCity, setMissionCity, mi
     </>
   );
 };
+// 篩選-手機
+const FilterMobile = ({ missionType, setMissionType, missionCity, setMissionCity, missionArea, setMissionArea, updateDate, setUpdateDate, sortOrder, setSortOrder, sortBy, setSortBy, setActivePage, buttonText1, setButtonText1, buttonText2, setButtonText2, selectedCity, setSelectedCity, selectedArea, setSelectedArea }) => {
+
+  // 三：處理任務city下拉選單項的點擊事件
+  const handleCityChange = (city) => {
+    setSelectedCity(city);
+    setSelectedArea(null);
+    // console.log(`選中的值是: ${selectedCity}`);
+    console.log(`選中的城市是: ${city.CityName}`);
+    setMissionCity(city.CityName);
+    setMissionArea(null); // 要重置area 第二次篩city才能正常
+    // console.log(`選中的missionCity是: ${missionCity}`);
+    setActivePage(1);
+  };
+
+  // 立即更新missionCity的值 否則第一次點擊會是null(因為異步)
+  useEffect(() => {
+    console.log(`選中的missionCity是: ${missionCity}`);
+    console.log(`"現在是接"+http://localhost:3005/api/mission/all-missions?missionType=${missionType}&missionCity=${missionCity}&missionArea=${missionArea}&sortOrder=${sortOrder}&sortBy=${sortBy}`)
+  }, [missionCity]);
+
+  // 三：處理任務area下拉選單項的點擊事件
+  const handleAreaChange = (area) => {
+    setSelectedArea(area);
+    console.log(`選中的地區是: ${area.AreaName}`);
+    setMissionArea(area.AreaName);
+    setActivePage(1);
+  };
+
+  useEffect(() => {
+    console.log(`選中的missionArea是: ${missionArea}`);
+    console.log(`"現在是接"++http://localhost:3005/api/mission/all-missions?missionType=${missionType}&missionCity=${missionCity}&missionArea=${missionArea}&sortOrder=${sortOrder}&sortBy=${sortBy}`)
+  }, [missionArea]);
+
+  // 任務類型選項
+  const options1 = [
+    { label: '到府照顧', value: 'feed' },
+    { label: '安親寄宿', value: 'house' },
+    { label: '到府美容', value: 'beauty' },
+    { label: '行為訓練', value: 'training' },
+    { label: '醫療護理', value: 'medical' },
+  ];
+
+  // 更新日期選項
+  const options2 = [
+    { label: '今天以內', value: 'today' },
+    { label: '一週以內', value: 'one_week' },
+    { label: '一個月內', value: 'one_month' },
+  ];
+
+  // 一：處理任務類型下拉選單項的點擊事件
+  const handleItemClick1 = (label) => {
+    // 獲取選項的value值
+    const selectedValue = options1.find(option => option.label === label)?.value;
+    // 更新按鈕文字
+    setButtonText1(label);
+    // 這裡可以使用selectedValue來執行其他操作
+    console.log(`選中的值是: ${selectedValue}`);
+
+    setMissionType(selectedValue);
+    setActivePage(1);
+  };
+
+  // 二：處理更新日期下拉選單項的點擊事件
+  const handleItemClick2 = (label) => {
+    const selectedValue = options2.find(option => option.label === label)?.value;
+    setButtonText2(label);
+    console.log(`選中的值是: ${selectedValue}`);
+
+    setUpdateDate(selectedValue);
+    setActivePage(1);
+  };
+
+  // 清除篩選條件
+  const clearFilters = () => {
+    setMissionType(null);
+    setUpdateDate(null);
+    setMissionCity(null);
+    setMissionArea(null);
+    setButtonText1('任務類型');
+    setButtonText2('更新時間');
+    setSelectedCity(null);
+    setSelectedArea(null);
+    console.log("現在的missionType是" + missionType + "現在的updateDate是" + updateDate + "現在的missionCity是" + missionCity + "現在的missionArea是" + missionArea);
+  };
+
+  return (
+    <>
+      <div className='filters d-flex justify-content-center align-items-center d-sm-none '>
+        <Swiper slidesPerView="auto" className="mobile-filter" preventClicks={false}>
+          <SwiperSlide>
+            {/* 一：任務類型 */}
+            <div className="btn-group mx-2">
+              <button
+                className="btn dropdown-toggle"
+                type="button"
+                id="defaultDropdown1"
+                data-bs-toggle="dropdown"
+                data-bs-auto-close="true"
+                aria-expanded="false"
+              >
+                <div className="left-background"></div>
+                <img src="/job-icon/plus-service.svg" className="me-3" />
+                {buttonText1} {/* 按鈕文字狀態 */}
+                <BiSolidDownArrow className="ms-2" />
+              </button>
+              <ul className="dropdown-menu" aria-labelledby="defaultDropdown1">
+                {/* 使用map函數動態生成下拉選單項 */}
+                {options1.map((option) => (
+                  <li
+                    key={option.label}
+                    className="dropdown-item text-center"
+                    onClick={() => handleItemClick1(option.label)}
+                  >
+                    {option.label}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </SwiperSlide>
+          <SwiperSlide>
+            {/* 二：更新日期 */}
+            <div className="btn-group mx-2">
+              <button
+                className="btn dropdown-toggle"
+                type="button"
+                id="defaultDropdown2"
+                data-bs-toggle="dropdown"
+                data-bs-auto-close="true"
+                aria-expanded="false"
+              >
+                <div className="left-background"></div>
+                <img src="/job-icon/Calendar.svg" className="me-3" />
+                {buttonText2}
+                <BiSolidDownArrow className="ms-2" />
+              </button>
+              <ul className="dropdown-menu" aria-labelledby="defaultDropdown2">
+                {options2.map((option) => (
+                  <li
+                    key={option.label}
+                    className="dropdown-item text-center"
+                    onClick={() => handleItemClick2(option.label)}
+                  >
+                    {option.label}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </SwiperSlide>
+          <SwiperSlide>
+            {/* 三：任務地區 */}
+            {/* 城市下拉選單 */}
+            <div className="btn-group ms-2">
+              <button
+                className="btn dropdown-toggle"
+                type="button"
+                id="defaultDropdown1"
+                data-bs-toggle="dropdown"
+                data-bs-auto-close="true"
+                aria-expanded="false"
+              >
+                <div className="left-background"></div>
+                <img src="/job-icon/Discovery-date.svg" className="me-3" />
+                {selectedCity ? selectedCity.CityName : '任務地區'}
+                <BiSolidDownArrow className="ms-2" />
+              </button>
+              <ul className="dropdown-menu" aria-labelledby="defaultDropdown1">
+                {cityData.map((city) => (
+                  <li
+                    key={city.CityName}
+                    className="dropdown-item text-center"
+                    onClick={() => handleCityChange(city)}
+                  >
+                    {city.CityName}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            {/* 地區下拉選單，有選city才會出現 */}
+            {selectedCity && (
+              <div className="btn-group">
+                <button
+                  className="btn dropdown-toggle"
+                  type="button"
+                  id="defaultDropdown1"
+                  data-bs-toggle="dropdown"
+                  data-bs-auto-close="true"
+                  aria-expanded="false"
+                >
+                  {selectedArea ? selectedArea.AreaName : '選擇地區'}
+                  <BiSolidDownArrow className="ms-2" />
+                </button>
+                <ul className="dropdown-menu" aria-labelledby="defaultDropdown1">
+                  {selectedCity.AreaList.map((area) => (
+                    <li
+                      key={area.ZipCode}
+                      className="dropdown-item text-center"
+                      onClick={() => handleAreaChange(area)}
+                    >
+                      {area.AreaName}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </SwiperSlide>
+          <SwiperSlide>
+            <button className="btn-second ms-4 filter-button" onClick={clearFilters} >清除篩選</button>
+          </SwiperSlide>
+        </Swiper>
+      </div>
+    </>
+  );
+};
 
 // 排序
 const Sort = ({ missionType, setMissionType, missionCity, setMissionCity, missionArea, setMissionArea, updateDate, setUpdateDate, sortOrder, setSortOrder, sortBy, setSortBy, search }) => {
@@ -349,7 +571,7 @@ const Sort = ({ missionType, setMissionType, missionCity, setMissionCity, missio
 
 
 // 最新任務（電腦版）
-const LatestMission=()=> {
+const LatestMission = ({ userId }) => {
 
   const [latestMissions, setLatestMissions] = useState([])
 
@@ -384,7 +606,7 @@ const LatestMission=()=> {
     // 在組件加載時從後端獲取已收藏的任務
     const fetchFavoriteMissions = async () => {
       try {
-        const response = await axios.get('http://localhost:3005/api/mission/fav');
+        const response = await axios.get(`http://localhost:3005/api/mission/fav?userId=${userId}`);
         const favoriteMissionIds = response.data.result.map((fav) => fav.mission_id);
 
         // 根據已收藏的任務和當前任務列表來初始化 isFavorites 數組
@@ -401,23 +623,28 @@ const LatestMission=()=> {
   }, [latestMissions]);
 
   const toggleFavorite = async (index) => {
+    // 檢查用戶是否已登入
+    if (!userId) {
+      alert('請先登入會員');
+      return;
+    }
     try {
       const newFavorites = [...isFavorites];
       newFavorites[index] = !newFavorites[index];
       setIsFavorites(newFavorites); // 立即更新圖標狀態
-  
+
       const missionId = latestMissions[index].mission_id;
       console.log(missionId)
 
-        if (!isFavorites[index]) {
-          // 如果任務未被收藏，發送加入收藏的請求
-          await axios.put('http://localhost:3005/api/mission/add-fav', { missionId });
-          console.log('已加入收藏');
-        } else {
-          // 如果任務已被收藏，發送取消收藏的請求
-          await axios.delete('http://localhost:3005/api/mission/delete-fav', { data: { missionId } });
-          console.log('已取消收藏');
-        }
+      if (!isFavorites[index]) {
+        // 如果任務未被收藏，發送加入收藏的請求
+        await axios.put(`http://localhost:3005/api/mission/add-fav?userId=${userId}`, { missionId });
+        console.log('已加入收藏');
+      } else {
+        // 如果任務已被收藏，發送取消收藏的請求
+        await axios.delete(`http://localhost:3005/api/mission/delete-fav?userId=${userId}`, { data: { missionId } });
+        console.log('已取消收藏');
+      }
 
     } catch (error) {
       console.error(error);
@@ -456,7 +683,7 @@ const LatestMission=()=> {
 }
 
 // 最新任務（手機版）
-const MobileLatestMission = () => {
+const MobileLatestMission = ({ userId }) => {
   const [latestMissions, setLatestMissions] = useState([]);
   const [activeIndex, setActiveIndex] = useState(0);
   // 追蹤動畫狀態 防止多次快速點擊上一張或下一張按鈕 導致卡片重疊
@@ -532,7 +759,7 @@ const MobileLatestMission = () => {
     // 在組件加載時從後端獲取已收藏的任務
     const fetchFavoriteMissions = async () => {
       try {
-        const response = await axios.get('http://localhost:3005/api/mission/fav');
+        const response = await axios.get(`http://localhost:3005/api/mission/fav?userId=${userId}`);
         const favoriteMissionIds = response.data.result.map((fav) => fav.mission_id);
 
         // 根據已收藏的任務和當前任務列表來初始化 isFavorites 數組
@@ -549,23 +776,28 @@ const MobileLatestMission = () => {
   }, [latestMissions]);
 
   const toggleFavorite = async (index) => {
+    // 檢查用戶是否已登入
+    if (!userId) {
+      alert('請先登入會員');
+      return;
+    }
     try {
       const newFavorites = [...isFavorites];
       newFavorites[index] = !newFavorites[index];
       setIsFavorites(newFavorites); // 立即更新圖標狀態
-  
+
       const missionId = latestMissions[index].mission_id;
       console.log(missionId)
 
-        if (!isFavorites[index]) {
-          // 如果任務未被收藏，發送加入收藏的請求
-          await axios.put('http://localhost:3005/api/mission/add-fav', { missionId });
-          console.log('已加入收藏');
-        } else {
-          // 如果任務已被收藏，發送取消收藏的請求
-          await axios.delete('http://localhost:3005/api/mission/delete-fav', { data: { missionId } });
-          console.log('已取消收藏');
-        }
+      if (!isFavorites[index]) {
+        // 如果任務未被收藏，發送加入收藏的請求
+        await axios.put(`http://localhost:3005/api/mission/add-fav?userId=${userId}`, { missionId });
+        console.log('已加入收藏');
+      } else {
+        // 如果任務已被收藏，發送取消收藏的請求
+        await axios.delete(`http://localhost:3005/api/mission/delete-fav?userId=${userId}`, { data: { missionId } });
+        console.log('已取消收藏');
+      }
 
     } catch (error) {
       console.error(error);
@@ -662,7 +894,7 @@ function ImageWithEqualDimensions({ file_path }) {
 }
 
 // 任務卡片（這邊的參數如果忘記設定會讓卡片出不來）
-const MissionCard = ({ missionType, missionCity, missionArea, setMissionType, updateDate, setUpdateDate, sortOrder, setSortOrder, sortBy, setSortBy, allMissions, currentData }) => {
+const MissionCard = ({ missionType, missionCity, missionArea, setMissionType, updateDate, setUpdateDate, sortOrder, setSortOrder, sortBy, setSortBy, allMissions, currentData, userId, setUserId, isFavorites, toggleFavorite }) => {
 
   // 格式化日期
   function formatDate(dateString) {
@@ -673,52 +905,6 @@ const MissionCard = ({ missionType, missionCity, missionArea, setMissionType, up
     return `${year}/${month}/${day}`;
   }
 
-  // 收藏
-  const [isFavorites, setIsFavorites] = useState([]);
-
-  useEffect(() => {
-    // 在組件加載時從後端獲取已收藏的任務
-    const fetchFavoriteMissions = async () => {
-      try {
-        const response = await axios.get('http://localhost:3005/api/mission/fav');
-        const favoriteMissionIds = response.data.result.map((fav) => fav.mission_id);
-
-        // 根據已收藏的任務和當前任務列表來初始化 isFavorites 數組
-        const initialFavorites = currentData.map((mission) =>
-          favoriteMissionIds.includes(mission.mission_id)
-        );
-        setIsFavorites(initialFavorites);
-      } catch (error) {
-        console.error('前端請求錯誤：', error);
-      }
-    };
-
-    fetchFavoriteMissions();
-  }, [currentData]);
-
-  const toggleFavorite = async (index) => {
-    try {
-      const newFavorites = [...isFavorites];
-      newFavorites[index] = !newFavorites[index];
-      setIsFavorites(newFavorites); // 立即更新圖標狀態
-  
-      const missionId = currentData[index].mission_id;
-      console.log(missionId)
-
-        if (!isFavorites[index]) {
-          // 如果任務未被收藏，發送加入收藏的請求
-          await axios.put('http://localhost:3005/api/mission/add-fav', { missionId });
-          console.log('已加入收藏');
-        } else {
-          // 如果任務已被收藏，發送取消收藏的請求
-          await axios.delete('http://localhost:3005/api/mission/delete-fav', { data: { missionId } });
-          console.log('已取消收藏');
-        }
-
-    } catch (error) {
-      console.error(error);
-    }
-  };
 
   return (
     <>
@@ -762,15 +948,25 @@ const MissionCard = ({ missionType, missionCity, missionArea, setMissionType, up
 };
 
 export default function MissionList() {
+  // 篩選
   const [missionType, setMissionType] = useState(null);
   const [updateDate, setUpdateDate] = useState(null);
   const [missionCity, setMissionCity] = useState("");
   const [missionArea, setMissionArea] = useState(null);
+  // 篩選按鈕文字的狀態
+  const [buttonText1, setButtonText1] = useState('任務類型');
+  const [buttonText2, setButtonText2] = useState('更新時間');
+  // 篩選地區文字的狀態
+  const [selectedCity, setSelectedCity] = useState(null);
+  const [selectedArea, setSelectedArea] = useState(null);
+  // 排序
   const [sortOrder, setSortOrder] = useState("asc");
   const [sortBy, setSortBy] = useState('post_date');
+  // 搜尋
+  const [inputValue, setInputValue] = useState('');
   const [search, setSearch] = useState("");
-  const [isSearchTriggered, setIsSearchTriggered] = useState(false);
-
+  // 用於儲存解析後的userID
+  const [userId, setUserId] = useState(null);
 
 
   const [allMissions, setAllMissions] = useState([]);
@@ -800,20 +996,35 @@ export default function MissionList() {
       setAllMissions(data);
     } catch (error) {
       console.error("Error:", error);
-    } finally {
-      setIsSearchTriggered(false); // 無論搜尋成功或失敗，按下搜尋鈕後都將其設置為 false
     }
   };
 
   useEffect(() => {
     getAllMissions()
-  }, [missionType, updateDate, missionCity, missionArea, sortOrder, sortBy, isSearchTriggered]) // 當篩選方式、排序方式發生變化時重新獲取數據（非常重要要記得！忘記好幾次）
-  // 這邊不添加 search 否則在input輸入時就直接即時搜尋
+  }, [missionType, updateDate, missionCity, missionArea, sortOrder, sortBy, search]) // 當篩選方式、排序方式發生變化時重新獲取數據（非常重要要記得！忘記好幾次）
+  // 這邊不添加 inputValue 否則在input輸入時就直接即時搜尋
 
   useEffect(() => {
     // 在allMissions狀態更新後輸出內容
     console.log("allMissions是", allMissions);
   }, [allMissions]);
+
+  // 利用token拿到當前登入的userID
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      try {
+        const decodedToken = jwt_decode(token);
+        const currentUserID = decodedToken.id;
+        console.log("currentUserID", currentUserID);
+        setUserId(currentUserID);
+        // 在此處將令牌token添加到請求標頭
+        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      } catch (error) {
+        console.error("解析Token時出錯", error);
+      }
+    }
+  }, []);
 
   // 分頁
   const itemsPerPage = 18;
@@ -822,9 +1033,61 @@ export default function MissionList() {
   const endIndex = startIndex + itemsPerPage;
   const currentData = allMissions.slice(startIndex, endIndex);
   useEffect(() => {
-    console.log("currentData這頁的資料是", currentData);
+    // console.log("currentData這頁的資料是", currentData);
   }, [currentData]);
 
+  // 收藏
+  const [isFavorites, setIsFavorites] = useState([]);
+
+  useEffect(() => {
+    // 在組件加載時從後端獲取已收藏的任務
+    const fetchFavoriteMissions = async () => {
+      try {
+        const response = await axios.get(`http://localhost:3005/api/mission/fav?userId=${userId}`);
+        const favoriteMissionIds = response.data.result.map((fav) => fav.mission_id);
+
+        // 根據已收藏的任務和當前任務列表來初始化 isFavorites 數組
+        const initialFavorites = currentData.map((mission) =>
+          favoriteMissionIds.includes(mission.mission_id)
+        );
+        setIsFavorites(initialFavorites);
+      } catch (error) {
+        console.error('前端請求錯誤：', error);
+      }
+    };
+
+    fetchFavoriteMissions();
+  }, [currentData]);
+
+  const toggleFavorite = async (index) => {
+    // 檢查用戶是否已登入
+    if (!userId) {
+      alert('請先登入會員');
+      return;
+    }
+
+    try {
+      const newFavorites = [...isFavorites];
+      newFavorites[index] = !newFavorites[index];
+      setIsFavorites(newFavorites); // 立即更新圖標狀態
+
+      const missionId = currentData[index].mission_id;
+      console.log(missionId)
+
+      if (!isFavorites[index]) {
+        // 如果任務未被收藏，發送加入收藏的請求
+        await axios.put(`http://localhost:3005/api/mission/add-fav?userId=${userId}`, { missionId });
+        console.log('已加入收藏');
+      } else {
+        // 如果任務已被收藏，發送取消收藏的請求
+        await axios.delete(`http://localhost:3005/api/mission/delete-fav?userId=${userId}`, { data: { missionId } });
+        console.log('已取消收藏');
+      }
+
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   // 在組件加載時重置篩選條件為默認值
   useEffect(() => {
@@ -834,37 +1097,72 @@ export default function MissionList() {
     setMissionArea(null);
     setSortOrder('asc');
     setSortBy('post_date');
+    setInputValue('');
     setSearch("");
-    setIsSearchTriggered(false);
     // setSelectedCity(null); // 重置城市选择为 null 或默认值
     // setSelectedArea(null); // 重置地区选择为 null 或默认值
-    console.log(`重載後是+http://localhost:3005/api/mission/all-missions?missionType=${missionType}&updateDate=${updateDate}&missionCity=${missionCity}&missionArea=${missionArea}&sortOrder=${sortOrder}&sortBy=${sortBy}`);
+    console.log(`重載後是+http://localhost:3005/api/mission/all-missions?missionType=${missionType}&updateDate=${updateDate}&missionCity=${missionCity}&missionArea=${missionArea}&sortOrder=${sortOrder}&sortBy=${sortBy}&missionSearch=${search}`);
   }, []);
+
+  // 點麵包屑重置所有設定
+  const clearSettings = () => {
+    setMissionType(null);
+    setUpdateDate(null);
+    setMissionCity("");
+    setMissionArea(null);
+    setSortOrder('asc');
+    setSortBy('post_date');
+    setInputValue('');
+    setSearch("");
+    setActivePage(1);
+    getAllMissions()
+    console.log("狀態變數已重置為預設值");
+  };
+
+
 
 
   return (
     <>
-      <div className="container pb-5 my-3 find-mission">
+      <div className="container my-4 find-mission">
         <nav className="breadcrumb-wrapper" aria-label="breadcrumb">
-          <ol class="breadcrumb">
-            <li class="breadcrumb-item">
+          <ol className="breadcrumb">
+            <li className="breadcrumb-item">
               <Link href="/">首頁</Link>
             </li>
-            <li class="breadcrumb-item" aria-current="page">
-              <Link href="/work/find-mission">任務總覽</Link>
+            <li className="breadcrumb-item" aria-current="page">
+              <Link href="/work/find-mission" onClick={clearSettings}>小貓上工(找任務)</Link>
             </li>
+            {search ? (
+              <>
+                <li className="breadcrumb-item" aria-current="page">
+                  搜尋結果
+                </li>
+                <li className="breadcrumb-item active" aria-current="page">
+                  {search}
+                </li>
+              </>
+            ) : (
+              <>
+                <li className="breadcrumb-item active" aria-current="page">
+                  所有任務
+                </li>
+              </>
+            )}
           </ol>
         </nav>
 
         <div className="d-flex flex-column flex-md-row justify-content-between mt-3">
           <RoleSelection defaultActive="mission" />
-          <Search placeholder="搜尋任務" search={search} setSearch={setSearch} setIsSearchTriggered={setIsSearchTriggered} setActivePage={setActivePage} />
+          <Search placeholder="搜尋任務" search={search} setSearch={setSearch} setActivePage={setActivePage} inputValue={inputValue} setInputValue={setInputValue} setMissionType={setMissionType} setUpdateDate={setUpdateDate} setMissionCity={setMissionCity} setMissionArea={setMissionArea} setSortOrder={setSortOrder} setSortBy={setSortBy} setButtonText1={setButtonText1} setButtonText2={setButtonText2} setSelectedCity={setSelectedCity} setSelectedArea={setSelectedArea} />
         </div>
         <div className='d-flex justify-content-between align-items-center mt-md-3 mb-md-4 position-relative'>
           <div className='filters d-flex justify-content-center align-items-center '>
             {/* <MobileFilter missionType={missionType} /> */}
             <MyFilter missionType={missionType} setMissionType={setMissionType} missionCity={missionCity} setMissionCity={setMissionCity} missionArea={missionArea} setMissionArea={setMissionArea}
-              updateDate={updateDate} setUpdateDate={setUpdateDate} sortOrder={sortOrder} setSortOrder={setSortOrder} sortBy={sortBy} setSortBy={setSortBy} setActivePage={setActivePage} />
+              updateDate={updateDate} setUpdateDate={setUpdateDate} sortOrder={sortOrder} setSortOrder={setSortOrder} sortBy={sortBy} setSortBy={setSortBy} setActivePage={setActivePage} buttonText1={buttonText1} setButtonText1={setButtonText1} buttonText2={buttonText2} setButtonText2={setButtonText2} selectedCity={selectedCity} setSelectedCity={setSelectedCity} selectedArea={selectedArea} setSelectedArea={setSelectedArea} />
+            <FilterMobile missionType={missionType} setMissionType={setMissionType} missionCity={missionCity} setMissionCity={setMissionCity} missionArea={missionArea} setMissionArea={setMissionArea}
+              updateDate={updateDate} setUpdateDate={setUpdateDate} sortOrder={sortOrder} setSortOrder={setSortOrder} sortBy={sortBy} setSortBy={setSortBy} setActivePage={setActivePage} buttonText1={buttonText1} setButtonText1={setButtonText1} buttonText2={buttonText2} setButtonText2={setButtonText2} selectedCity={selectedCity} setSelectedCity={setSelectedCity} selectedArea={selectedArea} setSelectedArea={setSelectedArea} />
           </div>
           <Link href="/work/create-mission" className="position-absolute add-mission-btn-pc-link">
             <button className="add-mission-btn-pc  d-none d-lg-block btn-confirm ">
@@ -888,12 +1186,12 @@ export default function MissionList() {
           {/* 最新任務桌機 */}
           <div className="latest-mission latest-mission-pc d-none d-lg-flex flex-column">
             <h3 className="size-4  ">最新任務</h3>
-            <LatestMission />
+            <LatestMission userId={userId} />
           </div>
           {/* 最新任務手機 */}
           <div className="latest-mission latest-mission-mobile d-lg-none mb-3 mt-1">
             <h3 className="size-4">最新任務</h3>
-            <MobileLatestMission />
+            <MobileLatestMission userId={userId} />
           </div>
           {/* 任務列表 */}
           <div className='mission-list d-lg-flex  justify-content-center align-items-start'>
@@ -901,7 +1199,7 @@ export default function MissionList() {
             <div className="row d-flex mb-3 g-3 g-md-4">
               {/* 使用g-3 不用justify-content-between 預設是start 卡片就會照順序排列 */}
               <MissionCard sortOrder={sortOrder} sortBy={sortBy} missionType={missionType} setMissionType={setMissionType} missionCity={missionCity} setMissionCity={setMissionCity} missionArea={missionArea} setMissionArea={setMissionArea}
-                updateDate={updateDate} setUpdateDate={setUpdateDate} allMissions={allMissions} currentData={currentData} />
+                updateDate={updateDate} setUpdateDate={setUpdateDate} allMissions={allMissions} currentData={currentData} userId={userId} setUserId={setUserId} isFavorites={isFavorites} toggleFavorite={toggleFavorite} />
             </div>
           </div>
         </section>

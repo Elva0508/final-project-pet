@@ -1,13 +1,14 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import { FiSend } from "react-icons/fi";
+import { LuCalendarClock } from "react-icons/lu";
 import { BiMessageRounded } from "react-icons/bi";
+import { PiPawPrintFill } from "react-icons/pi";
 import { FaRegHeart, FaHeart } from "react-icons/fa";
-import { CiCircleChevLeft, CiCircleChevRight } from "react-icons/ci";
+import { CiCircleChevLeft, CiCircleChevRight } from "react-icons/Ci";
 import Footer from "@/components/footer";
 import { Swiper, SwiperSlide, useSwiper } from "swiper/react";
-import { Scrollbar, Navigation, Pagination } from "swiper/modules";
+import { Scrollbar, Navigation } from "swiper/modules";
 // import function to register Swiper custom elements
 import { register } from "swiper/element/bundle";
 import workService from "@/services/work-service";
@@ -19,6 +20,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { useAuth } from "@/context/fakeAuthContext";
 import { useHelper } from "@/context/helperContext";
+import { Pagination } from "antd";
 // import { Button, Modal } from "antd";
 import {
   DatePicker,
@@ -99,251 +101,164 @@ const ImageSwiper = ({ images }) => {
   );
 };
 
-const ReviewSwiper = ({ reviews, setReviews }) => {
-  const [transReview, setTransReview] = useState(reviews);
-  const [filterReview, setFilterReview] = useState([]);
-  const [star, setStar] = useState("all");
-  const router = useRouter();
-  const { uid } = router.query;
-  const sliderRef = useRef(null);
-  useEffect(() => {
-    if (uid) {
-      workService
-        .getFilterReview(uid, star)
-        .then((response) => {
-          console.log(response.data);
-          console.log(response.data.reviews);
-          setFilterReview(response.data.reviews);
-          if (sliderRef.current) {
-            sliderRef.current.slickGoTo(0);
-          }
-        })
-        .catch((e) => {
-          console.log(e);
-        });
-    }
-  }, [uid, star]);
-  let fiveStar = 0;
-  let fourStar = 0;
-  let threeStar = 0;
-  let twoStar = 0;
-  let oneStar = 0;
-  reviews.map((review) => {
-    switch (review.star_rating) {
-      case 5:
-        fiveStar++;
-        break;
-      case 4:
-        fourStar++;
-        break;
-      case 3:
-        threeStar++;
-        break;
-      case 2:
-        twoStar++;
-        break;
-      case 1:
-        oneStar++;
-        break;
-    }
-  });
-  const settings = {
-    dots: true,
-    infinite: false,
-    speed: 500,
-    slidesToShow: 3,
-    slidesToScroll: 3,
-    // nextArrow: <img src="/caret-right.svg" className="next-arrow" />,
-    // prevArrow: <img src="/caret-left.svg" className="prev-arrow" />,
-    responsive: [
-      {
-        breakpoint: 1280,
-        settings: {
-          slidesToShow: 2.5,
-          slidesToScroll: 2,
-          infinite: true,
-          dots: true,
-        },
-      },
-      {
-        breakpoint: 1048,
-        settings: {
-          slidesToShow: 2,
-          slidesToScroll: 2,
-          initialSlide: 2,
-        },
-      },
-      {
-        breakpoint: 876,
-        settings: {
-          slidesToShow: 1.5,
-          slidesToScroll: 1,
-        },
-      },
-      {
-        breakpoint: 694,
-        settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1,
-        },
-      },
-    ],
-  };
-  const handleChangeStar = (e) => {
-    if (e.target.value) {
-      // 有value，代表點在button上而不是button外的div上
-      setStar(e.target.value);
+// const ReviewSwiper = ({ reviews, setReviews }) => {
+//   const [transReview, setTransReview] = useState(reviews);
 
-      // 將HTML Collection變成可迭代的陣列，先移除所有btn上的樣式，再加樣式在目前點擊的btn上
-      const children = e.currentTarget.children;
-      let childrenArr = Array.from(children);
-      childrenArr.forEach((btn) => {
-        btn.classList.remove("filter-btns-focus");
-      });
-      console.log(e.currentTarget.children);
-      e.target.classList.add("filter-btns-focus");
-    }
-  };
-  return (
-    <>
-      <div className="review-card-group">
-        <div className="size-5">服務評價</div>
-        <p className="m-size-7">
-          (共<span>{reviews.length}</span>則相關評論)
-        </p>
-        <div className="filter-btns " onClick={handleChangeStar}>
-          <button
-            value={"all"}
-            onClick={handleChangeStar}
-            className="filter-btns-focus"
-          >
-            全部評論
-          </button>
-          <button value={5}>
-            5星(<span>{fiveStar}</span>)
-          </button>
-          <button value={4}>
-            4星(<span>{fourStar}</span>)
-          </button>
-          <button value={3}>
-            3星(<span>{threeStar}</span>)
-          </button>
-          <button value={2}>
-            2星(<span>{twoStar}</span>)
-          </button>
-          <button value={1}>
-            1星(<span>{oneStar}</span>)
-          </button>
-        </div>
-        {filterReview.length > 0 ? (
-          <Slider {...settings} ref={sliderRef}>
-            {filterReview.map((review) => (
-              <div className="review-card" style={{ width: "350px" }}>
-                <div className="review-card-head d-flex justify-content-center align-items-center">
-                  <img
-                    className="review-card-avatar"
-                    src={`${review.cover_photo}`}
-                  />
-                  <div className="review-card-info d-flex flex-column justify-content-between ps-2">
-                    <div className="d-flex justify-content-between">
-                      <div className="username size-6">{review.name}</div>
-                      <div className="date size-7">{review.review_date}</div>
-                    </div>
-                    <div className="ranking mb-2">
-                      <Rating
-                        name="half-rating-read"
-                        value={review.star_rating}
-                        readOnly
-                        precision={0.5}
-                        emptyIcon={<StarIcon style={{ opacity: 0.35 }} />}
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div className="review-card-body mt-3">
-                  {review.review_content}
-                </div>
-              </div>
-            ))}
-          </Slider>
-        ) : (
-          ""
-        )}
-      </div>
-    </>
-  );
-};
+//   const router = useRouter();
+//   const { uid } = router.query;
+//   const sliderRef = useRef(null);
 
-export const HelperDetailSticky = () => {
-  const { collection, setCollection } = useHelper();
-  const { isAuthenticated } = useAuth();
-  const router = useRouter();
-  const user_id = parseInt(router.query.uid);
-  // console.log(router.query);
-  // useEffect(() => {
-  //   // 初次渲染時載入儲存在localStorage的收藏
-  //   if (localStorage.getItem("helperFav"))
-  //     setCollection(JSON.parse(localStorage.getItem("helperFav")));
-  // }, []);
-  useEffect(() => {
-    // 更新localStorage的收藏
-    if (collection.length === 0) {
-      localStorage.removeItem("helperFav");
-    } else {
-      localStorage.setItem("helperFav", JSON.stringify(collection));
-    }
-  }, [collection]);
-  // const [isFavorite, setIsFavorite] = useState(false); // 初始狀態為未收藏
-  // const toggleFavorite = () => {
-  //   setIsFavorite(!isFavorite); // 切換收藏狀態
-  // };
+//   let fiveStar = 0;
+//   let fourStar = 0;
+//   let threeStar = 0;
+//   let twoStar = 0;
+//   let oneStar = 0;
+//   reviews.map((review) => {
+//     switch (review.star_rating) {
+//       case 5:
+//         fiveStar++;
+//         break;
+//       case 4:
+//         fourStar++;
+//         break;
+//       case 3:
+//         threeStar++;
+//         break;
+//       case 2:
+//         twoStar++;
+//         break;
+//       case 1:
+//         oneStar++;
+//         break;
+//     }
+//   });
+//   const settings = {
+//     dots: true,
+//     infinite: false,
+//     speed: 500,
+//     slidesToShow: 3,
+//     slidesToScroll: 3,
+//     // nextArrow: <img src="/caret-right.svg" className="next-arrow" />,
+//     // prevArrow: <img src="/caret-left.svg" className="prev-arrow" />,
+//     responsive: [
+//       {
+//         breakpoint: 1280,
+//         settings: {
+//           slidesToShow: 2.5,
+//           slidesToScroll: 2,
+//           infinite: true,
+//           dots: true,
+//         },
+//       },
+//       {
+//         breakpoint: 1048,
+//         settings: {
+//           slidesToShow: 2,
+//           slidesToScroll: 2,
+//           initialSlide: 2,
+//         },
+//       },
+//       {
+//         breakpoint: 876,
+//         settings: {
+//           slidesToShow: 1.5,
+//           slidesToScroll: 1,
+//         },
+//       },
+//       {
+//         breakpoint: 694,
+//         settings: {
+//           slidesToShow: 1,
+//           slidesToScroll: 1,
+//         },
+//       },
+//     ],
+//   };
 
-  const handleFav = (e) => {
-    if (isAuthenticated) {
-      if (!collection.find((item) => item === user_id)) {
-        setCollection((prev) => {
-          return [...prev, user_id];
-        });
-      } else {
-        setCollection((prev) => {
-          const newArr = prev.filter((item) => item !== user_id);
-          console.log(newArr);
-          return newArr;
-        });
-      }
-    } else {
-      alert("請先登入會員");
-      router.push("/member/login");
-    }
-  };
-  return (
-    <section className="get-price d-flex justify-content-around align-items-center">
-      <div
-        className="fav d-flex justify-content-center align-items-center"
-        onClick={handleFav}
-      >
-        {collection.find((item) => item === user_id) ? (
-          <div className="d-flex flex-column justify-content-end align-items-start ms-2">
-            <FaHeart className="size-4 heart-icon" />
-            <span>取消</span>
-          </div>
-        ) : (
-          <div className="d-flex flex-column justify-content-end align-items-start ms-2">
-            <FaRegHeart className="size-4 heart-icon" />
-            <span>收藏</span>
-          </div>
-        )}
-      </div>
-      <div className="d-flex justify-content-around align-items-center">
-        <p className="get-price-number size-5 me-2">
-          <span>NT$</span>
-          <span>500</span>/次
-        </p>
-        <Quotation />
-      </div>
-    </section>
-  );
-};
+//   return (
+//     <>
+//       <div className="review-card-group">
+//         <div className="size-5">服務評價</div>
+//         <p className="m-size-7">
+//           (共<span>{reviews.length}</span>則相關評論)
+//         </p>
+
+//         {filterReview.length > 0 ? (
+//           <Slider {...settings} ref={sliderRef}>
+//             {filterReview.map((review) => (
+//               <div className="review-card" style={{ width: "350px" }}>
+//                 <div className="review-card-head d-flex justify-content-center align-items-center">
+//                   <img
+//                     className="review-card-avatar"
+//                     src={`${review.cover_photo}`}
+//                   />
+//                   <div className="review-card-info d-flex flex-column justify-content-between ps-2">
+//                     <div className="d-flex justify-content-between">
+//                       <div className="username size-6">{review.name}</div>
+//                       <div className="date size-7">{review.review_date}</div>
+//                     </div>
+//                     <div className="ranking mb-2">
+//                       <Rating
+//                         name="half-rating-read"
+//                         value={review.star_rating}
+//                         readOnly
+//                         precision={0.5}
+//                         emptyIcon={<StarIcon style={{ opacity: 0.35 }} />}
+//                       />
+//                     </div>
+//                   </div>
+//                 </div>
+//                 <div className="review-card-body mt-3">
+//                   {review.review_content}
+//                 </div>
+//               </div>
+//             ))}
+//           </Slider>
+//         ) : (
+//           ""
+//         )}
+//       </div>
+//     </>
+//   );
+// };
+
+// export const HelperDetailSticky = () => {
+
+//   const { isAuthenticated } = useAuth();
+//   const router = useRouter();
+//   const uid = parseInt(router.query.uid);
+//   // console.log(router.query);
+//   // useEffect(() => {
+//   //   // 初次渲染時載入儲存在localStorage的收藏
+//   //   if (localStorage.getItem("helperFav"))
+//   //     setCollection(JSON.parse(localStorage.getItem("helperFav")));
+//   // }, []);
+//   useEffect(() => {
+//     // 更新localStorage的收藏
+//     if (collection.length === 0) {
+//       localStorage.removeItem("helperFav");
+//     } else {
+//       localStorage.setItem("helperFav", JSON.stringify(collection));
+//     }
+//   }, [collection]);
+//   // const [isFavorite, setIsFavorite] = useState(false); // 初始狀態為未收藏
+//   // const toggleFavorite = () => {
+//   //   setIsFavorite(!isFavorite); // 切換收藏狀態
+//   // };
+
+//   return (
+//     <section className="get-price d-flex justify-content-around align-items-center">
+
+//       <div className="d-flex justify-content-around align-items-center">
+//         <p className="get-price-number size-5 me-2">
+//           <span>NT$</span>
+//           <span>500</span>/次
+//         </p>
+//         {/* <Quotation /> */}
+//       </div>
+//     </section>
+//   );
+// };
 const Quotation = () => {
   const router = useRouter();
   const { uid } = router.query;
@@ -410,7 +325,7 @@ const Quotation = () => {
   const [serviceType, setServiceType] = useState({});
   const [note, setNote] = useState("");
   const [location, setLocation] = useState("");
-
+  const [pets, setPets] = useState([]);
   useEffect(() => {
     if (startDay && endDay) {
       const start = dayjs(startDay);
@@ -458,6 +373,16 @@ const Quotation = () => {
         console.log(e);
       });
   }, [uid]);
+  useEffect(() => {
+    workService
+      .getPetInfo(uid)
+      .then((response) => {
+        setPets(response?.data?.data);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  }, []);
   const handleDisabledStart = (date) => {
     if (dayjs(date).isBefore(today)) {
       return true;
@@ -502,10 +427,10 @@ const Quotation = () => {
     <div>
       <button
         onClick={showDialog}
-        className="get-price-btn btn-second d-flex  align-items-center justify-content-center"
+        className="get-price-btn d-flex align-items-center justify-content-center"
       >
-        <FiSend className="get-price-icon" />
-        查看報價
+        <LuCalendarClock className="get-price-icon" />
+        <span>立即預約</span>
       </button>
 
       <Modal
@@ -531,12 +456,18 @@ const Quotation = () => {
       >
         <div className="body-item d-flex justify-content-between align-items-center">
           <p className="size-6">寵物</p>
-          <PetInfo
-            petsValue={petsValue}
-            setPetsValue={setPetsValue}
-            petsName={petsName}
-            setPetsName={setPetsName}
-          />
+          <Select
+            defaultValue="請選擇寵物"
+            className="pet-list-btn"
+            dropdownClassName="pet-list-dropdown"
+          >
+            {pets.map((pet) => (
+              <Select.Option value={pet.pet_id} className="pet-list">
+                <img className="pet-photo" src={pet.image}></img>
+                <p className="size-6 ms-2">{pet.name}</p>
+              </Select.Option>
+            ))}
+          </Select>
         </div>
         <div className="body-item d-flex justify-content-between align-items-center">
           <p className="size-6">開始日期</p>
@@ -602,6 +533,8 @@ const Quotation = () => {
             style={{ width: 150 }}
             onChangeWithObject
             optionList={serviceList}
+            className="service-type_list"
+            dropdownClassName="service-type-dropdown"
             placeholder="請選擇服務類型"
             defaultValue={serviceList[0]}
             onChange={(value) => {
@@ -700,20 +633,9 @@ const PetInfo = ({ petsValue, setPetsValue, petsName, setPetsName }) => {
   const { isAuthenticated } = useAuth();
   const router = useRouter();
   const { uid } = router.query;
-  const [pets, setPets] = useState([]);
+
   const [isCreate, setIsCreate] = useState(false);
   let tempValue, tempName;
-
-  useEffect(() => {
-    workService
-      .getPetInfo(uid)
-      .then((response) => {
-        setPets(response?.data?.data);
-      })
-      .catch((e) => {
-        console.log(e);
-      });
-  }, []);
 
   const [visible, setVisible] = useState(false);
   const showDialog = () => {
@@ -852,11 +774,55 @@ const PetInfo = ({ petsValue, setPetsValue, petsName, setPetsName }) => {
 };
 const HelperDetail = () => {
   const router = useRouter();
-  const { uid } = router.query;
+  const uid = parseInt(router.query.uid);
   const [profile, setProfile] = useState({});
   const [reviews, setReviews] = useState([]);
   const [images, setImages] = useState([]);
   const { isAuthenticated, userId } = useAuth();
+  const [currentPage, setPage] = useState(1);
+  const [filterReview, setFilterReview] = useState([]);
+  const [star, setStar] = useState("all");
+  const contentRef = useRef();
+  const { collection, setCollection } = useHelper();
+  // const uid = parseInt(router.query.uid);
+  const handleFav = (e) => {
+    if (isAuthenticated) {
+      if (!collection.find((item) => item === uid)) {
+        setCollection((prev) => {
+          return [...prev, uid];
+        });
+      } else {
+        setCollection((prev) => {
+          const newArr = prev.filter((item) => item !== uid);
+          console.log(newArr);
+          return newArr;
+        });
+      }
+    } else {
+      alert("請先登入會員");
+      router.push("/member/login");
+    }
+  };
+
+  const handleChangeStar = (e) => {
+    if (e.target.value) {
+      // 有value，代表點在button上而不是button外的div上
+      setStar(e.target.value);
+
+      // 將HTML Collection變成可迭代的陣列，先移除所有btn上的樣式，再加樣式在目前點擊的btn上
+      const children = e.currentTarget.children;
+      let childrenArr = Array.from(children);
+      childrenArr.forEach((btn) => {
+        btn.classList.remove("filter-btns-focus");
+      });
+      console.log(e.currentTarget.children);
+      e.target.classList.add("filter-btns-focus");
+    }
+  };
+  const changePage = (page) => {
+    console.log("Page: ", page);
+    setPage(page);
+  };
   useEffect(() => {
     if (uid) {
       workService
@@ -871,10 +837,31 @@ const HelperDetail = () => {
         });
     }
   }, [uid]);
-  console.log(123, isAuthenticated, userId);
+  useEffect(() => {
+    if (profile?.job_description) {
+      contentRef.current.innerHTML = profile.job_description;
+    }
+  }, [profile]);
   useEffect(() => {
     console.log(isAuthenticated);
   }, []);
+  useEffect(() => {
+    if (uid) {
+      workService
+        .getFilterReview(uid, star)
+        .then((response) => {
+          console.log(response.data);
+          console.log(response.data.reviews);
+          setFilterReview(response.data.reviews);
+          // if (sliderRef.current) {
+          //   sliderRef.current.slickGoTo(0);
+          // }
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    }
+  }, [uid, star]);
   let fiveStar = 0;
   let fourStar = 0;
   let threeStar = 0;
@@ -901,139 +888,297 @@ const HelperDetail = () => {
   });
   return (
     <>
-      <div className="helper-detail container-fluid">
-        <header className="d-flex flex-md-row flex-column justify-content-center align-items-center">
-          <div className="avatar">
-            <img src={profile.cover_photo} />
-          </div>
-          <div className="profile row justify-content-center justify-content-md-start">
-            <div className="size-3 m-size-4 username col-4 col-md-12 text-end text-sm-start">
-              {profile.name}
+      <div className="helper-detail container">
+        <div className="d-flex row align-items-start">
+          <section className="left-block col-3 flex-column justify-content-center align-items-center">
+            <div className="avatar">
+              <img src={profile.cover_photo} />
             </div>
-            <p className="intro size-6 col-12">{profile.Introduction}</p>
-            <div className="review size-6 d-flex my-2 align-items-center col-4 col-md-12 ">
-              <span className="">
-                {profile.average_star === null
-                  ? "0.0"
-                  : parseFloat(profile.average_star).toFixed(1)}
-              </span>
-              <GoStarFill className="icon" />
-              <span>
-                ({profile.review_count === null ? 0 : profile.review_count})
-              </span>
-            </div>
-            <button className="btn-confirm btn-message d-flex justify-content-center align-items-center">
-              <BiMessageRounded />
-              傳送訊息
-            </button>
-          </div>
-        </header>
-        <section className="description">
-          <div className="item">
-            <div className="item-title size-5">相片/影片</div>
-            <div className="item-image item-content">
-              <ImageSwiper images={images} setImages={setImages} />
-            </div>
-          </div>
-          <div className="item">
-            <div className="item-title size-5">小幫手介紹</div>
-            <p className="item-content size-6">{profile.job_description}</p>
-          </div>
-          <div className="item">
-            <div className="item-title size-5 ">可服務時間</div>
-            <span className="size-6 item-content">
-              日、一、二、三、四、五、六
-            </span>
-          </div>
-          <div className="item">
-            <div className="item-title size-5">可服務地區</div>
-            <span className="size-6 item-content">
-              {profile.service_county}
-            </span>
-          </div>
-          <div className="item">
-            <div className="item-title size-5">連絡電話</div>
-            <span className="size-6 item-content">{profile.phone}</span>
-          </div>
-          <div className="item">
-            <div className="item-title size-5">電子信箱</div>
-            <span className="size-6 item-content">{profile.email}</span>
-          </div>
-        </section>
-        <section className="">
-          <div className="evaluation-bar">
-            <div className="evaluation-bar-left d-flex flex-column justify-content-center">
-              <p className="size-3 text-center">
-                {profile.average_star === null
-                  ? "-"
-                  : parseFloat(profile.average_star).toFixed(1)}
-              </p>
-              <div className="ranking mb-2 mx-auto">
-                <Rating
-                  name="half-rating-read"
-                  value={
-                    profile.average_star === null
-                      ? 0
-                      : parseFloat(profile.average_star)
-                  }
-                  size="large"
-                  readOnly
-                  precision={0.5}
-                  emptyIcon={<StarIcon style={{ opacity: 0.35 }} />}
-                />
+            <div className="profile row justify-content-center justify-content-md-start">
+              <div className="size-5 m-size-5 username col-12 text-center my-2">
+                {profile.name}
+              </div>
+              <hr className="profile-divider" />
+              <div className="profile-info">
+                <p className="intro size-6 col-12 size-6">關於我</p>
+                <p className="intro size-7 col-12 size-7">
+                  {profile.Introduction}
+                </p>
+              </div>
+              <div className="profile-info">
+                <p className="intro size-6 col-12">我的服務內容</p>
+                <p className="intro size-7 col-12">
+                  到府代餵、安親寄宿(要連資料庫)
+                </p>
+              </div>
+              <div className="profile-info">
+                <p className="intro size-6 col-12">我的服務時間</p>
+                <p className="intro size-7 col-12">
+                  日、一、二、三、四、五、六
+                </p>
+              </div>
+              <div className="profile-info">
+                <p className="intro size-6 col-12">我的服務地區</p>
+                <p className="intro size-7 col-12">{profile.service_county}</p>
+              </div>
+
+              <div className="left-block-btns-group">
+                <div className="d-flex">
+                  <button className="btn-message">
+                    <BiMessageRounded />
+                    <span>傳送訊息</span>
+                  </button>
+                  <Quotation />
+                </div>
+
+                <button className="heart-icon" onClick={handleFav}>
+                  {collection.find((item) => item === uid) ? (
+                    <>
+                      <FaHeart className="fill-icon" />
+                      <span>取消收藏</span>
+                    </>
+                  ) : (
+                    <>
+                      <FaRegHeart />
+                      <span>加入收藏</span>
+                    </>
+                  )}
+                </button>
               </div>
             </div>
-            <div className="evaluation-bar-divider"></div>
-            <div className="evaluation-bar-right d-flex flex-column justify-content-evenly">
-              <div className="bar-group">
-                <p className="number size-6">5</p>
-                <div className="percentage">
-                  <div
-                    className="have"
-                    style={{ width: `${(fiveStar / reviews.length) * 100}%` }}
-                  ></div>
+          </section>
+          <section className="right-block col-8 description">
+            {/* <div className="photo">
+              <img src="https://s.yimg.com/ny/api/res/1.2/SbkcZy1AilHNsmQs08nHTw--/YXBwaWQ9aGlnaGxhbmRlcjt3PTY0MDtoPTM2MA--/https://media.zenfs.com/zh-tw/news_tvbs_com_tw_938/8c0eb4b2ed4519a4a341a90e72f5d93e" />
+            </div> */}
+            <div className="item">
+              <div className="item-title size-6">小幫手服務介紹</div>
+              <hr className="item-divider" />
+              <di className="item-content size-7" ref={contentRef}></di>
+            </div>
+            <div className="item">
+              <div className="item-title size-6">服務價格說明</div>
+              <hr className="item-divider" />
+              <div className="service-price item-content d-flex flex-column gap-2">
+                <div className="price-intro-text size-7">
+                  到府代餵：<span>單次價格以30分鐘為單位</span>
                 </div>
-              </div>
-              <div className="bar-group">
-                <p className="number size-6">4</p>
-                <div className="percentage">
-                  <div
-                    className="have"
-                    style={{ width: `${(fourStar / reviews.length) * 100}%` }}
-                  ></div>
+                <div className="price-intro-text size-7">
+                  安親寄宿：<span>單次價格以一天為單位</span>
                 </div>
-              </div>
-              <div className="bar-group">
-                <p className="number size-6">3</p>
-                <div className="percentage">
-                  <div
-                    className="have"
-                    style={{ width: `${(threeStar / reviews.length) * 100}%` }}
-                  ></div>
+                <div className="price-intro-text size-7">
+                  到府美容：<span>單次價格以一次美容服務為單位</span>
                 </div>
-              </div>
-              <div className="bar-group">
-                <p className="number size-6">2</p>
-                <div className="percentage">
-                  <div
-                    className="have"
-                    style={{ width: `${(twoStar / reviews.length) * 100}%` }}
-                  ></div>
-                </div>
-              </div>
-              <div className="bar-group">
-                <p className="number size-6">1</p>
-                <div className="percentage">
-                  <div
-                    className="have"
-                    style={{ width: `${(oneStar / reviews.length) * 100}%` }}
-                  ></div>
+
+                <div className="d-flex gap-4 mt-3">
+                  <div className="price-intro-card">
+                    <img src="/job-icon/cat-tree.svg" className="card-bg" />
+                    <div className="card-title">
+                      <PiPawPrintFill className="card-icon" />
+                      到府代餵
+                    </div>
+                    <div className="card-content">
+                      <p>
+                        NT$<span className="price">400</span>/半小時
+                      </p>
+                    </div>
+                  </div>
+                  <div className="price-intro-card">
+                    <img src="/job-icon/cat-tree.svg" className="card-bg" />
+                    <div className="card-title">
+                      <PiPawPrintFill className="card-icon" />
+                      安親寄宿
+                    </div>
+                    <div className="card-content">
+                      <p>
+                        NT$<span className="price">400</span>/天
+                      </p>
+                    </div>
+                  </div>
+                  <div className="price-intro-card">
+                    <img src="/job-icon/cat-tree.svg" className="card-bg" />
+                    <div className="card-title">
+                      <PiPawPrintFill className="card-icon" />
+                      到府美容
+                    </div>
+                    <div className="card-content">
+                      <p>
+                        NT$<span className="price">400</span>/次
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-          <ReviewSwiper reviews={reviews} setReviews={setReviews} />
-        </section>
+
+            <div className="item">
+              <div className="item-title size-6">相片/影片</div>
+              <hr className="item-divider" />
+              <div className="item-image item-content">
+                <ImageSwiper images={images} setImages={setImages} />
+              </div>
+            </div>
+
+            <div className="item">
+              <div className="d-flex align-items-center">
+                <div className="item-title size-6">服務評價</div>
+                <p className="m-size-7">
+                  (共<span>{reviews.length}</span>則相關評論)
+                </p>
+              </div>
+              <hr className="item-divider" />
+              <div className="evaluation-bar">
+                <div className="evaluation-bar-left d-flex flex-column justify-content-center">
+                  <p className="size-3 text-center">
+                    {profile.average_star === null
+                      ? "-"
+                      : parseFloat(profile.average_star).toFixed(1)}
+                  </p>
+                  <div className="ranking mb-2 mx-auto">
+                    <Rating
+                      name="half-rating-read"
+                      value={
+                        profile.average_star === null
+                          ? 0
+                          : parseFloat(profile.average_star)
+                      }
+                      size="large"
+                      readOnly
+                      precision={0.5}
+                      emptyIcon={<StarIcon style={{ opacity: 0.35 }} />}
+                    />
+                  </div>
+                </div>
+                <hr className="evaluation-bar-divider" />
+                <div className="evaluation-bar-right d-flex flex-column justify-content-evenly">
+                  <div className="bar-group">
+                    <p className="number size-6">5</p>
+                    <div className="percentage">
+                      <div
+                        className="have"
+                        style={{
+                          width: `${(fiveStar / reviews.length) * 100}%`,
+                        }}
+                      ></div>
+                    </div>
+                  </div>
+                  <div className="bar-group">
+                    <p className="number size-6">4</p>
+                    <div className="percentage">
+                      <div
+                        className="have"
+                        style={{
+                          width: `${(fourStar / reviews.length) * 100}%`,
+                        }}
+                      ></div>
+                    </div>
+                  </div>
+                  <div className="bar-group">
+                    <p className="number size-6">3</p>
+                    <div className="percentage">
+                      <div
+                        className="have"
+                        style={{
+                          width: `${(threeStar / reviews.length) * 100}%`,
+                        }}
+                      ></div>
+                    </div>
+                  </div>
+                  <div className="bar-group">
+                    <p className="number size-6">2</p>
+                    <div className="percentage">
+                      <div
+                        className="have"
+                        style={{
+                          width: `${(twoStar / reviews.length) * 100}%`,
+                        }}
+                      ></div>
+                    </div>
+                  </div>
+                  <div className="bar-group">
+                    <p className="number size-6">1</p>
+                    <div className="percentage">
+                      <div
+                        className="have"
+                        style={{
+                          width: `${(oneStar / reviews.length) * 100}%`,
+                        }}
+                      ></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="filter-btns " onClick={handleChangeStar}>
+                <button
+                  value={"all"}
+                  onClick={handleChangeStar}
+                  className="filter-btns-focus"
+                >
+                  全部評論({reviews.length})
+                </button>
+                <button value={5}>
+                  5星(<span>{fiveStar}</span>)
+                </button>
+                <button value={4}>
+                  4星(<span>{fourStar}</span>)
+                </button>
+                <button value={3}>
+                  3星(<span>{threeStar}</span>)
+                </button>
+                <button value={2}>
+                  2星(<span>{twoStar}</span>)
+                </button>
+                <button value={1}>
+                  1星(<span>{oneStar}</span>)
+                </button>
+              </div>
+              {filterReview.length > 0 ? (
+                <>
+                  {filterReview.map((review) => (
+                    <div className="review-card">
+                      <div className="review-card-head d-flex justify-content-center align-items-center">
+                        <img
+                          className="review-card-avatar"
+                          src={`${review.cover_photo}`}
+                        />
+                        <div className="review-card-info d-flex flex-column justify-content-between ps-2">
+                          <div className="d-flex justify-content-between">
+                            <div className="username size-6">{review.name}</div>
+                            <div className="date size-7">
+                              {review.review_date}
+                            </div>
+                          </div>
+                          <div className="ranking mb-2">
+                            <Rating
+                              name="half-rating-read"
+                              value={review.star_rating}
+                              readOnly
+                              precision={0.5}
+                              emptyIcon={<StarIcon style={{ opacity: 0.35 }} />}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                      <div className="review-card-body mt-3">
+                        {review.review_content}
+                      </div>
+                    </div>
+                  ))}
+                </>
+              ) : (
+                ""
+              )}
+              <Pagination
+                // current={currentPage}
+                total={30}
+                pageSize="10"
+                showSizeChanger={false}
+                rootClassName="cos-pagination"
+                onChange={changePage}
+              />
+            </div>
+          </section>
+        </div>
       </div>
     </>
   );
