@@ -33,19 +33,23 @@ export default function Layout({ children }) {
   // }, [isLoading]);
   return (
     <>
-      {/* <CatLoading ref={loadingRef} /> */}
-      <ResponsiveAppBar />
-      {pathname && pathname == "/" ? <HomeVedio /> : null}
-      <main style={{ maxWidth: "1320px", margin: "auto" }}>{children}</main>
-      <Footer />
       {pathname === "/work/find-mission/[mission_id]" && query.mission_id ? (
-        <MissionDetailSticky user_id={userId} />
+        <>
+          <ResponsiveAppBar />
+          {/* <BreadCrumb /> */}
+          <main style={{ margin: "auto" }}>{children}</main>
+        </>
       ) : (
-        ""
+        <> <ResponsiveAppBar />
+          {pathname === "/work/find-helper" ? "" : <BreadCrumb />}
+          {pathname && pathname == "/" ? <HomeVedio /> : null}
+          <main style={{ maxWidth: "1320px", margin: "auto" }}>{children}</main>
+          <Footer />
+
+          {pathname && pathname == "/work/find-helper/[uid]" ? (
+            <HelperDetailSticky />
+          ) : null}</>
       )}
-      {/* {pathname && pathname == "/work/find-helper/[uid]" ? (
-        <HelperDetailSticky />
-      ) : null} */}
     </>
   );
 }
