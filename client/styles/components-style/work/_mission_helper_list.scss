@@ -28,9 +28,9 @@
     }
     display: flex;
     flex-direction: column;
-    min-width: 360px;
+    min-width: 395px;
     background-color: $content-bg;
-    padding: 15px;
+    padding: 1rem 1.3rem;
     border-radius: 2px;
     position: relative;
     // &-title {
@@ -38,13 +38,14 @@
     //   margin-bottom: 2rem;
     // }
     &-card {
-      $img-size: 120px;
+      $img-size: 135px;
       margin-bottom: 3rem;
-      max-width: 380px;
+      max-width: 390px;
       min-width: 325px;
       cursor: pointer;
       position: relative;
       overflow: hidden;
+      gap: 0.6rem;
       &:hover {
         .img-wrapper img {
           transform: scale(1.1);
@@ -59,7 +60,7 @@
         border-radius: 50%;
         overflow: hidden;
         box-shadow: 0px 0px 8px rgba(167, 167, 167, 0.49);
-        margin-right: 0.2rem;
+        // margin-right: 0.2rem;
         img {
           width: 100%;
           height: 100%;
@@ -148,7 +149,6 @@
       width: 40px;
       height: 40px;
       border-radius: 50%;
-      // background-color: rgba(138, 138, 138, 0.25);
       display: flex;
       justify-content: center;
       align-items: center;
@@ -158,11 +158,8 @@
       cursor: pointer;
       transition: right 0.2s ease-in;
       &-fill {
-        // width: 100%;
-        // height: 100%;
         font-size: 28px;
         color: $price;
-        // padding: 10px;
       }
       &-hollow {
         font-size: 28px;
@@ -180,33 +177,11 @@
         }
       }
     }
-    &-mobile {
-      .slick-slider {
-        width: calc(100% - 56px);
-        margin: auto;
-        .slick-slide {
-          min-width: 300px;
-        }
-        .slick-arrow {
-          color: $text-main;
-          // background-color: $text-main;
-          $arrow-size: 28px;
-          width: $arrow-size;
-          height: $arrow-size;
-        }
-        .slick-prev {
-          left: -26px;
-        }
-        .slick-next {
-          right: -27px;
-        }
-      }
-    }
   }
   .helper-list {
     width: calc(100% - 360px);
     // justify-content: space-evenly;
-    gap: 25px;
+    gap: 35px;
   }
   .single-card {
     a,
@@ -214,9 +189,9 @@
       border: none;
     }
     & > *:not(.single-card-footer, img) {
-      padding: 0.5rem;
+      padding: 0.4rem 1rem;
     }
-    width: calc((100% - 50px) / 3);
+    width: calc((100% - 70px) / 3);
     // height: 410px;
     // margin: 0 0 20px 10px;
     // min-width: 220px;
@@ -234,7 +209,7 @@
     }
     &-img {
       // $img-size: 160px;
-      padding: 0.5rem 0.5rem 0 0.5rem;
+      padding: 1rem 1rem 0 1rem;
       width: 100%;
       border-radius: 4px;
       // height: $img-size;
@@ -245,6 +220,7 @@
       // height: calc(100% - 160px);
       display: flex;
       flex-direction: column;
+      flex-grow: 1;
     }
     &-title {
       font-weight: bold;
@@ -483,6 +459,7 @@
 }
 .mobile-filter {
   margin: 1.2rem 0;
+  // width: 100%;
   // height: 100px;
   .swiper-wrapper {
     display: flex;
@@ -498,22 +475,31 @@
     width: 150px;
   }
 }
-@media screen and (max-width: 1400px) {
-  .mission-helper-list {
-    .helper-list {
-      width: 100%;
-    }
-  }
-}
-@media screen and (max-width: 1199px) {
-  .mission-helper-list {
-    .helper-list {
-      .single-card {
-        width: calc((100% - 25px) / 2);
-      }
-    }
-  }
-}
+// @media screen and (max-width: 1400px) {
+//   .mission-helper-list {
+//     .helper-list {
+//       // width: 100%;
+//       gap: 20px;
+//     }
+//     .single-card {
+//       & > *:not(.single-card-footer, img) {
+//         padding: 0.4rem 0.8rem;
+//       }
+//       &-img {
+//         padding: 0.8rem 0.8rem 0 0.8rem;
+//       }
+//     }
+//   }
+// }
+// @media screen and (max-width: 1199px) {
+//   .mission-helper-list {
+//     .helper-list {
+//       .single-card {
+//         width: calc((100% - 25px) / 2);
+//       }
+//     }
+//   }
+// }
 @media screen and (max-width: 991px) {
   .mission-helper-list {
     // padding: 0 5px;
@@ -538,15 +524,7 @@
         margin: 0.4rem auto;
         gap: 20px;
       }
-      .img-wrapper {
-        $img-size: 160px;
-        width: $img-size;
-        height: $img-size;
-        // img {
-        //   width: $img-size;
-        //   height: $img-size;
-        // }
-      }
+
       .helper-content {
         width: calc(100% - 200px);
       }
@@ -555,67 +533,83 @@
     .helper-list {
       // width: 100%;
       justify-content: start;
-
       .single-card {
         width: calc((100% - 50px) / 3);
-        height: 370px;
-        margin-bottom: 10px;
-        margin-left: 0;
-        min-width: 175px;
-        padding: 0.5rem;
-        $img-size: 120px;
+        & > *:not(.single-card-footer, img) {
+          padding: 0.4rem 0.4rem;
+        }
         &-img {
-          width: $img-size;
-          height: $img-size;
+          padding: 0.4rem 0.4rem 0 0.4rem;
         }
-        &-content {
-          height: calc(100% - $img-size);
-        }
-
-        .animate-button-one {
-          width: 80px;
+        .service-time,
+        .service-county {
+          svg {
+            font-size: 14px;
+            margin-right: 0.1rem;
+          }
         }
       }
     }
   }
 }
 
-@media screen and (max-width: 768px) {
-  .mission-helper-list {
-    .helper-list {
-      // width: 100%;
-      // justify-content: start;
-      // margin: 10px auto;
-      gap: 25px;
+// @media screen and (max-width: 768px) {
+//   .mission-helper-list {
+//     .helper-list {
+//       // width: 100%;
+//       // justify-content: start;
+//       // margin: 10px auto;
+//       gap: 25px;
 
-      .single-card {
-        width: calc((100% - 25px) / 2);
-      }
-    }
-  }
-}
+//       .single-card {
+//         width: calc((100% - 25px) / 2);
+//       }
+//     }
+//   }
+// }
 
 @media screen and (max-width: 576px) {
   .mission-helper-list {
     .famous-helper {
+      min-width: 320px;
       &-card {
-        width: 100%;
+        gap: 10px;
       }
       .helper-content {
-        width: calc(100% - 100px);
+        // width: calc(100% - 100px);
       }
       .img-wrapper {
-        $img-size: 100px;
+        $img-size: 110px;
         width: $img-size;
         height: $img-size;
       }
+      .active-fav-in-fam-card {
+        .fav-icon {
+          right: 0px;
+        }
+      }
     }
     .helper-list {
+      width: 100%;
       gap: 15px;
       .single-card {
-        min-width: 0;
+        // min-width: 300px;
         width: calc((100% - 15px) / 2);
-        height: 360px;
+        // height: 360px;
+      }
+    }
+    .single-card {
+      .service-items {
+        flex-wrap: wrap;
+        gap: 5px;
+      }
+      .fav-icon {
+        bottom: 1px;
+      }
+      .active-fav-in-card {
+        .fav-icon {
+          bottom: 1px;
+        }
       }
     }
   }

@@ -38,9 +38,9 @@ export default function Layout({ children }) {
         {pathname && pathname == "/" ? <HomeVedio /> : null}
         <main style={{ maxWidth: "1320px", margin: "auto" }}>{children}</main>
         <Footer />
-        {pathname && pathname == "/work/find-helper/[uid]" ? (
+        {/* {pathname && pathname == "/work/find-helper/[uid]" ? (
           <HelperDetailSticky />
-        ) : null}
+        ) : null} */}
       </>
     </>
   );

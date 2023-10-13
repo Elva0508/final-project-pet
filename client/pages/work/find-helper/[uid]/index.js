@@ -429,7 +429,10 @@ const Quotation = () => {
         onClick={showDialog}
         className="get-price-btn d-flex align-items-center justify-content-center"
       >
-        <LuCalendarClock className="get-price-icon" />
+        <div className="icon-wrapper">
+          <LuCalendarClock className="get-price-icon" />
+        </div>
+
         <span>立即預約</span>
       </button>
 
@@ -831,27 +834,35 @@ const HelperDetail = () => {
   };
   useEffect(() => {
     const handleScroll = () => {
+      const width = window.innerWidth;
+      console.log(width);
       const leftBlock = document.querySelector(".left-block");
-      const scrollY = window.scrollY;
-      const windowHeight = window.innerHeight;
-      const documentHeight = document.documentElement.scrollHeight;
-      const distanceToBottom = documentHeight - (scrollY + windowHeight);
-      console.log(scrollY, windowHeight, documentHeight);
-      // console.log(leftBlock);
-      if (distanceToBottom < 145) {
-        leftBlock.style.position = "relative";
-        leftBlock.style.top = `${scrollY - 325}px`;
+      if (width > 992) {
+        const scrollY = window.scrollY;
+        const windowHeight = window.innerHeight;
+        const documentHeight = document.documentElement.scrollHeight;
+        const distanceToBottom = documentHeight - (scrollY + windowHeight);
+        console.log(scrollY, windowHeight, documentHeight);
+        // console.log(leftBlock);
+        if (distanceToBottom < 145) {
+          leftBlock.style.position = "relative";
+          leftBlock.style.top = `${scrollY - 325}px`;
+        } else {
+          leftBlock.style.position = "sticky";
+          leftBlock.style.top = "10px";
+        }
       } else {
-        leftBlock.style.position = "sticky";
-        leftBlock.style.top = "10px";
+        leftBlock.style.position = "static";
       }
     };
+
     // 添加事件
     window.addEventListener("scroll", handleScroll);
-
+    window.addEventListener("resize", handleScroll);
     // 移除事件
     return () => {
       window.removeEventListener("scroll", handleScroll);
+      window.addEventListener("resize", handleScroll);
     };
   }, []);
 
@@ -934,7 +945,7 @@ const HelperDetail = () => {
     <>
       <div className="helper-detail container">
         <div className="d-flex row align-items-start">
-          <section className="left-block col-3 flex-column justify-content-center align-items-center">
+          <section className="left-block col-12 col-lg-3 flex-column justify-content-center align-items-center">
             <div className="avatar">
               <img src={profile.cover_photo} />
             </div>
@@ -944,29 +955,23 @@ const HelperDetail = () => {
               </div>
               <hr className="profile-divider" />
               <div className="profile-info">
-                <p className="intro size-6 col-12 size-6">關於我</p>
-                <p className="intro size-7 col-12 size-7">
-                  {profile.Introduction}
-                </p>
+                <p className="intro size-6 size-6">關於我</p>
+                <p className="intro size-7 size-7">{profile.Introduction}</p>
               </div>
               <div className="profile-info">
-                <p className="intro size-6 col-12">我的服務內容</p>
-                <p className="intro size-7 col-12">
-                  到府代餵、安親寄宿(要連資料庫)
-                </p>
+                <p className="intro size-6">我的服務內容</p>
+                <p className="intro size-7">到府代餵、安親寄宿(要連資料庫)</p>
               </div>
               <div className="profile-info">
-                <p className="intro size-6 col-12">我的服務時間</p>
-                <p className="intro size-7 col-12">
-                  日、一、二、三、四、五、六
-                </p>
+                <p className="intro size-6">我的服務時間</p>
+                <p className="intro size-7">日、一、二、三、四、五、六</p>
               </div>
               <div className="profile-info">
-                <p className="intro size-6 col-12">我的服務地區</p>
-                <p className="intro size-7 col-12">{profile.service_county}</p>
+                <p className="intro size-6">我的服務地區</p>
+                <p className="intro size-7">{profile.service_county}</p>
               </div>
 
-              <div className="left-block-btns-group">
+              <div className="left-block-btns-group pc d-none d-lg-flex">
                 <div className="d-flex">
                   <button className="btn-message">
                     <BiMessageRounded />
@@ -989,9 +994,38 @@ const HelperDetail = () => {
                   )}
                 </button>
               </div>
+              <div className="left-block-btns-group mobile d-flex d-lg-none">
+                <button className="btn-message">
+                  <div className="icon-wrapper">
+                    <BiMessageRounded />
+                  </div>
+                  <span>傳送訊息</span>
+                </button>
+                <Quotation />
+                <button className="heart-icon" onClick={handleFav}>
+                  {collection.find((item) => item === uid) ? (
+                    <>
+                      <div className="icon-wrapper">
+                        {" "}
+                        <FaHeart className="fill-icon" />
+                      </div>
+
+                      <span>取消收藏</span>
+                    </>
+                  ) : (
+                    <>
+                      <div className="icon-wrapper">
+                        <FaRegHeart />
+                      </div>
+
+                      <span>加入收藏</span>
+                    </>
+                  )}
+                </button>
+              </div>
             </div>
           </section>
-          <section className="right-block col-8 description">
+          <section className="right-block col-12 col-lg-8 description">
             {/* <div className="photo">
               <img src="https://s.yimg.com/ny/api/res/1.2/SbkcZy1AilHNsmQs08nHTw--/YXBwaWQ9aGlnaGxhbmRlcjt3PTY0MDtoPTM2MA--/https://media.zenfs.com/zh-tw/news_tvbs_com_tw_938/8c0eb4b2ed4519a4a341a90e72f5d93e" />
             </div> */}

@@ -59,8 +59,8 @@ $detail-block-width: 9px; //標題左側直槓槓
     flex-direction: column;
     justify-content: start;
     align-items: center;
-    position: sticky;
-    top: 10px;
+    // position: sticky;
+    // top: 10px;
     .avatar {
       overflow: hidden;
       margin-top: 1rem;
@@ -125,7 +125,7 @@ $detail-block-width: 9px; //標題左側直槓槓
         color: $text-mark;
       }
     }
-    &-btns-group {
+    &-btns-group.pc {
       margin-top: 1rem;
       position: relative;
       height: 120px;
@@ -562,38 +562,129 @@ $detail-block-width: 9px; //標題左側直槓槓
     }
   }
 }
-// .semi-popover-wrapper {
-//   // left: 0px;
-//   right: 90px;
-//   top: -10px;
-//   .semi-select-option-list-wrapper {
-//     width: 250px;
-//   }
-// }
 
-// .get-price {
-//   overflow-x: hidden;
-//   height: 80px;
-//   background-color: $main-bg;
-//   position: sticky;
-//   bottom: 0;
-//   z-index: 100;
-//   box-shadow: 1px 0px 5px rgba(0, 0, 0, 0.25);
-//   span {
-//     color: $price;
-//     font-weight: bold;
-//   }
-//   &-number {
-//     color: $price;
-//   }
+@media screen and (max-width: 991px) {
+  .helper-detail {
+    .left-block {
+      position: relative;
+      z-index: 20;
+      .avatar {
+        max-width: 250px;
+        max-height: 250px;
+        width: 80vw;
+        height: 80vw;
+      }
 
-//   // &-icon {
-//   //   // transform: rotate(20deg);
-//   //   color: $hover;
-//   // }
-// }
+      .profile-info {
+        margin: 0.5rem 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        // justify-content: center;
+        & :first-child {
+          color: $text-main;
+          opacity: 0.8;
+          font-weight: bold;
+        }
+        & :last-child {
+          color: $text-mark;
+        }
+      }
+      &-btns-group.mobile {
+        justify-content: space-around;
+        background: linear-gradient(to bottom, #f0c3969b, lighten($hover, 15%));
+        padding: 1rem 0;
+        box-shadow: 1px 1px 10px rgba(185, 185, 185, 0.363);
+        // border-radius: 0;
+        .btn-message,
+        .heart-icon,
+        .get-price-btn {
+          display: flex;
+          border: none;
+          background-color: transparent;
+          align-items: center;
 
-@media screen and (max-width: 768px) {
+          & > :first-child {
+            // font-size: 20px;
+            // padding: 0.5rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: white;
+            box-shadow: 1px 1px 10px rgba(79, 79, 79, 0.719);
+            border: none;
+            margin-right: 8px;
+            svg {
+              font-size: 28px;
+              color: $hover;
+            }
+            // .fill-icon {
+            //     color: $price;
+            //   }
+          }
+        }
+
+        // &:hover {
+        //   width: 56px + 28px + 30px;
+        //   & > span {
+        //     right: 60px;
+        //     color: $price;
+        //   }
+        //   svg {
+        //     color: $price;
+        //   }
+        // }
+        // svg {
+        //   position: absolute;
+        //   top: 50%;
+        //   left: 6px;
+        //   transform: translateY(-50%);
+        //   font-size: 28px;
+        //   color: $hover;
+        // }
+        // & > span {
+        //   width: 56px;
+        //   position: absolute;
+        //   font-size: 14px;
+        //   left: 46px;
+        //   top: 50%;
+        //   transform: translateY(-50%);
+        // }
+
+        // margin-top: 1rem;
+        // position: relative;
+        // height: 100px;
+        // display: flex;
+        // justify-content: space-around;
+        // // background-color: $header-bg;
+        // // background: linear-gradient(to bottom, #f0c3969b, lighten($hover, 15%));
+        // // padding: 0;
+        // .btn-message,
+        // .heart-icon,
+        // .get-price-btn {
+        //   position: relative;
+        //   // @extend %helper-button-style;
+        // }
+
+        // .heart-icon {
+        //   top: 70px;
+        //   .fill-icon {
+        //     color: $price;
+        //   }
+        // }
+        // .get-price-btn {
+        //   left: 180px;
+        // }
+      }
+    }
+    .right-block {
+      margin-top: 1px;
+    }
+  }
+
   .evaluation-bar {
     flex-direction: column;
     align-items: center;
@@ -609,116 +700,133 @@ $detail-block-width: 9px; //標題左側直槓槓
     display: none;
   }
 }
-@media screen and (max-width: 576px) {
-  // $detail-block-width: 8px;
-  .helper-detail {
-    width: 100%;
-    header,
-    section {
-      background-color: transparent;
-      padding: 0;
-    }
 
-    .avatar {
-      $size: 200px;
-      width: $size;
-      height: $size;
-      margin-right: 0;
-    }
-    .profile {
-      width: 100%;
-      .username {
-        order: -1;
-      }
+// @media screen and (max-width: 768px) {
+//   .evaluation-bar {
+//     flex-direction: column;
+//     align-items: center;
+//     justify-content: center;
+//   }
+//   .evaluation-bar-left {
+//     width: 100%;
+//   }
+//   .evaluation-bar-right {
+//     width: 100%;
+//   }
+//   .evaluation-bar-divider {
+//     display: none;
+//   }
+// }
+// @media screen and (max-width: 576px) {
+//   // $detail-block-width: 8px;
+//   .helper-detail {
+//     width: 100%;
+//     header,
+//     section {
+//       background-color: transparent;
+//       padding: 0;
+//     }
 
-      .intro {
-        margin: 0 0 1rem 0;
-      }
-      .review {
-        order: -1;
-      }
+//     .avatar {
+//       $size: 200px;
+//       width: $size;
+//       height: $size;
+//       margin-right: 0;
+//     }
+//     .profile {
+//       width: 100%;
+//       .username {
+//         order: -1;
+//       }
 
-      .btn-message {
-        font-size: 1.4rem;
-        width: 160px;
-        height: 50px;
-      }
-    }
-    .item {
-      width: 100%;
-      &-title {
-        &::before {
-          width: $detail-block-width;
-          height: 30px;
-        }
-      }
-      &-content {
-        margin-right: $detail-block-width;
-      }
-    }
-    .review-card-group {
-      .review-card {
-        $avatar-width: 60px;
-        padding: 8px 15px;
-        // width: 80% !important;
-        &-avatar {
-          width: $avatar-width;
-          height: $avatar-width;
-        }
-        &-info {
-          width: calc(100% - $avatar-width);
-          height: $avatar-width;
-          img {
-            width: 18px;
-          }
-        }
-      }
-      .slick-slider {
-        width: 92%;
-        margin: auto;
-        position: relative;
-      }
+//       .intro {
+//         margin: 0 0 1rem 0;
+//       }
+//       .review {
+//         order: -1;
+//       }
 
-      .slick-prev,
-      .slick-next {
-        width: 35px;
-        height: 35px;
-        &::before {
-          width: 18px;
-          height: 35px;
-        }
-      }
-      .slick-prev {
-        left: -25px;
-      }
-      .slick-next {
-        right: -25px;
-      }
-      .slick-dots * {
-        width: 8px;
-        height: 8px;
-        bottom: 15px;
-      }
-    }
-  }
-  .evaluation-bar {
-    width: calc(100% - 10px);
-    &-left {
-      .ranking img {
-        width: 32px;
-        height: 32px;
-      }
-    }
-  }
-  .get-price {
-    height: 60px;
-    &-btn {
-      font-size: 1.2rem;
-      width: 135px;
-      height: 42px;
-    }
-  }
-  .semi-checkboxGroup {
-    justify-content: center;
-  }
-}
+//       .btn-message {
+//         font-size: 1.4rem;
+//         width: 160px;
+//         height: 50px;
+//       }
+//     }
+//     .item {
+//       width: 100%;
+//       &-title {
+//         &::before {
+//           width: $detail-block-width;
+//           height: 30px;
+//         }
+//       }
+//       &-content {
+//         margin-right: $detail-block-width;
+//       }
+//     }
+//     .review-card-group {
+//       .review-card {
+//         $avatar-width: 60px;
+//         padding: 8px 15px;
+//         // width: 80% !important;
+//         &-avatar {
+//           width: $avatar-width;
+//           height: $avatar-width;
+//         }
+//         &-info {
+//           width: calc(100% - $avatar-width);
+//           height: $avatar-width;
+//           img {
+//             width: 18px;
+//           }
+//         }
+//       }
+//       .slick-slider {
+//         width: 92%;
+//         margin: auto;
+//         position: relative;
+//       }
+
+//       .slick-prev,
+//       .slick-next {
+//         width: 35px;
+//         height: 35px;
+//         &::before {
+//           width: 18px;
+//           height: 35px;
+//         }
+//       }
+//       .slick-prev {
+//         left: -25px;
+//       }
+//       .slick-next {
+//         right: -25px;
+//       }
+//       .slick-dots * {
+//         width: 8px;
+//         height: 8px;
+//         bottom: 15px;
+//       }
+//     }
+//   }
+//   .evaluation-bar {
+//     width: calc(100% - 10px);
+//     &-left {
+//       .ranking img {
+//         width: 32px;
+//         height: 32px;
+//       }
+//     }
+//   }
+//   .get-price {
+//     height: 60px;
+//     &-btn {
+//       font-size: 1.2rem;
+//       width: 135px;
+//       height: 42px;
+//     }
+//   }
+//   .semi-checkboxGroup {
+//     justify-content: center;
+//   }
+// }

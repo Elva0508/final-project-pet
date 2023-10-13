@@ -425,6 +425,7 @@ const SingleHelperCard = ({
   const [isFavHovered, setIsFavHovered] = useState(false);
   const { isAuthenticated } = useAuth();
   const router = useRouter();
+  const imgRef = useRef(null);
   const service = [
     { label: "到府代餵", value: parseInt(helper.feed_service) },
     { label: "安親寄宿", value: parseInt(helper.house_service) },
@@ -457,6 +458,27 @@ const SingleHelperCard = ({
       router.push("/member/login");
     }
   };
+
+  // 使得圖片高度會在螢幕大小改變時跟著改變 而非在重整時才改變
+
+  const handleResize = () => {
+    // 獲取圖片元素的引用
+    const image = imgRef.current;
+    // 獲取圖片的寬度
+    const imageWidth = image.offsetWidth;
+    // 將寬度值分配给高度
+    image.style.height = imageWidth + "px";
+  };
+  useEffect(() => {
+    handleResize();
+    // 添加螢幕大小變化事件監聽器
+    window.addEventListener("resize", handleResize);
+    // 在組件卸載時移除事件監聽器
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   return (
     <>
       <motion.div
@@ -477,18 +499,14 @@ const SingleHelperCard = ({
           className="single-card-img"
           src={helper.cover_photo}
           alt="貓頭貼"
+          ref={imgRef}
         />
         <motion.div
           layout
-          className="single-card-content d-flex flex-column justify-content-between"
+          className="single-card-content d-flex flex-column justify-content-start"
         >
           <motion.div layout className="single-card-title size-6">
             {helper.name}
-          </motion.div>
-          <motion.div layout className="ranking d-flex align-items-center mb-1">
-            {/* <span layout className="ms-1 size-7">
-              ({helper.review_count === null ? "0" : helper.review_count})
-            </span> */}
           </motion.div>
           <div className="single-card-info d-flex justify-content-between">
             <div>
@@ -976,7 +994,7 @@ const MissionHelperList = () => {
         </p>
       </div>
 
-      <div className="d-flex flex-lg-row flex-column align-items-start justify-content-between gap-4">
+      <div className="d-flex flex-lg-row flex-column align-items-start justify-content-between gap-lg-5 gap-sm-4 gap-4">
         <section className="famous-helper">
           <p className="famous-helper-title size-5">熱門小幫手</p>
           <div className="famous-helper-pc d-lg-block d-none">
