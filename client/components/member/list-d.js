@@ -14,6 +14,7 @@ import { FaRegCalendarCheck } from "react-icons/fa";
 import Link from "next/link";
 import { useActivePage } from "@/hooks/useActivePage";
 import { useRouter } from "next/router";
+import Membership from "@/components/user/membership";
 
 export default function ListD() {
   //無法從localStorage取得資料 所以使用特定使用者api
@@ -62,9 +63,10 @@ export default function ListD() {
               <div className="lv">
                 <p className="size-7 level text-center px-2">Level.1 幼貓</p>
               </div>
-              <button className="size-7 ms-3" >
+              {/* <button className="size-7 ms-3" >
                 查看會員等級優惠
-              </button>
+              </button> */}
+              <Membership />
             </div>
           </div>
           <ul className="mt-2 text-center">
