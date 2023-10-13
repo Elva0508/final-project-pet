@@ -4,14 +4,13 @@ const API_URL = URL + "api/member/";
 
 class MemberService {
   // 小幫手頁route
-  getHelperInfo() {
-    const user_id = 1;
+  getHelperInfo(user_id) {
+    // console.log(user_id);
     return axios.get(API_URL + "helper", { params: { user_id } });
   }
-  handleHelperValid(valid) {
+  handleHelperValid(valid, user_id) {
     // const valid = true;
-    console.log(valid);
-    const user_id = 1;
+    // console.log(valid);
     return axios.patch(API_URL + "helper/valid", { valid, user_id });
   }
   handleHelperEdit(formData) {
@@ -23,16 +22,16 @@ class MemberService {
   }
 
   // reserve頁route
-  getReserve(status) {
-    const user = 1;
+  getReserve(user_id, status) {
+    // const user = 1;
     return axios.get(API_URL + "reserve", {
-      params: { user_id: user, status },
+      params: { user_id, status },
     });
   }
 
   // selling頁route
   getSelling(status) {
-    const user = 1;
+    // const user = 1;
     return axios.get(API_URL + "selling", {
       params: { user_id: user, status },
     });

@@ -4,7 +4,7 @@ import ListUserM from "@/components/member/list-user-m";
 import {useCart} from "@/hooks/useCart"
 import axios from "axios";
 import Pagination from '@/components/pagination'
-
+import { useRouter } from 'next/router';
 
 export default function Wishlist() {
   const [wishlist, setWishlist] = useState([]);
@@ -15,7 +15,7 @@ export default function Wishlist() {
   const startIndex = (activePage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentData = wishlist.slice(startIndex, endIndex);
-
+  const router = useRouter();
 
   const handleSelectChange = (pid, v) => {
     const newList = wishlist.map((w) => {
@@ -124,7 +124,7 @@ export default function Wishlist() {
   const id=localStorage.getItem("id")
   // 沒有token
   if (!token) {
-    window.location.href="/"
+    router.push("/")
   }
   console.log(id);
   console.log(token);

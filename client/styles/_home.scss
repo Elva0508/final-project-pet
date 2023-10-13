@@ -21,6 +21,11 @@
       margin-top: -200px;
     }
   }
+  .block-two {
+    .home-product-card {
+      padding-inline: 200px;
+    }
+  }
   .block-two-mobile {
     display: none;
   }
@@ -31,6 +36,16 @@
     }
     .block-two-mobile {
       display: block;
+    }
+  }
+
+  // .block-three {
+  //   padding-top: 200px;
+  // }
+
+  .block-four {
+    .home-product-card {
+      padding-inline: 200px;
     }
   }
 

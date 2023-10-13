@@ -9,7 +9,7 @@ import Link from 'next/link'
 function BreadCrumb(props) {
     const { pathname,query } = useRouter();
     // console.log(pathname);
-    // console.log(query);
+    console.log(query);
     const [product, setProduct] = useState([])
     const [article, setArticle] = useState([])
     const [mission, setMission] = useState([])
@@ -115,6 +115,7 @@ const getSubcategory =  () => {
 
       // 最後一個
       if (i === array.length - 1) {
+        console.log(query.oid);
         return (
           <li
             key={i}
