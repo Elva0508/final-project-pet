@@ -150,9 +150,9 @@ export default function Purchast() {
           <ListD />
           <div className="d-flex flex-column col-md-8 col-12 purchast-bg ">
 
-              <h5 className="size-5 mt-3 ms-md-5 ms-3 big">
-                購買紀錄
-              </h5>
+          <p className="size-4 big  mt-3 ms-md-5 ms-3">
+                 <span className="my">▍</span>購買紀錄
+                </p>
 
               {currentData.map((v, i) => {
                 return (
