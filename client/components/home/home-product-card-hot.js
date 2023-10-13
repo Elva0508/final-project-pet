@@ -4,14 +4,16 @@ import axios from "axios";
 import { useEffect } from "react";
 import Link from "next/link";
 
-export default function HomeProductCard2() {
+export default function HomeProductCardHot() {
   // 讀取資料庫資料
   const [productData, setProductData] = useState({ result: [] }); // 初始化為一個帶有 result 屬性的物件
 
   useEffect(() => {
-    axios.get("http://localhost:3005/api/product/home").then((response) => {
-      setProductData({ result: response.data.result }); // 將伺服器端的 result 放入物件中
-    });
+    axios
+      .get("http://localhost:3005/api/product/home/sales")
+      .then((response) => {
+        setProductData({ result: response.data.result }); // 將伺服器端的 result 放入物件中
+      });
   }, []);
 
   // 初始化 isFavorites 並設置與產品數量相同的初始值（都是 false）
