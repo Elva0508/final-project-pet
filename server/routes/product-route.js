@@ -20,21 +20,24 @@ const authenticateToken = (req, res, next) => {
 
 
 //product產品資料
+//product產品資料
 router.get("/", (req, res) => {
-  connection.execute(
-    `SELECT
+    connection.execute(
+        ` SELECT
         products.*,
         category.category_name AS category_name,
         subcategory.subcategory_name AS subcategory_name,
         GROUP_CONCAT(product_type.type_name SEPARATOR ', ') AS type_names
         FROM products
         JOIN category ON category.category_id = products.category_id
-        JOIN subcategory ON subcategory.subcategory_id = products.subcategory_id`,
-
-    (error, result) => {
-      res.json({ result });
-    }
-  );
+        JOIN subcategory ON subcategory.subcategory_id = products.subcategory_id
+        LEFT JOIN product_type ON product_type.product_id = products.product_id
+        GROUP BY products.product_id;
+        `,
+        (error, result) => {
+            res.json({ result });
+        }
+    );
 });
 
 //category&subcategory類別

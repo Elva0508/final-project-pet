@@ -83,6 +83,7 @@ export default function ProductList() {
     useEffect(() => {
         axios.get("http://localhost:3005/api/product").then((response) => {
             const data = response.data.result;
+            console.log(data);
             setProductData(data); // 將伺服器端的 result 放入物件中
             setMainPic(data[0].images_one)
             console.log(response.data.result[0].images_one)
