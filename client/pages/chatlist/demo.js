@@ -58,7 +58,7 @@ export default function ChatDemo() {
           // 调用handleSendClick
           handleSendClick(ChatlistId);
           // 在這裡導向到 chatUrl
-          window.location.href = chatUrl;
+          // window.location.href = chatUrl;
         } else if (response.status === 200) {
           // 消息已存在
           setMessage("消息已存在");
@@ -73,7 +73,7 @@ export default function ChatDemo() {
           // 调用handleSendClick
           handleSendClick(ChatlistId);
           // 在這裡導向到 chatUrl
-          window.location.href = chatUrl;
+          // window.location.href = chatUrl;
         } else {
           // 請求失敗
           setMessage("請求失敗: " + response.data.error);
