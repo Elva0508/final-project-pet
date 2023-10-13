@@ -3,10 +3,9 @@ import dayjs from "dayjs";
 import axios from "axios";
 import Pagination from '@/components/pagination'
 
-export default function HistoryStatusOne({ history ,getHistory ,currentScreen,idCounts}) {
+export default function HistoryStatusOne({ history ,getHistory ,currentScreen,idCounts,activePage,setActivePage}) {
 
-  const [activePage, setActivePage] = useState(1)
-  const itemsPerPage = 5;
+   const itemsPerPage = 5;
   const startIndex = (activePage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const type=history.filter((v)=>v.mission_status==currentScreen)

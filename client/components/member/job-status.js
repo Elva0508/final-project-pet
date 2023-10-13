@@ -7,11 +7,9 @@ import dayjs from "dayjs";
 import Pagination from '@/components/pagination'
 
 
-export default function JobStatusTwo({job,currentScreen,getJob,idCounts}) {
+export default function JobStatusTwo({job,currentScreen,getJob,idCounts,activePage,setActivePage}) {
  
   const itemsPerPage = 5
-  const [activePage, setActivePage] = useState(1)
-
 
   const startIndex = (activePage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;

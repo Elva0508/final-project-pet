@@ -73,7 +73,8 @@ export default function Orderdetail() {
     const id=localStorage.getItem("id")
     // 沒有token
     if (!token) {
-      window.location.href="/"
+      router.push("/")
+
     }
     console.log(id);
     console.log(token);

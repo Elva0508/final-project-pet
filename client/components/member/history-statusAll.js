@@ -5,10 +5,7 @@ import dayjs from "dayjs";
 import axios from "axios";
 import Pagination from '@/components/pagination'
 
-export default function HistoryStatusOne({ history ,getHistory ,idCounts}) {
-
-  const [activePage, setActivePage] = useState(1)
-
+export default function HistoryStatusOne({ history ,getHistory ,idCounts,activePage,setActivePage}) {
 
   const itemsPerPage = 5;
 
