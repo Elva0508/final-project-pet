@@ -5,11 +5,13 @@ import Link from "next/link";
 
 export default function BlockTwoMobile() {
   const [productData, setProductData] = useState({ result: [] });
-  
+
   useEffect(() => {
-    axios.get("http://localhost:3005/api/product/home").then((response) => {
-      setProductData({ result: response.data.result });
-    });
+    axios
+      .get("http://localhost:3005/api/product/home/sales")
+      .then((response) => {
+        setProductData({ result: response.data.result });
+      });
   }, []);
 
   const [isFavorites, setIsFavorites] = useState(() =>
@@ -47,7 +49,11 @@ export default function BlockTwoMobile() {
   }
 
   return (
-    <div id="carouselExample" className="carousel slide">
+    <div
+      id="carouselExampleAutoplaying"
+      className="carousel slide"
+      data-bs-ride="carousel"
+    >
       <div className="carousel-inner">
         {productGroups.map((group, groupIndex) => (
           <div
@@ -78,7 +84,9 @@ export default function BlockTwoMobile() {
                           <img
                             className="card-herat"
                             src={
-                              isFavorites[i] ? "/heart-clicked.svg" : "/heart.svg"
+                              isFavorites[i]
+                                ? "/heart-clicked.svg"
+                                : "/heart.svg"
                             }
                             alt={isFavorites[i] ? "已收藏" : "未收藏"}
                             onClick={() => toggleFavorite(i)}
@@ -91,7 +99,10 @@ export default function BlockTwoMobile() {
                           <div className="card-text size-6 m-size-7">
                             {v.product_name}
                           </div>
-                          <div className="product-sale-price d-flex align-items-center" href="#">
+                          <div
+                            className="product-sale-price d-flex align-items-center"
+                            href="#"
+                          >
                             <div className="price fs-4 size-6 m-size-7 me-3">
                               NT${v.specialoffer}
                             </div>
@@ -114,7 +125,7 @@ export default function BlockTwoMobile() {
       <button
         className="carousel-control-prev"
         type="button"
-        data-bs-target="#carouselExample"
+        data-bs-target="#carouselExampleAutoplaying"
         data-bs-slide="prev"
       >
         <span className="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -123,10 +134,10 @@ export default function BlockTwoMobile() {
       <button
         className="carousel-control-next"
         type="button"
-        data-bs-target="#carouselExample"
+        data-bs-target="#carouselExampleAutoplaying"
         data-bs-slide="next"
       >
-        <span className="carousel-control-next-icon" ariahidden="true"></span>
+        <span className="carousel-control-next-icon" aria-hidden="true"></span>
         <span className="visually-hidden">Next</span>
       </button>
     </div>
