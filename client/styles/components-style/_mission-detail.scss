@@ -12,6 +12,7 @@
     width: 100%;
     margin: 1rem auto;
     background-color: $cos-white;
+    align-items: center;
   }
   .MuiTypography-root{
     color: $text-main;
@@ -20,6 +21,10 @@
   .MuiChip-root{
     border: 1px solid $hover;
     color: $hover;
+  }
+  .MuiTypography-body-sm{
+    display: flex;
+    justify-content: space-between;
   }
   nav a {
     border-bottom: 0;

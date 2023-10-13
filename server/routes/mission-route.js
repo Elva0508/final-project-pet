@@ -251,7 +251,7 @@ router.get("/mission-details/:mission_id", (req, res) => {
 router.get("/fav/:mission_id", (req, res) => {
   const mission_id = req.params.mission_id; // 從路由參數中獲取 mission_id
   const userId = req.query.userId; // 從請求的 URL 中獲取用戶 token
-  console.log("mission_id是:"+mission_id+"userId是:"+userId)
+  console.log("mission_id是:" + mission_id + "userId是:" + userId)
   conn.execute(
     `SELECT mf.*,md.mission_id AS mission_id
     FROM mission_fav AS mf
@@ -300,7 +300,7 @@ router.delete("/delete-fav/:mission_id", (req, res) => {
 
 // 任務詳細頁：GOOGLE地圖API
 const googleMapsClient = require('@google/maps').createClient({
-  key: 'AIzaSyD3M4Wt4xdyN-LrJyCVDwGSUkQ1B8KpKT8' 
+  key: 'AIzaSyD3M4Wt4xdyN-LrJyCVDwGSUkQ1B8KpKT8'
 });
 router.get("/mission-details-map/:mission_id", (req, res) => {
   const mission_id = req.params.mission_id; // 從路由參數中獲取 mission_id
@@ -386,6 +386,22 @@ router.post("/add-record", (req, res) => {
       } else {
         res.json({ result });
       }
+    }
+  );
+});
+
+// 根據應徵紀錄找出「熱門任務」
+router.get("/popular", (req, res) => {
+  conn.execute(    // 算出每個mission_id有多少個不同的user_id 並從中選出有最多不同user_id的mission_id
+    `SELECT md.*, COUNT(DISTINCT mr.user_id) AS user_count
+    FROM mission_detail AS md
+    JOIN mission_record AS mr ON md.mission_id = mr.mission_id
+    GROUP BY md.mission_id
+    ORDER BY user_count DESC
+    LIMIT 5    
+    ;`,
+    (error, result) => {
+      res.json({ result });
     }
   );
 });

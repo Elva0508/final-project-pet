@@ -106,7 +106,25 @@ import Typography from '@mui/joy/Typography';
 //         </div>
 //     );
 // }
-function InteractiveCard() {
+function InteractiveCard({setPopularMissions}) {
+    const getPopularMissions = async () => {
+        try {
+          let apiUrl = `http://localhost:3005/api/mission/popular`;
+          const response = await axios.get(apiUrl);
+          const data = response.data.data;
+          setPopularMissions(data);
+          console.log("現在的popularMissions是"+popularMissions);
+        } catch (error) {
+          console.error("Error:", error);
+        }
+      };
+    
+      useEffect(() => {
+        getPopularMissions()
+      }, []) 
+
+
+
     return (
         <Card
             variant="outlined"
@@ -116,7 +134,7 @@ function InteractiveCard() {
                 '&:hover': { boxShadow: 'md', borderColor: 'neutral.outlinedHoverBorder' },
             }}
         >
-            <AspectRatio ratio="1" sx={{ width: 90 }}>
+            <AspectRatio ratio="1" sx={{ width: 60 }}>
                 <img
                     src="https://images.unsplash.com/photo-1507833423370-a126b89d394b?auto=format&fit=crop&w=90"
                     srcSet="https://images.pexels.com/photos/977935/pexels-photo-977935.jpeg?auto=compress&cs=tinysrgb&dpr=1&fit=crop&h=200&w=280"
@@ -124,29 +142,25 @@ function InteractiveCard() {
                     alt=""
                 />
             </AspectRatio>
-            <CardContent>
-                <Typography level="title-lg" id="card-description">
-                    桃園10/30~11/02貓咪代餵
-                </Typography>
-                <Typography level="body-sm" aria-describedby="card-description" mb={1}>
-                    <Link
-                        overlay
-                        underline="none"
-                        href="#interactive-card"
-                        sx={{ color: 'text.tertiary' }}
-                    >
-                        台北市信義區
-                    </Link>
-                </Typography>
-                <Chip
-                    variant="outlined"
-                    color="primary"
-                    size="sm"
-                    sx={{ pointerEvents: 'none' }}
-                >
-                    NT$ 800 / 次
-                </Chip>
-            </CardContent>
+            <Link href={`/work/find-mission`}>
+
+                <CardContent>
+                    <Typography level="title-lg" id="card-description">
+                        桃園10/30~11/02貓咪代餵
+                    </Typography>
+                    <Typography level="body-sm" aria-describedby="card-description" mb={1}>
+                        台北市
+                        <Chip
+                            variant="outlined"
+                            color="primary"
+                            size="sm"
+                            sx={{ pointerEvents: 'none' }}
+                        >
+                            NT$ 800 / 次
+                        </Chip>
+                    </Typography>
+                </CardContent>
+            </Link>
         </Card>
     );
 }
@@ -213,76 +227,76 @@ const ImageSwiper = ({ missionImages }) => {
     );
 };
 
-export const MissionDetailSticky = ({ userId, mission_id }) => {
-    const handleButtonClick = async () => {
-        // setIsLoading(true);
-        if (mission_id) {
-            try {
-                const response = await axios.get(`http://localhost:3005/api/mission/mission-details/${mission_id}`);
-                const post_user_id = response.data.post_user_id;
-                console.log("post_user_id是" + post_user_id);
-            } catch (error) {
-                console.error("Error:", error);
-            }
-        }
-        // 檢查是否有有效的 userId
-        //如果放入targetID 變數 這邊也要把targetID 變數放進來檢查
-        if (userId) {
-            // 建立要傳送的數據
-            const requestData = {
-                chatlist_userId1: userId,
-                chatlist_userId2: 31, // 放要對話的 targetID 變數
-            };
-            console.log("userId1是" + userId)
-            console.log("userId2是" + userId)
+// export const MissionDetailSticky = ({ userId, mission_id }) => {
+//     const handleButtonClick = async () => {
+//         // setIsLoading(true);
+//         if (mission_id) {
+//             try {
+//                 const response = await axios.get(`http://localhost:3005/api/mission/mission-details/${mission_id}`);
+//                 const post_user_id = response.data.post_user_id;
+//                 console.log("post_user_id是" + post_user_id);
+//             } catch (error) {
+//                 console.error("Error:", error);
+//             }
+//         }
+//         // 檢查是否有有效的 userId
+//         //如果放入targetID 變數 這邊也要把targetID 變數放進來檢查
+//         if (userId) {
+//             // 建立要傳送的數據
+//             const requestData = {
+//                 chatlist_userId1: userId,
+//                 chatlist_userId2: 31, // 放要對話的 targetID 變數
+//             };
+//             console.log("userId1是" + userId)
+//             console.log("userId2是" + userId)
 
-            try {
-                const response = await axios.post(
-                    "http://localhost:3005/api/chatlist/creatchat",
-                    requestData
-                );
+//             try {
+//                 const response = await axios.post(
+//                     "http://localhost:3005/api/chatlist/creatchat",
+//                     requestData
+//                 );
 
-                if (response.status === 201) {
-                    // 請求成功
-                    setMessage("請求成功");
-                    const chatUrl = response.data.chatUrl;
-                    console.log("chatUrl" + chatUrl);
-                    // 在這裡導向到 chatUrl
-                    // window.location.href = chatUrl;
-                } else if (response.status === 200) {
-                    // 消息已存在
-                    // setMessage("消息已存在");
-                    const chatUrl = response.data.chatUrl;
-                    console.log("已存在chatUrl" + chatUrl);
-                    // 在這裡導向到 chatUrl
-                    // window.location.href = chatUrl;
-                } else {
-                    // 請求失敗
-                    // setMessage("請求失敗: " + response.data.error);
-                }
-            } catch (error) {
-                // 處理錯誤
-                // setMessage(error.message || "發生錯誤");
-            } finally {
-                // setIsLoading(false);
-            }
-        }
-    };
-    return (
-        <>
-            <section className="ask-and-apply d-flex justify-content-center align-items-center">
-                <button className="ask-and-apply-btn btn-outline-confirm d-flex align-items-center justify-content-center" onClick={handleButtonClick} >
-                    <PiWechatLogoThin />
-                    線上詢問
-                </button>
-                <button className="ask-and-apply-btn btn-second d-flex align-items-center justify-content-center" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                    <IoPaperPlaneOutline />
-                    立即應徵
-                </button>
-            </section>
-        </>
-    )
-}
+//                 if (response.status === 201) {
+//                     // 請求成功
+//                     setMessage("請求成功");
+//                     const chatUrl = response.data.chatUrl;
+//                     console.log("chatUrl" + chatUrl);
+//                     // 在這裡導向到 chatUrl
+//                     // window.location.href = chatUrl;
+//                 } else if (response.status === 200) {
+//                     // 消息已存在
+//                     // setMessage("消息已存在");
+//                     const chatUrl = response.data.chatUrl;
+//                     console.log("已存在chatUrl" + chatUrl);
+//                     // 在這裡導向到 chatUrl
+//                     // window.location.href = chatUrl;
+//                 } else {
+//                     // 請求失敗
+//                     // setMessage("請求失敗: " + response.data.error);
+//                 }
+//             } catch (error) {
+//                 // 處理錯誤
+//                 // setMessage(error.message || "發生錯誤");
+//             } finally {
+//                 // setIsLoading(false);
+//             }
+//         }
+//     };
+//     return (
+//         <>
+//             <section className="ask-and-apply d-flex justify-content-center align-items-center">
+//                 <button className="ask-and-apply-btn btn-outline-confirm d-flex align-items-center justify-content-center" onClick={handleButtonClick} >
+//                     <PiWechatLogoThin />
+//                     線上詢問
+//                 </button>
+//                 <button className="ask-and-apply-btn btn-second d-flex align-items-center justify-content-center" data-bs-toggle="modal" data-bs-target="#exampleModal">
+//                     <IoPaperPlaneOutline />
+//                     立即應徵
+//                 </button>
+//             </section>
+//         </>
+//     )
+// }
 
 function CustomHTMLRenderer({ htmlContent }) {
     return (
@@ -335,6 +349,9 @@ export default function MissionDetail() {
     const [missionImages, setMissionImages] = useState([])
     // 用於儲存解析後的userID
     const [userId, setUserId] = useState(null);
+
+    // 熱門任務
+    const [popularMissions, setPopularMissions] = useState([]);
 
     // GOOGLE地圖API：初始狀態
     const [missionLocation, setMissionLocation] = useState({
@@ -520,7 +537,7 @@ export default function MissionDetail() {
         }
     };
 
-    // 彈跳視窗(確認送出)
+    // 彈跳視窗(確認送出)：寫進應徵紀錄
     const handleConfirmSubmit = async () => {
         setSelectedMissionId(mission_id)
         try {
@@ -593,7 +610,10 @@ export default function MissionDetail() {
 
                         <div className="modal-footer justify-content-center py-4">
                             <button type="button" className=" btn-outline-confirm" data-bs-dismiss="modal">取消</button>
-                            <button type="button" className=" btn-second" onClick={handleConfirmSubmit} data-bs-dismiss="modal">確認送出</button>
+                            <button type="button" className=" btn-second" onClick={() => {
+                                handleButtonClick();  // 跟案主聊聊
+                                handleConfirmSubmit();  //寫進應徵紀錄
+                            }} data-bs-dismiss="modal">確認送出</button>
                             {/* 在這邊也要加上data-bs-dismiss="modal"才能在送出後關閉modal 才不會到聊天室之後 後面畫面還是灰暗的 */}
                         </div>
                     </div>
@@ -621,7 +641,7 @@ export default function MissionDetail() {
                         <main className="d-flex flex-column flex-lg-row row justify-content-between g-lg-5">
                             <div className='left col-12 col-lg-3'>
                                 <aside className='post-user'>
-                                    <div className='mt-3 p-4 position-relative'>
+                                    <div className='mt-3 p-4'>
                                         <div className=' d-flex '>
                                             <p className='size-6'>案主資訊</p>
                                         </div>
@@ -653,11 +673,23 @@ export default function MissionDetail() {
                                             <PiWechatLogoThin />
                                             線上詢問
                                         </button>
+                                        <button className="chat-btn btn-second d-flex align-items-center justify-content-center" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                            <IoPaperPlaneOutline />
+                                            立即應徵
+                                        </button>
                                     </div>
                                 </aside>
-                                <div>
-                                    <InteractiveCard />
-                                </div>
+                                <aside className='post-user'>
+                                    <div className='mt-3 p-4'>
+                                        <div className=' d-flex '>
+                                            <p className='size-6'>熱門任務</p>
+                                        </div>
+                                        <div>
+                                            <InteractiveCard setPopularMissions={setPopularMissions} />
+                                        </div>
+                                    </div>
+                                </aside>
+
                             </div>
                             <div className='right col-12 col-lg-9'>
                                 <header className='mt-3 py-4 px-5 position-relative'>
@@ -747,8 +779,8 @@ export default function MissionDetail() {
                 )
             })
             }
-            <Footer />
-            <MissionDetailSticky userId={userId} mission_id={mission_id} setMessage={setMessage} isLoading={isLoading} setIsLoading={setIsLoading} message={message} />
+            {/* <Footer /> */}
+            {/* <MissionDetailSticky userId={userId} mission_id={mission_id} setMessage={setMessage} isLoading={isLoading} setIsLoading={setIsLoading} message={message} /> */}
         </>
     )
 }

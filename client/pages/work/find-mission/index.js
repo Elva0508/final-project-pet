@@ -671,7 +671,9 @@ const LatestMission = ({ userId }) => {
               </div>
               <div className='d-flex justify-content-between align-items-end price'>
                 <div >單次<span className='size-6'> NT${v.price}</span></div>
-                <button className='btn-confirm size-6'>應徵</button>
+                <Link href={`/work/find-mission/${v.mission_id}`} >
+                  <button className='btn-confirm size-6'>應徵</button>
+                </Link>
               </div>
             </div>
           </div>
@@ -838,7 +840,9 @@ const MobileLatestMission = ({ userId }) => {
                 </div>
                 <div className='d-flex justify-content-between align-items-end price'>
                   <div >單次<span className='size-6'> NT${v.price}</span></div>
-                  <button className='btn-confirm size-6'>應徵</button>
+                  <Link href={`/work/find-mission/${v.mission_id}`} >
+                    <button className='btn-confirm size-6'>應徵</button>
+                  </Link>
                 </div>
               </div>
             </div>
@@ -867,18 +871,22 @@ function ImageWithEqualDimensions({ file_path }) {
 
   // 使得圖片高度會在螢幕大小改變時跟著改變 而非在重整時才改變
   const handleResize = () => {
-    const image = imgRef.current;
-    const imageWidth = image.offsetWidth;
-    image.style.height = imageWidth + "px";
-  };
-
-  useEffect(() => {
     // 獲取圖片元素的引用
     const image = imgRef.current;
     // 獲取圖片的寬度
     const imageWidth = image.offsetWidth;
     // 將寬度值分配给高度
     image.style.height = imageWidth + "px";
+  };
+
+  // // 立即在組件加載時調整照片的高度
+  // useEffect(() => {
+  //   handleResize();
+  // }, []);
+
+  useEffect(() => {
+    // 立即在組件加載時調整照片的高度
+    handleResize();
     // 添加螢幕大小變化事件監聽器
     window.addEventListener("resize", handleResize);
     // 在組件卸載時移除事件監聽器
