@@ -6,9 +6,10 @@ import useRWD from "@/hooks/useRWD";
 import Image from "next/image";
 import myProfile from "@/assets/myProfile.svg";
 import data from "@/data/taiwan.json";
-import axios from "axios";
-import { Padding } from "@mui/icons-material";
+import TWZipCode from "@/components/user/TWZipCode";
 
+import { Padding } from "@mui/icons-material";
+import jwt_decode from "jwt-decode";
 
 const ProfilePage = () => {
   //RWD
@@ -32,12 +33,8 @@ const ProfilePage = () => {
       setArea([]);
     }
   };
-  //生日
-  const onChange = (date, dateString) => {
-    console.log(date, dateString);
-  };
+
   //取得資料
-  //const [userData, setUserData] = useState(null);
 
   const [userData, setUserData] = useState({});
   const [email, setEmail] = useState("");
@@ -50,33 +47,77 @@ const ProfilePage = () => {
   const [detailAddress, setDetailAddress] = useState("");
   const [petCount, setPetCount] = useState(1);
 
+  const [address, setAddress] = useState({
+    // country: '高雄市',
+    // township: '鳳山區',
+    postcode: "830",
+  });
 
+  //設置id狀態
+  const [userId, setUserId] = useState(null);
 
   useEffect(() => {
-    axios
-      .get("http://localhost:3005/api/user/user-info")
+    const token = localStorage.getItem("token");
+    if (token) {
+      try {
+        const decodeToken = jwt_decode(token);
+        const currentUserId = decodeToken.id;
+        console.log(userId);
+
+        //更新userId狀態
+        setUserId(currentUserId);
+      } catch (error) {
+        console.error("token解析錯誤", error);
+      }
+    }
+    const apiURL = `http://localhost:3005/api/user/user-profile/${userId}`;
+    fetch(apiURL)
       .then((res) => {
-        const userData = res.data.results[0];
-        setUserData(userData);
-        setEmail(userData.email);
-        setName(userData.name);
-        setGender(userData.gender);
-        setBirthday(userData.birthday);
-        setPhone(userData.phone);
-        setAddressCity(userData.city);
-        setAddressTown(userData.area);
-        setDetailAddress(userData.address);
-        setPetCount(userData.pet_number);
+        return res.json();
       })
-      .catch((err) => console.log(err));
-  }, []);
+      .then((data) => {
+        console.log(data.results[0]);
+        //把結果放進user
+        const user = data.results[0];
+        setEmail(user.email);
+        setName(user.name);
+        setGender(user.gender);
+        //birthday資料成為可用數字
+        setBirthday(new Date(user.birthday).toISOString().split("T")[0]);
+        //console.log(birthday)
+        setPhone(user.phone);
+        setAddressCity(user.city);
+        setAddressTown(user.area);
+        setDetailAddress(user.address);
+        setPetCount(user.pet_number);
+      })
+      .catch((error) => console.error("api請求錯誤", error));
+  }, [userId]);
 
   const handleSave = (event) => {
     event.preventDefault();
 
-    setErrors({});
-    
-    
+    // 驗證姓名不為空
+    if (!name.trim()) {
+      alert("請輸入姓名");
+      return;
+    }
+    // 驗證生日不為空
+    if (!birthday) {
+      alert("請輸入生日");
+      return;
+    }
+    // 驗證手機格式
+    // const phoneRegex = /^09\d{8}$/;
+    // if (!phoneRegex.test(phone)) {
+    //   alert("請輸入正確的手機號碼格式");
+    //   return;
+    // }
+    // 驗證地址不為空
+    // if (!detailAddress) {
+    //   alert("請輸入完整的地址");
+    //   return;
+    // }
     const updatedUserData = {
       email,
       name,
@@ -88,35 +129,32 @@ const ProfilePage = () => {
       address: detailAddress,
       pet_number: petCount,
     };
-    axios
-      .put("http://localhost:3005/api/user/update-user-data", updatedUserData)
-      .then((res) => {
-        setUserData(res.data.results[0]);
-        setEmail(res.data.results[0].email);
-        setName(res.data.results[0].name);
-        setGender(res.data.results[0].gender);
-        setBirthday(res.data.results[0].birthday);
-        setPhone(res.data.results[0].phone);
-        setAddressCity(res.data.results[0].city);
-        setAddressTown(res.data.results[0].area);
-        setDetailAddress(res.data.results[0].address);
-        setPetCount(res.data.results[0].pet_number);
+    fetch(`http://localhost:3005/api/user/user-profile-change/${userId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(updatedUserData),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        setUserData(data.results[0]);
+
+        setName(data.results[0].name);
+        setGender(data.results[0].gender);
+        setBirthday(
+          new Date(data.results[0].birthday).toISOString().split("T")[0]
+        );
+        setPhone(data.results[0].phone);
+
+        setDetailAddress(data.results[0].address);
+        setPetCount(data.results[0].pet_number);
+        alert("會員資料修改完成");
       })
       .catch((err) => console.log(err));
   };
 
-  const handleCancel = () => {
-    setUserData(userData);
-    setEmail(userData.email);
-    setName(userData.name);
-    setGender(userData.gender);
-    setBirthday(userData.birthday);
-    setPhone(userData.phone);
-    setAddressCity(userData.city);
-    setAddressTown(userData.area);
-    setDetailAddress(userData.address);
-    setPetCount(userData.pet_number);
-  };
   return (
     <div className=" my-3">
       <div className="d-flex justify-content-around pt-2">
@@ -164,31 +202,43 @@ const ProfilePage = () => {
               </div>
             </div>
 
-            <div className="ws20 gender mb-5 d-flex justify-content-center">
+            <div className="ws20 gender mb-5 d-flex justify-content-center gender-radio">
               <label className={`fs3 ${userRfs}`}>性別</label>
-              <div className="fs11">
-                <input
-                  type="radio"
-                  name="gender"
-                  id="male"
-                  className={userRfs}
-                  value="male"
-                  checked={gender === "male"}
-                  onChange={(e) => setGender(e.target.value)}
-                  aria-label="..."
-                />
-                男
-                <input
-                  type="radio"
-                  name="gender"
-                  id="female"
-                  className={userRfs}
-                  value="female"
-                  checked={gender === "female"}
-                  onChange={(e) => setGender(e.target.value)}
-                  aria-label="..."
-                />
-                女
+              <div className="fs11 d-flex align-items-center">
+                <div className="radio-box">
+                  <label className="gender-btn round">
+                    <input
+                      type="radio"
+                      name="label"
+                      id="male"
+                      className={userRfs}
+                      value="gender"
+                      checked={gender === "男"}
+                      onChange={() => setGender("男")}
+                      aria-label="..."
+                    />
+                    <span>男</span>
+                  </label>
+                </div>
+                <div className="radio-box">
+                <label className="gender-btn round">
+                  <input
+                    type="radio"
+                    name="label"
+                    id="female"
+                    className={userRfs}
+                    value="gender"
+                    checked={gender === "女"}
+                    onChange={() => setGender("女")}
+                    aria-label="..."
+                  />
+                  <span>女</span>
+                  </label>
+                  {/* <label>
+                    <input type="radio" name="label" value="古裝劇" />
+                    <span class="round button">123</span>
+                  </label> */}
+                </div>
               </div>
             </div>
 
@@ -212,13 +262,23 @@ const ProfilePage = () => {
               />
             </div>
 
+            <TWZipCode
+              initPostcode={address.postcode}
+              onPostcodeChange={(country, township, postcode) => {
+                setAddress({
+                  country,
+                  township,
+                  postcode,
+                });
+              }}
+            />
             <div className="ws20   d-flex justify-content-center">
               <label className={`fs3 py-2 ${userRfs}`}>地址</label>
               <div className="fs11 ">
                 <select
                   className="form-select fs5"
                   value={addressCity}
-                  onChange={(e) => setAddressCity(e.target.value)}
+                  // onChange={(e) => setAddressCity(e.target.value)}
                 >
                   <option value={-1}></option>
                   {data.map((v) => {
@@ -233,7 +293,7 @@ const ProfilePage = () => {
                 <select
                   className="form-select fs5"
                   value={addressTown}
-                  onChange={(e) => setAddressTown(e.target.value)}
+                  //onChange={(e) => setAddressTown(e.target.value)}
                 >
                   <option value={-1}></option>
                   {area.map((u, i) => {
@@ -274,9 +334,9 @@ const ProfilePage = () => {
               <button id="save" className="btn-confirm" onClick={handleSave}>
                 儲存
               </button>
-              <button className="btn-outline-confirm" onClick={handleCancel}>
+              {/* <button className="btn-outline-confirm" onClick={handleCancel}>
                 取消
-              </button>
+              </button> */}
             </div>
           </div>
         </div>

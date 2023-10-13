@@ -4,19 +4,23 @@ import ListUserM from "@/components/member/list-user-m";
 import { HiClipboardList } from "react-icons/hi";
 import HistoryStatus from "@/components/member/history-status";
 import HistoryStatusAll from "@/components/member/history-statusAll";
+import { useRouter } from 'next/router';
 
 import axios from "axios";
 
 export default function History() {
   const [currentScreen, setCurrentScreen] = useState("2");
   const [history , setHistory]=useState([])
+  const [count,setCount]=useState([])
+  const router = useRouter();
+  const [activePage, setActivePage] = useState(1)
 
   const handleButtonClick = (screenName) => {
     setCurrentScreen(screenName);
   };
 
-  const getHistory = async() => {
-    await axios.get("http://localhost:3005/api/member-history")
+  const getHistory = async(id) => {
+    await axios.get(`http://localhost:3005/api/member-history/${id}`)
       .then((response) => {
         const data = response.data.result;
         console.log(data);
@@ -27,8 +31,42 @@ export default function History() {
     });
   }
 
+  const getCount = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:3005/api/member-history/count/count`,
+      );
+      const data = response.data.result
+      console.log(data);
+       setCount(data)
+    } catch (error) {
+      console.error("Error:", error);
+    }
+   
+  };
+
+  let idCounts = [];
+  count.forEach(v => {
+    const mission_id = v.mission_id;
+    if (idCounts[mission_id]) {
+        idCounts[mission_id]++; // 如果 ID 已经存在，增加计数
+    } else {
+        idCounts[mission_id] = 1; // 如果 ID 不存在，初始化计数为 1
+    }
+  });
+
 useEffect(() => {
-  getHistory()
+  const token = localStorage.getItem("token");
+  const id=localStorage.getItem("id")
+  // 沒有token
+  if (!token) {
+    router.push("/")
+    
+  }
+  console.log(id);
+  console.log(token);
+  getHistory(id)
+  getCount()
   }, [])
 
   return (
@@ -39,9 +77,9 @@ useEffect(() => {
           <ListD />
           <div className="d-flex flex-column col-12 col-md-8 history">
 
-              <h5 className="size-5  my-3 ms-md-0 ms-3 big">
-                刊登紀錄
-              </h5>
+          <p className="size-4 big mb-2">
+                 <span className="my">▍</span>刊登紀錄
+                </p>
               <div className="">
                 <button
                   className={` size-6 listbutton first ${
@@ -49,6 +87,7 @@ useEffect(() => {
                   }`}
                   onClick={() => {
                     handleButtonClick("2");
+                    setActivePage(1)
                   }}
                 >
                   全部
@@ -59,6 +98,7 @@ useEffect(() => {
                   }`}
                   onClick={() => {
                     handleButtonClick("1");
+                    setActivePage(1)
                   }}
                 >
                   刊登中
@@ -69,14 +109,15 @@ useEffect(() => {
                   }`}
                   onClick={() => {
                     handleButtonClick("0");
+                    setActivePage(1)
                   }}
                 >
                   已下架
                 </button>
               </div>
-              {currentScreen === "2" && <HistoryStatusAll history={history} getHistory={getHistory}/>}
-              {currentScreen === "0" && <HistoryStatus history={history} getHistory={getHistory} currentScreen={currentScreen}/>}
-              {currentScreen === "1" && <HistoryStatus history={history} getHistory={getHistory} currentScreen={currentScreen}/>}
+              {currentScreen === "2" && <HistoryStatusAll history={history} getHistory={getHistory} idCounts={idCounts} activePage={activePage} setActivePage={setActivePage} />}
+              {currentScreen === "0" && <HistoryStatus history={history} getHistory={getHistory} currentScreen={currentScreen} idCounts={idCounts} activePage={activePage} setActivePage={setActivePage} />}
+              {currentScreen === "1" && <HistoryStatus history={history} getHistory={getHistory} currentScreen={currentScreen} idCounts={idCounts} activePage={activePage} setActivePage={setActivePage} />}
 
             </div>
           </div>

@@ -1,0 +1,106 @@
+.disableFlow {
+  overflow: hidden;
+}
+.cat-loading-wrapper {
+  background-color: #f5d4a9;
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 1;
+  transition: opacity 0.5s ease-in-out;
+  z-index: 999;
+  overflow-y: hidden;
+}
+.cat-loading-opacity {
+  opacity: 0;
+  z-index: -999;
+}
+.catloading {
+  width: 500px;
+  height: auto;
+  top: 10%;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  margin: auto;
+}
+
+#circle {
+  text-align: center;
+  transform-origin: center 30%;
+  animation: 5s circle infinite;
+  opacity: 0;
+}
+
+@keyframes circle {
+  0% {
+    opacity: 0;
+    transform: rotate(0deg);
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+    transform: rotate(360deg);
+  }
+}
+
+#textL {
+  opacity: 0;
+  animation: ld-in 3s 0s ease infinite;
+}
+#textO {
+  opacity: 0;
+  animation: ld-in 3s 0.1s ease infinite;
+}
+#textA {
+  opacity: 0;
+  animation: ld-in 3s 0.2s ease infinite;
+}
+#textD {
+  opacity: 0;
+  animation: ld-in 3s 0.3s ease infinite;
+}
+#textI {
+  opacity: 0;
+  animation: ld-in 3s 0.4s ease infinite;
+}
+#textN {
+  opacity: 0;
+  animation: ld-in 3s 0.5s ease infinite;
+}
+#textG {
+  opacity: 0;
+  animation: ld-in 3s 0.6s ease infinite;
+}
+#c1 {
+  opacity: 0;
+  animation: ld-in 3s 0.7s ease infinite;
+}
+#c2 {
+  opacity: 0;
+  animation: ld-in 3s 0.8s ease infinite;
+}
+#c3 {
+  opacity: 0;
+  animation: ld-in 3s 0.9s ease infinite;
+}
+
+@keyframes ld-in {
+  0% {
+    opacity: 0;
+    transform: scale(0);
+  }
+  30% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

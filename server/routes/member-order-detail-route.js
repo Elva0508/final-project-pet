@@ -2,8 +2,9 @@ const router = require("express").Router();
 const connection=require("../db");
 
   //拿訂單細節資料
-  router.get("/:oid",(req,res)=>{
-    const orderId =req.params.oid
+  router.get("/:oid/:id",(req,res)=>{
+    const orderId=req.params.oid
+    const id=req.params.id
     connection.execute(
         `SELECT o.*, 
         p.images_one AS image, 
@@ -26,9 +27,9 @@ const connection=require("../db");
  JOIN order_shipment AS oship ON o.order_shipment = oship.id
  JOIN product_type AS pt ON od.product_type=pt.product_type_id
  LEFT JOIN product_reviews AS pr ON od.product_id=pr.product_id AND pr.order_id=o.order_id
- WHERE o.user_id = 1 AND od.order_id=?
+ WHERE o.user_id = ? AND od.order_id=?
  ORDER BY od.product_id ASC;`,
-        [orderId],
+        [id,orderId],
         (error,result)=>{
             res.json({result})
         }    
@@ -38,10 +39,10 @@ const connection=require("../db");
 
 //商品評論
 router.post("/comment",(req,res)=>{
-    const {comment,star,productid,orderid} =req.body
+    const {comment,star,productid,orderid,user_id} =req.body
     connection.execute(
-        `INSERT INTO product_reviews(user_id, product_id, review_content,star_rating,order_id) VALUES (1,?,?,?,?);`,
-        [productid,comment,star,orderid]
+        `INSERT INTO product_reviews(user_id, product_id, review_content,star_rating,order_id) VALUES (?,?,?,?,?);`,
+        [user_id,productid,comment,star,orderid]
         ,(error,result)=>{
             res.json({result})
         }    

@@ -120,22 +120,46 @@
     }
     span{
         color: black;
+        font-weight: 400;
     }
+
+
 
 }
 
 .pay-confirm{
-    height: calc(100vh - 477px);
+    height: calc(100vh - 404px);
     color: $text-main;
-    overflow: auto;
+    // overflow: auto;
 
 }    
 @media screen and (max-width: 895px) {
        .pay-confirm{
-        height: calc(100vh - 430px);
+        height:  auto;
             img{
             width: 200px;
             height: 200px;
        };
        }
-      }
+}
+
+.credit-card{
+    height: calc(100vh - 332px); 
+    span{
+        color: black;
+        font-weight: 400;
+    }
+}
+@media screen and (max-width: 895px) {
+    .credit-card{
+     height: auto
+    };
+}
+
+.delivery{
+    span{
+        color: black;
+        font-weight: 400;
+    }
+
+}

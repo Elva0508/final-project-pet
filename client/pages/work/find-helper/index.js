@@ -15,6 +15,9 @@ import {
   BsTrashFill,
   BsTrash,
 } from "react-icons/bs";
+
+import { FaUserClock } from "react-icons/fa";
+import { ImLocation2 } from "react-icons/Im";
 import WorkService from "@/services/work-service";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
@@ -34,6 +37,8 @@ import { Tune } from "@mui/icons-material";
 import { SideSheet, Button } from "@douyinfe/semi-ui";
 import workService from "@/services/work-service";
 import { useHelper } from "@/context/helperContext";
+import { motion, useAnimationControls } from "framer-motion";
+
 const Search = ({
   handleSearch,
   placeholder,
@@ -88,6 +93,8 @@ const MobileFilter = ({
   setPage,
   setTotalRows,
   setCurrentSearch,
+  controller,
+  handleHelperAnimate,
 }) => {
   const [titleContent, setTitleContent] = useState("服務類型");
   const handleType = (value) => {
@@ -144,6 +151,8 @@ const MobileFilter = ({
           onClick={handleType}
           order={order}
           filterType={filterType}
+          controller={controller}
+          handleHelperAnimate={handleHelperAnimate}
         />
       </SwiperSlide>
       <SwiperSlide>
@@ -159,6 +168,8 @@ const MobileFilter = ({
           src={"/job-icon/Heart-price.svg"}
           onClick={handleOrder}
           order={order}
+          controller={controller}
+          handleHelperAnimate={handleHelperAnimate}
         />
       </SwiperSlide>
       <SwiperSlide>
@@ -174,6 +185,8 @@ const MobileFilter = ({
           src={"/job-icon/Discovery-date.svg"}
           onClick={handleOrder}
           order={order}
+          controller={controller}
+          handleHelperAnimate={handleHelperAnimate}
         />
       </SwiperSlide>
       <SwiperSlide>
@@ -189,6 +202,8 @@ const MobileFilter = ({
           src={"/job-icon/Discovery-date.svg"}
           onClick={handleOrder}
           order={order}
+          controller={controller}
+          handleHelperAnimate={handleHelperAnimate}
         />
       </SwiperSlide>
     </Swiper>
@@ -393,14 +408,16 @@ const MobileFamousHelper = ({
     </>
   );
 };
-const SingleHelperCard = ({ helper, collection, setCollection }) => {
+const SingleHelperCard = ({
+  helper,
+  collection,
+  setCollection,
+  controller,
+}) => {
   // const [isFavorite, setIsFavorite] = useState(false); // 初始狀態為未收藏
   const [isFavHovered, setIsFavHovered] = useState(false);
   const { isAuthenticated } = useAuth();
   const router = useRouter();
-  // useEffect(() => {
-  //   setIsFavorite(collection.find((item) => helper.user_id === item));
-  // }, [collection]);
   const service = [
     { label: "到府代餵", value: parseInt(helper.feed_service) },
     { label: "安親寄宿", value: parseInt(helper.house_service) },
@@ -434,50 +451,55 @@ const SingleHelperCard = ({ helper, collection, setCollection }) => {
   };
   return (
     <>
-      <div
+      <motion.div
+        layout
+        // initial={{ opacity: 0 }}
+        animate={controller}
         className={`single-card d-flex flex-column align-items-center ${
           collection.find((item) => item === helper.user_id)
             ? ""
             : "active-fav-in-card"
         }`}
+        onClick={() => {
+          router.push(`/work/find-helper/${helper.user_id}`);
+        }}
       >
-        <img
+        <motion.img
+          layout
           className="single-card-img"
           src={helper.cover_photo}
           alt="貓頭貼"
         />
-        <div className="single-card-content">
-          <div className="single-card-title size-6">{helper.name}</div>
-          <div className="ranking d-flex align-items-center mb-1">
-            <Rating
-              name="half-rating-read"
-              value={parseFloat(helper.average_star)}
-              precision={0.5}
-              readOnly
-              emptyIcon={<StarIcon style={{ opacity: 0.35 }} />}
-            />
-
-            <span className="ms-1 size-7">
+        <motion.div layout className="single-card-content">
+          <motion.div layout className="single-card-title size-6">
+            {helper.name}
+          </motion.div>
+          <motion.div layout className="ranking d-flex align-items-center mb-1">
+            {/* <span layout className="ms-1 size-7">
               ({helper.review_count === null ? "0" : helper.review_count})
-            </span>
-          </div>
+            </span> */}
+          </motion.div>
           <div className="single-card-info d-flex justify-content-between">
             <div>
-              <p className="m-size-7">{helper.service_county}</p>
-              <p className="service-items m-size-7">
-                服務項目：
+              <div className="service-items m-size-7">
                 {service
                   .filter((item) => item.value != 0)
                   .map((item, index, arr) =>
                     index < arr.length - 1 ? (
-                      <span>{item.label}、</span>
+                      <span className="tag-btns">{item.label}</span>
                     ) : (
-                      <span>{item.label}</span>
+                      <span className="tag-btns">{item.label}</span>
                     )
                   )}
-              </p>
+              </div>
               <p className="service-time m-size-7">
+                <FaUserClock />
                 服務時間：<span>周一至周日</span>
+              </p>
+
+              <p className="m-size-7 service-county">
+                <ImLocation2 />
+                {helper.service_county}
               </p>
             </div>
 
@@ -509,16 +531,25 @@ const SingleHelperCard = ({ helper, collection, setCollection }) => {
             </div>
           </div>
 
-          <div className="d-flex justify-content-between align-items-end price">
-            <div>
-              單次<span className="size-6"> NT$140</span>
-            </div>
-            <button className="size-6 animate-button-one">
+          <div className="d-flex justify-content-between align-items-end ">
+            {/* <button className="size-6 animate-button-one">
               <Link href={`/work/find-helper/${helper.user_id}`}>洽詢</Link>
-            </button>
+            </button> */}
           </div>
+          <Rating
+            name="half-rating-read"
+            value={parseFloat(helper.average_star)}
+            precision={0.5}
+            readOnly
+            emptyIcon={<StarIcon style={{ opacity: 0.35 }} />}
+          />
+        </motion.div>
+        <div className="single-card-footer">
+          <p className="price d-flex justify-content-end align-items-center">
+            單次<span className="size-6"> NT$140</span>
+          </p>
         </div>
-      </div>
+      </motion.div>
     </>
   );
 };
@@ -531,7 +562,7 @@ const Collection = ({ collection, setCollection }) => {
   useEffect(() => {
     WorkService.getFavHelpers(collection)
       .then((response) => {
-        console.log(response.data.results);
+        // console.log(response.data.results);
         if (response.data.results.length > 0) {
           setFavInfo(response.data.results);
         } else {
@@ -549,7 +580,15 @@ const Collection = ({ collection, setCollection }) => {
       <Button onClick={change}>Open SideSheet</Button>
       <SideSheet
         className="favorite-helper-sidesheet"
-        title="滑动侧边栏"
+        title={
+          <button
+            onClick={() => {
+              setCollection([]);
+            }}
+          >
+            清除全部
+          </button>
+        }
         visible={visible}
         onCancel={change}
       >
@@ -657,7 +696,10 @@ const MissionHelperList = () => {
   const [currentPage, setPage] = useState(1);
   const [totalRows, setTotalRows] = useState(18);
   const { collection, setCollection } = useHelper();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, userId } = useAuth();
+  const [isActive, setIsActive] = useState(false);
+  const controller = useAnimationControls();
+
   useEffect(() => {
     if (!currentSearch) {
       setPage(1);
@@ -670,7 +712,9 @@ const MissionHelperList = () => {
         )
           .then((response) => {
             console.log(response);
-            setAllHelpers(response?.data?.data);
+            setTimeout(() => {
+              setAllHelpers(response?.data?.data);
+            }, [200]);
             setTotalRows(response?.data?.totalRows);
           })
           .catch((e) => {
@@ -678,17 +722,19 @@ const MissionHelperList = () => {
           });
       } else {
         WorkService.getAllHelpers(filterType, 1)
-          .then((res) => {
-            setAllHelpers(res.data.data);
-            setTotalRows(res?.data?.totalRows);
+          .then((response) => {
+            setTimeout(() => {
+              setAllHelpers(response?.data?.data);
+            }, [200]);
+            setTotalRows(response?.data?.totalRows);
           })
           .catch((e) => {
             console.log(e);
           });
       }
       WorkService.getFamousHelper(filterType)
-        .then((res) => {
-          setFamous(res?.data.famous);
+        .then((response) => {
+          setFamous(response?.data.famous);
           // console.log(res?.data.data);
         })
         .catch((e) => {
@@ -707,7 +753,9 @@ const MissionHelperList = () => {
       )
         .then((response) => {
           console.log(response);
-          setAllHelpers(response?.data?.data);
+          setTimeout(() => {
+            setAllHelpers(response?.data?.data);
+          }, [200]);
           setTotalRows(response?.data?.totalRows);
         })
         .catch((e) => {
@@ -715,16 +763,20 @@ const MissionHelperList = () => {
         });
     } else {
       WorkService.getAllHelpers(filterType, currentPage)
-        .then((res) => {
-          setAllHelpers(res.data.data);
-          setTotalRows(res?.data?.totalRows);
+        .then((response) => {
+          setTimeout(() => {
+            setAllHelpers(response?.data?.data);
+          }, [200]);
+          setTotalRows(response?.data?.totalRows);
         })
         .catch((e) => {
           console.log(e);
         });
     }
   }, [currentPage]);
-
+  useEffect(() => {
+    console.log(userId);
+  }, [userId]);
   // useEffect(() => {
   //   // 初次渲染時載入儲存在localStorage的收藏
   //   if (localStorage.getItem("helperFav"))
@@ -744,8 +796,10 @@ const MissionHelperList = () => {
     setOrder(null);
     setCurrentSearch(null);
     WorkService.getAllHelpers(filterType, currentPage)
-      .then((res) => {
-        setAllHelpers(res?.data?.data);
+      .then((response) => {
+        setTimeout(() => {
+          setAllHelpers(response?.data?.data);
+        }, [200]);
       })
       .catch((e) => {
         console.log(e);
@@ -760,7 +814,9 @@ const MissionHelperList = () => {
       .then((response) => {
         // 查詢時，清除各種state設定值
         // console.log(response);
-        setAllHelpers(response?.data.data);
+        setTimeout(() => {
+          setAllHelpers(response?.data?.data);
+        }, [200]);
         setPage(1);
         setTotalRows(response?.data?.totalRows);
         setCurrentSearch(search);
@@ -771,6 +827,29 @@ const MissionHelperList = () => {
       .catch((e) => {
         console.log(e);
       });
+  };
+
+  const handleHelperAnimate = async () => {
+    controller.start({
+      opacity: 0,
+      x: 15,
+      transition: {
+        duration: 0.3,
+        ease: "easeIn",
+      },
+    });
+    await controller.start({
+      x: 120,
+      transition: {
+        duration: 0.4,
+        ease: "easeOut",
+      },
+    });
+    await controller.start({
+      opacity: 1,
+      x: 0,
+      transition: { duration: 1, ease: "easeIn" },
+    });
   };
 
   return (
@@ -836,6 +915,8 @@ const MissionHelperList = () => {
           setPage={setPage}
           setTotalRows={setTotalRows}
           setCurrentSearch={setCurrentSearch}
+          controller={controller}
+          handleHelperAnimate={handleHelperAnimate}
         />
       </div>
       {isAuthenticated && (
@@ -909,6 +990,7 @@ const MissionHelperList = () => {
               helper={helper}
               collection={collection}
               setCollection={setCollection}
+              controller={controller}
             />
           ))}
         </section>

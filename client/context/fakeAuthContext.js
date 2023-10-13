@@ -13,7 +13,7 @@ const AuthContext = createContext();
 
 const initialState = {
   Token: null,
-  isAuthenticated: false,
+  isAuthenticated: null,
 };
 
 function reducer(state, action) {
@@ -50,11 +50,10 @@ function AuthProvider({ children }) {
   const [userId, setUserId] = useState(null);
 
   useEffect(() => {
-    const data = localStorage.getItem("data");
+    const data = JSON.parse(localStorage.getItem("data"));
     const token = localStorage.getItem("token");
-
     if (data && token) {
-      setUserId(data.id);
+      setUserId(data);
       dispatch({ type: "login", payload: jwt(token) });
     }
   }, []);
@@ -68,7 +67,7 @@ function AuthProvider({ children }) {
 
   return (
     <AuthContext.Provider
-      value={{ Token, isAuthenticated, login, logout, userId }}
+      value={{ Token, isAuthenticated, login, logout, userId, setUserId }}
     >
       {children}
     </AuthContext.Provider>

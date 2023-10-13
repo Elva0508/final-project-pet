@@ -3,10 +3,13 @@ import BlockOne from "@/components/home/block-one";
 import BlockTwo from "@/components/home/block-two";
 import BlockTwoMobile from "@/components/home/block-two-mobile";
 import BlockThree from "@/components/home/block-three";
+import BlockFourMobile from "@/components/home/block-four-mobile";
 import BlockFive from "@/components/home/block-five";
 import BlockFiveMobile from "@/components/home/block-five-mobile";
 import BlockSix from "@/components/home/block-six";
 import BlockSixMobile from "@/components/home/block-six-mobile";
+import HomeProductCard2 from "@/components/home/home-product-card2";
+import HomeProductCardHot from "@/components/home/home-product-card-hot";
 
 export function HomeVedio() {
   return (
@@ -104,14 +107,14 @@ export default function Index() {
       <div className="home">
         <div className="container my-5">
           <div className="block-two my-5">
-            <div className="size-2 home-tilte d-flex justify-content-center mb-5">
+            <div className="size-3 home-tilte d-flex justify-content-center mb-3 border-bottom">
+              {/* <div>
+                <img src="/home/1.png" />
+              </div> */}
               新品推薦
             </div>
-            <div className="my-5">
-              <BlockTwo />
-            </div>
-            <div className="my-5">
-              <BlockTwo />
+            <div className="home-product-card row gy-5">
+              <HomeProductCard2 />
             </div>
           </div>
 
@@ -125,18 +128,15 @@ export default function Index() {
           </div>
 
           <div className="block-three my-5">
-            <BlockThree />
+            <BlockThree className="my-5" />
           </div>
 
           <div className="block-four my-5">
-            <div className="size-2 home-tilte d-flex justify-content-center mb-5">
+            <div className="size-3 home-tilte d-flex justify-content-center mt-3 pt-5">
               本週排行榜
             </div>
-            <div className="mb-3">
-              <BlockTwo />
-            </div>
-            <div className="mb-3">
-              <BlockTwo />
+            <div className="home-product-card row gy-5  mb-5 pb-5">
+              <HomeProductCardHot />
             </div>
           </div>
 
@@ -145,7 +145,7 @@ export default function Index() {
               本週排行榜
             </div>
             <div className="my-5">
-              <BlockTwoMobile />
+              <BlockFourMobile />
             </div>
           </div>
 
@@ -163,11 +163,11 @@ export default function Index() {
                 className="img-fluid"
                 alt="..."
               ></img> */}
-              <div className="size-2 mt-3 home-tilte d-flex justify-content-center">
+              <div className="size-3 mt-3 home-tilte d-flex justify-content-center">
                 小貓兩三知
               </div>
             </div>
-            <div className="px-5">
+            <div className="px-5 py-5">
               <BlockSix />
             </div>
           </div>
@@ -179,7 +179,7 @@ export default function Index() {
                 className="img-fluid"
                 alt="..."
               ></img> */}
-              <div className="size-2 mt-3 home-tilte d-flex justify-content-center">
+              <div className="size-3 mt-3 home-tilte d-flex justify-content-center">
                 小貓兩三知
               </div>
             </div>

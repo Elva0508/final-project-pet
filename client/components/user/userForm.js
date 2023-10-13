@@ -82,7 +82,7 @@ const [userData, setUserData] = useState(null);
             <label className={userRfs}>性別：</label>
             <div>
               <input
-                //class="form-check-input position-static"
+          
                 type="radio"
                 name="blankRadio"
                 id="blankRadio1"
@@ -93,7 +93,7 @@ const [userData, setUserData] = useState(null);
               />
               男
               <input
-                // class="form-check-input position-static"
+      
                 type="radio"
                 name="blankRadio"
                 id="blankRadio1"

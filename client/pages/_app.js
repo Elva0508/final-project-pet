@@ -18,12 +18,12 @@ export default function App({ Component, pageProps }) {
     <AuthProvider>
       <CartProvider>
         <HelperProvider>
-          <Layout>
-            <ActivePageProvider>
+          <ActivePageProvider>
+            <Layout>
               {pathname === "/work/find-helper" ? "" : <BreadCrumb />}
               <Component {...pageProps} />
-            </ActivePageProvider>
-          </Layout>
+            </Layout>
+          </ActivePageProvider>
         </HelperProvider>
       </CartProvider>
     </AuthProvider>

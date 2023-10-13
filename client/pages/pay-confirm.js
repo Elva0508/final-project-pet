@@ -1,9 +1,13 @@
 import { useRouter } from 'next/router';
+import { useAuth } from '@/context/fakeAuthContext';
+import {useEffect} from 'react'
+
 
 
 function PayConfirm(props) {
+
   const router = useRouter();
-  
+
   return (
     <>
       <div className='container my-5 pay-confirm text-center'>

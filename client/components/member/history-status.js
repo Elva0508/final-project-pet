@@ -1,14 +1,11 @@
-import React, { useState } from "react";
-import { GrFormPrevious } from "react-icons/gr";
-import { GrFormNext } from "react-icons/gr";
+import React, { useState  } from "react";
 import dayjs from "dayjs";
 import axios from "axios";
 import Pagination from '@/components/pagination'
 
-export default function HistoryStatusOne({ history ,getHistory ,currentScreen}) {
+export default function HistoryStatusOne({ history ,getHistory ,currentScreen,idCounts,activePage,setActivePage}) {
 
-  const [activePage, setActivePage] = useState(1)
-  const itemsPerPage = 5;
+   const itemsPerPage = 5;
   const startIndex = (activePage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const type=history.filter((v)=>v.mission_status==currentScreen)
@@ -37,7 +34,8 @@ export default function HistoryStatusOne({ history ,getHistory ,currentScreen}) 
     return newDay;
   };
 
-  const removetype = async (id) => {
+  const removetype = async (userid,id) => {
+    console.log(userid);
     console.log(id);
     try {
       const response = await axios.put(
@@ -47,8 +45,11 @@ export default function HistoryStatusOne({ history ,getHistory ,currentScreen}) 
     } catch (error) {
       console.error("Error:", error);
     }
-    getHistory()
+    getHistory(userid)
   };
+
+  console.log(idCounts);
+
 
 
 
@@ -84,12 +85,12 @@ export default function HistoryStatusOne({ history ,getHistory ,currentScreen}) 
                   )}
                 </p>
 
-                <p className="size-7 follow">6-10人追蹤</p>
+                <p className="size-7 follow">{idCounts[v.mission_id]==undefined?("0"):(idCounts[v.mission_id])}人追蹤</p>
               </div>
               <div className="d-flex align-items-center col-4 col-md-3 ps-md-5 ms-md-5 ms-0">
                 {v.mission_status === 1 ? (
                   <button className=" btn-confirm m-2 size-6" 
-                  onClick={() =>{removetype(v.mission_id)}}
+                  onClick={() =>{removetype(v.post_user_id,v.mission_id)}}
                   >下架任務</button>
                 ) : (
                   <div className="m-2 size-6 remove px-4 py-2">已下架</div>
