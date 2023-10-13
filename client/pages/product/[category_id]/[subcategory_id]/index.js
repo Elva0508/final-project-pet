@@ -105,7 +105,7 @@ const [productData, setProductData] = useState([]); // 初始化為一個帶有 
       
           fetchData();
         }
-        // eslint-disable-next-line
+        // eslint-disable-next-lineuserIdcategory
       }, [router.query]);
 
     
@@ -178,12 +178,30 @@ const [productData, setProductData] = useState([]); // 初始化為一個帶有 
     };
 
     //讀出大類小類
+    // const [subcategoryData, setSubcategoryData] = useState({ result: [] });
+    // useEffect(() => {
+    //     axios.get("http://localhost:3005/api/product/category").then((response) => {
+    //         setSubcategoryData({ result: response.data.result });
+    //     });
+    // }, [])
+
+    
+    //讀出大類
     const [subcategoryData, setSubcategoryData] = useState({ result: [] });
     useEffect(() => {
         axios.get("http://localhost:3005/api/product/category").then((response) => {
             setSubcategoryData({ result: response.data.result });
         });
     }, [])
+        //讀出小類
+        const [subcategoryDataOne, setSubcategoryDataOne] = useState([]);
+        useEffect(() => {
+            axios.get("http://localhost:3005/api/product/subcategory").then((response) => {
+                setSubcategoryDataOne(response.data.result );
+                console.log(subcategoryDataOne);
+            });
+            
+        }, [])
 
     //篩選＋排序+關鍵字
     // 狀態變數，用於存儲商品數據、加載狀態和其他篩選選項
@@ -255,6 +273,14 @@ const [productData, setProductData] = useState([]); // 初始化為一個帶有 
     // 處理排序選擇的變化
     const handleSortChange = (event) => {
         const selectedValue = event.target.value;
+        if(selectedValue=="price_desc"){
+            const newProduct=productData.sort((a, b) => b.specialoffer - a.specialoffer);
+            setProductData(newProduct)
+        }else{
+            const newProduct=productData.sort((a, b) => a.specialoffer - b.specialoffer);
+            setProductData(newProduct)
+
+        }
         setSelectedSort(selectedValue); // 更新選擇的排序方式
         console.log(selectedValue)
     };
@@ -418,21 +444,25 @@ const [productData, setProductData] = useState([]); // 初始化為一個帶有 
                                             </h2>
                                             <div id={`panelsStayOpen-collapseCategory-${index}`} className={`accordion-collapse collapse ${activeKey === index ? 'show' : ''}`}>
                                                 <div className="accordion-body row">
-                                                    {category.subcategories && category.subcategoriesid.split(',').map((subcategory, subIndex) => (
-                                                        <button
-                                                            className="button-subcategory size-7"
-                                                            type="button"
-                                                            key={subIndex}
-                                                            onClick={() => {
-                                                                
-                                                                router.push(`/product/${category.category_id}/${subcategory}`)
-                                                                // handlesubCategoryChange(subcategory.trim());
-                                                                // console.log(`Button for subcategory ${subcategory.trim()} clicked.`);
-                                                            }}
-                                                        >
-                                                            {subcategory.trim()}
-                                                        </button>
-                                                    ))}
+                                                    {subcategoryDataOne.map((v, i) => {
+                                                    if (v.category_id === category.category_id) {
+                                                        return (
+                                                            <button
+                                                                className="button-subcategory size-7"
+                                                                type="button"
+                                                                key={i}
+                                                                onClick={() => {
+                                                                    router.push(`/product/${category.category_id}/${v.subcategory_id}`);
+                                                                    // handlesubCategoryChange(subcategory.trim());
+                                                                    // console.log(`Button for subcategory ${subcategory.trim()} clicked.`);
+                                                                }}
+                                                            >
+                                                                {v.subcategory_name}
+                                                            </button>
+                                                        );
+                                                    }
+                                                    return null; // 或者直接不返回任何内容
+                                                })}
                                                 </div>
                                             </div>
                                         </div>
@@ -538,20 +568,25 @@ const [productData, setProductData] = useState([]); // 初始化為一個帶有 
                                         </h2>
                                         <div id={`panelsStayOpen-collapseCategory-${index}`} className={`accordion-collapse collapse ${activeKey === index ? 'show' : ''}`}>
                                             <div className="accordion-body row">
-                                                {category.subcategories && category.subcategoriesid.split(',').map((subcategory, subIndex) => (
-                                                    <button
-                                                        className="button-subcategory size-7"
-                                                        type="button"
-                                                        key={subIndex}
-                                                        onClick={() => {
-                                                            router.push(`/product/${category.category_id}/${subcategory}`)
-                                                            // handlesubCategoryChange(subcategory.trim());
-                                                            // console.log(`Button for subcategory ${subcategory.trim()} clicked.`);
-                                                        }}
-                                                    >
-                                                        {subcategory.trim()}
-                                                    </button>
-                                                ))}
+                                                {subcategoryDataOne.map((v, i) => {
+                                                    if (v.category_id === category.category_id) {
+                                                        return (
+                                                            <button
+                                                                className="button-subcategory size-7"
+                                                                type="button"
+                                                                key={i}
+                                                                onClick={() => {
+                                                                    router.push(`/product/${category.category_id}/${v.subcategory_id}`);
+                                                                    // handlesubCategoryChange(subcategory.trim());
+                                                                    // console.log(`Button for subcategory ${subcategory.trim()} clicked.`);
+                                                                }}
+                                                            >
+                                                                {v.subcategory_name}
+                                                            </button>
+                                                        );
+                                                    }
+                                                    return null; // 或者直接不返回任何内容
+                                                })}
                                             </div>
                                         </div>
                                     </div>

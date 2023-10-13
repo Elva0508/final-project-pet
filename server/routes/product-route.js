@@ -41,22 +41,42 @@ router.get("/", (req, res) => {
 });
 
 //category&subcategory類別
+// router.get("/category", (req, res) => {
+//   connection.execute(
+//     `SELECT
+//     category.category_id,
+//     category.category_name,
+//     GROUP_CONCAT(subcategory.subcategory_id) as subcategoriesid,
+//     GROUP_CONCAT(subcategory.subcategory_name) as subcategories
+//     FROM category
+//     JOIN subcategory ON subcategory.category_id = category.category_id
+//     GROUP BY category.category_name
+//     ORDER BY category.category_id; `,
+//     (error, result) => {
+//       res.json({ result });
+//     }
+//   );
+// });
+
+//找大類
 router.get("/category", (req, res) => {
-  connection.execute(
-    `SELECT
-    category.category_id,
-    category.category_name,
-    GROUP_CONCAT(subcategory.subcategory_id) as subcategoriesid,
-    GROUP_CONCAT(subcategory.subcategory_name) as subcategories
-    FROM category
-    JOIN subcategory ON subcategory.category_id = category.category_id
-    GROUP BY category.category_name
-    ORDER BY category.category_id; `,
-    (error, result) => {
-      res.json({ result });
-    }
-  );
-});
+    connection.execute(
+      `SELECT * FROM category`,
+      (error, result) => {
+        res.json({ result });
+      }
+    );
+  });
+
+  //找小類
+router.get("/subcategory", (req, res) => {
+    connection.execute(
+      `SELECT * FROM subcategory`,
+      (error, result) => {
+        res.json({ result });
+      }
+    );
+  });
 
 //商品細節頁
 router.get("/product-detail/:product_id", (req, res) => {
