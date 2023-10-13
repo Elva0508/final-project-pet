@@ -149,6 +149,9 @@ $detail-block-width: 9px; //標題左側直槓槓
       }
     }
   }
+  .stop-sticky {
+    position: static;
+  }
   .right-block {
     padding: 0;
     margin-bottom: 2rem;

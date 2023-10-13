@@ -824,6 +824,16 @@ const HelperDetail = () => {
     setPage(page);
   };
   useEffect(() => {
+    document.addEventListener("scroll", () => {
+      const scrollY = document.scrollY;
+      const windowHeight = document.innerHeight;
+      const documentHeight = document.documentElement.scrollHeight;
+      const distanceToBottom = documentHeight - (scrollY + windowHeight);
+      console.log(distanceToBottom);
+      // if(window.scrollY > 2400)
+    });
+  }, []);
+  useEffect(() => {
     if (uid) {
       workService
         .getHelperDetail(uid)
