@@ -44,11 +44,11 @@ router.get('/user-profile/:user_id', (req, res) => {
 });
 router.put('/user-profile-change/:user_id', (req, res) => {
   const userId = req.params.user_id;
-  const { name, phone, city, area, address, birthday, pet_number } = req.body;
+  const { name, phone, city, area,postcode, address, birthday, pet_number } = req.body;
   
   connection.query(
-    'UPDATE userinfo SET name = ?, phone = ?, city = ?, area = ?, address = ?, birthday = ?, pet_number = ? WHERE user_id = ?',
-    [name, phone, city, area, address, birthday, pet_number, userId],
+    'UPDATE userinfo SET name = ?, phone = ?, city = ?, area = ?,postcode = ? ,address = ?, birthday = ?, pet_number = ? WHERE user_id = ?',
+    [name, phone, city, area,postcode, address, birthday, pet_number, userId],
     (err, results) => {
       if (err) {
         console.error('資料庫-更新錯誤：', err);
@@ -61,12 +61,12 @@ router.put('/user-profile-change/:user_id', (req, res) => {
 });
 
 router.put('/update-user-data', (req, res) => {
-  const { name, phone, city, area, address, birthday, pet_number } = req.body;
+  const { name, phone, city, area,postcode, address, birthday, pet_number } = req.body;
   const userId = 1; // replace with the actual user ID
 
   connection.query(
-    'UPDATE userinfo SET name = ?, phone = ?, city = ?, area = ?, address = ?, birthday = ?, pet_number = ? WHERE user_id = ?',
-    [name, phone, city, area, address, birthday, pet_number, userId],
+    'UPDATE userinfo SET name = ?, phone = ?, city = ?, area = ? ,postcode = ? , address = ?, birthday = ?, pet_number = ? WHERE user_id = ?',
+    [name, phone, city, area, address,postcode, birthday, pet_number, userId],
     (err, results) => {
       if (err) {
         console.error('資料庫-更新錯誤：', err);
