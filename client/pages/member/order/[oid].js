@@ -16,7 +16,7 @@ export default function Orderdetail() {
   const [detail, setDetail] = useState([{}]);
   const router = useRouter();
 
-  const handleSaveComment = async(productId,orderId) => {
+  const handleSaveComment = async(user_id,productId,orderId) => {
         try {
         const response = await axios.post(
           `http://localhost:3005/api/member-order-detail/comment`,
@@ -24,7 +24,8 @@ export default function Orderdetail() {
             comment: comments,
             star:value,
             productid:productId,
-            orderid:orderId
+            orderid:orderId,
+            user_id:user_id
           }
         );
         const updatedComment = response.data.updatedComment;
@@ -33,7 +34,7 @@ export default function Orderdetail() {
         console.error("Error:", error);
       }
     setShowCommentForm(false);
-    getDetail(orderId)
+    getDetail(orderId,user_id)
     setValue(0)
   };
 
@@ -72,7 +73,8 @@ export default function Orderdetail() {
     const id=localStorage.getItem("id")
     // 沒有token
     if (!token) {
-      window.location.href="/"
+      router.push("/")
+
     }
     console.log(id);
     console.log(token);
@@ -214,7 +216,7 @@ const back =(id)=>{
                               </button>
                               <button
                                 className="btn btn-confirm m-2 size-6 m-size-6"
-                                onClick={() => handleSaveComment(v.product_id,v.order_id)}
+                                onClick={() => handleSaveComment(v.user_id,v.product_id,v.order_id)}
                               >
                                 儲存
                               </button>
