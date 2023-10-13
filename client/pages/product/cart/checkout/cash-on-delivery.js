@@ -1,8 +1,11 @@
 import { useState ,useEffect} from 'react'
 import { useRouter } from 'next/router';
 import {BsCheckCircle} from 'react-icons/bs';
+import { useAuth } from '@/context/fakeAuthContext';
 
 function cashOnDelivery(props) {
+  const {userId} = useAuth()
+  const id=parseInt(userId)
   const router = useRouter();
   const [orderPrice, setOrderPrice] = useState(0)
   const [orderNumber, setOrderNumber] = useState(0)
@@ -11,21 +14,32 @@ function cashOnDelivery(props) {
   const [freight,setFreight]=useState(0)
   const [sale,setSale]=useState(0)
 
+  useEffect(()=>{
+    if (!id) {
+        router.push("/")
+      }
+  })
+
   useEffect(() => {
-    const lastCart = localStorage.getItem('finalCart');
-    setFinalCart(JSON.parse(lastCart))  
-    setOrderPrice(parseInt(localStorage.getItem('totalPrice')))
-    setOrderNumber(localStorage.getItem('orderNumber'))
-    setAllPrice(parseInt(localStorage.getItem('allPrice')))
-    setFreight(parseInt(localStorage.getItem('freight')))
-    setSale(parseInt(localStorage.getItem('sale')))
+    if(!localStorage.getItem('finalCart')){
+      router.push("/")
+    }else{
+      const lastCart = localStorage.getItem('finalCart');
+      setFinalCart(JSON.parse(lastCart))  
+      setOrderPrice(parseInt(localStorage.getItem('totalPrice')))
+      setOrderNumber(localStorage.getItem('orderNumber'))
+      setAllPrice(parseInt(localStorage.getItem('allPrice')))
+      setFreight(parseInt(localStorage.getItem('freight')))
+      setSale(parseInt(localStorage.getItem('sale')))
+    }
+
 }, [router.isReady]);
 
   const handleOrder = () => {
     localStorage.removeItem("orderNumber");
     localStorage.removeItem("totalPrice");
     localStorage.removeItem("freight");
-    localStorage.removeItem("newFinalCart");
+    localStorage.removeItem("finalCart");
     localStorage.removeItem("sale");
     localStorage.removeItem("allPrice");
     router.push("/member/order")
@@ -37,10 +51,10 @@ function cashOnDelivery(props) {
         <BsCheckCircle className='ischeck'/>
         </div>
 
-        <div className='d-flex justify-content-center mb-4'>
+        <div className='d-flex justify-content-center mb-4 delivery'>
           <div className=' title'>
-            <p className='size-5' >訂單編號：<span>{orderNumber}</span></p>
-            <p className='size-5' >訂單金額：<span>{orderPrice}元</span></p>
+            <p className='size-5 fw-bold' >訂單編號：<span>{orderNumber}</span></p>
+            <p className='size-5 fw-bold' >訂單金額：<span>{orderPrice}元</span></p>
           </div>
         </div>
 
