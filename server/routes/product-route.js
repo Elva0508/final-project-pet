@@ -137,7 +137,7 @@ router.get("/recommend", (req, res) => {
 //查看購物車內有甚麼商品
 router.get("/cart", (req, res) => {
     const userId = req.query.userId; // 從請求的 URL 中獲取用戶 token OK
-    console.log("會員"+ userId);
+    console.log("會員:::::::"+ userId);
     connection.execute(
         `SELECT cart.*, 
         p.product_name AS name,
@@ -178,6 +178,7 @@ router.put("/cart", (req, res) => {
 router.put("/cartplus", (req, res) => {
     console.log(req);
     const userId = req.query.userId; // 從請求的 URL 中獲取用戶 token OK
+    console.log("會員~~~~~" + userId);
     const { id, newQuantity, type } = req.body
     connection.execute(
         `UPDATE cart SET quantity=? WHERE user_id=? AND product_id=? AND product_type_id=?`,
@@ -281,28 +282,16 @@ router.get("/vendor", (req, res) => {
 });
 
 //加入收藏
-//查看收藏內有甚麼商品
-router.get("/collections", (req, res) => {
-    const userId = req.query.userId; // 從請求的 URL 中獲取用戶 token   
-    connection.execute(
-        `SELECT product_collections.*
-        FROM product_collections
-        WHERE user_id=?;`,
-        [userId], 
-        (error, result) => {
-            res.json({ result })
-        }
-    )
-})
-
 //用來新增收藏裡沒有的商品
 router.put("/collections", (req, res) => {
-    const userId = req.query.userId; // 從請求的 URL 中獲取用戶 token
-    const { product_id, product_type} = req.body; // 從請求主體中獲取 quantity 參數
-    console.log(product_id, product_type)
+    const userId = req.query.userId; // 从请求的 URL 中获取用户 token
+    const { product_id } = req.body;
+    console.log(product_id);
+    const product_type = 1; // 如果 product_type 需要使用，确保在这里定义
+
     connection.execute(
         `INSERT INTO product_collections(user_id, product_id, product_type) VALUES (?, ?, ?);`,
-        [userId, product_id, product_type], // 將 quantity 參數傳遞到 SQL 查詢中
+        [userId, product_id, product_type],
         (error, result) => {
             if (error) {
                 console.error("Error inserting into cart:", error);
@@ -313,5 +302,21 @@ router.put("/collections", (req, res) => {
         }
     );
 });
+
+//查看收藏內有甚麼商品
+router.get("/collections", (req, res) => {
+    const userId = req.query.userId; // 从请求的 URL 参数中获取用户 token   
+    console.log('會員收藏id:' + userId)
+    connection.execute(
+        `SELECT product_collections.*
+        FROM product_collections
+        WHERE user_id=?;`,
+        [userId],
+        (error, result) => {
+            res.json({ result });
+        }
+    );
+});
+
 
 module.exports = router;

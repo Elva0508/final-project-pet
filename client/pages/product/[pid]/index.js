@@ -1,4 +1,3 @@
-// 商品細節頁pid
 import React, { useState } from 'react';
 import Counter from '@/components/product/quantity-counter';
 import { AiFillStar } from 'react-icons/ai';
@@ -52,12 +51,7 @@ export default function ProductDetail() {
     const handleDecrement = () => {
         if (count > 0) {
             setCount(count - 1);
-        }
-    };
-    const handleIncrement = () => {
-        setCount(count + 1);
-    };
-
+        } }; const handleIncrement = () => { setCount(count + 1); };
 
     //商品介紹和推薦跳頁
     const [activeSection, setActiveSection] = useState('product-description')
@@ -153,11 +147,11 @@ export default function ProductDetail() {
             })
             .catch((error) => {
                 console.error('Error fetching random products:', error);
-            });
-
-        getCollection()
-        
+            });      
     }, []);
+    
+    //查看收藏商品
+    // getCollection()
 
     // 添加商品到購物車的函式
     const { cart, setCart } = useCart();
@@ -227,22 +221,21 @@ export default function ProductDetail() {
     //儲存選中的type_id-selectedTypeId 加到購物車時已經有寫了
     // const [selectedTypeId, setSelectedTypeId] = useState('');
     const getCollection = () => {
-        axios.get(`http://localhost:3005/api/product/cart?userId=${userId}`)
+        axios.get(`http://localhost:3005/api/product/collections?userId=${userId}`)
             .then((response) => {
                 setCollection(response.data.result);
-                console.log(response.data.result)
+                console.log(response.data.result);
             })
             .catch((error) => {
                 console.error("Error:", error);
             });
-        
     }
 
-    const addCollection = async (product_id, product_type) => {
-        console.log(product_id, product_type)
+    const addCollection = async (product_id) => {
+        console.log(product_id);
 
-        // 檢查收藏中是否已經存在具有相同 id 和類型的商品
-        const have = collection.find((v) => v.product_id == product_id && v.type_id == product_type);
+        // 檢查收藏中是否已經存在具有相同 id 的商品
+        const have = collection.find((v) => v.product_id === product_id);
         console.log(have);
 
         // 如果購物車中沒有相同的商品
@@ -251,27 +244,26 @@ export default function ProductDetail() {
                 // 發送HTTP請求將商品添加到購物車
                 const response = await axios.put(
                     `http://localhost:3005/api/product/collections?userId=${userId}`,
-                    { product_id, product_type },
-                    console.log(userId, product_id, product_type)
+                    { product_id }
                 );
+                console.log(userId, product_id);
+                // 獲取最新的收藏資料
+                getCollection();
             } catch (error) {
                 console.error("錯誤：", error);
             }
-
-            // 獲取最新的收藏資料
-            getCollection();
+        } else { // 如果購物車中已經存在相同的商品
+            try {
+                getCollection();
+                // 在这里执行具体的操作，例如显示警告
+                alert('已加入收藏');
+               
+            } catch (error) {
+                console.error("錯誤：", error);
+            }
         }
-        //  else { // 如果購物車中已經存在相同的商品
-        //     try {
-
-        //     } catch (error) {
-        //         console.error("錯誤：", error);
-        //     }
-
-        //     // 獲取最新收藏資料
-        //     getCart();
-        // }
     };
+
 
 
     return (
