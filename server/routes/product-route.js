@@ -174,6 +174,7 @@ router.get("/recommend", (req, res) => {
 //     );
 // });
 
+//新增購物車
 router.put("/cart1/:user_id", (req, res) => {
     const userid = req.params.user_id
     console.log(userid);
@@ -202,9 +203,6 @@ router.put("/cart2/:user_id", (req, res) => {
         }
     )
 })
-
-
-
 
 //產品列表頁大類小類篩選＋價格篩選＋上架時間與價格排序
 router.get("/filter_sort", (req, res) => {
@@ -321,7 +319,7 @@ router.put("/collections", (req, res) => {
 });
 
 //查看收藏內有甚麼商品
-router.get("/collections", (req, res) => {
+router.get("/collections/:user_id", (req, res) => {
     const userId = req.query.userId; // 从请求的 URL 参数中获取用户 token   
     console.log('會員收藏id:' + userId)
     connection.execute(

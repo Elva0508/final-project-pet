@@ -186,6 +186,64 @@ img{
 
   }
 
+  
+
+   .evaluation-bar {
+    $block-width: calc(100% - 3px);
+    width: calc(100% - 80px);
+    display: flex;
+    height: auto;
+    margin: 1rem auto;
+    &-left {
+      width: calc($block-width * 0.5);
+
+      .ranking svg {
+        font-size: 42px;
+      }
+    }
+    &-divider {
+      width: 2px;
+      height: 200px;
+      background-color: darken($light-gray, 30%);
+    }
+    &-right {
+      width: calc($block-width * 0.5);
+
+      display: flex;
+      flex-direction: column;
+      // justify-content: center;
+      align-items: center;
+      .bar-group {
+        display: flex;
+        // justify-content: center;
+        align-items: center;
+        // margin-left: 4rem;
+      }
+      .percentage {
+        width: 260px;
+        height: 10px;
+        display: flex;
+        margin-left: 0.8rem;
+        background-color: $light-gray;
+        --width: 5%; //評論總數的百分比
+        .have {
+          // width: var(--width);
+          background-color: $hover;
+          border-radius: 0 2px 2px 0;
+        }
+      }
+    }
+    @media screen and (max-width: 900px) and (min-width: 768px) {
+      .evaluation-bar-left {
+        width: calc($block-width * 0.4);
+      }
+
+      .evaluation-bar-right {
+        width: calc($block-width * 0.6);
+      }
+    }
+  }
+
 
 
 
