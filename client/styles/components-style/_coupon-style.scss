@@ -1,9 +1,9 @@
 #container-coupon {
-    position: relative;
-    // margin: auto;
-    overflow: hidden;
-    width: 600px;
-    height: 300px;
+  position: relative;
+  // margin: auto;
+  overflow: hidden;
+  width: 600px;
+  height: 300px;
 
   p {
     margin-top: -5px;
@@ -78,36 +78,32 @@ button,
   &:hover {
     background: darken($white, 20%);
   }
-  
 
-  .cat1{
+  .cat1 {
     position: absolute;
     z-index: 2;
     animation: roll 3s ease-in-out infinite;
   }
-  
 
-  
   .shadow {
     position: absolute;
     width: 30%;
     height: 3%;
-    opacity: .5;
+    opacity: 0.5;
     background: $dark;
     left: 35%;
     top: 42%;
     border-radius: 50%;
     z-index: 1;
   }
-  
+
   .scale {
     animation: scale 1s ease-in infinite;
   }
   .move {
     animation: move 3s ease-in-out infinite;
   }
-  
-  
+
   .message-coupon {
     position: absolute;
     width: 100%;
@@ -116,79 +112,79 @@ button,
     top: 43%;
     padding: 30px 0;
   }
-  
 
-.coupon-shadow {
-  position: absolute;
-  width: 30%;
-  height: 3%;
-  opacity: 0.5;
-  background: $dark;
-  left: 35%;
-  top: 42%;
-  border-radius: 50%;
-  z-index: 1;
-}
+  .coupon-shadow {
+    position: absolute;
+    width: 30%;
+    height: 3%;
+    opacity: 0.5;
+    background: $dark;
+    left: 35%;
+    top: 42%;
+    border-radius: 50%;
+    z-index: 1;
+  }
 
-.scale {
-  animation: scale 1s ease-in infinite;
-}
-.move {
-  animation: move 3s ease-in-out infinite;
-}
+  .scale {
+    animation: scale 1s ease-in infinite;
+  }
+  .move {
+    animation: move 3s ease-in-out infinite;
+  }
 
-.message-coupon {
-  position: absolute;
-  width: 100%;
-  text-align: center;
-  height: 40%;
-  top: 43%;
-  padding: 30px 0;
-}
+  .message-coupon {
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    height: 40%;
+    top: 43%;
+    padding: 30px 0;
+  }
 
-@keyframes bounce {
-  50% {
-    transform: translateY(-10px);
+  @keyframes bounce {
+    50% {
+      transform: translateY(-10px);
+    }
   }
-}
 
-@keyframes scale {
-  50% {
-    transform: scale(0.9);
+  @keyframes scale {
+    50% {
+      transform: scale(0.9);
+    }
   }
-}
 
-@keyframes roll {
-  0% {
-    transform: rotate(0deg);
-    left: 25%;
+  @keyframes roll {
+    0% {
+      transform: rotate(0deg);
+      left: 25%;
+    }
+    50% {
+      left: 60%;
+      transform: rotate(168deg);
+    }
+    100% {
+      transform: rotate(0deg);
+      left: 25%;
+    }
   }
-  50% {
-    left: 60%;
-    transform: rotate(168deg);
-  }
-  100% {
-    transform: rotate(0deg);
-    left: 25%;
-  }
-}
 
-@keyframes move {
-  0% {
-    left: 25%;
+  @keyframes move {
+    0% {
+      left: 25%;
+    }
+    50% {
+      left: 60%;
+    }
+    100% {
+      left: 25%;
+    }
   }
-  50% {
-    left: 60%;
-  }
-  100% {
-    left: 25%;
-  }
-}
-@keyframes slide {
-  0% {
-    transform: rotate(0);
-  }
-  100% {
-    transform: rotate(360deg);
+  @keyframes slide {
+    0% {
+      transform: rotate(0);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
   }
 }
