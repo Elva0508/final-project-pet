@@ -1130,6 +1130,12 @@ export default function MissionList() {
     getAllMissions()
     console.log("狀態變數已重置為預設值");
   };
+  const handleClearSettings = () => {
+    // 使用 setTimeout 延遲執行 clearSettings 本來沒有寫 但clearSettings要點2次才反應
+    setTimeout(() => {
+      clearSettings();
+    }, 0);
+  };
 
 
 
@@ -1143,7 +1149,7 @@ export default function MissionList() {
               <Link href="/">首頁</Link>
             </li>
             <li className="breadcrumb-item" aria-current="page">
-              <Link href="/work/find-mission" onClick={clearSettings}>小貓上工(找任務)</Link>
+              <Link href="/work/find-mission" onClick={handleClearSettings}>小貓上工(找任務)</Link>
             </li>
             {search ? (
               <>
