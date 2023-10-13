@@ -32,6 +32,8 @@ $dropdown-border-width: 0;
 // 英文字體
 @import "https://fonts.googleapis.com/css2?family=Poppins:wght@400&display=swap";
 
+@import "@/node_modules/react-credit-cards-2/dist/lib/styles.scss";
+
 // 定義中文字體用
 body {
   font-family: "Poppins", "Noto Sans TC", Helvetica, Arial, "PingFang TC",
@@ -158,7 +160,7 @@ ul {
 @import "@/styles/components-style/_quantity-counter.scss";
 @import "@/styles/_product-list.scss";
 @import "@/styles/product/_product_cart.scss";
-@import "@/styles/product/_product_cart._checkout.scss";
+@import "@/styles/product/_product_cart_checkout.scss";
 @import "@/styles/components-style/_product-list-offcanvas.scss";
 @import "@/styles/product/_pay.scss";
 

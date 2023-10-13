@@ -2,7 +2,7 @@
     position: relative;
     // margin: auto;
     overflow: hidden;
-    width: 700px;
+    width: 600px;
     height: 300px;
 
     p {
@@ -98,73 +98,14 @@
     animation: bounce 1s ease-in infinite;
   }
   
-//   .face {
-//     position: absolute;
-//     width: 22%;
-//     height: 22%;
-//     background: $white;
-//     border-radius: 50%;
-//     border: 1px solid $dark;
-//     top: 21%;
-//     left: 37.5%;
-//     z-index: 2;
-//     animation: bounce 1s ease-in infinite;
-//   }
-  
-//   .face2 {
-//     position: absolute;
-//     width: 25%;
-//     height: 22%;
-//     background: #fff;
-//     border-radius: 50%;
-//     border: 1px solid $dark;
-//     top: 21%;
-//     left: 37.5%;
-//     z-index: 2;
-//     animation: roll 3s ease-in-out infinite;
-//   }
+
   .cat1{
     position: absolute;
     z-index: 2;
     animation: roll 3s ease-in-out infinite;
   }
   
-//   .eye {
-//     position: absolute;
-//     width: 5px;
-//     height: 5px;
-//     background: #000;
-//     border-radius: 50%;
-//     top: 40%;
-//     left: 20%;
-//     background-image: url(https://ibb.co/Y00NSLg);
-//   }
-  
-//   .right {
-//     left: 68%;
-//   }
-  
-//   .mouth {
-//     position:absolute;
-//     top: 43%;
-//     left: 41%;
-//     width: 7px;
-//     height: 7px;
-//     border-radius: 50%;
-//   }
-  
-//   .happy {
-//     border: 2px solid;
-//     border-color: transparent $dark $dark transparent;
-//     transform: rotate(45deg);
-//   }
-  
-//   .sad {
-//     top: 49%;
-//     border: 2px solid;
-//     border-color: $dark transparent transparent $dark;
-//     transform: rotate(45deg);
-//   }
+
   
   .shadow {
     position: absolute;

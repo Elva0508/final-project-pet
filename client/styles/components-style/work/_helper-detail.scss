@@ -51,7 +51,7 @@ $detail-block-width: 9px; //標題左側直槓槓
     background-color: white;
     margin: 0 1rem;
     // padding: 1rem 1rem 1.5rem 1rem;
-    box-shadow: 0px 0px 10px rgba(128, 128, 128, 0.452);
+    box-shadow: 0px 4px 10px rgba(128, 128, 128, 0.452);
     border-radius: 2px;
   }
   .left-block {
@@ -60,7 +60,7 @@ $detail-block-width: 9px; //標題左側直槓槓
     justify-content: start;
     align-items: center;
     position: sticky;
-    top: 24px;
+    top: 10px;
     .avatar {
       overflow: hidden;
       margin-top: 1rem;
@@ -68,8 +68,8 @@ $detail-block-width: 9px; //標題左側直槓槓
       // background-color: $light-gray;
       // border: 4px solid
       //   linear-gradient(to bottom, #f0c3969b, lighten($hover, 15%));
-      max-width: 220px;
-      max-height: 220px;
+      max-width: 200px;
+      max-height: 200px;
       min-width: 150px;
       height: 150px;
       width: 20vw;
@@ -109,8 +109,8 @@ $detail-block-width: 9px; //標題左側直槓槓
     .profile-divider {
       width: 90%;
       margin: auto;
-      margin-top: 1rem;
-      padding: 0.5rem 2rem;
+      margin-top: 0.5rem;
+      padding: 0 2rem;
       color: darken($light-gray, 30%);
       height: 2px;
     }

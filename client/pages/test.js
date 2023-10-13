@@ -5,7 +5,8 @@ import CatLoading from "@/components/cat-loading";
 const Test = () => {
   return (
     <>
-      <CatLoading />
+      {/* <CatLoading /> */}
+      <SingleCouponFree />
     </>
   );
 };

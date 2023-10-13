@@ -5,7 +5,10 @@ import Image from "next/image";
 import showPwdImg from "@/assets/showPwd.svg";
 import hidePwdImg from "@/assets/hidePwd.svg";
 
+
+
 const RegisterForm = () => { 
+
   const initialValues = {
     userName: "",
     signupEmail: "",
@@ -28,12 +31,25 @@ const RegisterForm = () => {
     confirm: Yup.boolean().oneOf([true], "請閱讀並同意會員條款"),
   });
 
-  const onSubmit = (values) => {
-    console.log(values);
-  };
+  const onSubmit = async(values,{setSubmitting})=>{
+    try{
+      const response = await fetch('http://localhost:3005/api/auth-jwt/register', {
+        method: "POST",
+        headers:{
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(values)
+      });
+      const data = await response.json();
+      console.log(data)
+      alert("註冊成功")
+    }catch(error){console.error(error)}
+    finally{setSubmitting(false)}
+  }
 
-  const [pwd, setPwd]=useState('')
+ 
 const [viewPwd,SetViewPwd]=useState(false)
+const [viewPwdConf,SetViewPwdConf]=useState(false)
 
   return (
     <Formik
@@ -49,7 +65,7 @@ const [viewPwd,SetViewPwd]=useState(false)
               className="form-input center-input"
               type="text"
               name="userName"
-              id="userName"
+              //id="userName"
               placeholder="請輸入姓名"
             />
             <ErrorMessage
@@ -64,8 +80,8 @@ const [viewPwd,SetViewPwd]=useState(false)
               className="form-input center-input"
               type="email"
               name="signupEmail"
-              id="signupEmail"
-              placeholder="請輸入信箱"
+              //id="signupEmail"
+              placeholder="請輸入email"
             />
             <ErrorMessage
               className="form-alert"
@@ -80,10 +96,10 @@ const [viewPwd,SetViewPwd]=useState(false)
               className="form-input center-input"
               type={viewPwd ? 'text':'password'}
               name="signupPassword"
-              id="signupPassword"
+              //id="signupPassword"
               placeholder="請輸入密碼"
-              value={pwd}
-              onChange={e => setPwd(e.target.value)}
+              //value={pwd}
+              //onChange={e => setPwd(e.target.value)}
             />
              <Image
             className="eye"
@@ -104,19 +120,19 @@ const [viewPwd,SetViewPwd]=useState(false)
       
             <Field
               className="form-input center-input"
-              type={viewPwd ? 'text':'password'}
+              type={viewPwdConf? 'text':'password'}
               name="rePassword"
-              id="rePassword"
+              //id="rePassword"
               placeholder="再次輸入密碼"
-              value={pwd}
-              onChange={e => setPwd(e.target.value)}
+              //value={pwd}
+              //onChange={e => setPwd(e.target.value)}
             />
              <Image
             className="eye"
           style={{ cursor: 'pointer',position: 'absolute',right: '105px',top: '5px'}}
-              title={viewPwd ? 'Hide password' : 'Show password'}
-              src={!viewPwd ? hidePwdImg : showPwdImg}
-              onClick={()=> SetViewPwd(prevState => !prevState)}
+              title={viewPwdConf ? 'Hide passwordConf' : 'Show passwordConf'}
+              src={!viewPwdConf ? hidePwdImg : showPwdImg}
+              onClick={()=> SetViewPwdConf(prevStateConf => !prevStateConf)}
               alt="show/hide password"
             />
             <ErrorMessage
@@ -125,25 +141,32 @@ const [viewPwd,SetViewPwd]=useState(false)
               component="div"
             />
           </div>
-          <div className="d-flex justify-content-center">
-          <div className="mb-3 ">
+          <div className="d-flex justify-content-center align-items-center flex-column">
+          <div className="mb-3 register-checkbox-style" 
+          style={{ marginBottom: '0'}}
+          >
             <Field
               className="register-checkbox"
               type="checkbox"
               name="confirm"
               id="confirm"
-              style={{ width: '15px'}}
-            />
-            <label htmlFor="confirm">已閱讀會員
+         
+            /> 
+            <label htmlFor="confirm" 
+            style={{ paddingLeft: '5px'}}
+            >已閱讀會員
             <a href="#">條款</a>
             </label>
-            <ErrorMessage
+          
+          </div>
+          <div >
+          <ErrorMessage
               className="form-alert"
               name="confirm"
               component="div"
-           
+  
             />
-          </div>
+            </div>
           </div>
           <div className="u-form-group">
             <button type="submit" className="btn-brown">

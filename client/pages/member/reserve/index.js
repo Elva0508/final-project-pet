@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import ListD from "@/components/member/list-d";
-import ListUserM from "@/components/member/list-user-m";
 import { BsCalendarDateFill } from "react-icons/bs";
 import { RecordTemplate } from "@/components/member/Record-template";
 import memberService from "@/services/member-service";
@@ -38,12 +37,7 @@ const MemberReserve = () => {
     <>
       {isAuthenticated && (
         <>
-          <div className="d-flex justify-content-end">
-            {/* mobile版的左側tab */}
-          </div>
-          <ListUserM />
           <div className="d-flex container-fluid flex-column justify-content-around flex-md-row my-3">
-            {/* <ListUserM /> */}
             <ListD />
             <div className="col-12 col-sm-8 sales-and-request">
               <RecordTemplate

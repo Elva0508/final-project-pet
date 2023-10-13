@@ -9,7 +9,6 @@ import axios from "axios";
 
 export default function Orderdetail() {
 
-
   const [showCommentForm, setShowCommentForm] = useState(false);
   const [currentProductId, setCurrentProductId] = useState(null);
   const [comments, setComments] = useState({});
@@ -17,7 +16,7 @@ export default function Orderdetail() {
   const [detail, setDetail] = useState([{}]);
   const router = useRouter();
 
-  const handleSaveComment = async(productId,orderId) => {
+  const handleSaveComment = async(user_id,productId,orderId) => {
         try {
         const response = await axios.post(
           `http://localhost:3005/api/member-order-detail/comment`,
@@ -25,7 +24,8 @@ export default function Orderdetail() {
             comment: comments,
             star:value,
             productid:productId,
-            orderid:orderId
+            orderid:orderId,
+            user_id:user_id
           }
         );
         const updatedComment = response.data.updatedComment;
@@ -34,7 +34,7 @@ export default function Orderdetail() {
         console.error("Error:", error);
       }
     setShowCommentForm(false);
-    getDetail(orderId)
+    getDetail(orderId,user_id)
     setValue(0)
   };
 
@@ -44,10 +44,11 @@ export default function Orderdetail() {
   };
 
 
-  const getDetail = async (oid) => {
+  const getDetail = async (oid,id) => {
+    console.log(oid,id)
     try {
       const res = await fetch(
-        "http://localhost:3005/api/member-order-detail/" + oid
+        `http://localhost:3005/api/member-order-detail/${oid}/${id}`
       );
 
       const data = await res.json();
@@ -68,12 +69,23 @@ export default function Orderdetail() {
   };
 
   useEffect(() => {
+    const token = localStorage.getItem("token");
+    const id=localStorage.getItem("id")
+    // 沒有token
+    if (!token) {
+      router.push("/")
+
+    }
+    console.log(id);
+    console.log(token);
+
+
     if (router.isReady) {
       // 確保能得到router.query有值
       const { oid } = router.query;
       console.log(oid);
       // 有pid後，向伺服器要求資料，設定到狀態中
-      getDetail(oid);
+      getDetail(oid,id);
     }
     // eslint-disable-next-line
   }, [router.query]);
@@ -204,7 +216,7 @@ const back =(id)=>{
                               </button>
                               <button
                                 className="btn btn-confirm m-2 size-6 m-size-6"
-                                onClick={() => handleSaveComment(v.product_id,v.order_id)}
+                                onClick={() => handleSaveComment(v.user_id,v.product_id,v.order_id)}
                               >
                                 儲存
                               </button>
