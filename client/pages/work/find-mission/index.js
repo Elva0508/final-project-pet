@@ -1118,6 +1118,10 @@ export default function MissionList() {
     setUpdateDate(null);
     setMissionCity("");
     setMissionArea(null);
+    setButtonText1('任務類型');
+    setButtonText2('更新時間');
+    setSelectedCity(null);
+    setSelectedArea(null);
     setSortOrder('asc');
     setSortBy('post_date');
     setInputValue('');

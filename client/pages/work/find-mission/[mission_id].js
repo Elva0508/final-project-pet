@@ -6,6 +6,7 @@ import axios from "axios"
 import Link from "next/link";
 import jwt_decode from "jwt-decode";
 import { GoogleMap, LoadScript, MarkerF, InfoWindowF, OverlayView } from '@react-google-maps/api';
+import Swal from 'sweetalert2';
 import { IoPaperPlaneOutline } from "react-icons/io5";
 import { PiWechatLogoThin } from "react-icons/pi";
 import { BsGenderFemale, BsGenderMale } from "react-icons/bs";
@@ -106,22 +107,22 @@ import Typography from '@mui/joy/Typography';
 //         </div>
 //     );
 // }
-function InteractiveCard({setPopularMissions}) {
+function InteractiveCard({ setPopularMissions }) {
     const getPopularMissions = async () => {
         try {
-          let apiUrl = `http://localhost:3005/api/mission/popular`;
-          const response = await axios.get(apiUrl);
-          const data = response.data.data;
-          setPopularMissions(data);
-          console.log("現在的popularMissions是"+popularMissions);
+            let apiUrl = `http://localhost:3005/api/mission/popular`;
+            const response = await axios.get(apiUrl);
+            const data = response.data.data;
+            setPopularMissions(data);
+            console.log("現在的popularMissions是" + popularMissions);
         } catch (error) {
-          console.error("Error:", error);
+            console.error("Error:", error);
         }
-      };
-    
-      useEffect(() => {
+    };
+
+    useEffect(() => {
         getPopularMissions()
-      }, []) 
+    }, [])
 
 
 
@@ -362,10 +363,11 @@ export default function MissionDetail() {
     const [postUserId, setPostUserId] = useState(null); // 聊天室的第二個對象
     const [message, setMessage] = useState(""); // 儲存返回後的消息
     const [isLoading, setIsLoading] = useState(false);
+    const [chatlistId, setChatlistId] = useState(null); // 用於儲存解析後的chatlistId
 
     // 彈跳視窗
     const [selectedMissionId, setSelectedMissionId] = useState(null);
-    const [recommendation, setRecommendation] = useState('');
+    const [msgInputValue, setMsgInputValue] = useState(""); // 輸入框的值
     const [autoSend, setAutoSend] = useState(false);
 
     const getMissionDetail = async (mission_id) => {  // 接受 mission_id 作為參數
@@ -489,8 +491,12 @@ export default function MissionDetail() {
         }
     };
 
-    // 跟案主線上聊聊
+    // 線上詢問：跟案主線上聊聊
     const handleButtonClick = async () => {
+        if (!userId) {
+            alert('請先登入會員');
+            return;
+        }
         // setIsLoading(true);
 
         // 檢查是否有有效的 userId
@@ -537,7 +543,104 @@ export default function MissionDetail() {
         }
     };
 
-    // 彈跳視窗(確認送出)：寫進應徵紀錄
+    // 立即應徵(跳出modal)：發出消息找有沒有chatlist_id 沒有就新增
+    const handleApplyClick = async () => {
+        if (!userId) {
+            alert('請先登入會員');
+            return;
+          }
+        // setIsLoading(true);
+
+        // 檢查是否有有效的 userId
+        //如果放入targetID 變數 這邊也要把targetID 變數放進來檢查
+        if (userId) {
+            // 建立要傳送的數據
+            const requestData = {
+                chatlist_userId1: userId,
+                chatlist_userId2: postUserId, // 放要對話的 targetID 變數
+            };
+            console.log("userId1是" + userId)
+            console.log("userId2是" + postUserId)
+
+            try {
+                const response = await axios.post(
+                    "http://localhost:3005/api/chatlist/creatchat",
+                    requestData
+                );
+
+                if (response.status === 201) {
+                    // 請求成功
+                    setMessage("請求成功");
+                    const ChatlistId = response.data.chatlistId;     // 這邊找有沒有chatlist_id
+                    console.log("ChatlistId" + ChatlistId);
+
+                    //把ChatlistId存到狀態裡後面送消息時使用
+                    setChatlistId(ChatlistId);
+                    console.log("setChatlistId設置成功");
+                } else if (response.status === 200) {
+                    // 消息已存在
+                    //   setMessage("消息已存在");
+                    const chatUrl = response.data.chatUrl;
+                    const ChatlistId = response.data.chatlistId;
+                    console.log("已存在chatUrl" + chatUrl);
+                    console.log("ChatlistId" + ChatlistId);
+
+                    //把ChatlistId存到狀態裡後面送消息時使用
+                    setChatlistId(ChatlistId);
+                    console.log("setChatlistId設置成功");
+                } else {
+                    // 請求失敗
+                    setMessage("請求失敗: " + response.data.error);
+                }
+            } catch (error) {
+                // 處理錯誤
+                setMessage(error.message || "發生錯誤");
+            } finally {
+                setIsLoading(false);
+            }
+        }
+    };
+
+
+    // 確認送出(modal裡)：處理訊息送出事件
+    const handleSendClick = async () => {
+
+        // 先檢查消息是否為空
+        if (!msgInputValue) {
+            alert('請輸入自我推薦');
+            return;
+        }
+        try {
+            // 發送消息到後端
+            const response = await fetch(
+                "http://localhost:3005/api/chatroom/sendchat",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        chatlist_id: chatlistId,
+                        talk_userId: userId, // 使用前端頁面登入的 userId
+                        chat_content: msgInputValue,
+                    }),
+                }
+            );
+            if (response.ok) {
+                // 清空輸入框的值
+                setMsgInputValue("");
+                const chatUrl = `/chatlist/${chatlistId}`;
+                // 在這裡導向到 chatUrl
+                window.location.href = chatUrl;
+            } else {
+                console.error("發送消息時出錯");
+            }
+        } catch (error) {
+            console.error("發送消息時出錯", error);
+        }
+    };
+
+    // 確認送出(modal裡)：寫進應徵紀錄
     const handleConfirmSubmit = async () => {
         setSelectedMissionId(mission_id)
         try {
@@ -575,50 +678,53 @@ export default function MissionDetail() {
     return (
         <>
             {/* Modal */}
-            <div className={`modal fade apply-modal`} id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div className="modal-dialog modal-dialog-centered">
-                    <div className="modal-content">
-                        <div className="modal-header">
-                            <h5 className="modal-title size-4" id="exampleModalLabel">立即應徵</h5>
-                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div className='modal-body'>
-                            <div className="profile d-flex justify-content-center align-items-center">
-                                <div className="avatar">
-                                    <img src="/kitten.jpg" />
-                                </div>
-                                <div className="justify-content-center">
-                                    <div className="size-4">
-                                        雅晴
+            {/* {userId && ( */}
+                <div className={`modal fade apply-modal`} id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div className="modal-dialog modal-dialog-centered">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h5 className="modal-title size-4" id="exampleModalLabel">立即應徵</h5>
+                                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div className='modal-body'>
+                                <div className="profile d-flex justify-content-center align-items-center">
+                                    <div className="avatar">
+                                        <img src="/kitten.jpg" />
                                     </div>
-                                    <p className="size-6 mt-1">
-                                        25歲
-                                    </p>
-                                    <p className='size-6 mt-1'>新北市三重區</p>
+                                    <div className="justify-content-center">
+                                        <div className="size-4">
+                                            雅晴
+                                        </div>
+                                        <p className="size-6 mt-1">
+                                            25歲
+                                        </p>
+                                        <p className='size-6 mt-1'>新北市三重區</p>
+                                    </div>
+                                </div>
+                                <div className='recommend mt-4'>
+                                    <div className='size-5 mb-2'>自我推薦</div>
+                                    <textarea className='recommend-content' value={msgInputValue}
+                                        onChange={(e) => setMsgInputValue(e.target.value)} ></textarea>
+
+                                    <div className='auto-send d-flex my-4 align-items-center'>
+                                        <input type="checkbox" className='checkbox' checked={autoSend} onChange={() => setAutoSend(!autoSend)} />
+                                        <div className='size-6 ms-2'>自動發送小幫手履歷<span className='size-7' >（需開啟小幫手資料）</span></div>
+                                    </div>
                                 </div>
                             </div>
-                            <div className='recommend mt-4'>
-                                <div className='size-5 mb-2'>自我推薦</div>
-                                <textarea className='recommend-content' value={recommendation} onChange={(e) => setRecommendation(e.target.value)} ></textarea>
 
-                                <div className='auto-send d-flex my-4 align-items-center'>
-                                    <input type="checkbox" className='checkbox' checked={autoSend} onChange={() => setAutoSend(!autoSend)} />
-                                    <div className='size-6 ms-2'>自動發送小幫手履歷<span className='size-7' >（需開啟小幫手資料）</span></div>
-                                </div>
+                            <div className="modal-footer justify-content-center py-4">
+                                <button type="button" className=" btn-outline-confirm" data-bs-dismiss="modal">取消</button>
+                                <button type="button" className=" btn-second" onClick={() => {
+                                    handleConfirmSubmit();  //寫進應徵紀錄
+                                    handleSendClick();  // 處理訊息送出事件+跟案主聊(導到聊天室)
+                                }} data-bs-dismiss="modal">確認送出</button>
+                                {/* 在這邊也要加上data-bs-dismiss="modal"才能在送出後關閉modal 才不會到聊天室之後 後面畫面還是灰暗的 */}
                             </div>
-                        </div>
-
-                        <div className="modal-footer justify-content-center py-4">
-                            <button type="button" className=" btn-outline-confirm" data-bs-dismiss="modal">取消</button>
-                            <button type="button" className=" btn-second" onClick={() => {
-                                handleButtonClick();  // 跟案主聊聊
-                                handleConfirmSubmit();  //寫進應徵紀錄
-                            }} data-bs-dismiss="modal">確認送出</button>
-                            {/* 在這邊也要加上data-bs-dismiss="modal"才能在送出後關閉modal 才不會到聊天室之後 後面畫面還是灰暗的 */}
                         </div>
                     </div>
                 </div>
-            </div>
+            {/* )} */}
 
             {missionDetail.map((v, i) => {
                 return (
@@ -673,7 +779,7 @@ export default function MissionDetail() {
                                             <PiWechatLogoThin />
                                             線上詢問
                                         </button>
-                                        <button className="chat-btn btn-second d-flex align-items-center justify-content-center" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                        <button className="chat-btn btn-second d-flex align-items-center justify-content-center" data-bs-toggle="modal" data-bs-target="#exampleModal" onClick={handleApplyClick}>
                                             <IoPaperPlaneOutline />
                                             立即應徵
                                         </button>
