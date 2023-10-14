@@ -2,7 +2,6 @@ import { useRouter } from "next/router";
 import ResponsiveAppBar from "@/components/navbar/ResponsiveAppBar";
 import Footer from "@/components/footer";
 import { MissionDetailSticky } from "@/pages/work/find-mission/[mission_id]";
-// import { HelperDetailSticky } from "@/pages/work/find-helper/[uid]";
 import { HomeVedio } from "@/pages/index";
 import BreadCrumb from "./breadCrumb";
 import { useEffect, useRef, useState } from "react";
@@ -17,12 +16,12 @@ export default function Layout({ children }) {
   //   // 讓頁面可以滾動，原本禁止有overflow-y軸
   //   setTimeout(() => {
   //     setIsLoading(false);
-  //   }, [4800]);
+  //   }, [4500]);
   //   setTimeout(() => {
   //     const loading = document.querySelector(".cat-loading-wrapper");
   //     console.log(loading);
   //     loading.classList.add("cat-loading-opacity");
-  //   }, [4300]);
+  //   }, [4000]);
   // }, []);
   // useEffect(() => {
   //   if (isLoading) {
@@ -39,9 +38,9 @@ export default function Layout({ children }) {
         {pathname && pathname == "/" ? <HomeVedio /> : null}
         <main style={{ maxWidth: "1320px", margin: "auto" }}>{children}</main>
         <Footer />
-        {pathname && pathname == "/work/find-helper/[uid]" ? (
+        {/* {pathname && pathname == "/work/find-helper/[uid]" ? (
           <HelperDetailSticky />
-        ) : null}
+        ) : null} */}
       </>
     </>
   );

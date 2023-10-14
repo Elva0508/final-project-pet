@@ -8,6 +8,8 @@ import {
   IllustrationNoContent,
   IllustrationNoContentDark,
 } from "@douyinfe/semi-illustrations";
+import lottie from "lottie-web";
+import animation from "@/data/animation_lnqha2jt.json";
 export const RecordTemplate = ({
   icon,
   title,
@@ -39,13 +41,34 @@ export const RecordTemplate = ({
         break;
     }
   };
+
   useEffect(() => {
     for (let i = 1; i <= 4; i++) {
       const focusBtn = document.querySelector(`#btn${i}`);
+      const lottie = document.querySelector("#lottie");
+      if (focusBtn.contains(lottie)) {
+        focusBtn.removeChild(document.querySelector("#lottie"));
+      }
       focusBtn.classList.remove("btn-focus");
     }
+    const lottie = document.createElement("div");
+    lottie.id = "lottie";
     const focusBtn = document.querySelector(`#btn${status}`);
+    focusBtn.appendChild(lottie);
     focusBtn.classList.add("btn-focus");
+  }, [status]);
+  useEffect(() => {
+    lottie.loadAnimation({
+      container: document.getElementById("lottie"), // the dom element
+      renderer: "svg",
+      loop: true,
+      autoplay: true,
+      animationData: animation, // the animation data
+    });
+
+    return () => {
+      lottie.destroy();
+    };
   }, [status]);
   return (
     <>
@@ -53,6 +76,7 @@ export const RecordTemplate = ({
         {icon || <MdHomeRepairService className="icon me-1" />}
         {title || "銷售紀錄"}
       </h5>
+
       <nav className="tab-nav" onClick={handleStatus}>
         <button
           id="btn1"
@@ -71,6 +95,7 @@ export const RecordTemplate = ({
             setStatus(2);
           }}
         >
+          <div id="lottie"></div>
           進行中
         </button>
         <button
@@ -119,18 +144,17 @@ export const RecordTemplate = ({
                   </p>
                   <div className="d-flex flex-column justify-content-center align-items-center">
                     <p className="mb-1 size-6 price">NT$ {item.total_price}</p>
-                    <button
-                      className="btn-outline-confirm"
-                      onClick={() => {
-                        if (title === "銷售紀錄") {
-                          router.push(`/member/selling/${item.oid}`);
-                        }
-                        if (title === "預約紀錄") {
-                          router.push(`/member/reserve/${item.oid}`);
-                        }
-                      }}
-                    >
-                      查看明細
+                    <button className="animate-button-one">
+                      {title === "銷售紀錄" && (
+                        <Link href={`/member/selling/${item.oid}`}>
+                          查看詳細
+                        </Link>
+                      )}
+                      {title === "預約紀錄" && (
+                        <Link href={`/member/reserve/${item.oid}`}>
+                          查看詳細
+                        </Link>
+                      )}
                     </button>
                   </div>
                 </div>

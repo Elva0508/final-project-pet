@@ -26,9 +26,9 @@ class WorkService {
     return axios.get(API_URL + "helpers/favorite", { params: { collection } });
   }
   // detail頁
-  getHelperDetail(uid) {
+  getHelperDetail(uid, page) {
     console.log(uid);
-    return axios.get(API_URL + "helpers/detail/" + uid);
+    return axios.get(API_URL + "helpers/detail/" + uid, { params: { page } });
   }
   getPetInfo(uid) {
     return axios.get(API_URL + "helpers/detail/petInfo", { params: { uid } });
@@ -36,9 +36,9 @@ class WorkService {
   createReqOrder(requestData) {
     return axios.post(API_URL + "helpers/request", requestData);
   }
-  getFilterReview(uid, star) {
+  getFilterReview(uid, star, page) {
     return axios.get(API_URL + "helpers/detail/review", {
-      params: { uid, star },
+      params: { uid, star, page },
     });
   }
   // createMission頁
