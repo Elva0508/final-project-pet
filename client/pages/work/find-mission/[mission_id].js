@@ -8,10 +8,14 @@ import jwt_decode from "jwt-decode";
 import { GoogleMap, LoadScript, MarkerF, InfoWindowF, OverlayView } from '@react-google-maps/api';
 import Swal from 'sweetalert2';
 import { IoPaperPlaneOutline } from "react-icons/io5";
-import { PiWechatLogoThin } from "react-icons/pi";
-import { BsGenderFemale, BsGenderMale } from "react-icons/bs";
-import { BiSolidTimeFive } from "react-icons/bi";
+import { PiWechatLogoThin, PiContactlessPaymentThin, PiImagesThin, PiImageSquareThin, PiImageThin, PiChatTeardropTextThin, PiMoneyThin } from "react-icons/pi";
+import { BsGenderFemale, BsGenderMale, BsCalendarDate } from "react-icons/bs";
+import { BiSolidTimeFive, BiMessageSquareDetail } from "react-icons/bi";
 import { MdEmail } from "react-icons/md";
+import { TbPigMoney } from "react-icons/tb";
+import { GiMoneyStack } from "react-icons/gi";
+import { CiCalendarDate, CiLocationOn, CiFilter } from "react-icons/ci";
+import { VscFilter } from "react-icons/vsc";
 import { FaPaw } from "react-icons/fa";
 import { FaRegHeart, FaHeart } from "react-icons/fa";
 // swiper:
@@ -292,7 +296,7 @@ const ImageSwiper = ({ missionImages }) => {
 function CustomHTMLRenderer({ htmlContent }) {
     return (
         <div className="item detailed-description">
-            <div className="item-title size-6 ">詳細說明</div>
+            <div className="item-title size-6 "><PiChatTeardropTextThin className='me-1' />詳細說明</div>
             <hr class="item-divider" />
             <ul className="item-introduction size-7" dangerouslySetInnerHTML={{ __html: htmlContent }} />
         </div>
@@ -532,7 +536,7 @@ export default function MissionDetail() {
             } catch (error) {
                 // 處理錯誤
                 // setMessage(error.message || "發生錯誤");
-            } finally {
+            // } finally {
                 // setIsLoading(false);
             }
         }
@@ -590,10 +594,11 @@ export default function MissionDetail() {
             } catch (error) {
                 // 處理錯誤
                 setMessage(error.message || "發生錯誤");
-            } finally {
-                setIsLoading(false);
+            // } finally {
+            //     setIsLoading(false);
             }
         }
+        getLoginUser(userId);   // 在點擊立即應徵按鈕時 就setLoginUser 才不會modal跳出來時loginUser還沒被設置（仍為null） 導致登入者資訊看不見 還要重整觸發useEffect才會出現
     };
 
 
@@ -605,6 +610,7 @@ export default function MissionDetail() {
             alert('請輸入自我推薦');
             return;
         }
+        setIsLoading(true);
         try {
             // 發送消息到後端
             const response = await fetch(
@@ -632,7 +638,10 @@ export default function MissionDetail() {
             }
         } catch (error) {
             console.error("發送消息時出錯", error);
+        } finally {
+            setIsLoading(false);
         }
+        
     };
 
     // 確認送出(modal裡)：寫進應徵紀錄
@@ -713,9 +722,11 @@ export default function MissionDetail() {
         // getRecordCount();
         // getLoginUser();
     }, [])
+
     useEffect(() => {
         getRecordCount(mission_id);  //要記得給參數
     }, [mission_id]) // 依賴陣列也要記得寫
+
     useEffect(() => {
         getLoginUser(userId);  //要記得給參數  //非同步操作 需要一些時間來完成
     }, [userId]) // 依賴陣列也要記得寫
@@ -747,34 +758,34 @@ export default function MissionDetail() {
                 <div className="modal-dialog modal-dialog-centered">
                     <div className="modal-content">
                         <div className="modal-header">
-                            <h5 className="modal-title size-4" id="exampleModalLabel">立即應徵</h5>
+                            <h5 className="modal-title size-5" id="exampleModalLabel">立即應徵</h5>
                             <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div className='modal-body'>
-                            <div className="profile d-flex justify-content-center align-items-center">
+                            <div className="profile d-flex justify-content-center align-items-center mt-3">
                                 <div className="avatar">
                                     <img src={loginUser ? loginUser.cover_photo : ''} />
                                 </div>
                                 <div className="justify-content-center">
-                                    <div className="size-4">
+                                    <div className="size-6">
                                         {loginUser ? loginUser.name : ''}
                                         {/* 本來只寫{loginUser.name}會報錯null(即使先前在console已看到loginUser被設置) 這是因為在頁面渲染之前 loginUser還沒有被設置 (loginUser仰賴數組userId) 像recordCount就沒這問題  */}
                                     </div>
-                                    <p className="size-6 mt-1">
+                                    <p className="size-7 mt-1">
                                         {age}歲
                                     </p>
-                                    <p className='size-6 mt-1'>{loginUser ? loginUser.city + loginUser.area : ''}</p>
+                                    <p className='size-7 mt-1'>{loginUser ? loginUser.city + loginUser.area : ''}</p>
                                 </div>
                             </div>
                             <div className='recommend mt-4'>
-                                <div className='size-5 mb-2'>自我推薦</div>
+                                <div className='size-6 mb-2'>自我推薦</div>
                                 <textarea className='recommend-content' value={msgInputValue}
                                     onChange={(e) => setMsgInputValue(e.target.value)} ></textarea>
 
-                                <div className='auto-send d-flex my-4 align-items-center'>
+                                {/* <div className='auto-send d-flex my-4 align-items-center'>
                                     <input type="checkbox" className='checkbox' checked={autoSend} onChange={() => setAutoSend(!autoSend)} />
-                                    <div className='size-6 ms-2'>自動發送小幫手履歷<span className='size-7' >（需開啟小幫手資料）</span></div>
-                                </div>
+                                    <div className='size-7 ms-2'>自動發送小幫手履歷<span className='size-7' >（需開啟小幫手資料）</span></div>
+                                </div> */}
                             </div>
                         </div>
 
@@ -783,7 +794,7 @@ export default function MissionDetail() {
                             <button type="button" className=" btn-second" onClick={() => {
                                 handleConfirmSubmit();  //寫進應徵紀錄
                                 handleSendClick();  // 處理訊息送出事件+跟案主聊(導到聊天室)
-                            }} data-bs-dismiss="modal">確認送出</button>
+                            }} data-bs-dismiss="modal">{isLoading ? "發送中..." : "確認送出"}</button>
                             {/* 在這邊也要加上data-bs-dismiss="modal"才能在送出後關閉modal 才不會到聊天室之後 後面畫面還是灰暗的 */}
                         </div>
                     </div>
@@ -926,21 +937,21 @@ export default function MissionDetail() {
                                 <section className='description my-4 py-1 '>
                                     <div className="item d-flex flex-column ">
                                         <div className="item-title size-6">
-                                            預算金額
+                                            <GiMoneyStack className='me-1' />預算金額
                                         </div>
                                         <hr class="item-divider" />
                                         <p className="size-7 d-flex align-items-center ms-4 ms-sm-0 salary mt-2 mt-sm-0">NT$ {v.price} / 次</p>
                                     </div>
                                     <div className="item d-flex flex-column">
                                         <div className="item-title size-6">
-                                            任務日期
+                                            <CiCalendarDate className='me-1' />任務日期
                                         </div>
                                         <hr class="item-divider" />
                                         <p className="size-7 d-flex align-items-center ms-4 ms-sm-0 mt-2 mt-sm-0 item-content">{v.start_date === v.end_date ? formatDate(v.start_date) : `${formatDate(v.start_date)}～${formatDate(v.end_date)}`}</p>
                                     </div>
                                     <div className="item d-flex flex-column mission-place">
                                         <div className="item-title size-6">
-                                            任務地點
+                                            <CiLocationOn className='me-1' />任務地點
                                         </div>
                                         <hr class="item-divider" />
                                         <p className="size-7 d-flex align-items-center ms-4 ms-sm-0 mt-2 mt-sm-0 item-content">{v.city}{v.area}{v.location_detail}</p>
@@ -953,7 +964,7 @@ export default function MissionDetail() {
 
                                     <div className="item d-flex flex-column ">
                                         <div className="item-title size-6">
-                                            任務類型
+                                            <CiFilter className='me-1' />任務類型
                                         </div>
                                         <hr class="item-divider" />
                                         <p className="size-7 d-flex align-items-center ms-4 ms-sm-0 mt-2 mt-sm-0 item-content"> {(() => {
@@ -975,7 +986,7 @@ export default function MissionDetail() {
                                     </div>
                                     <div className="item d-flex flex-column ">
                                         <div className="item-title size-6">
-                                            支付方式
+                                            <PiContactlessPaymentThin className='me-1' />支付方式
                                         </div>
                                         <hr class="item-divider" />
                                         <p className="size-7 d-flex align-items-center ms-4 ms-sm-0 mt-2 mt-sm-0 item-content">{(() => {
@@ -990,7 +1001,7 @@ export default function MissionDetail() {
                                         })()}</p>
                                     </div>
                                     <div className="item">
-                                        <div className="item-title size-6">相片/影片</div>
+                                        <div className="item-title size-6"><PiImageThin className='me-1' />相片/影片</div>
                                         <div className="item-image mt-4">
                                             <ImageSwiper missionImages={missionImages} />
                                         </div>
