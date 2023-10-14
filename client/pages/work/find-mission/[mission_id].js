@@ -291,9 +291,10 @@ const ImageSwiper = ({ missionImages }) => {
 
 function CustomHTMLRenderer({ htmlContent }) {
     return (
-        <div className="item">
-            <div className="item-title size-6 mb-3">詳細說明</div>
-            <ul className="item-content size-6" dangerouslySetInnerHTML={{ __html: htmlContent }} />
+        <div className="item detailed-description">
+            <div className="item-title size-6 ">詳細說明</div>
+            <hr class="item-divider" />
+            <ul className="item-introduction size-7" dangerouslySetInnerHTML={{ __html: htmlContent }} />
         </div>
     );
 }
@@ -345,6 +346,8 @@ export default function MissionDetail() {
     const [popularMissions, setPopularMissions] = useState([]);
     // 算應徵人數
     const [recordCount, setRecordCount] = useState(0);
+    // 取得登入會員的資訊
+    const [loginUser, setLoginUser] = useState(null);
 
     // GOOGLE地圖API：初始狀態
     const [missionLocation, setMissionLocation] = useState({
@@ -639,9 +642,10 @@ export default function MissionDetail() {
             // 使用 selectedMissionId 作為 missionId
             const requestData = {
                 missionId: selectedMissionId,
-                recommendation,
-                autoSend,
+                // recommendation,
+                // autoSend,
             };
+            console.log("requestData:" + requestData);
 
             // 發送 POST 請求將數據發送到後端 API
             const response = await axios.post(`http://localhost:3005/api/mission/add-record?userId=${userId}`, requestData);
@@ -683,9 +687,22 @@ export default function MissionDetail() {
     // 算應徵人數
     const getRecordCount = async () => {
         try {
-            const response = await axios.get(`http://localhost:3005/api/mission/record-count//${mission_id}`);
-            const data = response.data.result;  //注意這裡是result
+            const response = await axios.get(`http://localhost:3005/api/mission/record-count/${mission_id}`);
+            const data = response.data.result[0];  //注意這裡是result 陣列裡只有一個物件 所以要記得補[0]
+            console.log("Data received:", data);
             setRecordCount(data);
+        } catch (error) {
+            console.error("Error:", error);
+        }
+    };
+
+    // 彈跳視窗：登入者資訊
+    const getLoginUser = async () => {
+        try {
+            const response = await axios.get(`http://localhost:3005/api/mission/login-user?userId=${userId}`);
+            const data = response.data.result[0];  //注意這裡是result 陣列裡只有一個物件 所以要記得補[0]
+            console.log("登入者資訊的data是:" + data);
+            setLoginUser(data);
         } catch (error) {
             console.error("Error:", error);
         }
@@ -693,9 +710,33 @@ export default function MissionDetail() {
 
     useEffect(() => {
         getPopularMissions();
-        getRecordCount();
+        // getRecordCount();
+        // getLoginUser();
     }, [])
+    useEffect(() => {
+        getRecordCount(mission_id);  //要記得給參數
+    }, [mission_id]) // 依賴陣列也要記得寫
+    useEffect(() => {
+        getLoginUser(userId);  //要記得給參數  //非同步操作 需要一些時間來完成
+    }, [userId]) // 依賴陣列也要記得寫
+
     console.log("recordCount:", recordCount);
+    console.log("loginUser:", loginUser);
+
+    // 算登入者的年齡
+    const birthdayString = loginUser ? loginUser.birthday : null;  // 確保只有在loginUser被設置時 才會進行後續操作 避免在組件渲染前loginUser還沒有被設置 造成loginUser.birthday為null
+    console.log("birthdayString是" + birthdayString);
+    const birthdayDate = new Date(birthdayString);
+    const today = new Date();  // 取得今天的日期
+    let age = today.getFullYear() - birthdayDate.getFullYear();   // 計算年齡
+    // 如果今天的月份小於生日的月份，或今天的月份等於生日的月份但日期小於生日的日期，
+    // 則年齡減少一年，因為生日還沒到
+    if (
+        today.getMonth() < birthdayDate.getMonth() ||
+        (today.getMonth() === birthdayDate.getMonth() && today.getDate() < birthdayDate.getDate())
+    ) {
+        age--;
+    }
 
     return (
         <>
@@ -712,16 +753,17 @@ export default function MissionDetail() {
                         <div className='modal-body'>
                             <div className="profile d-flex justify-content-center align-items-center">
                                 <div className="avatar">
-                                    <img src="/kitten.jpg" />
+                                    <img src={loginUser ? loginUser.cover_photo : ''} />
                                 </div>
                                 <div className="justify-content-center">
                                     <div className="size-4">
-                                        雅晴
+                                        {loginUser ? loginUser.name : ''}
+                                        {/* 本來只寫{loginUser.name}會報錯null(即使先前在console已看到loginUser被設置) 這是因為在頁面渲染之前 loginUser還沒有被設置 (loginUser仰賴數組userId) 像recordCount就沒這問題  */}
                                     </div>
                                     <p className="size-6 mt-1">
-                                        25歲
+                                        {age}歲
                                     </p>
-                                    <p className='size-6 mt-1'>新北市三重區</p>
+                                    <p className='size-6 mt-1'>{loginUser ? loginUser.city + loginUser.area : ''}</p>
                                 </div>
                             </div>
                             <div className='recommend mt-4'>
@@ -770,20 +812,21 @@ export default function MissionDetail() {
                         <main className="d-flex flex-column flex-lg-row row justify-content-between g-lg-5">
                             <div className='left col-12 col-lg-3'>
                                 <aside className='post-user'>
-                                    <div className='mt-3 p-4'>
-                                        <div className=' d-flex '>
-                                            <p className='size-6'>案主資訊</p>
+                                    <div className='mt-3'>
+                                        <div className=' d-flex p-4 pb-3'>
+                                            <p className='size-6'>刊登案主</p>
                                         </div>
                                         <div className='poster-img text-center my-2'>
                                             <img src={v.cover_photo} />
                                         </div>
-                                        <div className='my-2 d-flex justify-content-center align-items-center'>
+                                        <div className='mt-2 mb-3 d-flex justify-content-center align-items-center'>
                                             <p className='size-7 me-1'>{v.name}</p>
                                             <div className='poster-gender'>
                                                 {v.gender === '女' ? <BsGenderFemale /> : <BsGenderMale />}
                                             </div>
                                         </div>
-                                        <div className='ms-3 mb-3'>
+                                        <hr className='poster-divider mb-4' />
+                                        <div className='ms-3 mb-3 px-4'>
                                             <p className='size-7 mb-1'><BiSolidTimeFive /><span className='ms-1'>聯絡時段</span></p>
                                             <p>
                                                 {v.contact_morning === 1 && '09:00~12:00 '}
@@ -792,13 +835,13 @@ export default function MissionDetail() {
                                                 {v.contact_morning === 0 && v.contact_noon === 0 && v.contact_night === 0 && '案主未填'}
                                             </p>
                                         </div>
-                                        <div className='ms-3 mb-3'>
+                                        <div className='ms-3 mb-3 px-4'>
                                             <p className='size-7 mb-1'><MdEmail /><span className='ms-1'>E-mail</span></p>
                                             <p className='poster-email'>
                                                 {v.email}
                                             </p>
                                         </div>
-                                        <button className="chat-btn btn-outline-confirm " onClick={handleButtonClick} >
+                                        {/* <button className="chat-btn btn-outline-confirm " onClick={handleButtonClick} >
                                             <PiWechatLogoThin />
                                             線上詢問
                                         </button>
@@ -813,7 +856,44 @@ export default function MissionDetail() {
                                                 <IoPaperPlaneOutline />
                                                 立即應徵
                                             </button>
-                                        )}
+                                        )} */}
+
+                                        {/* 新的 */}
+                                        <div className="left-block-btns-group d-flex align-items-center">
+                                            <button className="left-block-btn d-flex align-items-center justify-content-center" onClick={handleButtonClick} >
+                                                <div className='left-block-icon'><PiWechatLogoThin /></div>
+                                                <span>線上詢問</span>
+                                            </button>
+                                            {userId && (    // 會員有登入時顯示這顆
+                                                <button className="left-block-btn apply-now-btn  d-flex align-items-center justify-content-center" data-bs-toggle="modal" data-bs-target="#exampleModal" onClick={handleApplyClick}>
+                                                    <div className='left-block-icon'> <IoPaperPlaneOutline /></div>
+                                                    <span>立即應徵</span>
+                                                </button>
+                                            )}
+                                            {!userId && (   // 會員沒登入時顯示這顆
+                                                <button className="left-block-btn apply-now-btn d-flex align-items-center justify-content-center" onClick={handleApplyClick}>
+                                                    <div className='left-block-icon'> <IoPaperPlaneOutline /></div>
+                                                    <span>立即應徵</span>
+                                                </button>
+                                            )}
+
+
+                                            {/* <button className="heart-icon" onClick={toggleFavorite}>
+                                                {isFavorite  ? (
+                                                    <>
+                                                        <FaHeart className="fill-icon" />
+                                                        <span>取消收藏</span>
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <FaRegHeart />
+                                                        <span>加入收藏</span>
+                                                    </>
+                                                )}
+                                            </button> */}
+                                        </div>
+
+
                                     </div>
                                 </aside>
                                 <aside className='post-user mt-4'>
@@ -831,36 +911,39 @@ export default function MissionDetail() {
                             <div className='right col-12 col-lg-9'>
                                 <header className='mt-3 py-4 px-5 position-relative'>
                                     <div className=' d-flex '>
-                                        <p>案件編號：{v.pid}</p>
+                                        <p className='header-font'>案件編號：{v.pid}</p>
                                         <img className='position-absolute' src={isFavorite ? "/heart-clicked.svg" : "/heart.svg"} alt={isFavorite ? "已收藏" : "未收藏"} onClick={toggleFavorite} />
                                     </div>
 
                                     <h2 className='size-5'>{v.title}</h2>
-                                    <p className='size-7 mt-3'>刊登日期：{formatDate(v.post_date)}</p>
+                                    <p className='size-7 mt-3 header-font'>刊登日期：{formatDate(v.post_date)}</p>
                                     <div className='d-flex mt-2 justify-content-between'>
-                                        <p className='size-7 '>最後更新：{formatDate(v.update_date)}</p>
-                                        <p className='size-7 '>已有 {recordCount.user_count} 人應徵</p>
+                                        <p className='size-7 header-font'>最後更新：{formatDate(v.update_date)}</p>
+                                        <p className='size-7 header-font'>已有 {recordCount.user_count} 人應徵</p>
                                     </div>
 
                                 </header>
                                 <section className='description my-4 py-1 '>
-                                    <div className="item d-flex flex-column flex-sm-row ">
+                                    <div className="item d-flex flex-column ">
                                         <div className="item-title size-6">
-                                            預算金額&emsp;
+                                            預算金額
                                         </div>
-                                        <p className="size-6 d-flex align-items-center ms-4 ms-sm-0 salary mt-2 mt-sm-0">NT$ {v.price} / 次</p>
+                                        <hr class="item-divider" />
+                                        <p className="size-7 d-flex align-items-center ms-4 ms-sm-0 salary mt-2 mt-sm-0">NT$ {v.price} / 次</p>
                                     </div>
-                                    <div className="item d-flex flex-column flex-sm-row">
+                                    <div className="item d-flex flex-column">
                                         <div className="item-title size-6">
-                                            任務日期&emsp;
+                                            任務日期
                                         </div>
-                                        <p className="size-6 d-flex align-items-center ms-4 ms-sm-0 mt-2 mt-sm-0">{v.start_date === v.end_date ? formatDate(v.start_date) : `${formatDate(v.start_date)}～${formatDate(v.end_date)}`}</p>
+                                        <hr class="item-divider" />
+                                        <p className="size-7 d-flex align-items-center ms-4 ms-sm-0 mt-2 mt-sm-0 item-content">{v.start_date === v.end_date ? formatDate(v.start_date) : `${formatDate(v.start_date)}～${formatDate(v.end_date)}`}</p>
                                     </div>
-                                    <div className="item d-flex flex-column flex-sm-row mission-place">
+                                    <div className="item d-flex flex-column mission-place">
                                         <div className="item-title size-6">
-                                            任務地點&emsp;
+                                            任務地點
                                         </div>
-                                        <p className="size-6 d-flex align-items-center ms-4 ms-sm-0 mt-2 mt-sm-0">{v.city}{v.area}{v.location_detail}</p>
+                                        <hr class="item-divider" />
+                                        <p className="size-7 d-flex align-items-center ms-4 ms-sm-0 mt-2 mt-sm-0 item-content">{v.city}{v.area}{v.location_detail}</p>
                                     </div>
                                     <div className='d-flex justify-content-center'>
                                         <MapComponent key={`map-${missionLocation.lat}-${missionLocation.lng}`} lat={missionLocation.lat} lng={missionLocation.lng} />
@@ -868,11 +951,12 @@ export default function MissionDetail() {
 
                                     <CustomHTMLRenderer htmlContent={v.description} />
 
-                                    <div className="item d-flex flex-column flex-sm-row">
+                                    <div className="item d-flex flex-column ">
                                         <div className="item-title size-6">
-                                            任務類型&emsp;
+                                            任務類型
                                         </div>
-                                        <p className="size-6 d-flex align-items-center ms-4 ms-sm-0 mt-2 mt-sm-0"> {(() => {
+                                        <hr class="item-divider" />
+                                        <p className="size-7 d-flex align-items-center ms-4 ms-sm-0 mt-2 mt-sm-0 item-content"> {(() => {
                                             switch (v.mission_type) {
                                                 case 1:
                                                     return '到府照顧';
@@ -889,11 +973,12 @@ export default function MissionDetail() {
                                             }
                                         })()}</p>
                                     </div>
-                                    <div className="item d-flex flex-column flex-sm-row">
+                                    <div className="item d-flex flex-column ">
                                         <div className="item-title size-6">
-                                            支付方式&emsp;
+                                            支付方式
                                         </div>
-                                        <p className="size-6 d-flex align-items-center ms-4 ms-sm-0 mt-2 mt-sm-0">{(() => {
+                                        <hr class="item-divider" />
+                                        <p className="size-7 d-flex align-items-center ms-4 ms-sm-0 mt-2 mt-sm-0 item-content">{(() => {
                                             switch (v.payment_type) {
                                                 case 1:
                                                     return '現金';

@@ -1,10 +1,57 @@
-// @import "@/styles/_variable.scss";
 %mission-button-style {
   font-size: 1.2rem;
   // font-weight: bold;
   width: 150px;
   height: 45px;
   // box-shadow: 1px 5px 7px rgba(0, 0, 0, 0.25);
+}
+
+%chat-button-style {
+  font-size: 1.2rem;
+  width: 40px;
+  height: 40px;
+  border-radius: 100px 100px 100px 100px;
+  background-color: white;
+  border: none;
+  box-shadow: 1px 1px 10px rgba(79, 79, 79, 0.719);
+  position: absolute;
+  // display: flex;
+  // justify-content: center;
+  // align-items: center;
+  transition: all 0.3s linear;
+  top: 15px;
+  left: 45px;
+
+  &:hover {
+    width: 56px + 28px + 30px;
+
+    &>span {
+      right: 60px;
+      color: $price;
+    }
+
+    svg {
+      color: $price;
+    }
+  }
+
+  svg {
+    position: absolute;
+    top: 50%;
+    left: 6px;
+    transform: translateY(-50%);
+    font-size: 28px;
+    color: $hover;
+  }
+
+  &>span {
+    width: 56px;
+    position: absolute;
+    font-size: 14px;
+    left: 46px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
 }
 
 .mission-detail {
@@ -14,7 +61,7 @@
 
   aside {
     // background-color: $content-bg;
-    background-color: $cos-white;
+    background-color: #fff;
     box-shadow: 0 0 10px rgba(128, 128, 128, 0.452);
 
     img {
@@ -28,6 +75,13 @@
       font-size: 1.2rem;
     }
 
+    .poster-divider {
+      width: 90%;
+      margin: auto;
+      color: #8d8d8d;
+      height: 2px;
+    }
+
     .poster-email {
       word-wrap: break-word; // 避免email超出框框範圍
     }
@@ -38,35 +92,59 @@
     }
   }
 
+  .left-block-btns-group {
+    margin-top: 2rem;
+    position: relative;
+    height: 70px;
+    background: linear-gradient(to bottom, rgba(240, 195, 150, 0.6078431373), #e6bd99);
+  }
+
+  .left-block-btn {
+    @extend %chat-button-style;
+    left: 8%
+  }
+
+  .apply-now-btn {
+    // left: 160px;
+    left: 55%;
+  }
+
   // 熱門任務
-  .MuiCard-root{
+  .MuiCard-root {
     width: 100%;
     margin: 1rem auto;
     background-color: $cos-white;
     align-items: center;
     border: 0;
   }
-  .MuiAspectRatio-content{
+
+  .MuiAspectRatio-content {
     background-color: transparent;
   }
-  .MuiTypography-root{
+
+  .MuiTypography-root {
     color: $text-main;
     font-weight: normal;
   }
-  .MuiChip-root{
+
+  .MuiChip-root {
     border: 1px solid $hover;
     color: $hover;
   }
-  .MuiTypography-body-sm{
+
+  .MuiTypography-body-sm {
     display: flex;
     justify-content: space-between;
   }
-  .popular-cards{
+
+  .popular-cards {
     width: 100%;
     gap: 1rem;
-    .popular-card-content{
+
+    .popular-card-content {
       width: 9rem;
-      .popular-card-title{
+
+      .popular-card-title {
         min-height: 2rem;
       }
     }
@@ -75,12 +153,18 @@
 
   header {
     // background-color: $content-bg;
-    background-color: $cos-white;
+    background-color: #fff;
     box-shadow: 0 0 10px rgba(128, 128, 128, 0.452);
 
-    // h2 {
-    //   font-weight: bold;
-    // }
+    h2 {
+      font-weight: bold;
+      color: $text-main;
+      opacity: 0.8;
+    }
+
+    .header-font {
+      color: $text-mark;
+    }
 
     img {
       cursor: pointer;
@@ -102,11 +186,12 @@
 
   .description {
     // background-color: $content-bg;
-    background-color: $cos-white;
+    background-color: #fff;
     box-shadow: 0 0 10px rgba(128, 128, 128, 0.452);
     // padding: 1rem 0;
   }
 
+  // 舊的
   .item {
     $block-width: 9px;
     width: calc(100% - 100px);
@@ -115,29 +200,30 @@
     &-title {
       display: flex;
       align-items: center;
-
       // margin-bottom: 0.5rem;
-      &::before {
-        //標題前的裝飾塊
-        content: "";
-        display: inline-block; //與標題文字水平排列
-        background-color: $hover;
-        width: $block-width;
-        height: 35px;
-        margin-right: 0.5rem;
-      }
+
+      // &::before {
+      //   //標題前的裝飾塊
+      //   content: "";
+      //   display: inline-block; //與標題文字水平排列
+      //   background-color: $hover;
+      //   width: $block-width;
+      //   height: 35px;
+      //   margin-right: 0.5rem;
+      // }
     }
 
-    .salary {
-      color: $price;
-    }
+    // .salary {
+    //   color: $price;
+    // }
 
-    &-content {
+    &-introduction {
       margin-left: $block-width + 5px;
-      font-weight: 500;
+      // font-weight: 500;
       text-align: justify;
       list-style: disc;
       padding-left: 1.5rem;
+      color: $text-mark;
 
       // list-style-position: inside;
       li {
@@ -164,6 +250,50 @@
     }
   }
 
+  // 新的
+  .item {
+    margin: 2rem 3rem 3rem 3rem;
+    width: calc(100% - 6rem); // 減掉兩邊的margin
+
+    & p {
+      margin: 0;
+      // color: #6d6868;
+    }
+
+    &-title {
+      color: $text-main;
+      opacity: 0.8;
+      font-weight: bold;
+    }
+
+    &-divider {
+      margin: 0.2rem 0 1rem 0;
+      color: darken($light-gray, 30%);
+      height: 2px;
+    }
+
+    &-content {
+      // margin-left: $detail-block-width + 5px;
+      padding-left: 0.2rem;
+      color: $text-mark;
+      // font-weight: 500;
+      text-align: justify;
+    }
+  }
+
+  .salary {
+    color: $price;
+    padding-left: 0.2rem;
+  }
+
+  .mission-place {
+    margin-bottom: 1.2rem;
+  }
+
+  .detailed-description {
+    margin-top: 3rem;
+  }
+
   iframe {
     width: 100%;
     height: 300px;
@@ -174,13 +304,6 @@
   @media screen and (max-width: 991px) {
     .item {
       width: calc(100% - 50px);
-
-      &-title {
-        &::before {
-          width: 10px;
-          height: 40px;
-        }
-      }
     }
 
     .mission-place {
@@ -192,12 +315,11 @@
     .item {
       width: calc(100% - 40px);
 
-      &-title {
-        &::before {
-          width: 9px;
-          height: 30px;
-        }
-      }
+      // &-title {
+      //   &::before {
+      //     height: 30px;
+      //   }
+      // }
     }
   }
 }

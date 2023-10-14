@@ -423,4 +423,18 @@ router.get("/record-count/:mission_id", (req, res) => {
   );
 });
 
+// 彈跳視窗：登入者資訊
+router.get("/login-user", (req, res) => {
+  const userId = req.query.userId; // 從請求的 URL 中獲取用戶 token
+  conn.execute(
+    `SELECT u.*
+    FROM userinfo AS u
+    WHERE u.user_id = ?;`,
+    [userId],
+    (error, result) => {
+      res.json({ result });
+    }
+  );
+});
+
 module.exports = router;
