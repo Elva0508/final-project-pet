@@ -52,11 +52,13 @@ app.use("/api/pay", payRouter);
 const authJWTRouter = require("./routes/auth-jwt");
 const userRouter = require("./routes/user-route");
 const JWTOtherRouter = require("./routes/auth-jwt-other");
+const email = require("./routes/email");
 
 // // // 掛載 auth-jwt 路由
 app.use("/api/auth-jwt", authJWTRouter);
 app.use("/api/auth-jwt-other", JWTOtherRouter);
 app.use("/api/user", userRouter);
+app.use("/api/email", email);
 
 //跨網域資源共用、設置白名單
 app.use(

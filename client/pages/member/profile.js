@@ -124,11 +124,11 @@ const ProfilePage = () => {
     //   alert("請輸入正確的手機號碼格式");
     //   return;
     // }
-    // 驗證地址不為空
-    // if (!detailAddress) {
-    //   alert("請輸入完整的地址");
-    //   return;
-    // }
+    //驗證地址不為空
+    if (!detailAddress) {
+      alert("請輸入完整的地址");
+      return;
+    }
     const updatedUserData = {
       email,
       name,

@@ -391,10 +391,22 @@ const Register = async (req, res) => {
         console.error(error);
         return res.status(500).json({ error: "註冊失敗，資料庫輸入有問題" });
       }
+      //獲得最新新增的使用者id
+      const userId = result.insertId;
+
+      //新增使用者優惠券
+      const addUserCoupon = " INSERT INTO users_coupon (user_id,coupon_id, valid) VALUES (?,30, 1)"
+      db.query(addUserCoupon, [userId], (error, result) =>{
+        if(error){
+          console.log(error);
+          return res.status(500).json({error: '增加優惠券失敗，資料庫輸入有問題'})
+        }
+      })
 
       console.log(result);
       res.status(200).json({ msg: "註冊成功" });
     });
+    
   });
 };
 
