@@ -30,10 +30,10 @@ class MemberService {
   }
 
   // selling頁route
-  getSelling(status) {
+  getSelling(user_id, status) {
     // const user = 1;
     return axios.get(API_URL + "selling", {
-      params: { user_id: user, status },
+      params: { user_id, status },
     });
   }
 

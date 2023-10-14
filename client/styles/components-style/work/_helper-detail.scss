@@ -157,7 +157,7 @@ $detail-block-width: 9px; //標題左側直槓槓
     padding: 0;
     margin-bottom: 2rem;
     .photo {
-      width: 100%;
+      width: 150px;
       border-radius: 2px 2px 0 0;
       overflow: hidden;
       img {
@@ -165,14 +165,32 @@ $detail-block-width: 9px; //標題左側直槓槓
       }
     }
     .filter-btns {
-      margin: 2rem 1rem 0 1rem;
-      display: flex;
-      gap: 10px;
-      & > * {
+      // margin: 2rem 1rem 0 1rem;
+      // display: flex;
+      // gap: 10px;
+      .swiper {
+        width: auto;
+      }
+      .swiper-wrapper {
+        // 增加每個按鈕的間距
+        // gap: 12px;
+        // width: 120%;
+      }
+      .swiper-slide {
+        // 讓按鈕外層的包裹框適應按鈕大小
+        width: auto;
+        margin-right: 0.5rem;
+      }
+
+      .swiper-wrapper .swiper-slide:last-child {
+        // margin-right: 2rem;
+      }
+      .filter-btn-item {
         // margin: 0 15px;
         border: 2px solid rgba(152, 152, 152, 0.6);
+        // max-width: 115px;
         border-radius: 8px;
-        padding: 3px 10px;
+        // padding: 3px 10px;
         background-color: $cos-white;
         box-shadow: 0px 0px 5px rgba(142, 142, 142, 0.145);
         color: lighten($text-dark, 25%);
@@ -475,18 +493,21 @@ $detail-block-width: 9px; //標題左側直槓槓
     margin: 0;
     background-color: $header-bg;
     box-shadow: 0px 0px 5px gray;
+    display: flex;
+    align-items: center;
+    .semi-modal-title {
+      margin: 0 1rem;
+    }
   }
-  .semi-modal-title {
-    margin: 0.8rem 1rem;
-  }
+
   .semi-modal-body {
     padding: 0.4rem 1rem 1rem 1rem;
     .body-item:not(:first-child) {
       margin-bottom: 1.2rem;
-      // & > :first-child {
-      //   font-size: 1.2rem;
-      //   color: $text-main;
-      // }
+    }
+    .body-item:first-child {
+      height: 40px;
+      margin: 0.8rem 0;
     }
   }
 
@@ -515,6 +536,32 @@ $detail-block-width: 9px; //標題左側直槓槓
       border-radius: 2px;
     }
   }
+
+  .semi-select,
+  .semi-select:hover,
+  .semi-select:focus,
+  .semi-select-open:hover,
+  .semi-select-focus:hover,
+  .semi-select-open,
+  .semi-select-focus,
+  .semi-select-open:active,
+  .semi-select-focus:active,
+  .semi-select:active {
+    // 移除各種預設的邊框背景
+    border: none;
+    background-color: transparent;
+  }
+  .semi-select-arrow {
+    // 移除箭頭
+    display: none;
+  }
+  .semi-select-content-wrapper {
+    width: 100%;
+    height: 40px;
+    .semi-select-selection-text {
+      text-align: end;
+    }
+  }
 }
 .pet-list-btn {
   background-color: transparent;
@@ -529,11 +576,12 @@ $detail-block-width: 9px; //標題左側直槓槓
     align-items: center;
   }
 }
+
 .pet-list-dropdown {
   position: relative;
-  width: 250px;
-  right: 90px;
-  top: -10px;
+  // width: 250px;
+  // right: 90px;
+  // top: -10px;
 }
 .semi-select-focus,
 .semi-select-open,
@@ -550,9 +598,10 @@ $detail-block-width: 9px; //標題左側直槓槓
 .pet-list,
 .pet-list-btn {
   .pet-photo {
-    width: 55px;
-    height: 55px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
+    // margin-right: 0.1rem;
   }
   .semi-select-content-wrapper {
     width: 100%;
@@ -565,6 +614,13 @@ $detail-block-width: 9px; //標題左側直槓槓
 
 @media screen and (max-width: 991px) {
   .helper-detail {
+    section {
+      // margin: 0.5rem;
+      width: 96%;
+      margin: auto;
+      // background-color: $main-bg;
+      // box-shadow: none;
+    }
     .left-block {
       position: relative;
       z-index: 20;
@@ -595,6 +651,7 @@ $detail-block-width: 9px; //標題左側直槓槓
         background: linear-gradient(to bottom, #f0c3969b, lighten($hover, 15%));
         padding: 1rem 0;
         box-shadow: 1px 1px 10px rgba(185, 185, 185, 0.363);
+        margin-top: 1.4rem;
         // border-radius: 0;
         .btn-message,
         .heart-icon,
@@ -610,20 +667,23 @@ $detail-block-width: 9px; //標題左側直槓槓
             display: flex;
             justify-content: center;
             align-items: center;
-            width: 50px;
-            height: 50px;
+            width: 45px;
+            height: 45px;
             border-radius: 50%;
             background-color: white;
             box-shadow: 1px 1px 10px rgba(79, 79, 79, 0.719);
             border: none;
-            margin-right: 8px;
+            margin-right: 4px;
             svg {
-              font-size: 28px;
+              font-size: 24px;
               color: $hover;
             }
             // .fill-icon {
             //     color: $price;
             //   }
+          }
+          & > :last-child {
+            font-size: 14px;
           }
         }
 
@@ -682,6 +742,73 @@ $detail-block-width: 9px; //標題左側直槓槓
     }
     .right-block {
       margin-top: 1px;
+      padding-top: 1.8rem;
+      .item {
+        margin: 0.5rem 0.5rem 4rem 0.5rem;
+      }
+      .service-price {
+        .price-intro-card {
+          padding: 5px;
+        }
+        .card-title {
+          font-size: 16px;
+          display: flex;
+          align-items: center;
+          svg {
+            font-size: 20px;
+            margin-right: 0.1rem;
+          }
+        }
+        .card-content {
+          flex-direction: column;
+          width: 100%;
+          // justify-content: space-between;
+          align-items: baseline;
+          left: 0;
+          bottom: 25px;
+          padding: 0.2rem;
+          p,
+          span {
+            font-size: 16px;
+            padding: 0;
+          }
+          span.price {
+            font-size: 22px;
+          }
+          & > :last-child {
+            font-size: 14px;
+            // margin-left: auto;
+            align-self: flex-end;
+          }
+        }
+      }
+      .item-image {
+        .swiper-slide {
+          margin: 0;
+          img {
+            width: 325px;
+            height: 325px;
+          }
+        }
+      }
+      .price-intro-card {
+        .card-bg {
+          left: -8px;
+          width: 105%;
+          height: 108%;
+          transform: rotate(350deg);
+        }
+      }
+      .evaluation-bar .ranking {
+        svg {
+          font-size: 2rem;
+          // color: darken($star, 3%);
+        }
+      }
+    }
+
+    .evaluation-bar-left {
+      width: 100%;
     }
   }
 

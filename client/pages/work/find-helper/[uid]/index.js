@@ -37,6 +37,7 @@ import {
 } from "@douyinfe/semi-illustrations";
 
 import dayjs from "dayjs";
+import { set } from "react-hook-form";
 // register Swiper custom elements
 register();
 const ImageSwiper = ({ images }) => {
@@ -50,13 +51,13 @@ const ImageSwiper = ({ images }) => {
           .swiper-button-next,
           .swiper-button-prev {
             background-color: #FFFDFB;
-            width:50px;
-            height:50px;
+            width:45px;
+            height:45px;
             border-radius: 50%;
             color: #F8CB9F;
             box-shadow: 0 0 9px rgba(0, 0, 0, 0.5);
             background-position: center;
-            background-size: 25px;
+            background-size: 22px;
             background-repeat: no-repeat;
           }
 
@@ -101,164 +102,6 @@ const ImageSwiper = ({ images }) => {
   );
 };
 
-// const ReviewSwiper = ({ reviews, setReviews }) => {
-//   const [transReview, setTransReview] = useState(reviews);
-
-//   const router = useRouter();
-//   const { uid } = router.query;
-//   const sliderRef = useRef(null);
-
-//   let fiveStar = 0;
-//   let fourStar = 0;
-//   let threeStar = 0;
-//   let twoStar = 0;
-//   let oneStar = 0;
-//   reviews.map((review) => {
-//     switch (review.star_rating) {
-//       case 5:
-//         fiveStar++;
-//         break;
-//       case 4:
-//         fourStar++;
-//         break;
-//       case 3:
-//         threeStar++;
-//         break;
-//       case 2:
-//         twoStar++;
-//         break;
-//       case 1:
-//         oneStar++;
-//         break;
-//     }
-//   });
-//   const settings = {
-//     dots: true,
-//     infinite: false,
-//     speed: 500,
-//     slidesToShow: 3,
-//     slidesToScroll: 3,
-//     // nextArrow: <img src="/caret-right.svg" className="next-arrow" />,
-//     // prevArrow: <img src="/caret-left.svg" className="prev-arrow" />,
-//     responsive: [
-//       {
-//         breakpoint: 1280,
-//         settings: {
-//           slidesToShow: 2.5,
-//           slidesToScroll: 2,
-//           infinite: true,
-//           dots: true,
-//         },
-//       },
-//       {
-//         breakpoint: 1048,
-//         settings: {
-//           slidesToShow: 2,
-//           slidesToScroll: 2,
-//           initialSlide: 2,
-//         },
-//       },
-//       {
-//         breakpoint: 876,
-//         settings: {
-//           slidesToShow: 1.5,
-//           slidesToScroll: 1,
-//         },
-//       },
-//       {
-//         breakpoint: 694,
-//         settings: {
-//           slidesToShow: 1,
-//           slidesToScroll: 1,
-//         },
-//       },
-//     ],
-//   };
-
-//   return (
-//     <>
-//       <div className="review-card-group">
-//         <div className="size-5">服務評價</div>
-//         <p className="m-size-7">
-//           (共<span>{reviews.length}</span>則相關評論)
-//         </p>
-
-//         {filterReview.length > 0 ? (
-//           <Slider {...settings} ref={sliderRef}>
-//             {filterReview.map((review) => (
-//               <div className="review-card" style={{ width: "350px" }}>
-//                 <div className="review-card-head d-flex justify-content-center align-items-center">
-//                   <img
-//                     className="review-card-avatar"
-//                     src={`${review.cover_photo}`}
-//                   />
-//                   <div className="review-card-info d-flex flex-column justify-content-between ps-2">
-//                     <div className="d-flex justify-content-between">
-//                       <div className="username size-6">{review.name}</div>
-//                       <div className="date size-7">{review.review_date}</div>
-//                     </div>
-//                     <div className="ranking mb-2">
-//                       <Rating
-//                         name="half-rating-read"
-//                         value={review.star_rating}
-//                         readOnly
-//                         precision={0.5}
-//                         emptyIcon={<StarIcon style={{ opacity: 0.35 }} />}
-//                       />
-//                     </div>
-//                   </div>
-//                 </div>
-//                 <div className="review-card-body mt-3">
-//                   {review.review_content}
-//                 </div>
-//               </div>
-//             ))}
-//           </Slider>
-//         ) : (
-//           ""
-//         )}
-//       </div>
-//     </>
-//   );
-// };
-
-// export const HelperDetailSticky = () => {
-
-//   const { isAuthenticated } = useAuth();
-//   const router = useRouter();
-//   const uid = parseInt(router.query.uid);
-//   // console.log(router.query);
-//   // useEffect(() => {
-//   //   // 初次渲染時載入儲存在localStorage的收藏
-//   //   if (localStorage.getItem("helperFav"))
-//   //     setCollection(JSON.parse(localStorage.getItem("helperFav")));
-//   // }, []);
-//   useEffect(() => {
-//     // 更新localStorage的收藏
-//     if (collection.length === 0) {
-//       localStorage.removeItem("helperFav");
-//     } else {
-//       localStorage.setItem("helperFav", JSON.stringify(collection));
-//     }
-//   }, [collection]);
-//   // const [isFavorite, setIsFavorite] = useState(false); // 初始狀態為未收藏
-//   // const toggleFavorite = () => {
-//   //   setIsFavorite(!isFavorite); // 切換收藏狀態
-//   // };
-
-//   return (
-//     <section className="get-price d-flex justify-content-around align-items-center">
-
-//       <div className="d-flex justify-content-around align-items-center">
-//         <p className="get-price-number size-5 me-2">
-//           <span>NT$</span>
-//           <span>500</span>/次
-//         </p>
-//         {/* <Quotation /> */}
-//       </div>
-//     </section>
-//   );
-// };
 const Quotation = () => {
   const router = useRouter();
   const { uid } = router.query;
@@ -268,15 +111,17 @@ const Quotation = () => {
   const [endDateOpen, setEndDateOpen] = useState(false);
   const [profile, setProfile] = useState({});
   const [serviceList, setServiceList] = useState([]);
-  const [petsName, setPetsName] = useState(null);
+  const [formClear, setFormClear] = useState(false);
+  // const [petsName, setPetsName] = useState(null);
+  const { userId } = useAuth();
   const showDialog = () => {
     setVisible(true);
   };
+
   const handleSubmit = () => {
     setVisible(false);
-    const user = 1;
     const requestData = {
-      customer_id: user,
+      customer_id: userId,
       startDay,
       endDay,
       days,
@@ -293,7 +138,7 @@ const Quotation = () => {
       .createReqOrder(requestData)
       .then((response) => {
         console.log(response.data);
-        if (response.data.status === 200) {
+        if (response.data.status === 200 && response.data.data) {
           setTime(1);
           setFrequency(1);
           setDays(0);
@@ -303,6 +148,7 @@ const Quotation = () => {
           setServiceType({});
           setNote("");
           setLocation("");
+          alert("預約成功!");
         }
       })
       .catch((e) => {
@@ -366,7 +212,6 @@ const Quotation = () => {
             price: info.house_price,
           });
         }
-
         setServiceList(serviceArr);
       })
       .catch((e) => {
@@ -375,14 +220,42 @@ const Quotation = () => {
   }, [uid]);
   useEffect(() => {
     workService
-      .getPetInfo(uid)
+      .getPetInfo(userId)
       .then((response) => {
         setPets(response?.data?.data);
       })
       .catch((e) => {
         console.log(e);
       });
-  }, []);
+  }, [userId]);
+
+  useEffect(() => {
+    if (
+      !startDay ||
+      !endDay ||
+      !days ||
+      !petsValue ||
+      !serviceType.value ||
+      !time ||
+      !frequency ||
+      !note ||
+      !location
+    ) {
+      setFormClear(false);
+    } else {
+      setFormClear(true);
+    }
+  }, [
+    startDay,
+    endDay,
+    days,
+    petsValue,
+    serviceType,
+    time,
+    frequency,
+    note,
+    location,
+  ]);
   const handleDisabledStart = (date) => {
     if (dayjs(date).isBefore(today)) {
       return true;
@@ -451,7 +324,11 @@ const Quotation = () => {
             <Button type="tertiary" onClick={handleCancel}>
               取消
             </Button>
-            <button className="btn-confirm" onClick={handleSubmit}>
+            <button
+              className="btn-confirm"
+              onClick={handleSubmit}
+              disabled={formClear ? false : true}
+            >
               確認
             </button>
           </div>
@@ -463,6 +340,10 @@ const Quotation = () => {
             defaultValue="請選擇寵物"
             className="pet-list-btn"
             dropdownClassName="pet-list-dropdown"
+            onChange={(value) => {
+              console.log(value);
+              setPetsValue(value);
+            }}
           >
             {pets.map((pet) => (
               <Select.Option value={pet.pet_id} className="pet-list">
@@ -578,9 +459,10 @@ const Quotation = () => {
             />
           </div>
         </div>
-        <div className="body-item d-flex justify-content-between align-items-center">
-          <p className="size-6">地點</p>
+        <div className="body-item d-flex flex-column justify-content-between">
+          <p className="size-6 mb-2">地點</p>
           <input
+            className="form-input"
             type="text"
             value={location}
             onChange={(e) => {
@@ -591,6 +473,8 @@ const Quotation = () => {
         <div className="body-item d-flex flex-column justify-content-between">
           <p className="size-6 mb-2">備註</p>
           <textarea
+            className="form-area"
+            rows="8"
             placeholder="輸入備註或是您毛小孩的需求與個性狀況"
             onChange={(e) => {
               console.log(e.target.value);
@@ -783,17 +667,17 @@ const HelperDetail = () => {
   const [images, setImages] = useState([]);
   const { isAuthenticated, userId } = useAuth();
   const [currentPage, setPage] = useState(1);
-  const [filterReview, setFilterReview] = useState([]);
+  // const [filterReview, setFilterReview] = useState([]);
   const [star, setStar] = useState("all");
   const contentRef = useRef();
   const [totalRows, setTotalRows] = useState(null);
+  const [currentReviewCount, setCurrentReviewCount] = useState(null);
   const { collection, setCollection } = useHelper();
   const [fiveStar, setFiveStar] = useState(0);
   const [fourStar, setFourStar] = useState(0);
   const [threeStar, setThreeStar] = useState(0);
   const [twoStar, setTwoStar] = useState(0);
   const [oneStar, setOneStar] = useState(0);
-  // const uid = parseInt(router.query.uid);
   const handleFav = (e) => {
     if (isAuthenticated) {
       if (!collection.find((item) => item === uid)) {
@@ -814,19 +698,14 @@ const HelperDetail = () => {
   };
 
   const handleChangeStar = (e) => {
-    if (e.target.value) {
-      // 有value，代表點在button上而不是button外的div上
-      setStar(e.target.value);
+    setStar(e.currentTarget.value);
+    //先移除所有btn上的樣式，再加樣式在目前點擊的btn上
+    const btnItem = document.querySelectorAll(".filter-btn-item");
 
-      // 將HTML Collection變成可迭代的陣列，先移除所有btn上的樣式，再加樣式在目前點擊的btn上
-      const children = e.currentTarget.children;
-      let childrenArr = Array.from(children);
-      childrenArr.forEach((btn) => {
-        btn.classList.remove("filter-btns-focus");
-      });
-      console.log(e.currentTarget.children);
-      e.target.classList.add("filter-btns-focus");
-    }
+    btnItem.forEach((btn) => {
+      btn.classList.remove("filter-btns-focus");
+    });
+    e.currentTarget.classList.add("filter-btns-focus");
   };
   const changePage = (page) => {
     console.log("Page: ", page);
@@ -835,14 +714,14 @@ const HelperDetail = () => {
   useEffect(() => {
     const handleScroll = () => {
       const width = window.innerWidth;
-      console.log(width);
+      // console.log(width);
       const leftBlock = document.querySelector(".left-block");
       if (width > 992) {
         const scrollY = window.scrollY;
         const windowHeight = window.innerHeight;
         const documentHeight = document.documentElement.scrollHeight;
         const distanceToBottom = documentHeight - (scrollY + windowHeight);
-        console.log(scrollY, windowHeight, documentHeight);
+        // console.log(scrollY, windowHeight, documentHeight);
         // console.log(leftBlock);
         if (distanceToBottom < 145) {
           leftBlock.style.position = "relative";
@@ -862,7 +741,7 @@ const HelperDetail = () => {
     // 移除事件
     return () => {
       window.removeEventListener("scroll", handleScroll);
-      window.addEventListener("resize", handleScroll);
+      window.removeEventListener("resize", handleScroll);
     };
   }, []);
 
@@ -872,18 +751,23 @@ const HelperDetail = () => {
         .getHelperDetail(uid, currentPage)
         .then((response) => {
           const data = response?.data?.data;
-          console.log(response);
+          // console.log(response);
           setTotalRows(data.allReviews?.totalRows);
           setProfile(data.profile[0]);
-          setReviews(data.reviews);
+          // setReviews(data.reviews);
           setImages(data.images);
 
-          // 計算每個星數的評論數
+          // 先清除重渲染可能造成的值再計算每個星數的評論數
+          setFiveStar(0);
+          setFourStar(0);
+          setThreeStar(0);
+          setTwoStar(0);
+          setOneStar(0);
           data.allReviews?.result.map((review) => {
             switch (parseInt(review.star_rating)) {
               case 5:
                 setFiveStar((pre) => {
-                  console.log(pre);
+                  // console.log(pre);
                   return pre + 1;
                 });
 
@@ -922,24 +806,37 @@ const HelperDetail = () => {
       contentRef.current.innerHTML = profile.job_description;
     }
   }, [profile]);
-  useEffect(() => {
-    console.log(isAuthenticated);
-  }, []);
 
   useEffect(() => {
     if (uid) {
+      // 切換星數篩選時，重新回到第一頁
+      setPage(1);
       workService
-        .getFilterReview(uid, star)
+        .getFilterReview(uid, star, currentPage)
         .then((response) => {
-          console.log(response.data);
-          console.log(response.data.reviews);
-          setFilterReview(response.data.reviews);
+          // console.log(response.data);
+          // console.log(response.data.reviews);
+          setReviews(response.data.reviews);
+          setCurrentReviewCount(response.data.review_count);
         })
         .catch((e) => {
           console.log(e);
         });
     }
   }, [uid, star]);
+  useEffect(() => {
+    workService
+      .getFilterReview(uid, star, currentPage)
+      .then((response) => {
+        // console.log(response.data);
+        // console.log(response.data.reviews);
+        setReviews(response.data.reviews);
+        setCurrentReviewCount(response.data.review_count);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  }, [currentPage]);
 
   return (
     <>
@@ -1048,7 +945,7 @@ const HelperDetail = () => {
                   到府美容：<span>單次價格以一次美容服務為單位</span>
                 </div>
 
-                <div className="d-flex gap-4 mt-3">
+                <div className="d-flex gap-2 gap-md-4 mt-3">
                   <div className="price-intro-card">
                     <img src="/job-icon/cat-tree.svg" className="card-bg" />
                     <div className="card-title">
@@ -1056,9 +953,11 @@ const HelperDetail = () => {
                       到府代餵
                     </div>
                     <div className="card-content">
-                      <p>
-                        NT$<span className="price">400</span>/半小時
-                      </p>
+                      <div className="d-flex align-items-center">
+                        <p className="">NT$</p>
+                        <span className="price">400</span>
+                      </div>
+                      <p className="mt-1">/ 半小時</p>
                     </div>
                   </div>
                   <div className="price-intro-card">
@@ -1068,9 +967,11 @@ const HelperDetail = () => {
                       安親寄宿
                     </div>
                     <div className="card-content">
-                      <p>
-                        NT$<span className="price">400</span>/天
-                      </p>
+                      <div className="d-flex align-items-center">
+                        <p className="">NT$</p>
+                        <span className="price">400</span>
+                      </div>
+                      <p className="mt-1">/ 天</p>
                     </div>
                   </div>
                   <div className="price-intro-card">
@@ -1080,9 +981,11 @@ const HelperDetail = () => {
                       到府美容
                     </div>
                     <div className="card-content">
-                      <p>
-                        NT$<span className="price">400</span>/次
-                      </p>
+                      <div className="d-flex align-items-center">
+                        <p className="">NT$</p>
+                        <span className="price">400</span>
+                      </div>
+                      <p className="mt-1">/ 次</p>
                     </div>
                   </div>
                 </div>
@@ -1135,7 +1038,7 @@ const HelperDetail = () => {
                       <div
                         className="have"
                         style={{
-                          width: `${(fiveStar / reviews.length) * 100}%`,
+                          width: `${(fiveStar / totalRows) * 100}%`,
                         }}
                       ></div>
                     </div>
@@ -1146,7 +1049,7 @@ const HelperDetail = () => {
                       <div
                         className="have"
                         style={{
-                          width: `${(fourStar / reviews.length) * 100}%`,
+                          width: `${(fourStar / totalRows) * 100}%`,
                         }}
                       ></div>
                     </div>
@@ -1157,7 +1060,7 @@ const HelperDetail = () => {
                       <div
                         className="have"
                         style={{
-                          width: `${(threeStar / reviews.length) * 100}%`,
+                          width: `${(threeStar / totalRows) * 100}%`,
                         }}
                       ></div>
                     </div>
@@ -1168,7 +1071,7 @@ const HelperDetail = () => {
                       <div
                         className="have"
                         style={{
-                          width: `${(twoStar / reviews.length) * 100}%`,
+                          width: `${(twoStar / totalRows) * 100}%`,
                         }}
                       ></div>
                     </div>
@@ -1179,40 +1082,77 @@ const HelperDetail = () => {
                       <div
                         className="have"
                         style={{
-                          width: `${(oneStar / reviews.length) * 100}%`,
+                          width: `${(oneStar / totalRows) * 100}%`,
                         }}
                       ></div>
                     </div>
                   </div>
                 </div>
               </div>
-              <div className="filter-btns " onClick={handleChangeStar}>
-                <button
-                  value={"all"}
-                  onClick={handleChangeStar}
-                  className="filter-btns-focus"
-                >
-                  全部評論({totalRows})
-                </button>
-                <button value={5}>
-                  5星(<span>{fiveStar}</span>)
-                </button>
-                <button value={4}>
-                  4星(<span>{fourStar}</span>)
-                </button>
-                <button value={3}>
-                  3星(<span>{threeStar}</span>)
-                </button>
-                <button value={2}>
-                  2星(<span>{twoStar}</span>)
-                </button>
-                <button value={1}>
-                  1星(<span>{oneStar}</span>)
-                </button>
-              </div>
-              {filterReview.length > 0 ? (
+              <div className="filter-btns " onClick={handleChangeStar}></div>
+              <Swiper
+                slidesPerView="auto"
+                spaceBetween={10}
+                className="filter-btns"
+              >
+                <SwiperSlide>
+                  <button
+                    value={"all"}
+                    className="filter-btns-focus filter-btn-item"
+                    onClick={handleChangeStar}
+                  >
+                    全部評論({totalRows})
+                  </button>
+                </SwiperSlide>
+                <SwiperSlide>
+                  <button
+                    value={5}
+                    className="filter-btn-item"
+                    onClick={handleChangeStar}
+                  >
+                    5星(<span>{fiveStar}</span>)
+                  </button>
+                </SwiperSlide>
+                <SwiperSlide>
+                  <button
+                    value={4}
+                    className="filter-btn-item"
+                    onClick={handleChangeStar}
+                  >
+                    4星(<span>{fourStar}</span>)
+                  </button>
+                </SwiperSlide>
+                <SwiperSlide>
+                  <button
+                    value={3}
+                    className="filter-btn-item"
+                    onClick={handleChangeStar}
+                  >
+                    3星(<span>{threeStar}</span>)
+                  </button>
+                </SwiperSlide>
+                <SwiperSlide>
+                  <button
+                    value={2}
+                    className="filter-btn-item"
+                    onClick={handleChangeStar}
+                  >
+                    2星(<span>{twoStar}</span>)
+                  </button>
+                </SwiperSlide>
+                <SwiperSlide>
+                  <button
+                    value={1}
+                    className="filter-btn-item"
+                    onClick={handleChangeStar}
+                  >
+                    1星({oneStar})
+                  </button>
+                </SwiperSlide>
+              </Swiper>
+              {reviews.length > 0 ? (
                 <>
-                  {filterReview.map((review) => (
+                  {reviews.map((review) => (
                     <div className="review-card">
                       <div className="review-card-head d-flex justify-content-center align-items-center">
                         <img
@@ -1248,7 +1188,7 @@ const HelperDetail = () => {
               )}
               <Pagination
                 current={currentPage}
-                total={reviews?.review_count}
+                total={currentReviewCount}
                 pageSize="10"
                 showSizeChanger={false}
                 rootClassName="cos-pagination"
