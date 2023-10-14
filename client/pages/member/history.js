@@ -14,6 +14,8 @@ export default function History() {
   const [count,setCount]=useState([])
   const router = useRouter();
   const [activePage, setActivePage] = useState(1)
+  const [sort,setSort]=useState()
+
 
   const handleButtonClick = (screenName) => {
     setCurrentScreen(screenName);
@@ -77,9 +79,32 @@ useEffect(() => {
           <ListD />
           <div className="d-flex flex-column col-12 col-md-8 history">
 
+        <div className="d-flex justify-content-between">
           <p className="size-4 big mb-2">
                  <span className="my">▍</span>刊登紀錄
                 </p>
+
+                <div className="">
+              <select
+                className="form-select"
+                style={{ width: "200px" }}
+                onChange={(e) =>
+                 setSort(e.target.value)
+                }
+              >
+              <option>
+                排序方法
+              </option>
+                <option value={1} >
+                  刊登日期：由近到遠
+                </option>
+                <option value={2} >
+                  刊登日期：由遠到近
+                </option>
+              </select>
+            </div>
+</div>
+
               <div className="">
                 <button
                   className={` size-6 listbutton first ${
@@ -115,9 +140,9 @@ useEffect(() => {
                   已下架
                 </button>
               </div>
-              {currentScreen === "2" && <HistoryStatusAll history={history} getHistory={getHistory} idCounts={idCounts} activePage={activePage} setActivePage={setActivePage} />}
-              {currentScreen === "0" && <HistoryStatus history={history} getHistory={getHistory} currentScreen={currentScreen} idCounts={idCounts} activePage={activePage} setActivePage={setActivePage} />}
-              {currentScreen === "1" && <HistoryStatus history={history} getHistory={getHistory} currentScreen={currentScreen} idCounts={idCounts} activePage={activePage} setActivePage={setActivePage} />}
+              {currentScreen === "2" && <HistoryStatusAll history={history} getHistory={getHistory} idCounts={idCounts} activePage={activePage} setActivePage={setActivePage} sort={sort} setHistory={setHistory}/>}
+              {currentScreen === "0" && <HistoryStatus history={history} getHistory={getHistory} currentScreen={currentScreen} idCounts={idCounts} activePage={activePage} setActivePage={setActivePage} sort={sort} setHistory={setHistory}/>}
+              {currentScreen === "1" && <HistoryStatus history={history} getHistory={getHistory} currentScreen={currentScreen} idCounts={idCounts} activePage={activePage} setActivePage={setActivePage} sort={sort} setHistory={setHistory}/>}
 
             </div>
           </div>

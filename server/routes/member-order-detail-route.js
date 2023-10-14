@@ -19,7 +19,7 @@ const connection=require("../db");
         pr.review_content AS review_content,
         pr.star_rating AS star_rating
  FROM orders AS o 
- JOIN users AS u ON o.user_id = u.user_id 
+ JOIN userinfo AS u ON o.user_id = u.user_id 
  JOIN order_details AS od ON o.oid=od.order_id
  JOIN products AS p ON od.product_id = p.product_id   
  JOIN order_status AS os ON o.status_id = os.status_id 

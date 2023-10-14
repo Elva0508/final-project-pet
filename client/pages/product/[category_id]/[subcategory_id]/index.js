@@ -11,6 +11,7 @@ import { BiSearchAlt } from "react-icons/bi";
 import jwt_decode from 'jwt-decode';
 import { useCart } from "@/hooks/useCart"
 import { useRouter } from "next/router";
+import { string } from 'yup';
 
 
 const Search = ({ handleSearch, placeholder, color, onClick, search, setSearch }) => {
@@ -80,6 +81,7 @@ export default function ProductList() {
     //     // eslint-disable-next-line
     //   }, [router.query]);
 // 讀取資料庫資料
+const [productDataOrigin, setProductDataOrigin] = useState([]);
 const [productData, setProductData] = useState([]); // 初始化為一個帶有 result 屬性的物件
 
     useEffect(() => {    
@@ -95,7 +97,8 @@ const [productData, setProductData] = useState([]); // 初始化為一個帶有 
               const response = await axios.get(`http://localhost:3005/api/product/product/subcategory/${subcategory_id}`);
               const data = response.data.result;
               console.log(data);
-              setProductData(data); // 将服务器端的 result 放入物件中
+              setProductData(data); 
+              setProductDataOrigin(data)// 将服务器端的 result 放入物件中
               // setMainPic(data[0].images_one)
               // console.log(response.data.result[0].images_one)
             } catch (error) {
@@ -338,27 +341,49 @@ const [productData, setProductData] = useState([]); // 初始化為一個帶有 
     };
 
     //傳送vendor, minPrice, maxPrice的到後端
+    // const handlePriceVendorfilter = (vendor, minPrice, maxPrice) => {
+    //     console.log("handlePriceVendorfilter 函数被使用，search結果:", vendor, minPrice, maxPrice);
+    //     axios.get('http://localhost:3005/api/product/filter_sort', {
+    //         params: {
+    //             vendor, 
+    //             minPrice, 
+    //             maxPrice
+    //         }
+    //     })
+    //         .then(response => {
+    //             // 请求完成后隐藏加载蒙层
+    //             setIsLoading(false);
+    //             setProductData(response.data.result);
+    //             setVendor(''); //搜尋之後清空搜尋文字
+    //             setMinPrice('');
+    //             setMaxPrice('');
+    //         })
+    //         .catch(error => {
+    //             console.error('Error:', error);
+    //             setIsLoading(false);
+    //         });
+    // };
+
     const handlePriceVendorfilter = (vendor, minPrice, maxPrice) => {
         console.log("handlePriceVendorfilter 函数被使用，search結果:", vendor, minPrice, maxPrice);
-        axios.get('http://localhost:3005/api/product/filter_sort', {
-            params: {
-                vendor, 
-                minPrice, 
-                maxPrice
-            }
-        })
-            .then(response => {
-                // 请求完成后隐藏加载蒙层
-                setIsLoading(false);
-                setProductData(response.data.result);
-                setVendor(''); //搜尋之後清空搜尋文字
-                setMinPrice('');
-                setMaxPrice('');
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                setIsLoading(false);
-            });
+        let lowPrice,highPrice,finalData
+
+        if(minPrice===""||minPrice==null){
+            lowPrice=productDataOrigin    
+        }else{
+            lowPrice=productDataOrigin.filter((v)=>v.specialoffer>=minPrice) 
+        }
+        if(maxPrice===""||maxPrice==null){
+            highPrice=lowPrice
+        }else{
+            highPrice=lowPrice.filter((v)=>v.specialoffer<=maxPrice)
+        }
+        if(vendor==="" ||vendor==null){
+            finalData=highPrice          
+        }else{
+            finalData=highPrice.filter((v)=>v.vendor==vendor)
+        }
+        setProductData(finalData)
     };
 
 
