@@ -55,6 +55,60 @@ const Search = ({ handleSearch, placeholder, color, onClick, search, setSearch }
 
 export default function ProductList() {
 
+    const router = useRouter();
+    // 手風琴剛開始只有第一格打開
+    const [activeKey, setActiveKey] = useState(0); // 初始值为0，表示第一个格子展开
+
+
+    // useEffect(() => {    
+    //     if (router.isReady) {
+    //       // 確保能得到router.query有值
+    //       const {category_id,subcategory_id } = router.query;
+    //       console.log(subcategory_id);
+    //       console.log(category_id);
+    //       setActiveKey(parseInt(category_id)-1)
+    //       // 有pid後，向伺服器要求資料，設定到狀態中
+    //       axios.get(`http://localhost:3005/api/product/product/subcategory/${subcategory_id}`).then((response) => {
+    //         const data = response.data.result;
+    //         console.log(data);
+    //         setProductData(data); // 將伺服器端的 result 放入物件中
+    //         // setMainPic(data[0].images_one)
+    //         // console.log(response.data.result[0].images_one)
+    //     })
+
+    //     }
+    //     // eslint-disable-next-line
+    //   }, [router.query]);
+    // 讀取資料庫資料
+    const [productData, setProductData] = useState([]); // 初始化為一個帶有 result 屬性的物件
+
+    useEffect(() => {
+        if (router.isReady) {
+            // 确保能得到 router.query 有值
+            const fetchData = async () => {
+                const { category_id, subcategory_id } = router.query;
+                console.log(subcategory_id);
+                // console.log(category_id);
+                setActiveKey(parseInt(category_id) - 1);
+
+                try {
+                    const response = await axios.get(`http://localhost:3005/api/product/product/subcategory/${subcategory_id}`);
+                    const data = response.data.result;
+                    console.log(data);
+                    setProductData(data); // 将服务器端的 result 放入物件中
+                    // setMainPic(data[0].images_one)
+                    // console.log(response.data.result[0].images_one)
+                } catch (error) {
+                    console.error("Error:", error);
+                }
+            };
+
+            fetchData();
+        }
+        // eslint-disable-next-lineuserIdcategory
+    }, [router.query]);
+
+
     // 用於儲存解析後的userID
     const [userId, setUserId] = useState(null);
     console.log(userId);
@@ -76,20 +130,19 @@ export default function ProductList() {
         }
     }, []);
 
-    // 讀取資料庫資料
-    const [productData, setProductData] = useState([]); // 初始化為一個帶有 result 屬性的物件
+
     //圖片抽換
     const [mainPic, setMainPic] = useState(''); // 初始化為 v.images_one
     // 讀取all product 資料庫資料
-    useEffect(() => {
-        axios.get("http://localhost:3005/api/product").then((response) => {
-            const data = response.data.result;
-            console.log(data);
-            setProductData(data); // 將伺服器端的 result 放入物件中
-            setMainPic(data[0].images_one)
-            console.log(response.data.result[0].images_one)
-        });
-    }, []);
+    // useEffect(() => {
+    //     axios.get("http://localhost:3005/api/product").then((response) => {
+    //         const data = response.data.result;
+    //         console.log(data);
+    //         setProductData(data); // 將伺服器端的 result 放入物件中
+    //     //     setMainPic(data[0].images_one)
+    //     //     console.log(response.data.result[0].images_one)
+    //     });
+    // }, []);
 
     //分頁
     const itemsPerPage = 18
@@ -100,13 +153,11 @@ export default function ProductList() {
 
     const total = productData
     // console.log(total)
-    const router = useRouter();
 
     const [isUpIconVisible, setIsUpIconVisible] = useState(false);
     const [isPriceIconVisible, setIsPriceIconVisible] = useState(false);
 
-    // 手風琴剛開始只有第一格打開
-    const [activeKey, setActiveKey] = useState(0); // 初始值为0，表示第一个格子展开
+
 
     //排序按鈕切換
     const toggleUpIcon = () => {
@@ -125,6 +176,15 @@ export default function ProductList() {
             setIsUpIconVisible(false);
         }
     };
+
+    //讀出大類小類
+    // const [subcategoryData, setSubcategoryData] = useState({ result: [] });
+    // useEffect(() => {
+    //     axios.get("http://localhost:3005/api/product/category").then((response) => {
+    //         setSubcategoryData({ result: response.data.result });
+    //     });
+    // }, [])
+
 
     //讀出大類
     const [subcategoryData, setSubcategoryData] = useState({ result: [] });
@@ -162,6 +222,7 @@ export default function ProductList() {
     //     setIsLoading(true);
     //     axios.get('http://localhost:3005/api/product/filter_sort', {
     //         params: {
+
     //             sortBy: selectedSort,
     //         }
     //     })
@@ -175,8 +236,7 @@ export default function ProductList() {
     //             console.error('Error:', error);
     //             setIsLoading(false);
     //         });
-    // }, [selectedSort]);
-
+    // }, [ selectedSort]);
 
     // 當選擇不同的篩選條件時，更新相應的狀態
     // 透過 event.target.value 來找到用戶輸入的值
@@ -226,7 +286,7 @@ export default function ProductList() {
     };
 
 
-    // //廠商與價錢篩選
+    //廠商與價錢篩選
     // const handleFilterSubmit = () => {
     //     // 在事件處理程序中構建請求資料
     //     const requestData = {
@@ -498,7 +558,7 @@ export default function ProductList() {
                                                 data-bs-parent="#accordionPanelsStayOpenExample" // 將這行添加到這個button元素中
                                                 onClick={() => {
                                                     router.push(`/product/${category.category_id}`)
-                                                    // setActiveKey(index); // 当按钮被点击时，更新activeKey状态
+                                                    setActiveKey(index); // 当按钮被点击时，更新activeKey状态
                                                     // handleCategoryChange(category.category_name);
                                                     // console.log(`Button for category ${category.category_name} clicked.`);
                                                 }}
@@ -527,7 +587,6 @@ export default function ProductList() {
                                                     }
                                                     return null; // 或者直接不返回任何内容
                                                 })}
-
                                             </div>
                                         </div>
                                     </div>
@@ -613,10 +672,8 @@ export default function ProductList() {
                             <Pagination itemsPerPage={itemsPerPage} total={total} activePage={activePage} setActivePage={setActivePage} />
                         </div>
                     </section>
-
                 </div>
             </div>
-
         </>
     )
 }

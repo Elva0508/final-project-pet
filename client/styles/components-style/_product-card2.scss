@@ -7,7 +7,9 @@
 
     .card {
         width: 100%;
-        border: none;
+        border: 1px solid $light-gray;
+        border-radius: 2px;
+
 
         .card-body {
             background-color: $main-bg;

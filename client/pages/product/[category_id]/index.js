@@ -13,7 +13,13 @@ import { useCart } from "@/hooks/useCart"
 import { useRouter } from "next/router";
 
 
+
+
+
+
 const Search = ({ handleSearch, placeholder, color, onClick, search, setSearch }) => {
+
+
     const rippleBtnRef = useRef(null);
     const inputRef = useRef(null);
     const handleRipple = () => {
@@ -54,6 +60,26 @@ const Search = ({ handleSearch, placeholder, color, onClick, search, setSearch }
 
 
 export default function ProductList() {
+    const router = useRouter();
+    // 讀取資料庫資料
+    const [productData, setProductData] = useState([]); // 初始化為一個帶有 result 屬性的物件
+    useEffect(() => {
+        if (router.isReady) {
+            // 確保能得到router.query有值
+            const { category_id } = router.query;
+            console.log(category_id);
+            setActiveKey(parseInt(category_id) - 1)
+            // 有pid後，向伺服器要求資料，設定到狀態中
+            axios.get(`http://localhost:3005/api/product/product/category/${category_id}`).then((response) => {
+                const data = response.data.result;
+                console.log(data);
+                setProductData(data); // 將伺服器端的 result 放入物件中
+                // setMainPic(data[0].images_one)
+                // console.log(response.data.result[0].images_one)
+            })
+        }
+        // eslint-disable-next-line
+    }, [router.query]);
 
     // 用於儲存解析後的userID
     const [userId, setUserId] = useState(null);
@@ -76,19 +102,18 @@ export default function ProductList() {
         }
     }, []);
 
-    // 讀取資料庫資料
-    const [productData, setProductData] = useState([]); // 初始化為一個帶有 result 屬性的物件
+
     //圖片抽換
     const [mainPic, setMainPic] = useState(''); // 初始化為 v.images_one
     // 讀取all product 資料庫資料
     useEffect(() => {
-        axios.get("http://localhost:3005/api/product").then((response) => {
-            const data = response.data.result;
-            console.log(data);
-            setProductData(data); // 將伺服器端的 result 放入物件中
-            setMainPic(data[0].images_one)
-            console.log(response.data.result[0].images_one)
-        });
+        // axios.get(`http://localhost:3005/api/product/product/category/${category_id}`).then((response) => {
+        //     const data = response.data.result;
+        //     console.log(data);
+        //     setProductData(data); // 將伺服器端的 result 放入物件中
+        //     setMainPic(data[0].images_one)
+        //     console.log(response.data.result[0].images_one)
+        // });
     }, []);
 
     //分頁
@@ -100,7 +125,6 @@ export default function ProductList() {
 
     const total = productData
     // console.log(total)
-    const router = useRouter();
 
     const [isUpIconVisible, setIsUpIconVisible] = useState(false);
     const [isPriceIconVisible, setIsPriceIconVisible] = useState(false);
@@ -125,6 +149,15 @@ export default function ProductList() {
             setIsUpIconVisible(false);
         }
     };
+
+    //讀出大類小類
+    // const [subcategoryData, setSubcategoryData] = useState({ result: [] });
+    // useEffect(() => {
+    //     axios.get("http://localhost:3005/api/product/category").then((response) => {
+    //         setSubcategoryData({ result: response.data.result });
+    //     });
+    // }, [])
+
 
     //讀出大類
     const [subcategoryData, setSubcategoryData] = useState({ result: [] });
@@ -162,6 +195,7 @@ export default function ProductList() {
     //     setIsLoading(true);
     //     axios.get('http://localhost:3005/api/product/filter_sort', {
     //         params: {
+
     //             sortBy: selectedSort,
     //         }
     //     })
@@ -176,7 +210,6 @@ export default function ProductList() {
     //             setIsLoading(false);
     //         });
     // }, [selectedSort]);
-
 
     // 當選擇不同的篩選條件時，更新相應的狀態
     // 透過 event.target.value 來找到用戶輸入的值
@@ -498,7 +531,7 @@ export default function ProductList() {
                                                 data-bs-parent="#accordionPanelsStayOpenExample" // 將這行添加到這個button元素中
                                                 onClick={() => {
                                                     router.push(`/product/${category.category_id}`)
-                                                    // setActiveKey(index); // 当按钮被点击时，更新activeKey状态
+                                                    setActiveKey(index); // 当按钮被点击时，更新activeKey状态
                                                     // handleCategoryChange(category.category_name);
                                                     // console.log(`Button for category ${category.category_name} clicked.`);
                                                 }}
@@ -527,7 +560,6 @@ export default function ProductList() {
                                                     }
                                                     return null; // 或者直接不返回任何内容
                                                 })}
-
                                             </div>
                                         </div>
                                     </div>
