@@ -352,6 +352,8 @@ export default function MissionDetail() {
     const [recordCount, setRecordCount] = useState(0);
     // 取得登入會員的資訊
     const [loginUser, setLoginUser] = useState(null);
+    // 小幫手履歷
+    const [helperInfo, setHelperInfo] = useState(null);
 
     // GOOGLE地圖API：初始狀態
     const [missionLocation, setMissionLocation] = useState({
@@ -536,7 +538,7 @@ export default function MissionDetail() {
             } catch (error) {
                 // 處理錯誤
                 // setMessage(error.message || "發生錯誤");
-            // } finally {
+                // } finally {
                 // setIsLoading(false);
             }
         }
@@ -594,11 +596,12 @@ export default function MissionDetail() {
             } catch (error) {
                 // 處理錯誤
                 setMessage(error.message || "發生錯誤");
-            // } finally {
-            //     setIsLoading(false);
+                // } finally {
+                //     setIsLoading(false);
             }
         }
         getLoginUser(userId);   // 在點擊立即應徵按鈕時 就setLoginUser 才不會modal跳出來時loginUser還沒被設置（仍為null） 導致登入者資訊看不見 還要重整觸發useEffect才會出現
+        getHelperInfo(userId);
     };
 
 
@@ -610,11 +613,22 @@ export default function MissionDetail() {
             alert('請輸入自我推薦');
             return;
         }
+
+        // 建立一個包含 msgInputValue 和 helperInfo 的陣列(自我推薦＋自動發送履歷)
+        const chatContentArray = [msgInputValue];
+        if (autoSend) {
+            if (helperInfo.cat_helper === 0) {
+                alert('您尚未開啟小幫手資料 請先至會員中心開啟 才可自動發送履歷唷');
+                setAutoSend(false); // 清除勾勾
+                return;
+            }
+            chatContentArray.push(helperInfo.introduction);
+        }
         setIsLoading(true);
         try {
             // 發送消息到後端
             const response = await fetch(
-                "http://localhost:3005/api/chatroom/sendchat",
+                "http://localhost:3005/api/chatroom/sendchat2",
                 {
                     method: "POST",
                     headers: {
@@ -623,7 +637,8 @@ export default function MissionDetail() {
                     body: JSON.stringify({
                         chatlist_id: chatlistId,
                         talk_userId: userId, // 使用前端頁面登入的 userId
-                        chat_content: msgInputValue,
+                        // chat_content: msgInputValue,
+                        chat_content: chatContentArray, // 使用 chatContentArray
                     }),
                 }
             );
@@ -641,7 +656,6 @@ export default function MissionDetail() {
         } finally {
             setIsLoading(false);
         }
-        
     };
 
     // 確認送出(modal裡)：寫進應徵紀錄
@@ -717,6 +731,18 @@ export default function MissionDetail() {
         }
     };
 
+    // 彈跳視窗（勾選）：取得小幫手履歷
+    const getHelperInfo = async () => {
+        try {
+            const response = await axios.get(`http://localhost:3005/api/mission/helper-info?userId=${userId}`);
+            const data = response.data.result[0];  //注意這裡是result 陣列裡只有一個物件 所以要記得補[0]
+            console.log("小幫手履歷的data是:" + data);
+            setHelperInfo(data);
+        } catch (error) {
+            console.error("Error:", error);
+        }
+    };
+
     useEffect(() => {
         getPopularMissions();
         // getRecordCount();
@@ -729,10 +755,12 @@ export default function MissionDetail() {
 
     useEffect(() => {
         getLoginUser(userId);  //要記得給參數  //非同步操作 需要一些時間來完成
+        getHelperInfo(userId);
     }, [userId]) // 依賴陣列也要記得寫
 
     console.log("recordCount:", recordCount);
     console.log("loginUser:", loginUser);
+    console.log("helperInfo:", helperInfo);
 
     // 算登入者的年齡
     const birthdayString = loginUser ? loginUser.birthday : null;  // 確保只有在loginUser被設置時 才會進行後續操作 避免在組件渲染前loginUser還沒有被設置 造成loginUser.birthday為null
@@ -778,14 +806,14 @@ export default function MissionDetail() {
                                 </div>
                             </div>
                             <div className='recommend mt-4'>
-                                <div className='size-6 mb-2'>自我推薦</div>
+                                <div className='size-6 mb-2'>自我推薦<span className='size-7'>(必填)</span></div>
                                 <textarea className='recommend-content' value={msgInputValue}
                                     onChange={(e) => setMsgInputValue(e.target.value)} ></textarea>
 
-                                {/* <div className='auto-send d-flex my-4 align-items-center'>
+                                <div className='auto-send d-flex my-4 align-items-center'>
                                     <input type="checkbox" className='checkbox' checked={autoSend} onChange={() => setAutoSend(!autoSend)} />
                                     <div className='size-7 ms-2'>自動發送小幫手履歷<span className='size-7' >（需開啟小幫手資料）</span></div>
-                                </div> */}
+                                </div>
                             </div>
                         </div>
 
