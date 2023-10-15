@@ -178,25 +178,92 @@ const MyFilter = ({ missionType, setMissionType, missionCity, setMissionCity, mi
     console.log("現在的missionType是" + missionType + "現在的updateDate是" + updateDate + "現在的missionCity是" + missionCity + "現在的missionArea是" + missionArea);
   };
 
+  // 點擊標題時 讓button為active（修改樣式用）
+  // const buttonRef = useRef(null);  //僅適用只有一組標題時
+  const buttonRef1 = useRef(null);
+  const buttonRef2 = useRef(null);
+  const buttonRef3 = useRef(null);
+  const buttonRef4 = useRef(null);
+  // const [isActive, setIsActive] = useState(false);  //僅適用只有一組標題時
+  const [buttonStates, setButtonStates] = useState({
+    button1: false,
+    button2: false,
+    button3: false,
+    button4: false,
+  });
+
+  useEffect(() => {
+    // 添加點擊頁面其他地方關閉下拉選單的事件監聽器
+    function handleClickOutside(event) {
+      // 如果按鈕元素存在（即buttonRef.current不為null）且點擊事件發生在按鈕元素之外
+      // if (buttonRef.current && !buttonRef.current.contains(event.target)) {   //僅適用只有一組標題時
+      //   setIsActive(false);
+      // }
+      if (buttonRef1.current && !buttonRef1.current.contains(event.target)) {
+        setButtonStates((prevButtonStates) => ({
+          ...prevButtonStates,
+          button1: false,
+        }));
+      }
+      if (buttonRef2.current && !buttonRef2.current.contains(event.target)) {
+        setButtonStates((prevButtonStates) => ({
+          ...prevButtonStates,
+          button2: false,
+        }));
+      }
+      if (buttonRef3.current && !buttonRef3.current.contains(event.target)) {
+        setButtonStates((prevButtonStates) => ({
+          ...prevButtonStates,
+          button3: false,
+        }));
+      }
+      if (buttonRef4.current && !buttonRef4.current.contains(event.target)) {
+        setButtonStates((prevButtonStates) => ({
+          ...prevButtonStates,
+          button4: false,
+        }));
+      }
+    }
+
+    document.addEventListener('click', handleClickOutside);
+
+    // 組件卸載時移除事件監聽器（組件卸載時會自動執行return語句)
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, []);
+
+  // const handleButtonActive = () => {    //僅適用只有一組標題時
+  //   setIsActive(!isActive);
+  // };
+  const handleButtonActive = (buttonName) => {
+    setButtonStates((prevButtonStates) => ({
+      ...prevButtonStates,
+      [buttonName]: !prevButtonStates[buttonName],
+    }));
+  };
+
   return (
     <>
       <div className='filters d-sm-flex justify-content-center align-items-center d-none '>
         {/* 一：任務類型 */}
-        <div className="btn-group mx-2">
+        <div className={`btn-group mx-2 ${buttonStates.button1 ? 'active' : ''}`}>
           <button
-            className="btn dropdown-toggle"
+            ref={buttonRef1}
+            className={`btn dropdown-toggle ${buttonStates.button1 ? 'active' : ''}`}
             type="button"
             id="defaultDropdown1"
             data-bs-toggle="dropdown"
             data-bs-auto-close="true"
-            aria-expanded="false"
+            aria-expanded={buttonStates.button1}
+            onClick={() => handleButtonActive('button1')}
           >
             <div className="left-background"></div>
             <img src="/job-icon/plus-service.svg" className="me-3" />
             {buttonText1} {/* 按鈕文字狀態 */}
             <BiSolidDownArrow className="ms-2" />
           </button>
-          <ul className="dropdown-menu" aria-labelledby="defaultDropdown1">
+          <ul className={`dropdown-menu ${buttonStates.button1 ? 'show' : ''}`} aria-labelledby="defaultDropdown1">
             {/* 使用map函數動態生成下拉選單項 */}
             {options1.map((option) => (
               <li
@@ -211,21 +278,23 @@ const MyFilter = ({ missionType, setMissionType, missionCity, setMissionCity, mi
         </div>
 
         {/* 二：更新日期 */}
-        <div className="btn-group mx-2">
+        <div className={`btn-group mx-2 ${buttonStates.button2 ? 'active' : ''}`}>
           <button
-            className="btn dropdown-toggle"
+            ref={buttonRef2}
+            className={`btn dropdown-toggle ${buttonStates.button2 ? 'active' : ''}`}
             type="button"
             id="defaultDropdown2"
             data-bs-toggle="dropdown"
             data-bs-auto-close="true"
-            aria-expanded="false"
+            aria-expanded={buttonStates.button2}
+            onClick={() => handleButtonActive('button2')}
           >
             <div className="left-background"></div>
             <img src="/job-icon/Calendar.svg" className="me-3" />
             {buttonText2}
             <BiSolidDownArrow className="ms-2" />
           </button>
-          <ul className="dropdown-menu" aria-labelledby="defaultDropdown2">
+          <ul className={`dropdown-menu ${buttonStates.button2 ? 'show' : ''}`} aria-labelledby="defaultDropdown2">
             {options2.map((option) => (
               <li
                 key={option.label}
@@ -239,21 +308,23 @@ const MyFilter = ({ missionType, setMissionType, missionCity, setMissionCity, mi
         </div>
         {/* 三：任務地區 */}
         {/* 城市下拉選單 */}
-        <div className="btn-group ms-2">
+        <div className={`btn-group ms-2 ${buttonStates.button3 ? 'active' : ''}`}>
           <button
-            className="btn dropdown-toggle"
+            ref={buttonRef3}
+            className={`btn dropdown-toggle ${buttonStates.button3 ? 'active' : ''}`}
             type="button"
-            id="defaultDropdown1"
+            id="defaultDropdown3"
             data-bs-toggle="dropdown"
             data-bs-auto-close="true"
-            aria-expanded="false"
+            aria-expanded={buttonStates.button3}
+            onClick={() => handleButtonActive('button3')}
           >
             <div className="left-background"></div>
             <img src="/job-icon/Discovery-date.svg" className="me-3" />
             {selectedCity ? selectedCity.CityName : '任務地區'}
             <BiSolidDownArrow className="ms-2" />
           </button>
-          <ul className="dropdown-menu" aria-labelledby="defaultDropdown1">
+          <ul className={`dropdown-menu ${buttonStates.button3 ? 'show' : ''}`} aria-labelledby="defaultDropdown3">
             {cityData.map((city) => (
               <li
                 key={city.CityName}
@@ -267,19 +338,21 @@ const MyFilter = ({ missionType, setMissionType, missionCity, setMissionCity, mi
         </div>
         {/* 地區下拉選單，有選city才會出現 */}
         {selectedCity && (
-          <div className="btn-group">
+          <div className={`btn-group ${buttonStates.button4 ? 'active' : ''}`}>
             <button
-              className="btn dropdown-toggle"
+              ref={buttonRef4}
+              className={`btn dropdown-toggle ${buttonStates.button4 ? 'active' : ''}`}
               type="button"
-              id="defaultDropdown1"
+              id="defaultDropdown4"
               data-bs-toggle="dropdown"
               data-bs-auto-close="true"
-              aria-expanded="false"
+              aria-expanded={buttonStates.button4}
+              onClick={() => handleButtonActive('button4')}
             >
               {selectedArea ? selectedArea.AreaName : '選擇地區'}
               <BiSolidDownArrow className="ms-2" />
             </button>
-            <ul className="dropdown-menu" aria-labelledby="defaultDropdown1">
+            <ul className={`dropdown-menu ${buttonStates.button4 ? 'show' : ''}`} aria-labelledby="defaultDropdown4">
               {selectedCity.AreaList.map((area) => (
                 <li
                   key={area.ZipCode}
