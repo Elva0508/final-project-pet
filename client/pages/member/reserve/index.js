@@ -22,15 +22,17 @@ const MemberReserve = () => {
     }
   }, [isAuthenticated]);
   useEffect(() => {
-    memberService
-      .getReserve(user_id, status)
-      .then((response) => {
-        console.log(response);
-        setRequests(response?.data?.data);
-      })
-      .catch((e) => {
-        console.log(e);
-      });
+    if (user_id) {
+      memberService
+        .getReserve(user_id, status)
+        .then((response) => {
+          console.log(response);
+          setRequests(response?.data?.data);
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    }
   }, [status]);
 
   return (

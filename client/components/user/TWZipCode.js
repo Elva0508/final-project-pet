@@ -84,7 +84,7 @@ export default function TWZipCode({
             </option>
           ))}
       </select>
-      {/* <h3>郵遞區號:{postcode}</h3> */}
+       <h3>郵遞區號:{postcode}</h3> 
     </>
   )
 }

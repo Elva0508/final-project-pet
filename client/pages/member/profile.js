@@ -17,22 +17,22 @@ const ProfilePage = () => {
   const userRfs = device == "mobile" ? "m-size-6" : "size-6";
 
   //地址
-  const [city, setCity] = useState(-1);
-  const [area, setArea] = useState([]);
-  const handleCityChange = (event) => {
-    const cityValue = event.target.value;
-    setCity(cityValue);
-    const cityNumber = parseInt(cityValue);
-    for (let i = 0; i < data.length + 1; i++) {
-      if (cityNumber == i) {
-        const newArea = data[i - 1].districts.map((district) => district.name);
-        return setArea(newArea);
-      }
-    }
-    if (cityNumber == -1) {
-      setArea([]);
-    }
-  };
+  // const [city, setCity] = useState(-1);
+  // const [area, setArea] = useState([]);
+  // const handleCityChange = (event) => {
+  //   const cityValue = event.target.value;
+  //   setCity(cityValue);
+  //   const cityNumber = parseInt(cityValue);
+  //   for (let i = 0; i < data.length + 1; i++) {
+  //     if (cityNumber == i) {
+  //       const newArea = data[i - 1].districts.map((district) => district.name);
+  //       return setArea(newArea);
+  //     }
+  //   }
+  //   if (cityNumber == -1) {
+  //     setArea([]);
+  //   }
+  // };
 
   //取得資料
 
@@ -45,12 +45,15 @@ const ProfilePage = () => {
   const [addressCity, setAddressCity] = useState("");
   const [addressTown, setAddressTown] = useState("");
   const [detailAddress, setDetailAddress] = useState("");
+  const [countryIndex, setCountryIndex] = useState(-1);
+  const [townshipIndex, setTownshipIndex] = useState(-1);
+  const [postcode, setPostcode] = useState("");
   const [petCount, setPetCount] = useState(1);
 
   const [address, setAddress] = useState({
-    // country: '高雄市',
-    // township: '鳳山區',
-    postcode: "830",
+     country: '',
+     township: '',
+    postcode: '',
   });
 
   //設置id狀態
@@ -86,10 +89,18 @@ const ProfilePage = () => {
         setBirthday(new Date(user.birthday).toISOString().split("T")[0]);
         //console.log(birthday)
         setPhone(user.phone);
-        setAddressCity(user.city);
-        setAddressTown(user.area);
+        console.log(phone);
+        // setAddressCity(user.city);
+        // setAddressTown(user.area);
         setDetailAddress(user.address);
+        console.log(detailAddress);
         setPetCount(user.pet_number);
+        setAddress({
+          country: user.city,
+          township: user.area,
+          postcode: user.postcode,
+        })
+        console.log(address)
       })
       .catch((error) => console.error("api請求錯誤", error));
   }, [userId]);
@@ -124,8 +135,13 @@ const ProfilePage = () => {
       gender,
       birthday,
       phone,
-      city: addressCity,
-      area: addressTown,
+      // city: addressCity,
+      // area: addressTown,
+    
+      city: address.country,
+      area: address.township,
+      postcode: address.postcode,
+
       address: detailAddress,
       pet_number: petCount,
     };
@@ -257,7 +273,7 @@ const ProfilePage = () => {
               <input
                 className="form-input fs11"
                 type="text"
-                value={`0${phone}`}
+                value={phone}
                 onChange={(e) => setPhone(e.target.value)}
               />
             </div>
@@ -274,7 +290,7 @@ const ProfilePage = () => {
             />
             <div className="ws20   d-flex justify-content-center">
               <label className={`fs3 py-2 ${userRfs}`}>地址</label>
-              <div className="fs11 ">
+              {/* <div className="fs11 ">
                 <select
                   className="form-select fs5"
                   value={addressCity}
@@ -304,7 +320,7 @@ const ProfilePage = () => {
                     );
                   })}
                 </select>
-              </div>
+              </div> */}
             </div>
             <div className="d-flex justify-content-center">
               <div className="address-w20 ">

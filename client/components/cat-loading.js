@@ -1,9 +1,10 @@
 import React, { forwardRef, useEffect, useRef } from "react";
 // import Icon from "./Icon";
 // import CatImage from "/cat.svg";
+import { motion } from "framer-motion";
 function Icon() {
   return (
-    <svg
+    <motion.svg
       id="&#x5716;&#x5C64;_1"
       xmlns="http://www.w3.org/2000/svg"
       xmlnsXlink="http://www.w3.org/1999/xlink"
@@ -14,6 +15,7 @@ function Icon() {
         enableBackground: "new 0 0 1040 663",
       }}
       xmlSpace="preserve"
+      // initial={}
     >
       <g id="cat">
         <defs>
@@ -625,7 +627,7 @@ function Icon() {
           r={3.5}
         />
       </g>
-    </svg>
+    </motion.svg>
   );
 }
 const CatLoading = forwardRef((props, ref) => {
