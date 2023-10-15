@@ -58,6 +58,7 @@ body {
     "Apple Color Emoji",
     "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   background-color: $main-bg;
+  overflow-x: hidden;
 }
 a {
   text-decoration: none;
@@ -139,6 +140,7 @@ ul {
 @import "@/styles/components-style/_bread-crumb.scss";
 @import "@/styles/components-style/_ResponsiveAppBar.scss";
 @import "@/styles/components-style/home/_home-product-card.scss";
+@import "@/styles/_cat-loading.scss";
 
 // 小貓上工
 @import "@/styles/components-style/_create-mission.scss";

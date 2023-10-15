@@ -1,17 +1,26 @@
 import React, { useState ,useEffect} from 'react';
 import Cards from 'react-credit-cards-2';
 import { useRouter } from 'next/router';
-
+import { useAuth } from '@/context/fakeAuthContext';
+import 'react-credit-cards-2/dist/lib/styles.scss';
 
 export default function CreditCard() {
+  const {userId} = useAuth()
+  const id=parseInt(userId)
   const router = useRouter();
   const [orderPrice, setOrderPrice] = useState(0)
   const [orderNumber, setOrderNumber] = useState(0)
 
+
   useEffect(() => {
-    setOrderPrice(parseInt(localStorage.getItem('totalPrice')))
-    setOrderNumber(localStorage.getItem('orderNumber'))
-}, [router.isReady]);
+    if(!localStorage.getItem('totalPrice')){
+      router.push("/")
+    }else{
+      setOrderPrice(parseInt(localStorage.getItem('totalPrice')))
+      setOrderNumber(localStorage.getItem('orderNumber'))
+    }
+
+  }, [router.isReady]);
 
         const [state, setState] = useState({
           number: '',
@@ -33,22 +42,22 @@ export default function CreditCard() {
           localStorage.removeItem("orderNumber");
           localStorage.removeItem("totalPrice");
           localStorage.removeItem("freight");
-          localStorage.removeItem("newFinalCart");
+          localStorage.removeItem("finalCart");
           localStorage.removeItem("sale");
           localStorage.removeItem("allPrice");
-          router.push("/member/order")
+          router.push("/pay-confirm")
         }
       
         return (
 
           <div className='credit-card'>
-          <div className='d-flex justify-content-center mb-4'>
+          <div className='d-flex justify-content-center mb-4 '>
             <div className=' title'>
-              <p className='size-5' >訂單編號：<span>{orderNumber}</span></p>
-              <p className='size-5' >訂單金額：<span>{orderPrice}元</span></p>
+              <p className='size-5 fw-bold' >訂單編號：<span>{orderNumber}</span></p>
+              <p className='size-5 fw-bold' >訂單金額：<span>{orderPrice}元</span></p>
             </div>
           </div>
-          <div className='d-flex justify-content-center '>
+          <div className='d-flex justify-content-center flex-column flex-sm-row align-items-center'>
             <div className='d-flex justify-content-end  me-3'>
               <Cards
               number={state.number}
@@ -57,7 +66,7 @@ export default function CreditCard() {
               focused={state.focus}
               />
             </div>
-            <div className='d-flex flex-column justify-content-between'>
+            <div className='d-flex flex-column justify-content-between my-sm-0 my-5'>
             <form className=' '>
               <div className='mb-2'>
                 <input

@@ -11,8 +11,7 @@ import { RiFileList3Fill } from "react-icons/ri";
 import { FaChartLine } from "react-icons/fa";
 import { FaIdBadge } from "react-icons/fa";
 import { FaRegCalendarCheck } from "react-icons/fa";
-import { useRouter } from 'next/router';
-
+import { useRouter } from "next/router";
 
 export default function ListUserM() {
   const [memberData, setMemberData] = useState(null);
@@ -70,7 +69,6 @@ export default function ListUserM() {
           </div>
         </div>
 
-
         <div className="d-flex justify-content-center">
           <div>
             <button
@@ -121,6 +119,28 @@ export default function ListUserM() {
                 </div>
               </div>
             </button>
+
+            <button
+              className={`size-6 ${activeButton === 6 ? "active" : ""}`}
+              onClick={() => {
+                setActiveButton(6);
+                router.push("/member/joblist");
+              }}
+            >
+              <div className="mx-1 my-3">
+                <div>
+                  <LiaListAltSolid />
+                </div>
+                <div>
+                  <p>任務清單</p>
+                </div>
+              </div>
+            </button>
+          </div>
+        </div>
+
+        <div className="d-flex justify-content-center">
+          <div>
             <button
               className={`size-6 ${activeButton === 5 ? "active" : ""}`}
               onClick={() => {
@@ -137,56 +157,59 @@ export default function ListUserM() {
                 </div>
               </div>
             </button>
-          </div>
-        </div>
-        
-        <div className="d-flex justify-content-center">
-          <div>
-          <button
-            className={`size-6 ${activeButton === 6 ? "active" : ""}`}
-            onClick={() => {
-              setActiveButton(6);
-              router.push("/member/joblist");
-            }}
-          >
-            <div className="mx-1 my-3">
-              <div>
-                <LiaListAltSolid />
-              </div>
-              <div>
-                <p>任務清單</p>
-              </div>
-            </div>
-          </button>
-          <button className={`size-6 ${activeButton === 7 ? 'active' : ''}`} onClick={()=>{
-              setActiveButton(7)
-              router.push('/member/history')
-            }}> 
+
+            <button
+              className={`size-6 ${activeButton === 8 ? "active" : ""}`}
+              onClick={() => {
+                setActiveButton(8);
+                router.push("/member/selling");
+              }}
+            >
               <div className="mx-1 my-3">
-              <div><HiClipboardList /></div>
-              <div><p>刊登紀錄</p></div>
+                <div>
+                  <FaChartLine />
+                </div>
+                <div>
+                  <p>幫手訂單</p>
+                </div>
               </div>
-            </button>
-            <button className={`size-6 ${activeButton === 8 ? 'active' : ''}`} onClick={()=>{
-              setActiveButton(8)
-              router.push('/member/selling')
-            }}>
-              <div className="mx-1 my-3">
-              <div><FaChartLine /></div>
-              <div><p>銷售紀錄</p></div>
-              </div>
-            </button>
-            <button className={`size-6 ${activeButton === 9 ? 'active' : ''}`} onClick={()=>{
-              setActiveButton(9)
-              router.push('/member/reserve')
-            }}> 
-              <div className="mx-1 mt-3 pb-3">
-              <div><FaRegCalendarCheck /></div>
-              <div><p>預約紀錄</p></div></div>
             </button>
 
+            <button
+              className={`size-6 ${activeButton === 7 ? "active" : ""}`}
+              onClick={() => {
+                setActiveButton(7);
+                router.push("/member/history");
+              }}
+            >
+              <div className="mx-1 my-3">
+                <div>
+                  <HiClipboardList />
+                </div>
+                <div>
+                  <p>刊登紀錄</p>
+                </div>
+              </div>
+            </button>
+
+            <button
+              className={`size-6 ${activeButton === 9 ? "active" : ""}`}
+              onClick={() => {
+                setActiveButton(9);
+                router.push("/member/reserve");
+              }}
+            >
+              <div className="mx-1 mt-3 pb-3">
+                <div>
+                  <FaRegCalendarCheck />
+                </div>
+                <div>
+                  <p>預約紀錄</p>
+                </div>
+              </div>
+            </button>
           </div>
-          </div>
+        </div>
       </div>
     </>
   );

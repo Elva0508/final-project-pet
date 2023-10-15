@@ -1,5 +1,4 @@
 // import React, { useState, useEffect } from "react";
-import BreadCrumbArticle from "@/components/article/bread-crumb-article";
 import ArticleCatogory from "@/components/article/article-catogory";
 import ArticleCard from "@/components/article/article-card";
 // import axios from "axios";
@@ -29,9 +28,6 @@ export default function Article() {
   return (
     <>
       <div className="container mt-5">
-        <div>
-          <BreadCrumbArticle className="mt-5" />
-        </div>
         <div className="d-flex justify-content-center mt-5">
           <ArticleCatogory />
         </div>

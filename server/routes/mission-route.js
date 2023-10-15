@@ -1,5 +1,21 @@
 const router = require("express").Router();
 const conn = require("../db");
+const jwt = require("jsonwebtoken");
+
+const authenticateToken = (req, res, next) => {
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1]; // 從 Authorization 標頭中提取令牌
+
+  if (token == null) {
+    return res.sendStatus(401); // 如果令牌不存在，返回未經授權的狀態碼
+  }
+
+  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
+    if (err) return res.sendStatus(403); // 如果令牌無效，返回禁止狀態碼
+    req.user = user;
+    next();
+  });
+};
 
 router.get("/", (req, res) => {
   res.send("mission-route測試成功");
@@ -156,26 +172,29 @@ router.get("/latest-missions", (req, res) => {
   );
 });
 
-//先取得收藏的任務有哪些
+// 列表頁：先取得收藏的任務有哪些
 router.get("/fav", (req, res) => {
+  const userId = req.query.userId; // 從請求的 URL 中獲取用戶 token
   conn.execute(
     `SELECT mf.*,md.mission_id AS mission_id
     FROM mission_fav AS mf
     JOIN mission_detail AS md ON mf.mission_id = md.mission_id 
-    WHERE mf.user_id = 1;`,
+    WHERE mf.user_id = ?;`,
+    [userId],
     (error, result) => {
       res.json({ result });
     }
   );
 });
 
-// 任務加入收藏
+// 列表頁：任務加入收藏
 router.put("/add-fav", (req, res) => {
   const { missionId } = req.body; // 從請求體中獲取任務的 missionId  
   console.log("req.body:", req.body);
+  const userId = req.query.userId; // 從請求的 URL 中獲取用戶 token
   conn.execute(
-    `INSERT INTO mission_fav(mission_id, user_id) VALUES (?,1)`,
-    [missionId], // 使用參數化查詢來防止 SQL 注入攻擊
+    `INSERT INTO mission_fav(mission_id, user_id) VALUES (?,?)`,
+    [missionId, userId], // 使用參數化查詢來防止 SQL 注入攻擊
     (error, result) => {
       if (error) {
         console.error(error);
@@ -187,12 +206,13 @@ router.put("/add-fav", (req, res) => {
   );
 });
 
-// 任務取消收藏
+// 列表頁：任務取消收藏
 router.delete("/delete-fav", (req, res) => {
   const { missionId } = req.body;
+  const userId = req.query.userId; // 從請求的 URL 中獲取用戶 token
   conn.execute(
-    "DELETE FROM mission_fav WHERE mission_id = ? AND user_id = 1;",
-    [missionId],
+    "DELETE FROM mission_fav WHERE mission_id = ? AND user_id = ?;",
+    [missionId, userId],
     (error, result) => {
       if (error) {
         console.error(error);
@@ -209,9 +229,9 @@ router.get("/mission-details/:mission_id", (req, res) => {
   const mission_id = req.params.mission_id; // 從路由參數中獲取 mission_id
   conn.execute(
     `
-    SELECT md.*, u.*, GROUP_CONCAT(DISTINCT im.file_path ORDER BY im.image_id) AS file_paths
+    SELECT md.*, u.name, u.gender, u.cover_photo, u.email, GROUP_CONCAT(DISTINCT im.file_path ORDER BY im.image_id) AS file_paths
     FROM mission_detail AS md 
-    JOIN users AS u ON md.post_user_id = u.user_id 
+    JOIN userinfo AS u ON md.post_user_id = u.user_id 
     JOIN image_mission AS im ON md.mission_id = im.mission_id
     WHERE md.mission_id = ?
     GROUP BY md.mission_id;
@@ -227,9 +247,60 @@ router.get("/mission-details/:mission_id", (req, res) => {
   );
 });
 
+// 任務詳細頁：取得收藏的任務
+router.get("/fav/:mission_id", (req, res) => {
+  const mission_id = req.params.mission_id; // 從路由參數中獲取 mission_id
+  const userId = req.query.userId; // 從請求的 URL 中獲取用戶 token
+  console.log("mission_id是:"+mission_id+"userId是:"+userId)
+  conn.execute(
+    `SELECT mf.*,md.mission_id AS mission_id
+    FROM mission_fav AS mf
+    JOIN mission_detail AS md ON mf.mission_id = md.mission_id 
+    WHERE mf.mission_id = ? AND mf.user_id = ?;`,
+    [mission_id, userId],
+    (error, result) => {
+      res.json({ result });
+    }
+  );
+});
+// 任務詳細頁：加入收藏
+router.put("/add-fav/:mission_id", (req, res) => {
+  const mission_id = req.params.mission_id; // 從路由參數中獲取 mission_id
+  const userId = req.query.userId; // 從請求的 URL 中獲取用戶 token
+  conn.execute(
+    `INSERT INTO mission_fav(mission_id, user_id) VALUES (?,?)`,
+    [mission_id, userId], // 使用參數化查詢來防止 SQL 注入攻擊
+    (error, result) => {
+      if (error) {
+        console.error(error);
+        res.status(500).json({ error: '加到收藏出錯' });
+      } else {
+        res.json({ result });
+      }
+    }
+  );
+});
+// 任務詳細頁：取消收藏
+router.delete("/delete-fav/:mission_id", (req, res) => {
+  const mission_id = req.params.mission_id; // 從路由參數中獲取 mission_id
+  const userId = req.query.userId; // 從請求的 URL 中獲取用戶 token
+  conn.execute(
+    "DELETE FROM mission_fav WHERE mission_id = ? AND user_id = ?;",
+    [mission_id, userId],
+    (error, result) => {
+      if (error) {
+        console.error(error);
+        res.status(500).json({ error: '移除收藏出錯' });
+      } else {
+        res.json({ result });
+      }
+    }
+  );
+});
+
 // 任務詳細頁：GOOGLE地圖API
 const googleMapsClient = require('@google/maps').createClient({
-  key: 'AIzaSyD3M4Wt4xdyN-LrJyCVDwGSUkQ1B8KpKT8' // 你的 Google 地图 API 密钥
+  key: 'AIzaSyD3M4Wt4xdyN-LrJyCVDwGSUkQ1B8KpKT8' 
 });
 router.get("/mission-details-map/:mission_id", (req, res) => {
   const mission_id = req.params.mission_id; // 從路由參數中獲取 mission_id
@@ -298,6 +369,7 @@ router.get("/mission-details-img/:mission_id", (req, res) => {
 // 應徵紀錄
 router.post("/add-record", (req, res) => {
   const { missionId } = req.body; // 從請求體中獲取任務的 missionId  
+  const userId = req.query.userId; // 從請求的 URL 中獲取用戶 token
   const today = new Date();
   today.setHours(0, 0, 0, 0); // 將時間設為 00:00:00.000
   const tomorrow = new Date(today); // 複製今天的日期
@@ -305,8 +377,8 @@ router.post("/add-record", (req, res) => {
   const formattedDate = tomorrow.toISOString().split('T')[0]; // 格式化成 YYYY-MM-DD 格式的日期字符串
   console.log("req.body:", req.body);
   conn.execute(
-    `INSERT INTO mission_record(user_id, mission_id, job_date) VALUES (1,?,?)`,
-    [missionId, formattedDate],
+    `INSERT INTO mission_record(user_id, mission_id, job_date) VALUES (?,?,?)`,
+    [userId, missionId, formattedDate],
     (error, result) => {
       if (error) {
         console.error(error);
@@ -317,6 +389,5 @@ router.post("/add-record", (req, res) => {
     }
   );
 });
-
 
 module.exports = router;

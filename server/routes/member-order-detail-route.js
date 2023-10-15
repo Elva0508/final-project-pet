@@ -39,10 +39,10 @@ const connection=require("../db");
 
 //商品評論
 router.post("/comment",(req,res)=>{
-    const {comment,star,productid,orderid} =req.body
+    const {comment,star,productid,orderid,user_id} =req.body
     connection.execute(
-        `INSERT INTO product_reviews(user_id, product_id, review_content,star_rating,order_id) VALUES (1,?,?,?,?);`,
-        [productid,comment,star,orderid]
+        `INSERT INTO product_reviews(user_id, product_id, review_content,star_rating,order_id) VALUES (?,?,?,?,?);`,
+        [user_id,productid,comment,star,orderid]
         ,(error,result)=>{
             res.json({result})
         }    

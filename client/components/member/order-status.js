@@ -6,10 +6,10 @@ import Pagination from '@/components/pagination'
 
 
 
-export default function OrderStatusOne({order ,currentScreen}) {
+export default function OrderStatusOne({order ,currentScreen,activePage,setActivePage}) {
 
     const itemsPerPage = 5
-    const [activePage, setActivePage] = useState(1);
+;
     const startIndex = (activePage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
     const type=order.filter((v)=>v.status_id==currentScreen)

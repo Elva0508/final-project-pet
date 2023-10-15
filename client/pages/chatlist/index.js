@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 
 export default function ChatList() {
   const [chatList, setChatList] = useState([]); //聊天列表設置的狀態
+  const [chatContent, setChatContent] = useState([]); //聊天列表最新一筆聊天訊息的狀態
   const [decodedToken, setDecodedToken] = useState(null); // 新增 decodedToken 狀態
   const router = useRouter();
 
@@ -40,7 +41,7 @@ export default function ChatList() {
 
     const data = await res.json();
 
-    console.log(data);
+    console.log("data" + data);
     // 設定到狀態中 -> 會觸發重新渲染(re-render)
     if (Array.isArray(data)) setChatList(data);
   };

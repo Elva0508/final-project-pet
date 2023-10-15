@@ -1,4 +1,5 @@
 import axios from "axios";
+import React from "react";
 import { URL } from "@/config";
 const API_URL = URL + "api/work/";
 
@@ -48,14 +49,14 @@ class WorkService {
       },
     });
   }
-  getCat() {
-    // 用來找貓的圖片
-    return axios.get(
-      "https://api.pexels.com/v1/search?query=cat&per_page=1curated?page=3&per_page=80",
-      {
-        headers: { Authorization: auth },
-      }
-    );
-  }
+  // getCat() {
+  //   // 用來找貓的圖片
+  //   return axios.get(
+  //     "https://api.pexels.com/v1/search?query=cat&per_page=1curated?page=3&per_page=80",
+  //     {
+  //       headers: { Authorization: auth },
+  //     }
+  //   );
+  // }
 }
 export default new WorkService();

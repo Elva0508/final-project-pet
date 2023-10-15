@@ -1,11 +1,14 @@
 import axios from 'axios'
 import { useState ,useEffect} from 'react'
-import { confirmAlert } from 'react-confirm-alert'
-import 'react-confirm-alert/src/react-confirm-alert.css'
+// import { confirmAlert } from 'react-confirm-alert'
+// import 'react-confirm-alert/src/react-confirm-alert.css'
 import { useRouter } from 'next/router';
 import {BsCheckCircle} from 'react-icons/bs';
+import { useAuth } from '@/context/fakeAuthContext';
 
 function Pay(props) {
+  const {userId} = useAuth()
+  const id=parseInt(userId)
   const router = useRouter();
   const [orderPrice, setOrderPrice] = useState(0)
   const [orderNumber, setOrderNumber] = useState(0)
@@ -15,37 +18,45 @@ function Pay(props) {
   const [sale,setSale]=useState(0)
 
   useEffect(() => {
-    const newFinalCart = localStorage.getItem('newFinalCart');
-    setFinalCart(JSON.parse(newFinalCart))  
-    setOrderPrice(parseInt(localStorage.getItem('totalPrice')))
-    setOrderNumber(localStorage.getItem('orderNumber'))
-    setAllPrice(parseInt(localStorage.getItem('allPrice')))
-    setFreight(parseInt(localStorage.getItem('freight')))
-    setSale(parseInt(localStorage.getItem('sale')))
+    if(!localStorage.getItem('allPrice')){
+      router.push("/")
+    }else{
+      const newFinalCart = localStorage.getItem('newFinalCart');
+      setFinalCart(JSON.parse(newFinalCart))  
+      setOrderPrice(parseInt(localStorage.getItem('totalPrice')))
+      setOrderNumber(localStorage.getItem('orderNumber'))
+      setAllPrice(parseInt(localStorage.getItem('allPrice')))
+      setFreight(parseInt(localStorage.getItem('freight')))
+      setSale(parseInt(localStorage.getItem('sale')))
+    }
 }, [router.isReady]);
 
   const handleLinePay = () => {
-    confirmAlert({
-      title: '確認付款',
-      message: '確認要導向至LINE Pay進行付款？',
-      buttons: [
-        {
-          label: '確定',
-          onClick: () => {
+    // confirmAlert({
+    //   title: '確認付款',
+    //   message: '確認要導向至LINE Pay進行付款？',
+    //   buttons: [
+    //     {
+    //       label: '確定',
+    //       onClick: () => {
 
-            // 在本window直接導至node付款(reverse)url，之後會導向至line pay
-            window.location.href =
-            'http://localhost:3005/api/pay/reserve'  +
-              '?orderId=' +
-              orderNumber
-          },
-        },
-        {
-          label: '取消',
-          onClick: () => {},
-        },
-      ],
-    })
+    //         // 在本window直接導至node付款(reverse)url，之後會導向至line pay
+    //         window.location.href =
+    //         'http://localhost:3005/api/pay/reserve'  +
+    //           '?orderId=' +
+    //           orderNumber
+    //       },
+    //     },
+    //     {
+    //       label: '取消',
+    //       onClick: () => {},
+    //     },
+    //   ],
+    // })
+    window.location.href =
+    'http://localhost:3005/api/pay/reserve'  +
+      '?orderId=' +
+      orderNumber
     localStorage.removeItem("orderNumber");
     localStorage.removeItem("totalPrice");
     localStorage.removeItem("freight");
@@ -62,20 +73,43 @@ function Pay(props) {
 
         <div className='d-flex justify-content-center mb-4'>
           <div className=' title'>
-            <p className='size-5' >訂單編號：<span>{orderNumber}</span></p>
-            <p className='size-5' >訂單金額：<span>{orderPrice}元</span></p>
+            <p className='size-5  fw-bold' >訂單編號：<span>{orderNumber}</span></p>
+            <p className='size-5  fw-bold' >訂單金額：<span>{orderPrice}元</span></p>
           </div>
         </div>
 
         <div className='d-flex justify-content-center mb-5'>
         <img src="/LINEPay.png" alt="LINE Pay" className='me-3'></img>
+
+
         <button
+            data-bs-toggle="modal" data-bs-target="#exampleModal"
             className='btn btn-confirm'
-            onClick={handleLinePay}
             // 限制有orderId產生後才能點按
             disabled={!orderNumber}
         >前往付款
         </button>
+
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">通知</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+              確認要導向至LINE Pay進行付款？
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-confirm" data-bs-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-price" onClick={()=>{
+                  handleLinePay()
+                }}>確認</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
         </div>
 
         <div className='pay'>
@@ -90,7 +124,7 @@ function Pay(props) {
                         </thead>
                         <tbody>
                             {finalCart.map((v,i)=>{
-                                if(v.product_id==0){
+                                if(v.product_id==0 ||v.product_id==1000){
                                   return ""
                                 }
                                 return(
@@ -120,7 +154,7 @@ function Pay(props) {
                         </thead>
                         <tbody>
                         {finalCart.map((v,i)=>{
-                            if(v.product_id==0){
+                            if(v.product_id==1000||v.product_id==0){
                                   return ""
                                 }
                             return(

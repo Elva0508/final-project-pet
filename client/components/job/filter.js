@@ -2,8 +2,17 @@ import React, { useState, useRef, useEffect } from "react";
 import { BiSolidDownArrow, BiSolidUpArrow } from "react-icons/bi";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
+import { easeInOut, motion, useAnimationControls } from "framer-motion";
 
-const Filter = ({ items, src, onClick, order, filterType }) => {
+const Filter = ({
+  items,
+  src,
+  onClick,
+  order,
+  filterType,
+  controller,
+  handleHelperAnimate,
+}) => {
   const dropDownRef = useRef(null);
   const [anchorEl, setAnchorEl] = useState(null);
   const handleClick = (event) => {
@@ -18,7 +27,7 @@ const Filter = ({ items, src, onClick, order, filterType }) => {
   // };
   return (
     <div className="drop-down-filter" ref={dropDownRef}>
-      <button
+      <motion.button
         className={`drop-down-filter-btn ${anchorEl ? "drop-down-active" : ""}`}
         onClick={handleClick}
       >
@@ -31,7 +40,7 @@ const Filter = ({ items, src, onClick, order, filterType }) => {
         </div>
         {items.title || "選項"}
         <BiSolidDownArrow className={`icon icon-down `} />
-      </button>
+      </motion.button>
       <Menu
         id="simple-menu"
         anchorEl={anchorEl}
@@ -57,7 +66,7 @@ const Filter = ({ items, src, onClick, order, filterType }) => {
                   }
                 }}
               >
-                <span value={item.value}>{item.label}</span>
+                <motion.span value={item.value}>{item.label}</motion.span>
               </MenuItem>
             );
           }
@@ -70,7 +79,9 @@ const Filter = ({ items, src, onClick, order, filterType }) => {
                 }
               }}
             >
-              <span value={item.value}>{item.label}</span>
+              <motion.span value={item.value} onTap={handleHelperAnimate}>
+                {item.label}
+              </motion.span>
             </MenuItem>
           );
         })}
@@ -78,7 +89,6 @@ const Filter = ({ items, src, onClick, order, filterType }) => {
     </div>
   );
 };
-
 export default Filter;
 
 // 下拉式選單可傳入變數(props)：
