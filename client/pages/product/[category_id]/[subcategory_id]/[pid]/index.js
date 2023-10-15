@@ -12,7 +12,8 @@ import { FiPlus } from 'react-icons/fi';
 import { FiMinus } from 'react-icons/fi';
 import jwt_decode from "jwt-decode";
 import { FaPaw } from 'react-icons/fa';
-;
+import ProductSlick from '@/components/product/product-slick';
+
 
 //next裡innerhtml語法
 function ProductDescription({ htmlContent }) {
@@ -605,12 +606,13 @@ export default function ProductDetail() {
                         <div className="customer-message-title text-center mb-4 ">
                             <h4 className="name size-5">你可能會喜歡的商品</h4>
                         </div>
-                        <div id="carouselExampleControls" className="carousel slide " data-bs-ride="carousel">
+                        {/* <div id="carouselExampleControls" className="carousel slide " data-bs-ride="carousel">
                             <div className="carousel-inner">
-                                <div className="carousel-item active">
-                                    <div className="row d-lg-flex  justify-content-center ">
+                                <div className="carousel-item active row d-flex" >
                                         <ProductCard3 />
-                                    </div>
+                                        <ProductCard3 />
+                                        <ProductCard3 />   
+                                        <ProductCard3 />
                                 </div>
                                 <div className="carousel-item active">
                                     <div className="row d-lg-flex  justify-content-center ">
@@ -627,8 +629,11 @@ export default function ProductDetail() {
                                 <FaChevronRight size={60} style={{ color: '#512f10' }} />
                                 <span className="visually-hidden">Next</span>
                             </button>
-                        </div>
+                        </div> */}
+                        <ProductSlick />
                     </section>
+
+                  
 
                 </div>
             </div>

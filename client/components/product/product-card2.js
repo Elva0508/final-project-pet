@@ -51,7 +51,7 @@ export default function ProductCard2({ productData, mainPic, setMainPic }) {
                 <Link href={`/product/${v.category_id}/${v.subcategory_id}/${v.product_id}`} >
                   <img src={v.images_one} className="card-img-top" alt="..." />
                 </Link>
-                <div className="card-body p-0" >
+                <div className="card-body p-3" >
                   <div className="d-flex justify-content-between align-items-center">
                     
                     {/* 類別按鈕顏色已建好 btn-color-1 一直到btn-color-7 再依需求調整className即可 */}
@@ -61,7 +61,7 @@ export default function ProductCard2({ productData, mainPic, setMainPic }) {
                   </div>
                   <Link href={`/product/${v.category_id}/${v.subcategory_id}/${v.product_id}`} >
                     <div className="card-text-vendor size-7 m-size-7">{v.vendor}</div>
-                    <div className="card-text size-6 m-size-7">{v.product_name}</div>
+                    <div className="card-text size-7 m-size-7">{v.product_name}</div>
                     <div className="product-sale-price d-flex align-items-center" href="#">
                       <div className="price fs-4  size-6 m-size-7 me-3">NT${v.specialoffer}</div>
                       <del>NT${v.price}</del>
@@ -144,16 +144,7 @@ export default function ProductCard2({ productData, mainPic, setMainPic }) {
                   </div>
                 </div>
               </div>
-
-
-
-
             </div>
-
-
-
-
-
           </div>
 
         )

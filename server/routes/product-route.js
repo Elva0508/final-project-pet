@@ -146,7 +146,7 @@ router.get("/recommend", (req, res) => {
         LEFT JOIN product_type ON product_type.product_id = products.product_id
         GROUP BY products.product_id, category_name, subcategory_name
         ORDER BY RAND()
-        LIMIT 4;
+        LIMIT 8;
         ;
         `,
         (error, result) => {
