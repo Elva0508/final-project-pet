@@ -806,13 +806,13 @@ export default function MissionDetail() {
                                 </div>
                             </div>
                             <div className='recommend mt-4'>
-                                <div className='size-6 mb-2'>自我推薦<span className='size-7'>(必填)</span></div>
+                                <div className='size-6 mb-2 recommend-title'>自我推薦<span className='size-7'>（必填）</span></div>
                                 <textarea className='recommend-content' value={msgInputValue}
                                     onChange={(e) => setMsgInputValue(e.target.value)} ></textarea>
 
                                 <div className='auto-send d-flex my-4 align-items-center'>
                                     <input type="checkbox" className='checkbox' checked={autoSend} onChange={() => setAutoSend(!autoSend)} />
-                                    <div className='size-7 ms-2'>自動發送小幫手履歷<span className='size-7' >（需開啟小幫手資料）</span></div>
+                                    <div className='size-7 ms-2 auto-send-title'>自動發送小幫手履歷<span className='size-7' >（需開啟小幫手資料）</span></div>
                                 </div>
                             </div>
                         </div>
