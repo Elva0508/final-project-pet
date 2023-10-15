@@ -13,9 +13,13 @@ import RoleSelection from "@/components/job/role-selection";
 // import MissionCard from '@/components/job/mission-card'
 import Pagination from "@/components/pagination";
 // react-icons
-import { FaCaretUp, FaCaretDown } from "react-icons/fa";
+import { FaCaretUp, FaCaretDown, FaRegHeart, FaHeart } from "react-icons/fa";
 import { BiSolidDownArrow, BiSolidUpArrow } from "react-icons/bi";
 import { BiSearchAlt } from "react-icons/bi";
+import { CiLocationOn } from "react-icons/ci";
+import { FaLocationDot, FaRegCalendarCheck } from "react-icons/fa6";
+import { MdDateRange } from "react-icons/md";
+import { BsFillCalendar2DateFill } from "react-icons/bs";
 // Swiper
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
@@ -975,7 +979,7 @@ function ImageWithEqualDimensions({ file_path }) {
 }
 
 // 任務卡片（這邊的參數如果忘記設定會讓卡片出不來）
-const MissionCard = ({ missionType, missionCity, missionArea, setMissionType, updateDate, setUpdateDate, sortOrder, setSortOrder, sortBy, setSortBy, allMissions, currentData, userId, setUserId, isFavorites, toggleFavorite }) => {
+const MissionCard = ({ missionType, missionCity, missionArea, setMissionType, updateDate, setUpdateDate, sortOrder, setSortOrder, sortBy, setSortBy, allMissions, currentData, userId, setUserId, isFavorites, toggleFavorite, handleMouseEnter, handleMouseLeave, isHovered }) => {
 
   // 格式化日期
   function formatDate(dateString) {
@@ -999,25 +1003,64 @@ const MissionCard = ({ missionType, missionCity, missionArea, setMissionType, up
               <div className="mission-content mx-1 mt-2">
                 <Link href={`/work/find-mission/${v.mission_id}`}>
                   <div className="title size-6">{v.title}</div>
-                </Link>
-                <div className="d-flex justify-content-between mt-2">
-                  <div className="size-7">
-                    {v.city}
-                    {v.area}
-                    <br />
-                    {formatDate(v.post_date)}
-                  </div>
-                  <img
+                  <div className="d-flex justify-content-between mt-1 mb-1">
+                    <div className="size-7">
+                      <div className="d-flex align-items-center mb-1">
+                        <span className="tag-btn mb-1">{(() => {
+                          switch (v.mission_type) {
+                            case 1:
+                              return '到府照顧';
+                            case 2:
+                              return '安親寄宿';
+                            case 3:
+                              return '到府美容';
+                            case 4:
+                              return '行為訓練';
+                            case 5:
+                              return '醫療護理';
+                            default:
+                              return '其他';
+                          }
+                        })()}</span>
+                      </div>
+                      <div className="d-flex align-items-center mb-1">
+                        <FaLocationDot className="me-1" />
+                        {v.city}
+                        {v.area}
+                      </div>
+                      <div className="d-flex align-items-center">
+                        <FaRegCalendarCheck className="me-1" />
+                        刊登日：{formatDate(v.post_date)}
+                      </div>
+                    </div>
+                    {/* <img
                     src={isFavorites[i] ? "/heart-clicked.svg" : "/heart.svg"}
                     alt={isFavorites[i] ? "已收藏" : "未收藏"}
                     onClick={() => toggleFavorite(i)}
-                  />
-                </div>
-                <div className='d-flex justify-content-between align-items-end price'>
+                  /> */}
+                  </div>
+                </Link>
+                <div className='d-flex justify-content-between align-items-center price'>
                   <div  >單次<span className='size-6'> NT${v.price}</span></div>
-                  <Link href={`/work/find-mission/${v.mission_id}`} >
+                  {/* <Link href={`/work/find-mission/${v.mission_id}`} >
                     <button className='btn-confirm size-6'>應徵</button>
-                  </Link>
+                  </Link> */}
+                  <button className=" heart-btn" onClick={() => toggleFavorite(i)} onMouseEnter={() => handleMouseEnter(i)}
+                    onMouseLeave={() => handleMouseLeave(i)}>
+                    {isFavorites[i] ? (
+                      <>
+                        <FaHeart className="fill-icon" />
+                      </>
+                    ) : (
+                      <>
+                        {isHovered[i] ? (
+                          <FaHeart className="empty-icon-hover" />
+                        ) : (
+                          <FaRegHeart className="empty-icon" />
+                        )}
+                      </>
+                    )}
+                  </button>
                 </div>
               </div>
             </div>
@@ -1119,6 +1162,22 @@ export default function MissionList() {
 
   // 收藏
   const [isFavorites, setIsFavorites] = useState([]);
+  // 初始化每個按鈕的初始懸停狀態（空心愛心hover時要替換成實心）
+  const initialHoverStates = Array(currentData.length).fill(false);
+  const [isHovered, setIsHovered] = useState(initialHoverStates);
+  // 設置 onMouseEnter 處理程序來處理懸停狀態
+  const handleMouseEnter = (index) => {
+    const newHoverStates = [...isHovered];
+    newHoverStates[index] = true;
+    setIsHovered(newHoverStates);
+  };
+
+  // 設置 onMouseLeave 處理程序來處理取消懸停狀態
+  const handleMouseLeave = (index) => {
+    const newHoverStates = [...isHovered];
+    newHoverStates[index] = false;
+    setIsHovered(newHoverStates);
+  };
 
   useEffect(() => {
     // 在組件加載時從後端獲取已收藏的任務
@@ -1290,7 +1349,7 @@ export default function MissionList() {
             <div className="row d-flex mb-3 g-3 g-md-4">
               {/* 使用g-3 不用justify-content-between 預設是start 卡片就會照順序排列 */}
               <MissionCard sortOrder={sortOrder} sortBy={sortBy} missionType={missionType} setMissionType={setMissionType} missionCity={missionCity} setMissionCity={setMissionCity} missionArea={missionArea} setMissionArea={setMissionArea}
-                updateDate={updateDate} setUpdateDate={setUpdateDate} allMissions={allMissions} currentData={currentData} userId={userId} setUserId={setUserId} isFavorites={isFavorites} toggleFavorite={toggleFavorite} />
+                updateDate={updateDate} setUpdateDate={setUpdateDate} allMissions={allMissions} currentData={currentData} userId={userId} setUserId={setUserId} isFavorites={isFavorites} toggleFavorite={toggleFavorite} handleMouseEnter={handleMouseEnter} handleMouseLeave={handleMouseLeave} isHovered={isHovered} />
             </div>
           </div>
         </section>
