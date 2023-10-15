@@ -5,11 +5,14 @@ import axios from "axios";
 import { useCart } from '@/hooks/useCart';
 import Swal from 'sweetalert2';
 import Link from 'next/link';
+import { useAuth } from '@/context/fakeAuthContext';
 
 // import moment from "moment";
 
 export default function Cart() {
     const { cart, setCart } = useCart();
+    const {userId} = useAuth()
+    const id=parseInt(userId)
     const router = useRouter();
     const [isChecked, setIsChecked] = useState(true);
     const [coupon, setCoupon] = useState([])
@@ -24,8 +27,8 @@ export default function Cart() {
     let all=0
 
     //抓購物車內所有商品 ，並增加屬性
-    const getCart =  () => {
-         axios.get("http://localhost:3005/api/product/cart")
+    const getCart =  (id) => {
+         axios.get(`http://localhost:3005/api/product/cart/${id}`)
           .then((response) => {
             const data = response.data.result;
             const newData=data.map((v)=>{
@@ -38,8 +41,8 @@ export default function Cart() {
         });
       }
     //抓可使用優惠券
-    const getCoupon =  async() => {   
-        let data = await axios.get("http://localhost:3005/api/product/cart/coupon",{ params: {allPrice}})
+    const getCoupon =  async(id, allPrice) => {   
+        let data = await axios.get("http://localhost:3005/api/product/cart/coupon/coupon",{ params: {allPrice,id}})
           .then((response) => {
             if(allPrice!==0){
                 const data = response.data.result;
@@ -79,7 +82,7 @@ export default function Cart() {
       //判斷該引入哪些優惠券
     useEffect(() => {
         setCoupon([])
-        getCoupon()
+        getCoupon(id, allPrice)
         setSale(0)
         setSelectedOption(["no",0,0])
     }, [allPrice])

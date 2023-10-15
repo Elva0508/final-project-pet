@@ -15,8 +15,8 @@ export default function History() {
     setCurrentScreen(screenName);
   };
 
-  const getHistory = async() => {
-    await axios.get("http://localhost:3005/api/member-history")
+  const getHistory = async(id) => {
+    await axios.get(`http://localhost:3005/api/member-history/${id}`)
       .then((response) => {
         const data = response.data.result;
         console.log(data);
@@ -28,7 +28,15 @@ export default function History() {
   }
 
 useEffect(() => {
-  getHistory()
+  const token = localStorage.getItem("token");
+  const id=localStorage.getItem("id")
+  // 沒有token
+  if (!token) {
+    window.location.href="/"
+  }
+  console.log(id);
+  console.log(token);
+  getHistory(id)
   }, [])
 
   return (

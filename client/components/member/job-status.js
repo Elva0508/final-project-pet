@@ -142,7 +142,10 @@ export default function JobStatusTwo({job,currentScreen}) {
               ):(
                 (v.record_mission_id==null?(
                   <>
-                  <p className="size-6 text-center apply px-3 py-2">未應徵</p>
+                  <button className="btn-confirm size-6 text-center px-3 py-2"
+                  onClick={()=>{
+                    window.location.href=`/work/find-mission/${v.mission_id}`
+                  }}>立即應徵</button>
                   </>
                 ):(
                   <>

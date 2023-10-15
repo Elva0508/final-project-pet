@@ -52,7 +52,7 @@ export default function ListD() {
                 <p className="size-5 my-3 text-center title">
                   Hi,{memberData ? memberData.name : "loading..."}
                 </p>
-                <Link className="size-7" href="">
+                <Link className="size-7" href="/pages/member/profile.js">
                   <span className="me-2">管理個人資料</span>
                   <FaPencilAlt />
                 </Link>

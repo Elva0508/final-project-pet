@@ -22,7 +22,7 @@ const [viewPwd,SetViewPwd]=useState(false)
 
   useEffect(
     function () {
-      if (isAuthenticated) router.replace("/member/profile"); 
+      if (isAuthenticated) window.location.href="/"; 
     },
     [isAuthenticated, router]
   );
@@ -58,7 +58,7 @@ const [viewPwd,SetViewPwd]=useState(false)
         localStorage.setItem('id', u);
 
         login(token);
-       router.push('/member/profile');
+        window.location.href="/"; 
       } else {
         throw new Error('Login failed');
       }
