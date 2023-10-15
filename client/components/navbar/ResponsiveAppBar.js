@@ -13,7 +13,6 @@ import MenuItem from "@mui/material/MenuItem";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { ThemeProvider, createTheme, styled } from "@mui/material/styles";
 import Badge from "@mui/material/Badge";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import Image from "next/image";
 import Link from "next/link";
 import { useActivePage } from "@/hooks/useActivePage";
@@ -80,10 +79,10 @@ const pages = [
   { path: "http://localhost:3000/article", name: "小貓兩三知", id: 4 },
   { path: "http://localhost:3000/support", name: "常見問題", id: 5 },
 ];
-const settings = [
-  { path: "/register", name: "註冊", id: 1 },
-  { path: "/login", name: "登入", id: 2 },
-];
+// const settings = [
+//   { path: "/register", name: "註冊", id: 1 },
+//   { path: "/login", name: "登入", id: 2 },
+// ];
 
 function ResponsiveAppBar() {
   //會員狀態
@@ -274,17 +273,7 @@ function ResponsiveAppBar() {
                     </MenuItem>
                   </Link>
                 )}
-                {/* <Link href="/login" >
-                    <MenuItem onClick={handleCloseUserMenu}>
-                      <Typography textAlign="center">登入</Typography>
-                    </MenuItem>
-                  </Link>
-                  
-                  <Link href={v.path} key={v.id}>
-                    <MenuItem onClick={handleCloseUserMenu}>
-                      <Typography textAlign="center">登出</Typography>
-                    </MenuItem>
-                  </Link> */}
+              
               </Menu>
             </Box>
           </Toolbar>

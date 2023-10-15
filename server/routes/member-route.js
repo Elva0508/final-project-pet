@@ -432,6 +432,7 @@ router.get("/request/detail/:pid", (req, res) => {
 
 router.get("/selling", (req, res) => {
   const { user_id, status } = req.query;
+  // console.log(user_id);
   conn.execute(
     `SELECT * FROM mission_req_orders WHERE status = ? AND helper_userId = ?`,
     [status, user_id],
@@ -440,7 +441,6 @@ router.get("/selling", (req, res) => {
         console.log(err);
         return res.status(500).send({ status: 500, error: "資料查詢錯誤" });
       }
-      console.log(results);
       results = results.map((item) => {
         const start_day = transferDate(item.start_day);
         const end_day = transferDate(item.end_day);

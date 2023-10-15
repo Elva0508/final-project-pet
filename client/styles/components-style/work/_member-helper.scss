@@ -63,6 +63,13 @@
     background-color: $cos-white;
     border: 2px solid $header-bg;
   }
+  // .semi-checkbox-cardType:hover {
+  //   background-color: transparent;
+  // }
+  .semi-checkbox-cardType_checked:hover {
+    background-color: $cos-white;
+    border: 2px solid $header-bg;
+  }
   .semi-checkbox-inner-display:hover {
     // 修改checkbox預設藍外框
     box-shadow: none;
