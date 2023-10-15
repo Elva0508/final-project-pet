@@ -54,6 +54,11 @@
             content: url("/heart-clicked.svg");
         }
 
+        .update-title{
+            font-size: 12px;
+            color: #555555;
+        }
+
         .price {
 
             span {
@@ -94,7 +99,6 @@
                     @extend %fav-icon-style;
                     color: $price;
                     animation: heartbeat 0.4s 2;
-                    /* 应用名为'heartbeat'的动画，无限循环 */
                 }
 
                 @keyframes heartbeat {
@@ -120,6 +124,7 @@
 
 @media screen and (max-width: 575px) {
     .mission-list-card {
+        padding: 0.5rem;
         .mission-content {
             .title {
                 min-height: 3rem;

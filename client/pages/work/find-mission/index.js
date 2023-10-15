@@ -648,7 +648,7 @@ const Sort = ({ missionType, setMissionType, missionCity, setMissionCity, missio
 
 
 // 最新任務（電腦版）
-const LatestMission = ({ userId }) => {
+const LatestMission = ({ userId, handleMouseEnter, handleMouseLeave, isHovered }) => {
 
   const [latestMissions, setLatestMissions] = useState([])
 
@@ -732,7 +732,7 @@ const LatestMission = ({ userId }) => {
     <>
       {latestMissions.map((v, i) => {
         return (
-          <div className='latest-mission-card d-flex'>
+          <div className='latest-mission-card d-flex align-items-center'>
             <Link href={`/work/find-mission/${v.mission_id}`} >
               <div className='mission-img'>
                 <img src={v.file_path} alt="任務" />
@@ -741,16 +741,61 @@ const LatestMission = ({ userId }) => {
             <div className='mission-content ms-2'>
               <Link href={`/work/find-mission/${v.mission_id}`} >
                 <div className='title size-6'>{v.title}</div>
+
+                <div className='d-flex justify-content-between mt-1 '>
+                  <div className='size-7'>
+                    <div className="d-flex align-items-center mb-1">
+                      <span className="tag-btn mb-1">{(() => {
+                        switch (v.mission_type) {
+                          case 1:
+                            return '到府照顧';
+                          case 2:
+                            return '安親寄宿';
+                          case 3:
+                            return '到府美容';
+                          case 4:
+                            return '行為訓練';
+                          case 5:
+                            return '醫療護理';
+                          default:
+                            return '其他';
+                        }
+                      })()}</span>
+                    </div>
+                    <div className="d-flex align-items-center mb-1">
+                      <FaLocationDot className="me-1" />
+                      {v.city}
+                      {v.area}
+                    </div>
+                    <div className="d-flex align-items-center mb-1">
+                      <FaRegCalendarCheck className="me-1" />
+                      {formatDate(v.update_date)}<span className="update-title" >（最後更新）</span>
+                    </div>
+                  </div>
+                  {/* <img src={isFavorites[i] ? "/heart-clicked.svg" : "/heart.svg"} alt={isFavorites[i] ? "已收藏" : "未收藏"} onClick={() => toggleFavorite(i)} /> */}
+                </div>
               </Link>
-              <div className='d-flex justify-content-between mt-1 mt-sm-2'>
-                <div className='size-7'>{v.city}{v.area}<br />{formatDate(v.post_date)}</div>
-                <img src={isFavorites[i] ? "/heart-clicked.svg" : "/heart.svg"} alt={isFavorites[i] ? "已收藏" : "未收藏"} onClick={() => toggleFavorite(i)} />
-              </div>
-              <div className='d-flex justify-content-between align-items-end price'>
+              <div className='d-flex justify-content-between align-items-center price'>
                 <div >單次<span className='size-6'> NT${v.price}</span></div>
-                <Link href={`/work/find-mission/${v.mission_id}`} >
+                {/* <Link href={`/work/find-mission/${v.mission_id}`} >
                   <button className='btn-confirm size-6'>應徵</button>
-                </Link>
+                </Link> */}
+                <button className=" heart-btn" onClick={() => toggleFavorite(i)} onMouseEnter={() => handleMouseEnter(i)}
+                  onMouseLeave={() => handleMouseLeave(i)}>
+                  {isFavorites[i] ? (
+                    <>
+                      <FaHeart className="fill-icon" />
+                    </>
+                  ) : (
+                    <>
+                      {isHovered[i] ? (
+                        <FaHeart className="empty-icon-hover" />
+                      ) : (
+                        <FaRegHeart className="empty-icon" />
+                      )}
+                    </>
+                  )}
+                </button>
               </div>
             </div>
           </div>
@@ -1030,7 +1075,7 @@ const MissionCard = ({ missionType, missionCity, missionArea, setMissionType, up
                       </div>
                       <div className="d-flex align-items-center">
                         <FaRegCalendarCheck className="me-1" />
-                        刊登日：{formatDate(v.post_date)}
+                        {formatDate(v.update_date)}<span className="update-title" >（最後更新）</span>
                       </div>
                     </div>
                     {/* <img
@@ -1334,13 +1379,13 @@ export default function MissionList() {
 
         <section className="d-flex all-mission flex-column flex-lg-row mt-3">
           {/* 最新任務桌機 */}
-          <div className="latest-mission latest-mission-pc d-none d-lg-flex flex-column">
-            <h3 className="size-4  ">最新任務</h3>
-            <LatestMission userId={userId} />
+          <div className="latest-mission latest-mission-pc d-none d-lg-flex flex-column mb-3">
+            <h3 className="size-5  ">最新任務</h3>
+            <LatestMission userId={userId} handleMouseEnter={handleMouseEnter} handleMouseLeave={handleMouseLeave} isHovered={isHovered} />
           </div>
           {/* 最新任務手機 */}
           <div className="latest-mission latest-mission-mobile d-lg-none mb-3 mt-1">
-            <h3 className="size-4">最新任務</h3>
+            <h3 className="size-5">最新任務</h3>
             <MobileLatestMission userId={userId} />
           </div>
           {/* 任務列表 */}
