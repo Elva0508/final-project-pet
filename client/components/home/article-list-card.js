@@ -6,7 +6,7 @@ export default function ArticleListCard() {
 
   // // 向伺服器要求資料，設定到狀態中
   const getArticleListCard = async () => {
-    const res = await fetch("http://localhost:3005/api/article/home");
+    const res = await fetch("http://localhost:3005/api/article-home");
 
     const data = await res.json();
 

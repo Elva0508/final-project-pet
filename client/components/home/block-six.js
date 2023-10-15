@@ -10,27 +10,6 @@ export default function BlockSix() {
         <div id="carouselExample" className="carousel slide">
           <div className="carousel-inner">
             <ArticleListCard />
-            {/* <div className="carousel-item active">
-              <div className="row g-4 px-5">
-                <div className="col">
-                  <ArticleListCard />
-                </div>
-              </div>
-            </div>
-            <div className="carousel-item">
-              <div className="row g-4 px-5">
-                <div className="col">
-                  <ArticleListCard />
-                </div>
-              </div>
-            </div>
-            <div className="carousel-item">
-              <div className="row g-4 px-5">
-                <div className="col">
-                  <ArticleListCard />
-                </div>
-              </div>
-            </div> */}
           </div>
           <button
             className="carousel-control-prev"
