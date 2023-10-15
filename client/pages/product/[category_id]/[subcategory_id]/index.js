@@ -98,7 +98,8 @@ const [productData, setProductData] = useState([]); // 初始化為一個帶有 
               const data = response.data.result;
               console.log(data);
               setProductData(data); 
-              setProductDataOrigin(data)// 将服务器端的 result 放入物件中
+              setProductDataOrigin(data)
+              // 将服务器端的 result 放入物件中
               // setMainPic(data[0].images_one)
               // console.log(response.data.result[0].images_one)
             } catch (error) {
@@ -279,10 +280,13 @@ const [productData, setProductData] = useState([]); // 初始化為一個帶有 
         if(selectedValue=="price_desc"){
             const newProduct=productData.sort((a, b) => b.specialoffer - a.specialoffer);
             setProductData(newProduct)
-        }else{
+        }else if(selectedValue=="price_asc"){
             const newProduct=productData.sort((a, b) => a.specialoffer - b.specialoffer);
             setProductData(newProduct)
 
+        }else{
+            const newProduct=productData.sort((a, b) => a.product_id - b.product_id);
+            setProductData(newProduct)
         }
         setSelectedSort(selectedValue); // 更新選擇的排序方式
         console.log(selectedValue)
@@ -312,13 +316,23 @@ const [productData, setProductData] = useState([]); // 初始化為一個帶有 
     // };
 
     //篩選重複的廠商
-    const [vendorData, setVendorData] = useState({ result: [] });
+    const [vendorData, setVendorData] = useState([]);
+    // useEffect(() => {
+    //     axios.get("http://localhost:3005/api/product/vendor").then((response) => {
+    //         console.log(response.data.result);
+    //         setVendorData({ result: response.data.result });
+    //     });
+    // }, []);
     useEffect(() => {
-        axios.get("http://localhost:3005/api/product/vendor").then((response) => {
-            console.log(response.data.result);
-            setVendorData({ result: response.data.result });
-        });
-    }, []);
+        let newvendor = [];
+        for (let i = 0; i < productData.length; i++) {
+            let currentVendor = productData[i].vendor;   
+            if (newvendor.indexOf(currentVendor) === -1) {
+                newvendor.push(currentVendor);
+            }
+        }
+        setVendorData(newvendor)        
+}, [productDataOrigin]);
     
     //傳送search的到後端
     const handleSearch = (search) => {
@@ -383,7 +397,16 @@ const [productData, setProductData] = useState([]); // 初始化為一個帶有 
         }else{
             finalData=highPrice.filter((v)=>v.vendor==vendor)
         }
-        setProductData(finalData)
+        if(selectedSort==="" ||selectedSort==null){
+            setProductData(finalData)
+        }else if(selectedSort=="price_desc"){
+            const newProduct=finalData.sort((a, b) => b.specialoffer - a.specialoffer);
+            setProductData(newProduct)
+        }else if(selectedSort=="price_asc"){
+            const newProduct=finalData.sort((a, b) => a.specialoffer - b.specialoffer);
+            setProductData(newProduct)
+        }
+        
     };
 
 
@@ -543,8 +566,8 @@ const [productData, setProductData] = useState([]); // 初始化為一個帶有 
                                                     onChange={handleVendorChange}
                                                 >
                                                     <option value="">請選擇</option>
-                                                    {vendorData.result.map((vendor, index) => (
-                                                        <option key={index} value={vendor.vendor}>{vendor.vendor}</option>
+                                                    {vendorData.map((vendor, index) => (
+                                                        <option key={index} value={vendor}>{vendor}</option>
                                                     ))}
                                                 </select>
                                             </div>
@@ -666,8 +689,8 @@ const [productData, setProductData] = useState([]); // 初始化為一個帶有 
                                                 onChange={handleVendorChange}
                                             >
                                                 <option value="">請選擇</option>
-                                                {vendorData.result.map((vendor, index) => (
-                                                    <option key={index} value={vendor.vendor}>{vendor.vendor}</option>
+                                                {vendorData.map((vendor, index) => (
+                                                    <option key={index} value={vendor}>{vendor}</option>
                                                 ))}
                                             </select>
                                         </div>

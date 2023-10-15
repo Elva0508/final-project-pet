@@ -86,7 +86,9 @@ export default function ProductList() {
         axios.get("http://localhost:3005/api/product").then((response) => {
             const data = response.data.result;
             console.log(data);
-            setProductData(data); // 將伺服器端的 result 放入物件中
+            setProductData(data); 
+            setProductDataOrigin(data)
+            // 將伺服器端的 result 放入物件中
             setMainPic(data[0].images_one)
             console.log(response.data.result[0].images_one)
         });
@@ -217,10 +219,13 @@ export default function ProductList() {
         if(selectedValue=="price_desc"){
             const newProduct=productData.sort((a, b) => b.specialoffer - a.specialoffer);
             setProductData(newProduct)
-        }else{
+        }else if(selectedValue=="price_asc"){
             const newProduct=productData.sort((a, b) => a.specialoffer - b.specialoffer);
             setProductData(newProduct)
 
+        }else{
+            const newProduct=productData.sort((a, b) => a.product_id - b.product_id);
+            setProductData(newProduct)
         }
         setSelectedSort(selectedValue); // 更新選擇的排序方式
         console.log(selectedValue)
@@ -321,7 +326,16 @@ export default function ProductList() {
         }else{
             finalData=highPrice.filter((v)=>v.vendor==vendor)
         }
-        setProductData(finalData)
+        if(selectedSort==="" ||selectedSort==null){
+            setProductData(finalData)
+        }else if(selectedSort=="price_desc"){
+            const newProduct=finalData.sort((a, b) => b.specialoffer - a.specialoffer);
+            setProductData(newProduct)
+        }else if(selectedSort=="price_asc"){
+            const newProduct=finalData.sort((a, b) => a.specialoffer - b.specialoffer);
+            setProductData(newProduct)
+        }
+        
     };
 
 
