@@ -437,6 +437,7 @@ export default function MissionDetail() {
 
     // 收藏
     const [isFavorite, setIsFavorite] = useState(false);
+    const [isHovered, setIsHovered] = useState(false);  // 空心愛心hover時要替換成實心
 
     // 獲取任務是否已被收藏的狀態
     const getIsFavoriteStatus = async (mission_id) => {
@@ -915,21 +916,6 @@ export default function MissionDetail() {
                                                     <span>立即應徵</span>
                                                 </button>
                                             )}
-
-
-                                            {/* <button className="heart-icon" onClick={toggleFavorite}>
-                                                {isFavorite  ? (
-                                                    <>
-                                                        <FaHeart className="fill-icon" />
-                                                        <span>取消收藏</span>
-                                                    </>
-                                                ) : (
-                                                    <>
-                                                        <FaRegHeart />
-                                                        <span>加入收藏</span>
-                                                    </>
-                                                )}
-                                            </button> */}
                                         </div>
 
 
@@ -949,9 +935,40 @@ export default function MissionDetail() {
                             </div>
                             <div className='right col-12 col-lg-9'>
                                 <header className='mt-3 py-4 px-5 position-relative'>
-                                    <div className=' d-flex '>
+                                    <div className=' d-flex justify-content-between'>
                                         <p className='header-font'>案件編號：{v.pid}</p>
-                                        <img className='position-absolute' src={isFavorite ? "/heart-clicked.svg" : "/heart.svg"} alt={isFavorite ? "已收藏" : "未收藏"} onClick={toggleFavorite} />
+                                        {/* <img className='position-absolute' src={isFavorite ? "/heart-clicked.svg" : "/heart.svg"} alt={isFavorite ? "已收藏" : "未收藏"} onClick={toggleFavorite} /> */}
+                                        <button className=" heart-btn" onClick={toggleFavorite} onMouseEnter={() => setIsHovered(true)}
+                                            onMouseLeave={() => setIsHovered(false)}>
+                                            {isFavorite ? (
+                                                <>
+                                                    <FaHeart className="fill-icon" />
+                                                    <span>取消</span>
+                                                </>
+                                            ) : (
+                                                <>
+                                                    {isHovered ? (
+                                                        <FaHeart className="empty-icon-hover" />
+                                                    ) : (
+                                                        <FaRegHeart className="empty-icon" />
+                                                    )}
+                                                    <span>收藏</span>
+                                                </>
+                                            )}
+                                        </button>
+                                        {/* <button className="right-block-btn position-absolute" onClick={toggleFavorite}>
+                                                {isFavorite ? (
+                                                    <>
+                                                        <FaHeart className="fill-icon" />
+                                                        <span>取消收藏</span>
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <FaRegHeart />
+                                                        <span>加入收藏</span>
+                                                    </>
+                                                )}
+                                            </button> */}
                                     </div>
 
                                     <h2 className='size-5'>{v.title}</h2>

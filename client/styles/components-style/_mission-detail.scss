@@ -54,6 +54,11 @@
   }
 }
 
+%heart-icon-style {
+  font-size: 1.5rem;
+  margin-right: 0.5rem;
+}
+
 .mission-detail {
   nav a {
     border-bottom: 0;
@@ -175,6 +180,59 @@
 
     img:hover {
       content: url("/heart-clicked.svg");
+    }
+
+    .heart-btn {
+      border: 0;
+      // right: 30px;
+      color: $text-mark;
+      background-color: transparent;
+      display: flex;
+      align-items: center;
+      padding: 0;
+
+      .empty-icon {
+        @extend %heart-icon-style;
+        color: $hover;
+
+        // &:hover{
+        //   color: $price;
+        // }
+        &-hover {
+          //就是fill-icon只是少了跳動
+          @extend %heart-icon-style;
+          color: $price;
+        }
+      }
+
+      .fill-icon {
+        @extend %heart-icon-style;
+        color: $price;
+        animation: heartbeat 0.4s 2;
+        /* 应用名为'heartbeat'的动画，无限循环 */
+      }
+
+      @keyframes heartbeat {
+        0% {
+          transform: scale(1);
+          /* 初始大小 */
+        }
+
+        50% {
+          transform: scale(1.2);
+          /* 放大到1.2倍 */
+        }
+
+        100% {
+          transform: scale(1);
+          /* 返回到原始大小 */
+        }
+      }
+    }
+
+    .right-block-btn {
+      @extend %chat-button-style;
+      left: 86%;
     }
 
     @media screen and (max-width: 576px) {
@@ -471,7 +529,7 @@
     .modal-body {
       .profile {
         gap: 1.5rem;
-  
+
         .avatar {
           img {
             width: 8rem;
@@ -480,6 +538,7 @@
         }
       }
     }
+
     .modal-footer {
       button {
         width: 30%;
