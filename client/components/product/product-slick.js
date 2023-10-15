@@ -55,7 +55,7 @@ export default function ProductSlick() {
         slidesToScroll: 4, //一次要滾動幾張圖片
         initialSlide: 0,
         autoplay: true,
-        autoplayspeed: 1000,
+        autoplayspeed: 500,
         cssEase: "linear",
 
         responsive: [
