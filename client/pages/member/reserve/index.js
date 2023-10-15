@@ -4,6 +4,7 @@ import { BsCalendarDateFill } from "react-icons/bs";
 import { RecordTemplate } from "@/components/member/Record-template";
 import memberService from "@/services/member-service";
 import Link from "next/link";
+import ListUserM from "@/components/member/list-user-m";
 import { useAuth } from "@/context/fakeAuthContext";
 import { useRouter } from "next/router";
 const MemberReserve = () => {
@@ -39,6 +40,7 @@ const MemberReserve = () => {
     <>
       {isAuthenticated && (
         <>
+          <ListUserM />
           <div className="d-flex container-fluid flex-column justify-content-around flex-md-row my-3">
             <ListD />
             <div className="col-12 col-sm-8 sales-and-request">
