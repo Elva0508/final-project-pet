@@ -1,6 +1,73 @@
 const router = require("express").Router();
 const connection = require("../db");
 
+// 抓取目前已登入user的某個聊天室最新一筆內容
+router.get("/newest/:uid", (req, res) => {
+  const uid = req.params.uid;
+
+  connection.execute(
+    `SELECT c.*, 
+      CASE
+        WHEN c.chatlist_userId1 = ? THEN u2.user_id
+        WHEN c.chatlist_userId2 = ? THEN u1.user_id
+      END AS user_id,
+      CASE
+        WHEN c.chatlist_userId1 = ? THEN u2.name
+        WHEN c.chatlist_userId2 = ? THEN u1.name
+      END AS name,
+      CASE
+        WHEN c.chatlist_userId1 = ? THEN u2.cover_photo
+        WHEN c.chatlist_userId2 = ? THEN u1.cover_photo
+      END AS cover_photo
+      FROM chatlist AS c
+      JOIN userinfo AS u1 ON c.chatlist_userId1 = u1.user_id
+      JOIN userinfo AS u2 ON c.chatlist_userId2 = u2.user_id
+      WHERE u1.user_id = ? OR u2.user_id = ?`,
+    [uid, uid, uid, uid, uid, uid, uid, uid],
+    (error, chatlistResult) => {
+      if (error) {
+        console.error(error);
+        res.status(500).json({ error: "获取聊天室列表失败" });
+      } else {
+        // 获取聊天室列表成功后，继续查询每个聊天室的最新聊天记录
+        const chatroomsWithLatestMessages = [];
+
+        function fetchLatestMessages(index) {
+          if (index < chatlistResult.length) {
+            const chatlist_id = chatlistResult[index].chatlist_id;
+            connection.execute(
+              `SELECT chat_content, timestamp
+               FROM chat_content
+               WHERE chatlist_id = ?
+               ORDER BY timestamp DESC
+               LIMIT 1`,
+              [chatlist_id],
+              (error, chatContentResult) => {
+                if (error) {
+                  console.error(error);
+                  res.status(500).json({ error: "获取最新聊天记录失败" });
+                } else {
+                  const chatroom = chatlistResult[index];
+                  const latestMessage = chatContentResult[0];
+                  chatroom.latestMessage = latestMessage;
+                  chatroomsWithLatestMessages.push(chatroom);
+                  fetchLatestMessages(index + 1);
+                }
+              }
+            );
+          } else {
+            // 所有聊天室的最新聊天记录已获取完毕，回复给客户端
+            res.json(chatroomsWithLatestMessages);
+          }
+        }
+
+        // 开始获取每个聊天室的最新聊天记录
+        fetchLatestMessages(0);
+      }
+    }
+  );
+});
+
 // 抓取目前已登入user的某個聊天室內容
 // "http://localhost:3005/api/chatroom/" + chatlist_id
 router.get("/:cid", (req, res) => {

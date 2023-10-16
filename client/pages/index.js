@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import BlockOne from "@/components/home/block-one";
 import BlockTwo from "@/components/home/block-two";
 import BlockTwoMobile from "@/components/home/block-two-mobile";
@@ -102,15 +102,28 @@ export function HomeVedio() {
   );
 }
 export default function Index() {
+  const [imageIndex, setImageIndex] = useState(1);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      // 計算圖片名稱，從1-10
+      setImageIndex((prevIndex) => (prevIndex % 10) + 1);
+    }, 1000);
+
+    return () => clearInterval(interval); //
+  }, []);
+
+  // 建構圖像URL
+  const imageSrc = `/home/${imageIndex}.png`;
   return (
     <>
       <div className="home">
         <div className="container my-5">
           <div className="block-two my-5">
             <div className="size-3 home-tilte d-flex justify-content-center mb-3 border-bottom">
-              {/* <div>
-                <img src="/home/1.png" />
-              </div> */}
+              <div className="animephoto">
+                <img src={imageSrc} className="img-fluid" />
+              </div>
               新品推薦
             </div>
             <div className="home-product-card row gy-5">
@@ -132,7 +145,7 @@ export default function Index() {
           </div>
 
           <div className="block-four my-5">
-            <div className="size-3 home-tilte d-flex justify-content-center mt-3 pt-5">
+            <div className="size-3 home-tilte d-flex justify-content-center my-3 pt-5">
               本週排行榜
             </div>
             <div className="home-product-card row gy-5  mb-5 pb-5">
