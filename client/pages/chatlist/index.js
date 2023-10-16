@@ -75,38 +75,46 @@ export default function ChatList() {
                 我的訊息
               </Link>
             </div>
-            {chatContent.map((v, i) => {
-              const latestMessage = v.latestMessage;
-              return (
-                <div className="list" key={v.user_id}>
-                  <Link
-                    href={`/chatlist/${v.chatlist_id}`}
-                    className="list-group-item list-group-item-action"
-                  >
-                    <div className="d-flex align-items-center">
-                      <div className="avatar rounded-circle mr-3 overflow-hidden rounded-circle">
-                        <img
-                          src={v.cover_photo}
-                          className="img-fluid object-fit-cover"
-                        />
+            {chatContent.length > 0 ? ( // Check if chatContent is not empty
+              chatContent.map((v, i) => {
+                const latestMessage = v.latestMessage;
+                return (
+                  <div className="list" key={v.user_id}>
+                    <Link
+                      href={`/chatlist/${v.chatlist_id}`}
+                      className="list-group-item list-group-item-action"
+                    >
+                      <div className="d-flex align-items-center">
+                        <div className="avatar rounded-circle mr-3 overflow-hidden rounded-circle">
+                          <img
+                            src={v.cover_photo}
+                            className="img-fluid object-fit-cover"
+                          />
+                        </div>
+                        <div className="mx-3 size-5 m-size-5">
+                          <span>{v.name}</span>
+                        </div>
+                        <div className="size-7 m-size-7 text-secondary">
+                          {latestMessage ? (
+                            <span key={latestMessage.timestamp}>
+                              {latestMessage.chat_content}
+                            </span>
+                          ) : (
+                            <span></span>
+                          )}
+                        </div>
                       </div>
-                      <div className="mx-3 size-5 m-size-5">
-                        <span>{v.name}</span>
-                      </div>
-                      <div className="size-7 m-size-7 text-secondary">
-                        {latestMessage ? (
-                          <span key={latestMessage.timestamp}>
-                            {latestMessage.chat_content}
-                          </span>
-                        ) : (
-                          <span></span>
-                        )}
-                      </div>
-                    </div>
-                  </Link>
-                </div>
-              );
-            })}
+                    </Link>
+                  </div>
+                );
+              })
+            ) : (
+              // Display an image or message when chatContent is empty
+              <div className="no-data-image d-flex flex-column align-items-center justify-content-center my-5">
+                <img src="/checkout.png" alt="No data image" />
+                <p className="size-5">目前沒有新消息</p>
+              </div>
+            )}
           </div>
         </div>
       </div>

@@ -120,10 +120,10 @@ export default function Index() {
       <div className="home">
         <div className="container my-5">
           <div className="block-two my-5">
-            <div className="size-3 home-tilte d-flex justify-content-center mb-3 border-bottom">
-              <div className="animephoto">
+            <div className="size-3 home-tilte d-flex justify-content-center mb-3">
+              {/* <div className="animephoto">
                 <img src={imageSrc} className="img-fluid" />
-              </div>
+              </div> */}
               新品推薦
             </div>
             <div className="home-product-card row gy-5">
