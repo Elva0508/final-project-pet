@@ -251,7 +251,7 @@ router.get("/mission-details/:mission_id", (req, res) => {
 router.get("/fav/:mission_id", (req, res) => {
   const mission_id = req.params.mission_id; // 從路由參數中獲取 mission_id
   const userId = req.query.userId; // 從請求的 URL 中獲取用戶 token
-  console.log("mission_id是:"+mission_id+"userId是:"+userId)
+  console.log("mission_id是:" + mission_id + "userId是:" + userId)
   conn.execute(
     `SELECT mf.*,md.mission_id AS mission_id
     FROM mission_fav AS mf
@@ -300,7 +300,7 @@ router.delete("/delete-fav/:mission_id", (req, res) => {
 
 // 任務詳細頁：GOOGLE地圖API
 const googleMapsClient = require('@google/maps').createClient({
-  key: 'AIzaSyD3M4Wt4xdyN-LrJyCVDwGSUkQ1B8KpKT8' 
+  key: 'AIzaSyD3M4Wt4xdyN-LrJyCVDwGSUkQ1B8KpKT8'
 });
 router.get("/mission-details-map/:mission_id", (req, res) => {
   const mission_id = req.params.mission_id; // 從路由參數中獲取 mission_id
@@ -386,6 +386,68 @@ router.post("/add-record", (req, res) => {
       } else {
         res.json({ result });
       }
+    }
+  );
+});
+
+// 根據應徵紀錄找出「熱門任務」
+router.get("/popular", (req, res) => {
+  conn.execute(    // 算出每個mission_id有多少個不同的user_id 並從中選出有最多不同user_id的mission_id
+    `SELECT md.*, im.file_path AS file_path, COUNT(DISTINCT mr.user_id) AS user_count
+    FROM mission_detail AS md
+    JOIN mission_record AS mr ON md.mission_id = mr.mission_id
+    JOIN (${commonSubquery}) AS min_ids ON md.mission_id = min_ids.mission_id
+    JOIN image_mission AS im ON min_ids.mission_id = im.mission_id AND min_ids.min_image_id = im.image_id
+    GROUP BY md.mission_id
+    ORDER BY user_count DESC
+    LIMIT 5    
+    ;`,
+    (error, result) => {
+      res.json({ result });
+    }
+  );
+});
+
+// 詳細頁：算已應徵人數
+router.get("/record-count/:mission_id", (req, res) => {
+  const mission_id = req.params.mission_id; // 從路由參數中獲取 mission_id
+  conn.execute(    // 算出每個mission_id有多少個不同的user_id 並從中選出有最多不同user_id的mission_id
+    `SELECT mission_id, COUNT(DISTINCT user_id) AS user_count
+    FROM mission_record
+    WHERE mission_id = ?
+    ;`,
+    [mission_id],  // 使用 mission_id 進行查詢
+    (error, result) => {
+      res.json({ result });
+    }
+  );
+});
+
+// 彈跳視窗：登入者資訊
+router.get("/login-user", (req, res) => {
+  const userId = req.query.userId; // 從請求的 URL 中獲取用戶 token
+  conn.execute(
+    `SELECT u.*
+    FROM userinfo AS u
+    WHERE u.user_id = ?;`,
+    [userId],
+    (error, result) => {
+      res.json({ result });
+    }
+  );
+});
+
+// 彈跳視窗（勾選）：取得小幫手履歷
+router.get("/helper-info", (req, res) => {
+  const userId = req.query.userId; // 從請求的 URL 中獲取用戶 token
+  conn.execute(
+    `SELECT u.cat_helper, h.introduction
+    FROM userinfo AS u
+    JOIN mission_helper_info AS h ON u.user_id = h.user_id 
+    WHERE u.user_id = ? ;`,
+    [userId],
+    (error, result) => {
+      res.json({ result });
     }
   );
 });
