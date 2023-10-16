@@ -1051,7 +1051,7 @@ const MissionCard = ({ missionType, missionCity, missionArea, setMissionType, up
     return `${year}/${month}/${day}`;
   }
 
-  //添加任務到收藏的函式
+  // 收藏
   const [collection, setCollection] = useState([]); //用來儲存收藏
   const getCollection = () => {
     axios.get(`http://localhost:3005/api/mission/collections/${userId}`)
@@ -1079,7 +1079,6 @@ const MissionCard = ({ missionType, missionCity, missionArea, setMissionType, up
           `http://localhost:3005/api/mission/collections/${userId}`,
           { mission_id }
         );
-        alert('已加入收藏囉');
       } catch (error) {
         console.error("錯誤：", error);
       }
@@ -1091,30 +1090,55 @@ const MissionCard = ({ missionType, missionCity, missionArea, setMissionType, up
     // 檢查收藏中是否已經存在具有相同 id 的商品
     const have = collection.find((v) => v.mission_id === mission_id);
     console.log(have);
-     // 如果收藏中沒有相同的任務
+    // 如果收藏中有相同的任務
     if (have) {
       try {
-        // 發送HTTP請求將商品添加到購物車，product_id 放在 URL 中
+        // 發送HTTP請求將任務移除收藏，mission_id 放在 URL 中
         const response = await axios.delete(
           `http://localhost:3005/api/mission/collections/${userId}/${mission_id}`
         );
-        alert('已取消收藏');
       } catch (error) {
         console.error("錯誤：", error);
       }
-
       getCollection(userId);
-    } 
+    }
   };
 
   const toggleCollection = async (mission_id) => {
     const isMissionInCollection = collection.some((item) => item.mission_id === mission_id);
+    // 檢查用戶是否已登入
+    if (!userId) {
+      alert('請先登入會員');
+      return;
+    }
     if (isMissionInCollection) {
       await deleteCollection(mission_id);
     } else {
       await addCollection(mission_id);
     }
     getCollection(userId);
+  };
+
+  // 初始化每個按鈕的初始hover狀態（空心愛心hover時要替換成實心）
+  // 設一個陣列，包含了與 currentData 中任務數量相同數量的布林值false，用來表示每個按鈕的初始 hover 狀態。
+  const initialHoverStates = Array(currentData.length).fill(false);
+  console.log("initialHoverStates是"+initialHoverStates);
+  const [isHovered, setIsHovered] = useState(initialHoverStates);
+  console.log("isHovered是"+isHovered)
+
+  // 設置 onMouseEnter 處理程序來處理hover狀態
+  const handleMouseEnter = (index) => {
+    // 複製原陣列，創建新陣列來表示更新後的狀態
+    const newHoverStates = [...isHovered];
+    newHoverStates[index] = true;
+    setIsHovered(newHoverStates);
+  };
+
+  // 設置 onMouseLeave 處理程序來處理取消hover狀態
+  const handleMouseLeave = (index) => {
+    const newHoverStates = [...isHovered];
+    newHoverStates[index] = false;
+    setIsHovered(newHoverStates);
   };
 
 
@@ -1172,18 +1196,19 @@ const MissionCard = ({ missionType, missionCity, missionArea, setMissionType, up
                   {/* <Link href={`/work/find-mission/${v.mission_id}`} >
                     <button className='btn-confirm size-6'>應徵</button>
                   </Link> */}
-                  <button className=" heart-btn" onClick={() => toggleCollection(v.mission_id)} >
+                  <button className=" heart-btn" onClick={() => toggleCollection(v.mission_id)} onMouseEnter={() => handleMouseEnter(i)}
+                    onMouseLeave={() => handleMouseLeave(i)}>
                     {collection.some((item) => item.mission_id === v.mission_id) ? (
                       <>
                         <FaHeart className="fill-icon" />
                       </>
                     ) : (
                       <>
-                        {/* {isHovered[i] ? (
+                        {isHovered[i] ? (
                           <FaHeart className="empty-icon-hover" />
-                        ) : ( */}
-                        <FaRegHeart className="empty-icon" />
-                        {/* )} */}
+                        ) : (
+                          <FaRegHeart className="empty-icon" />
+                        )}
                       </>
                     )}
                   </button>
@@ -1286,24 +1311,8 @@ export default function MissionList() {
     // console.log("currentData這頁的資料是", currentData);
   }, [currentData]);
 
-  // // 收藏
+  // // 收藏（不用此方法，因為currentData作為依賴數組導致頁面一直重複渲染，但原因待釐清，程式碼先留著）
   // const [isFavorites, setIsFavorites] = useState([]);
-  // // 初始化每個按鈕的初始懸停狀態（空心愛心hover時要替換成實心）
-  // const initialHoverStates = Array(currentData.length).fill(false);
-  // const [isHovered, setIsHovered] = useState(initialHoverStates);
-  // // 設置 onMouseEnter 處理程序來處理懸停狀態
-  // const handleMouseEnter = (index) => {
-  //   const newHoverStates = [...isHovered];
-  //   newHoverStates[index] = true;
-  //   setIsHovered(newHoverStates);
-  // };
-
-  // // 設置 onMouseLeave 處理程序來處理取消懸停狀態
-  // const handleMouseLeave = (index) => {
-  //   const newHoverStates = [...isHovered];
-  //   newHoverStates[index] = false;
-  //   setIsHovered(newHoverStates);
-  // };
 
   // useEffect(() => {
   //   // 在組件加載時從後端獲取已收藏的任務

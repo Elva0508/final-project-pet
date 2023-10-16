@@ -452,8 +452,8 @@ router.get("/helper-info", (req, res) => {
   );
 });
 
-//加入收藏
-//查看收藏內有什麼任務
+// 收藏（寫法二）
+// 查看收藏內有什麼任務
 router.get("/collections/:user_id", (req, res) => {
   const userid = req.params.user_id
   console.log("收藏的id" + userid)
@@ -468,16 +468,16 @@ router.get("/collections/:user_id", (req, res) => {
   );
 });
 
-//用來新增收藏裡沒有的商品
+// 用來新增收藏裡沒有的商品
 router.put("/collections/:user_id", (req, res) => {
   const userid = req.params.user_id
   console.log("收藏的id" + userid)
-  const { missionId } = req.body;
-  console.log(missionId);
+  const { mission_id } = req.body;
+  console.log(mission_id);
 
   conn.execute(
     `INSERT INTO mission_fav(mission_id, user_id) VALUES (?,?)`,
-    [missionId, userid],
+    [mission_id, userid],
     (error, result) => {
       if (error) {
         console.error(error);
@@ -489,7 +489,7 @@ router.put("/collections/:user_id", (req, res) => {
   );
 });
 
-//取消收藏
+// 取消收藏
 router.delete("/collections/:user_id/:mission_id", (req, res) => {
   const userid = req.params.user_id;
   console.log("取消收藏的id:" + userid);
