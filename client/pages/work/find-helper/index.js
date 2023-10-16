@@ -29,6 +29,10 @@ import { BiSearchAlt } from "react-icons/bi";
 import "animate.css";
 import { useAuth } from "@/context/fakeAuthContext";
 import { useRouter } from "next/router";
+import {
+  ScrollMotionContainer,
+  ScrollMotionItem,
+} from "@/components/ScrollMotion";
 register();
 // Import Swiper styles
 import "swiper/css";
@@ -535,18 +539,20 @@ const SingleHelperCard = ({
 
   return (
     <>
-      <motion.div
+      <ScrollMotionItem
+        element="div"
+        type="up"
         // layout
-        ref={ref}
-        variants={helperVariant}
+        // ref={ref}
+        // variants={helperVariant}
         // (index + 1) % 3 == 1 ? 0 : (index + 1) % 3 == 2 ? 1 : 2 整排移動參數
         // custom={index}
-        animate={helperControl}
-        initial="initial"
+        // animate={helperControl}
+        // initial="initial"
         // whileInView="singleMove"
-        viewport={{
-          once: true,
-        }}
+        // viewport={{
+        //   once: true,
+        // }}
         className={`single-card d-flex flex-column align-items-center justify-content-between ${
           collection.find((item) => item === helper.user_id)
             ? ""
@@ -556,20 +562,18 @@ const SingleHelperCard = ({
           router.push(`/work/find-helper/${helper.user_id}`);
         }}
       >
-        <motion.img
+        <img
           // layout
           className="single-card-img"
           src={helper.cover_photo}
           alt="貓頭貼"
           ref={imgRef}
         />
-        <motion.div
+        <div
           // layout
           className="single-card-content d-flex flex-column justify-content-start"
         >
-          <motion.div className="single-card-title size-6">
-            {helper.name}
-          </motion.div>
+          <div className="single-card-title size-6">{helper.name}</div>
           <div className="single-card-info d-flex justify-content-between">
             <div>
               <div className="service-items m-size-7">
@@ -637,14 +641,14 @@ const SingleHelperCard = ({
               ({helper.review_count === null ? "0" : helper.review_count})
             </span>
           </div>
-        </motion.div>
+        </div>
         <div className="single-card-footer">
           <div className="d-flex align-items-end price">
             <span className="size-5">NT$140</span>
             <span>起</span>
           </div>
         </div>
-      </motion.div>
+      </ScrollMotionItem>
     </>
   );
 };
@@ -1103,25 +1107,29 @@ const MissionHelperList = () => {
             />
           </div>
         </section>
+
         {allHelpers && (
-          <section
+          <div
+            // element="section"
             className="helper-list d-flex flex-wrap"
             // initial="ini"
           >
             {/* <AnimatePresence> */}
             {allHelpers?.map((helper, index) => (
-              <SingleHelperCard
-                // key={helper.user_id}
-                helper={helper}
-                collection={collection}
-                setCollection={setCollection}
-                helperControl={helperControl}
-                index={index}
-                helperVariant={helperVariant}
-              />
+              <ScrollMotionContainer element="div" className="card-wrapper">
+                <SingleHelperCard
+                  // key={helper.user_id}
+                  helper={helper}
+                  collection={collection}
+                  setCollection={setCollection}
+                  helperControl={helperControl}
+                  index={index}
+                  helperVariant={helperVariant}
+                />
+              </ScrollMotionContainer>
             ))}
             {/* </AnimatePresence> */}
-          </section>
+          </div>
         )}
       </div>
       <Pagination
