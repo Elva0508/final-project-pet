@@ -58,7 +58,16 @@ $mobile-font: 3rem, 2.625rem, 2.125rem, 1.5rem, 1.25rem, 1rem, 0.875rem;
   @extend .form-input;
   height: 2rem;
 }
-
+.form-area {
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  text-indent: 5px;
+  border-radius: 2px;
+  &:focus {
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    outline: none; /* 去掉預設input聚焦時的黑框線 */
+    box-shadow: 0 1px 4px rgb(0, 0, 0, 0.25);
+  }
+}
 @media screen and (max-width: 768px) {
   .m-form-input {
     height: 2rem;
