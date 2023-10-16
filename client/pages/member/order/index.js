@@ -49,23 +49,11 @@ export default function Order() {
 
 
   return (
-<<<<<<< Updated upstream
-      <div className="my-3">
-        <ListUserM />
-          <div className="d-flex justify-content-around py-2">
-            <ListD />
-            <div className="d-flex flex-column col-md-8 col-12 order">
-  
-                <p className="size-4  mb-2">
-                 <span className="my">▍</span>我的訂單
-                </p>
-=======
     <div className="my-3">
       <ListUserM />
       <div className="d-flex justify-content-around py-2">
         <ListD />
         <div className="d-flex flex-column col-md-8 col-12 order">
->>>>>>> Stashed changes
 
           <div className="d-flex justify-content-between">
             <p className="size-4 big mb-2">
