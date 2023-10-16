@@ -4,6 +4,7 @@ import ListUserM from "@/components/member/list-user-m";
 import {useCart} from "@/hooks/useCart"
 import axios from "axios";
 import Pagination from '@/components/pagination'
+import { useRouter } from "next/router";
 
 export default function Wishlist() {
   const [wishlist, setWishlist] = useState([]);
@@ -105,7 +106,7 @@ export default function Wishlist() {
   };
 
   const getCart =  (id) => {
-    axios.get(`http://localhost:3005/api/product/cart/${id}`)
+    axios.get(`http://localhost:3005/api/product/cart/cart/${id}`)
         .then((response) => {
         const data = response.data.result;
         const newData=data.map((v)=>{
@@ -203,6 +204,19 @@ export default function Wishlist() {
                       </div>
 
                       <div className="col-4 d-md-none d-flex flex-column justify-content-between align-items-end">
+                      <div className="d-flex justify-content-center">
+                          <button
+                            className="btn btn-confirm m-2 size-7  m-size-7"
+                            data-bs-toggle="offcanvas" 
+                          data-bs-target="#offcanvasRight" 
+                          aria-controls="offcanvasRight"
+                            onClick={() =>
+                              addCart(v.user_id,v.product_id, v.product_type)
+                            }
+                          >
+                            立即購買
+                          </button>
+                        </div>
                         <div className="d-flex justify-content-center">
                           <button
                             className="delete btn btn-outline-confirm size-6 m-size-7 m-2"
@@ -214,19 +228,7 @@ export default function Wishlist() {
                             取消追蹤
                           </button>
                         </div>
-                        <div className="d-flex justify-content-center">
-                          <button
-                            className="btn btn-confirm m-2 size-7  m-size-7"
-                            data-bs-toggle="offcanvas" 
-                          data-bs-target="#offcanvasRight" 
-                          aria-controls="offcanvasRight"
-                            onClick={() =>
-                              addCart(v.product_id, v.product_type)
-                            }
-                          >
-                            立即購買
-                          </button>
-                        </div>
+
                       </div>
                     </div>
                   </>
@@ -260,7 +262,7 @@ export default function Wishlist() {
                     <div className="d-flex justify-content-center my-3">
                       <button
                         type="button"
-                        className="btn btn-confirm"
+                        className="btn btn-outline-confirm"
                         data-bs-dismiss="offcanvas" 
                         aria-label="Close"
                       >

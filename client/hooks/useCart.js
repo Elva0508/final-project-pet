@@ -8,12 +8,12 @@ const cartContext = createContext(null)
 export function CartProvider({ children }) {
     const router = useRouter();
     const [cart, setCart] = useState([])
-    const [id, setId] = useState(null);
+    const [userid, setId] = useState(null);
 
 
     //抓購物車內所有商品 ，並增加屬性
     const getCart =  (id) => {
-        axios.get(`http://localhost:3005/api/product/cart/${id}`)
+        axios.get(`http://localhost:3005/api/product/cart/cart/${id}`)
             .then((response) => {
             const data = response.data.result;
             const newData=data.map((v)=>{
@@ -26,23 +26,20 @@ export function CartProvider({ children }) {
         });
     }
     useEffect(() => {
-
         const userId = parseInt(localStorage.getItem('id'));
         setId(userId);
-
-
     }, [router.isReady]);
 
     useEffect(() => {
       
-      if(id){
-        getCart(id)
+      if(userid){
+        getCart(userid)
      }
-    }, [id]) 
+    }, [userid]) 
 
 
   return (
-    <cartContext.Provider value={{ cart, setCart }}>
+    <cartContext.Provider value={{cart, setCart,userid }}>
       {children}
     </cartContext.Provider>
   )
