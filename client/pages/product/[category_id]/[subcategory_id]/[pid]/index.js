@@ -12,7 +12,8 @@ import { FiPlus } from 'react-icons/fi';
 import { FiMinus } from 'react-icons/fi';
 import jwt_decode from "jwt-decode";
 import { FaPaw } from 'react-icons/fa';
-;
+import ProductSlick from '@/components/product/product-slick';
+
 
 //next裡innerhtml語法
 function ProductDescription({ htmlContent }) {
@@ -350,13 +351,13 @@ export default function ProductDetail() {
                                         <figure className="main-pic  ">
                                             <img src={mainPic} alt="..."></img>
                                         </figure>
-                                        
+
                                     </div>
 
                                     <div className="product-detail col-lg-6">
                                         <div className="brand d-flex size-7">{v.vendor}</div>
                                         <h4 className="name size-4 mt-2"><strong>{v.product_name}</strong></h4>
-                                        
+
                                         <div className="price-wrapper mt-2">
                                             <div className="pricebox_detail  d-flex">
                                                 <div className="priceBlock me-4" >
@@ -376,7 +377,7 @@ export default function ProductDetail() {
                                                 <div className="coupon-2 size-7 d-flex ">即領折扣券</div>
                                             </div>
                                         </div>
-                                       
+
                                         <div className="type d-flex flex-column mt-2">
                                             <div className="type-chinese">規格</div>
                                             <div className="type-btn d-flex mt-1 ">
@@ -458,8 +459,8 @@ export default function ProductDetail() {
                                             </button> */}
                                         </div>
                                         <div className='additional-information mt-3'>
-                                            <li><FaPaw/>  商品享7日鑑賞期</li>
-                                            <li><FaPaw/>   付款後，3日內配送，台灣本島最快隔天送達</li>
+                                            <li><FaPaw />  商品享7日鑑賞期</li>
+                                            <li><FaPaw />   付款後，3日內配送，台灣本島最快隔天送達</li>
                                             <li><FaPaw />  提供宅配到府和超商取貨付款服務。</li>
                                         </div>
                                     </div>
@@ -605,12 +606,13 @@ export default function ProductDetail() {
                         <div className="customer-message-title text-center mb-4 ">
                             <h4 className="name size-5">你可能會喜歡的商品</h4>
                         </div>
-                        <div id="carouselExampleControls" className="carousel slide " data-bs-ride="carousel">
+                        {/* <div id="carouselExampleControls" className="carousel slide " data-bs-ride="carousel">
                             <div className="carousel-inner">
-                                <div className="carousel-item active">
-                                    <div className="row d-lg-flex  justify-content-center ">
+                                <div className="carousel-item active row d-flex" >
                                         <ProductCard3 />
-                                    </div>
+                                        <ProductCard3 />
+                                        <ProductCard3 />   
+                                        <ProductCard3 />
                                 </div>
                                 <div className="carousel-item active">
                                     <div className="row d-lg-flex  justify-content-center ">
@@ -627,8 +629,11 @@ export default function ProductDetail() {
                                 <FaChevronRight size={60} style={{ color: '#512f10' }} />
                                 <span className="visually-hidden">Next</span>
                             </button>
-                        </div>
+                        </div> */}
+                        <ProductSlick />
                     </section>
+
+
 
                 </div>
             </div>
