@@ -39,9 +39,9 @@ const Search = ({ placeholder, color, onClick, search, setSearch, inputValue, se
   const handleRipple = () => {
     const btn = rippleBtnRef.current;
     btn.classList.add("ripple");
-    setTimeout(() => {
-      btn.classList.remove("ripple");
-    }, 500); //動畫持續時間結束後移除動畫效果，讓動畫可以重複使用
+    // setTimeout(() => {
+    //   btn.classList.remove("ripple");
+    // }, 500); //動畫持續時間結束後移除動畫效果，讓動畫可以重複使用
   };
 
   const handleSearch = () => {
@@ -229,11 +229,11 @@ const MyFilter = ({ missionType, setMissionType, missionCity, setMissionCity, mi
       }
     }
 
-    document.addEventListener('click', handleClickOutside);
+    // document.addEventListener('click', handleClickOutside);
 
     // 組件卸載時移除事件監聽器（組件卸載時會自動執行return語句)
     return () => {
-      document.removeEventListener('click', handleClickOutside);
+      // document.removeEventListener('click', handleClickOutside);
     };
   }, []);
 
@@ -863,11 +863,11 @@ const MobileLatestMission = ({ userId }) => {
     };
 
     const carousel = document.querySelector('.carousel-inner');
-    carousel.addEventListener('transitionend', transitionEndHandler);
+    // carousel.addEventListener('transitionend', transitionEndHandler);
 
     // 組件卸載（或下一次 useEffect 執行時）時，移除之前附加的事件處理程序
     return () => {
-      carousel.removeEventListener('transitionend', transitionEndHandler);
+      // carousel.removeEventListener('transitionend', transitionEndHandler);
     };
   }, []);
 
@@ -1010,10 +1010,10 @@ function ImageWithEqualDimensions({ file_path }) {
     // 立即在組件加載時調整照片的高度
     handleResize();
     // 添加螢幕大小變化事件監聽器
-    window.addEventListener("resize", handleResize);
+    // window.addEventListener("resize", handleResize);
     // 在組件卸載時移除事件監聽器
     return () => {
-      window.removeEventListener("resize", handleResize);
+      // window.removeEventListener("resize", handleResize);
     };
   }, []);
   return (
@@ -1307,15 +1307,18 @@ export default function MissionList() {
     getAllMissions()
     console.log("狀態變數已重置為預設值");
   };
-  const handleClearSettings = () => {
-    // 使用 setTimeout 延遲執行 clearSettings 本來沒有寫 但clearSettings要點2次才反應
-    setTimeout(() => {
-      clearSettings();
-    }, 0);
-  };
+  // const handleClearSettings = () => {
+  //   // 使用 setTimeout 延遲執行 clearSettings 本來沒有寫 但clearSettings要點2次才反應
+  //   // setTimeout(() => {
+  //   //   clearSettings();
+  //   // }, [3000]);
+  // };
 
 
-
+console.log(allMissions)
+;
+console.log(itemsPerPage);
+console.log("我愛台灣")
 
   return (
     <>
@@ -1326,7 +1329,7 @@ export default function MissionList() {
               <Link href="/">首頁</Link>
             </li>
             <li className="breadcrumb-item" aria-current="page">
-              <Link href="/work/find-mission" onClick={handleClearSettings}>小貓上工(找任務)</Link>
+              <Link href="/work/find-mission" >小貓上工(找任務)</Link>
             </li>
             {search ? (
               <>
