@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import Link from "next/link";
 import Counter from '@/components/product/quantity-counter';
 import { FaHeart, FaRegHeart } from 'react-icons/fa';
+import jwt_decode from "jwt-decode";
 
 
 export default function ProductCard2({ productData, mainPic, setMainPic }) {
@@ -102,7 +103,7 @@ export default function ProductCard2({ productData, mainPic, setMainPic }) {
     const have = collection.find((v) => v.product_id === product_id);
     console.log(have);
 
-    // 如果購物車中沒有相同的商品
+    // 如果收藏中沒有相同的商品
     if (have) {
       try {
         // 發送HTTP請求將商品添加到購物車，product_id 放在 URL 中
@@ -115,7 +116,7 @@ export default function ProductCard2({ productData, mainPic, setMainPic }) {
       }
 
       getCollection(userId);
-    } else { // 如果購物車中已經沒有存在相同的商品
+    } else { // 如果收藏中已經沒有存在相同的商品
       try {
         getCollection(userId);
         //顯示警告
@@ -161,6 +162,7 @@ export default function ProductCard2({ productData, mainPic, setMainPic }) {
                     </button>
                   </div>
                   <Link href={`/product/${v.category_id}/${v.subcategory_id}/${v.product_id}`} >
+                    <div className="card-text-vendor size-7 m-size-7">{v.vendor}</div>
                     <div className="card-text size-6 m-size-7">{v.product_name}</div>
                     <div className="product-sale-price d-flex align-items-center" href="#">
                       <div className="price fs-4  size-6 m-size-7 me-3">NT${v.specialoffer}</div>

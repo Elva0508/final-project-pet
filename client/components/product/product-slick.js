@@ -196,7 +196,7 @@ export default function ProductSlick() {
                     return (
                         <div className="product-card2" key={v.product_id}>
                             <div className="card" >
-                                <Link href={`/product/${v.product_id}`} >
+                                <Link href={`/product/${v.category_id}/${v.subcategory_id}/${v.product_id}`} >
                                     <img src={v.images_one} className="card-img-top" alt="..." />
                                 </Link>
                                 <div className="card-body p-3" >
@@ -209,7 +209,7 @@ export default function ProductSlick() {
                                             {collection.some((item) => item.product_id === v.product_id) ? <FaHeart color="#ca526f" size={20} /> : <FaRegHeart color="#d7965b" size={20} />}
                                         </button>
                                     </div>
-                                    <Link href={`/product/${v.product_id}`} >
+                                    <Link href={`/product/${v.category_id}/${v.subcategory_id}/${v.product_id}`} >
                                         <div className="card-text-vendor size-7 m-size-7">{v.vendor}</div>
                                         <div className="card-text size-6 m-size-7">{v.product_name}</div>
                                         <div className="product-sale-price d-flex align-items-center" href="#">
