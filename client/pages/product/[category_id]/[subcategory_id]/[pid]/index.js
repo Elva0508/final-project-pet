@@ -632,13 +632,8 @@ export default function ProductDetail() {
                         </div> */}
                         <ProductSlick />
                     </section>
-
-
-
                 </div>
             </div>
-
         </>
-
     );
 }
