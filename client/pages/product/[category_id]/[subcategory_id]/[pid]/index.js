@@ -11,6 +11,11 @@ import { useCart } from "@/hooks/useCart"
 import { FiPlus } from 'react-icons/fi';
 import { FiMinus } from 'react-icons/fi';
 import jwt_decode from "jwt-decode";
+import { FaPaw } from 'react-icons/fa';
+import ProductSlick from '@/components/product/product-slick';
+import { FaHeart, FaRegHeart } from 'react-icons/fa';
+// import HeartButton from '@/components/product/product-heartbutton';
+
 
 //next裡innerhtml語法
 function ProductDescription({ htmlContent }) {
@@ -23,8 +28,6 @@ function ProductDescription({ htmlContent }) {
 
 export default function ProductDetail() {
 
-    //用來儲存收藏
-    const [collection, setCollection ]  = useState([]);
 
     // 用於儲存解析後的userID
     const [userId, setUserId] = useState(null);
@@ -51,7 +54,8 @@ export default function ProductDetail() {
     const handleDecrement = () => {
         if (count > 0) {
             setCount(count - 1);
-        } }; const handleIncrement = () => { setCount(count + 1); };
+        }
+    }; const handleIncrement = () => { setCount(count + 1); };
 
     //商品介紹和推薦跳頁
     const [activeSection, setActiveSection] = useState('product-description')
@@ -147,18 +151,17 @@ export default function ProductDetail() {
             })
             .catch((error) => {
                 console.error('Error fetching random products:', error);
-            });      
+            });
     }, []);
-    
-    //查看收藏商品
-    // getCollection()
+
+
 
     // 添加商品到購物車的函式
     const { cart, setCart } = useCart();
     //儲存選中的type_id-selectedTypeId
     const [selectedTypeId, setSelectedTypeId] = useState('');
-    const getCart = () => {
-        axios.get(`http://localhost:3005/api/product/cart?userId=${userId}`)
+    const getCart = (id) => {
+        axios.get(`http://localhost:3005/api/product/cart/cart/${id}`)
             .then((response) => {
                 const data = response.data.result;
                 const newData = data.map((v) => {
@@ -172,10 +175,11 @@ export default function ProductDetail() {
     }
 
     const addCart = async (product_id, product_type_id, quantity) => {
+        console.log(parseInt(product_type_id));
+        console.log(typeof (parseInt(product_type_id)));
         console.log(product_id, product_type_id, quantity)
-
         // 檢查購物車中是否已經存在具有相同 id 和類型的商品
-        const have = cart.find((v) => v.product_id == product_id && v.type_id == product_type_id);
+        const have = cart.find((v) => v.product_id == product_id && v.product_type_id == parseInt(product_type_id));
         console.log(have);
 
         // 如果購物車中沒有相同的商品
@@ -185,43 +189,43 @@ export default function ProductDetail() {
             try {
                 // 發送HTTP請求將商品添加到購物車
                 const response = await axios.put(
-                    `http://localhost:3005/api/product/cart?userId=${userId}`,
+                    `http://localhost:3005/api/product/cart1/${userId}`,
                     { product_id, product_type_id, quantity },
-                    console.log(userId,product_id, product_type_id, quantity),
-                    console.log('我是會員'+ userId)
+                    // console.log(userId,product_id, product_type_id, quantity),
+                    // console.log('我是會員'+ userId)
                 );
             } catch (error) {
                 console.error("錯誤：", error);
             }
 
             // 獲取最新的購物車資料
-            getCart();
+            getCart(userId);
         } else { // 如果購物車中已經存在相同的商品
             try {
                 // 計算新的商品數量（增加1）
-                const newQuantity = have.quantity + 1;
+                const newQuantity = have.quantity + quantity;
                 console.log(newQuantity);
-                console.log(id);
 
                 // 發送HTTP請求將商品數量更新為新數量
                 const response = await axios.put(
-                    `http://localhost:3005/api/product/cartplus`,
-                    { id, newQuantity, type }
+                    `http://localhost:3005/api/product/cart2/${userId}`,
+                    { product_id, newQuantity, product_type_id }
                 );
             } catch (error) {
                 console.error("錯誤：", error);
             }
 
             // 獲取最新的購物車資料
-            getCart();
+            getCart(userId);
         }
     };
 
-    // 添加商品到收藏的函式
+    //添加商品到收藏的函式
     //儲存選中的type_id-selectedTypeId 加到購物車時已經有寫了
+    const [collection, setCollection] = useState([]); //用來儲存收藏
     // const [selectedTypeId, setSelectedTypeId] = useState('');
     const getCollection = () => {
-        axios.get(`http://localhost:3005/api/product/collections?userId=${userId}`)
+        axios.get(`http://localhost:3005/api/product/collections/${userId}`)
             .then((response) => {
                 setCollection(response.data.result);
                 console.log(response.data.result);
@@ -243,26 +247,79 @@ export default function ProductDetail() {
             try {
                 // 發送HTTP請求將商品添加到購物車
                 const response = await axios.put(
-                    `http://localhost:3005/api/product/collections?userId=${userId}`,
+                    `http://localhost:3005/api/product/collections/${userId}`,
                     { product_id }
                 );
-                console.log(userId, product_id);
-                // 獲取最新的收藏資料
-                getCollection();
+                alert('已加入收藏囉');
             } catch (error) {
                 console.error("錯誤：", error);
             }
+
+            getCollection(userId)
         } else { // 如果購物車中已經存在相同的商品
             try {
-                getCollection();
-                // 在这里执行具体的操作，例如显示警告
-                alert('已加入收藏');
-               
+                getCollection(userId);
+                //顯示警告
+
+
             } catch (error) {
                 console.error("錯誤：", error);
             }
         }
     };
+
+    const deleteCollection = async (product_id) => {
+        console.log(product_id);
+
+        // 檢查收藏中是否已經存在具有相同 id 的商品
+        const have = collection.find((v) => v.product_id === product_id);
+        console.log(have);
+
+        // 如果購物車中沒有相同的商品
+        if (have) {
+            try {
+                // 發送HTTP請求將商品添加到購物車，product_id 放在 URL 中
+                const response = await axios.delete(
+                    `http://localhost:3005/api/product/collections/${userId}/${product_id}`
+                );
+                alert('已取消收藏');
+            } catch (error) {
+                console.error("錯誤：", error);
+            }
+
+            getCollection(userId);
+        } else { // 如果購物車中已經沒有存在相同的商品
+            try {
+                getCollection(userId);
+                //顯示警告
+
+            } catch (error) {
+                console.error("錯誤：", error);
+            }
+        }
+    };
+
+    const toggleCollection = async (product_id) => {
+        const isProductInCollection = collection.some((item) => item.product_id === product_id);
+        if (isProductInCollection) {
+            await deleteCollection(product_id);
+        } else {
+            await addCollection(product_id);
+        }
+        getCollection(userId);
+    };
+
+    useEffect(() => {
+        // 獲取商品列表
+        getCollection(userId);
+    }, [userId]);
+
+
+    //type款式按鈕
+    const handleButtonClick = (typeId) => {
+        setSelectedTypeId(typeId);
+    };
+
 
 
 
@@ -289,50 +346,82 @@ export default function ProductDetail() {
                                     </ol>
                                 </nav> */}
                                 <section className="product-itembox row justify-content-center" key={v.product_id} >
-                                    <div className="product-pic col-lg-6" >
+                                    <div className="product-pic d-flex col-lg-6" >
+                                        <div className='d-flex flex-column other-pic'>
+                                            <img
+                                                src={v.images_one}
+                                                alt="..."
+                                                onClick={() => handleImageClick(v.images_one)}
+                                                className={v.images_one === mainPic ? 'selected-image' : ''}
+
+                                            ></img>
+                                            <img
+                                                src={v.images_two}
+                                                alt="..."
+                                                onClick={() => handleImageClick(v.images_two)}
+                                                className={v.images_two === mainPic ? 'selected-image' : ''}
+
+                                            ></img>
+                                        </div>
                                         <figure className="main-pic  ">
                                             <img src={mainPic} alt="..."></img>
                                         </figure>
-                                        <div className="other-pic mt-2 ">
-                                            <div className='row g-2 d-flex justify-content-start '>
-                                                <img src={v.images_one} alt="..." onClick={() => handleImageClick(v.images_one)}></img>
-                                                <img src={v.images_two} alt="..." onClick={() => handleImageClick(v.images_two)}></img>
-                                            </div>
-                                        </div>
+
                                     </div>
 
                                     <div className="product-detail col-lg-6">
-                                        <h4 className="name size-5">{v.product_name}</h4>
-                                        <div className="brand d-flex size-6">{v.vendor}</div>
-                                        <div className="price-wrapper">
+                                        <div className="brand d-flex size-7">{v.vendor}</div>
+                                        <h4 className="name size-4 mt-2"><strong>{v.product_name}</strong></h4>
+
+                                        <div className="price-wrapper mt-2">
                                             <div className="pricebox_detail  d-flex">
                                                 <div className="priceBlock me-4" >
-                                                    <span className="PriceName1 size-5 ">NT$</span>
+                                                    <span className="PriceName1 size-5 ">折扣後NT$</span>
                                                     <span className="font-big size-5">{v.specialoffer}</span>
                                                 </div>
-                                                <div className="font-delete size-6" >NT${v.price}</div>
+                                                <div className="font-delete size-7" >原價NT${v.price}</div>
                                             </div>
                                         </div>
-                                        <div className="type d-flex flex-column">
+                                        <div className="delivery-coupon size-7 d-flex flex-row mt-2">
+                                            <div className="free-delivery size-7 d-flex pe-2 ">
+                                                <div className="free-delivery-1 size-7 d-flex " >免運</div>
+                                                <div className="free-delivery-2 size-7 d-flex ">滿千限時送</div>
+                                            </div>
+                                            <div className="coupon size-7 d-flex  ">
+                                                <div className="coupon-1 size-7 d-flex " >會員</div>
+                                                <div className="coupon-2 size-7 d-flex ">即領折扣券</div>
+                                            </div>
+                                        </div>
+
+                                        <div className="type d-flex flex-column mt-2">
                                             <div className="type-chinese">規格</div>
                                             <div className="type-btn d-flex mt-1 ">
-                                                {v.type_names.split(',').map((typeName, i) => (
-                                                    <button
-                                                        key={i}
-                                                        type="button"
-                                                        className="btn-outline-brown me-4"
-                                                        onClick={() => {
-                                                            // 儲存選中的type_id
-                                                            setSelectedTypeId(v.type_ids.split(',')[i].trim());
-                                                        }}
-                                                    >
-                                                        {typeName.trim()}
-                                                    </button>
-                                                ))}
+                                                {v.type_names.split(',').map((typeName, i) => {
+                                                    const typeId = v.type_ids.split(',')[i].trim();
+                                                    const isSelected = typeId === selectedTypeId;
+                                                    return (
+                                                        <button
+                                                            key={i}
+                                                            type="button"
+                                                            style={{
+                                                                //選中/沒選中
+                                                                backgroundColor: isSelected ? '#512f10' : '#fffdfb',
+                                                                border: isSelected ? '1px solid #512f10' : '1px solid #6d6868',
+                                                                color: isSelected ? '#FFFDFB' : '#6d6868',
+                                                                borderRadius: isSelected ? '2px' : '2px',
+                                                                padding: isSelected ? '3px 15px' : '3px 15px',
+                                                                marginRight: isSelected ? '20px ' : '20px ',
+                                                            }}
+                                                            onClick={() => handleButtonClick(typeId)}
+                                                        >
+                                                            {typeName.trim()}
+                                                        </button>
+                                                    );
+                                                })}
                                             </div>
                                         </div>
                                         {/* 計算數量 */}
-                                        <div className="quantity-counter">
+                                        <div className="quantity-counter mt-2">
                                             <div className="type-chinese">數量</div>
                                             <div className="quantity-counter d-flex mt-1">
                                                 <button className="decrement  " onClick={handleDecrement}>
@@ -344,50 +433,62 @@ export default function ProductDetail() {
                                                 </button>
                                             </div>
                                         </div>
-
-                                        <div className="add-to-cart">
-                                            <button
-                                                className="btn btn-confirm  size-7  m-size-7"
-                                                data-bs-toggle="offcanvas"
-                                                data-bs-target="#offcanvasRight"
-                                                aria-controls="offcanvasRight"
-                                                onClick={() => {
-                                                    addCart(v.product_id, selectedTypeId, count);
-                                                    console.log(v.product_id, selectedTypeId, count)
-                                                }
-                                                }
-                                            >
-                                                加入購物車
-                                            </button>
+                                        <div className='additional-information mt-3'>
+                                            <li><FaPaw />  商品享7日鑑賞期</li>
+                                            <li><FaPaw />  付款後，3日內配送，台灣本島最快隔天送達</li>
+                                            <li><FaPaw />  商品提供宅配到府和超商取貨付款服務</li>
+                                            <li><FaPaw />  小貓上工服務上線! </li>
+                                            <li><FaPaw />  如有任何問題，歡迎詢問</li>
                                         </div>
-                                        <div className="add-to-favorites">
+
+                                        <div className="add-to-cart-fav mt-3 d-flex flex-row">
+                                            <div className='add-to-cart'>
+                                                <button
+                                                    className="btn btn-confirm size-7  m-size-7"
+                                                    data-bs-toggle="offcanvas"
+                                                    data-bs-target="#offcanvasRight"
+                                                    aria-controls="offcanvasRight"
+                                                    onClick={() => {
+                                                        addCart(v.product_id, selectedTypeId, count);
+                                                        console.log(v.product_id, selectedTypeId, count)
+                                                    }
+                                                    }
+                                                >
+                                                    加入購物車
+                                                </button>
+                                            </div>
+                                            <button onClick={() => toggleCollection(v.product_id)} style={{ background: 'transparent', border: 'none' }}>
+                                                {collection.some((item) => item.product_id === v.product_id) ? <FaHeart color="#ca526f" size={29} /> : <FaRegHeart color="#d7965b" size={29} />}
+                                            </button>
+
+                                        </div>
+
+                                        <div className="add-to-favorites mt-3">
+                                            {/* <button
+                                                type="button"
+                                                className=" btn-second"
+                                                onClick={() => {
+                                                    addCollection(v.product_id)
+                                                    console.log('收藏:', v.product_id)
+                                                }}
+
+                                            >
+                                                加入收藏
+                                            </button>
+
                                             <button
                                                 type="button"
                                                 className=" btn-second"
-                                                onClick={()=>{
-                                                    addCollection(v.product_id, selectedTypeId)
-                                                    console.log('收藏:',v.product_id, selectedTypeId)
+                                                onClick={() => {
+                                                    deleteCollection(v.product_id)
+                                                    console.log('取消收藏:', v.product_id)
                                                 }}
-                                               
-                                                >
-                                                加入收藏
-                                            </button>
+                                            >
+                                                取消收藏
+                                            </button> */}
+
                                         </div>
-                                        <div>
-                                            <p>訂單金額滿新臺幣 4,500 元即享免費標準運送服務
 
-
-                                                臺北市:
-                                                標準運送的商品可於 2-5 個工作天內送達
-                                                快遞運送的商品可於 2-3 個工作天內送達
-
-                                                其它縣市:
-                                                標準運送的商品可於 3-6 個工作天內送達
-                                                快遞運送的商品可於 3-5 個工作天內送達
-
-
-                                                訂單皆於星期一至星期五之間處理與寄送 (國定假日除外)</p>
-                                        </div>
                                     </div>
                                     {/* 加到購物車 */}
                                     <div className="offcanvas offcanvas-end" tabIndex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel" >
@@ -463,10 +564,10 @@ export default function ProductDetail() {
 
                                         </div>
                                         <div className="product-description-pic text-center ">
-                                            <figure className="main-pic ">
+                                            <figure className="product-description-pic-1 ">
                                                 <img src={v.images_one} alt="..."></img>
                                             </figure>
-                                            <figure className="main-pic ">
+                                            <figure className="product-description-pic-1 ">
                                                 <img src={v.images_two} alt="..."></img>
                                             </figure>
                                         </div>
@@ -527,16 +628,17 @@ export default function ProductDetail() {
                         </section>
                     )}
 
-                    <section className='recommend-product p-4'>
-                        <div className="customer-message-title text-center mb-3 ">
-                            <h4 className="name size-4">你可能會喜歡的商品</h4>
+                    <section className='recommend-product p-4 mt-2 mb-5'>
+                        <div className="customer-message-title text-center mb-4 ">
+                            <h4 className="name size-5">你可能會喜歡的商品</h4>
                         </div>
-                        <div id="carouselExampleControls" className="carousel slide " data-bs-ride="carousel">
+                        {/* <div id="carouselExampleControls" className="carousel slide " data-bs-ride="carousel">
                             <div className="carousel-inner">
-                                <div className="carousel-item active">
-                                    <div className="row d-lg-flex  justify-content-center ">
+                                <div className="carousel-item active row d-flex" >
                                         <ProductCard3 />
-                                    </div>
+                                        <ProductCard3 />
+                                        <ProductCard3 />   
+                                        <ProductCard3 />
                                 </div>
                                 <div className="carousel-item active">
                                     <div className="row d-lg-flex  justify-content-center ">
@@ -545,21 +647,19 @@ export default function ProductDetail() {
                                 </div>
                             </div>
                             <button className="carousel-control-prev " type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
-                                <FaChevronLeft size={70} style={{ color: '#512f10' }} />
+                                <FaChevronLeft size={60} style={{ color: '#512f10' }} />
                                 <span className="visually-hidden">Previous</span>
                             </button>
 
                             <button className="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
-                                <FaChevronRight size={70} style={{ color: '#512f10' }} />
+                                <FaChevronRight size={60} style={{ color: '#512f10' }} />
                                 <span className="visually-hidden">Next</span>
                             </button>
-                        </div>
+                        </div> */}
+                        <ProductSlick />
                     </section>
-
                 </div>
             </div>
-
         </>
-
     );
 }

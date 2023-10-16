@@ -850,11 +850,11 @@ export default function MissionDetail() {
                             </ol>
                         </nav>
                         <main className="d-flex flex-column flex-lg-row row justify-content-between g-lg-5">
-                            <div className='left col-12 col-lg-3'>
+                            <div className='left col-12 col-lg-3 order-2 order-lg-1'>
                                 <aside className='post-user'>
-                                    <div className='mt-3'>
+                                    <div className='mt-lg-3'>
                                         <div className=' d-flex p-4 pb-3'>
-                                            <p className='size-6'>刊登案主</p>
+                                            <p className='size-6 left-title'>刊登案主</p>
                                         </div>
                                         <div className='poster-img text-center my-2'>
                                             <img src={v.cover_photo} />
@@ -924,7 +924,7 @@ export default function MissionDetail() {
                                 <aside className='post-user mt-4'>
                                     <div className='mt-3 p-4'>
                                         <div className=' d-flex '>
-                                            <p className='size-6'>熱門任務</p>
+                                            <p className='size-6 left-title'>熱門任務</p>
                                         </div>
                                         <div>
                                             <InteractiveCard popularMissions={popularMissions} setPopularMissions={setPopularMissions} />
@@ -933,9 +933,9 @@ export default function MissionDetail() {
                                 </aside>
 
                             </div>
-                            <div className='right col-12 col-lg-9'>
-                                <header className='mt-3 py-4 px-5 position-relative'>
-                                    <div className=' d-flex justify-content-between'>
+                            <div className='right col-12 col-lg-9 order-1 order-lg-2'>
+                                <header className='mt-3 py-4 px-sm-5 position-relative'>
+                                    <div className=' d-flex justify-content-between align-items-start'>
                                         <p className='header-font'>案件編號：{v.pid}</p>
                                         {/* <img className='position-absolute' src={isFavorite ? "/heart-clicked.svg" : "/heart.svg"} alt={isFavorite ? "已收藏" : "未收藏"} onClick={toggleFavorite} /> */}
                                         <button className=" heart-btn" onClick={toggleFavorite} onMouseEnter={() => setIsHovered(true)}
@@ -943,7 +943,7 @@ export default function MissionDetail() {
                                             {isFavorite ? (
                                                 <>
                                                     <FaHeart className="fill-icon" />
-                                                    <span>取消</span>
+                                                    <span className='d-none d-lg-inline'>取消</span>
                                                 </>
                                             ) : (
                                                 <>
@@ -952,7 +952,7 @@ export default function MissionDetail() {
                                                     ) : (
                                                         <FaRegHeart className="empty-icon" />
                                                     )}
-                                                    <span>收藏</span>
+                                                    <span className='d-none d-lg-inline'>收藏</span>
                                                 </>
                                             )}
                                         </button>
@@ -973,9 +973,9 @@ export default function MissionDetail() {
 
                                     <h2 className='size-5'>{v.title}</h2>
                                     <p className='size-7 mt-3 header-font'>刊登日期：{formatDate(v.post_date)}</p>
-                                    <div className='d-flex mt-2 justify-content-between'>
+                                    <div className='d-flex mt-2 justify-content-between flex-column flex-sm-row'>
                                         <p className='size-7 header-font'>最後更新：{formatDate(v.update_date)}</p>
-                                        <p className='size-7 header-font'>已有 {recordCount.user_count} 人應徵</p>
+                                        <p className='size-7 header-font mt-2 mt-sm-0'>已有 {recordCount.user_count} 人應徵</p>
                                     </div>
 
                                 </header>
@@ -985,21 +985,21 @@ export default function MissionDetail() {
                                             <GiMoneyStack className='me-1' />預算金額
                                         </div>
                                         <hr class="item-divider" />
-                                        <p className="size-7 d-flex align-items-center ms-4 ms-sm-0 salary mt-2 mt-sm-0">NT$ {v.price} / 次</p>
+                                        <p className="size-7 d-flex align-items-center salary">NT$ {v.price} / 次</p>
                                     </div>
                                     <div className="item d-flex flex-column">
                                         <div className="item-title size-6">
                                             <CiCalendarDate className='me-1' />任務日期
                                         </div>
                                         <hr class="item-divider" />
-                                        <p className="size-7 d-flex align-items-center ms-4 ms-sm-0 mt-2 mt-sm-0 item-content">{v.start_date === v.end_date ? formatDate(v.start_date) : `${formatDate(v.start_date)}～${formatDate(v.end_date)}`}</p>
+                                        <p className="size-7 d-flex align-items-center  item-content">{v.start_date === v.end_date ? formatDate(v.start_date) : `${formatDate(v.start_date)}～${formatDate(v.end_date)}`}</p>
                                     </div>
                                     <div className="item d-flex flex-column mission-place">
                                         <div className="item-title size-6">
                                             <CiLocationOn className='me-1' />任務地點
                                         </div>
                                         <hr class="item-divider" />
-                                        <p className="size-7 d-flex align-items-center ms-4 ms-sm-0 mt-2 mt-sm-0 item-content">{v.city}{v.area}{v.location_detail}</p>
+                                        <p className="size-7 d-flex align-items-center  item-content">{v.city}{v.area}{v.location_detail}</p>
                                     </div>
                                     <div className='d-flex justify-content-center'>
                                         <MapComponent key={`map-${missionLocation.lat}-${missionLocation.lng}`} lat={missionLocation.lat} lng={missionLocation.lng} />
@@ -1012,7 +1012,7 @@ export default function MissionDetail() {
                                             <CiFilter className='me-1' />任務類型
                                         </div>
                                         <hr class="item-divider" />
-                                        <p className="size-7 d-flex align-items-center ms-4 ms-sm-0 mt-2 mt-sm-0 item-content"> {(() => {
+                                        <p className="size-7 d-flex align-items-center item-content"> {(() => {
                                             switch (v.mission_type) {
                                                 case 1:
                                                     return '到府照顧';
@@ -1034,7 +1034,7 @@ export default function MissionDetail() {
                                             <PiContactlessPaymentThin className='me-1' />支付方式
                                         </div>
                                         <hr class="item-divider" />
-                                        <p className="size-7 d-flex align-items-center ms-4 ms-sm-0 mt-2 mt-sm-0 item-content">{(() => {
+                                        <p className="size-7 d-flex align-items-center item-content">{(() => {
                                             switch (v.payment_type) {
                                                 case 1:
                                                     return '現金';

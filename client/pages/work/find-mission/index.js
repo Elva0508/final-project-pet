@@ -648,7 +648,7 @@ const Sort = ({ missionType, setMissionType, missionCity, setMissionCity, missio
 
 
 // 最新任務（電腦版）
-const LatestMission = ({ userId, handleMouseEnter, handleMouseLeave, isHovered }) => {
+const LatestMission = ({ userId }) => {
 
   const [latestMissions, setLatestMissions] = useState([])
 
@@ -678,6 +678,22 @@ const LatestMission = ({ userId, handleMouseEnter, handleMouseLeave, isHovered }
 
   // 收藏
   const [isFavorites, setIsFavorites] = useState([]);
+  // 初始化每個按鈕的初始懸停狀態（空心愛心hover時要替換成實心）
+  const latestInitialHoverStates = Array(latestMissions.length).fill(false);
+  const [latestIsHovered, setLatestIsHovered] = useState(latestInitialHoverStates);
+  // 設置 onMouseEnter 處理程序來處理懸停狀態
+  const handleLatestMouseEnter = (index) => {
+    const newHoverStates = [...latestIsHovered];
+    newHoverStates[index] = true;
+    setLatestIsHovered(newHoverStates);
+  };
+
+  // 設置 onMouseLeave 處理程序來處理取消懸停狀態
+  const handleLatestMouseLeave = (index) => {
+    const newHoverStates = [...latestIsHovered];
+    newHoverStates[index] = false;
+    setLatestIsHovered(newHoverStates);
+  };
 
   useEffect(() => {
     // 在組件加載時從後端獲取已收藏的任務
@@ -780,15 +796,15 @@ const LatestMission = ({ userId, handleMouseEnter, handleMouseLeave, isHovered }
                 {/* <Link href={`/work/find-mission/${v.mission_id}`} >
                   <button className='btn-confirm size-6'>應徵</button>
                 </Link> */}
-                <button className=" heart-btn" onClick={() => toggleFavorite(i)} onMouseEnter={() => handleMouseEnter(i)}
-                  onMouseLeave={() => handleMouseLeave(i)}>
+                <button className=" heart-btn" onClick={() => toggleFavorite(i)} onMouseEnter={() => handleLatestMouseEnter(i)}
+                  onMouseLeave={() => handleLatestMouseLeave(i)}>
                   {isFavorites[i] ? (
                     <>
                       <FaHeart className="fill-icon" />
                     </>
                   ) : (
                     <>
-                      {isHovered[i] ? (
+                      {latestIsHovered[i] ? (
                         <FaHeart className="empty-icon-hover" />
                       ) : (
                         <FaRegHeart className="empty-icon" />
@@ -1384,7 +1400,7 @@ console.log("我愛台灣")
           {/* 最新任務桌機 */}
           <div className="latest-mission latest-mission-pc d-none d-lg-flex flex-column mb-3">
             <h3 className="size-5  ">最新任務</h3>
-            <LatestMission userId={userId} handleMouseEnter={handleMouseEnter} handleMouseLeave={handleMouseLeave} isHovered={isHovered} />
+            <LatestMission userId={userId} />
           </div>
           {/* 最新任務手機 */}
           <div className="latest-mission latest-mission-mobile d-lg-none mb-3 mt-1">
