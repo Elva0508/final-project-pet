@@ -182,38 +182,40 @@ export default function Chatroom() {
             </div>
           </div>
           <div className="chat-content d-flex flex-column flex-grow-1 overflow-auto">
-            {/* 聊天對象 */}
-            {/* <div className="chat-content-target-user p-3">
-              <div className="d-flex align-items-center">
-                <div className="avatar rounded-circle mr-3 overflow-hidden rounded-circle">
-                  <img
-                    src="https://upload.wikimedia.org/wikipedia/commons/b/b1/VAN_CAT.png"
-                    className="img-fluid object-fit-cover"
-                  />
-                </div>
-                <div className="mx-3 size-6 m-size-6">
-                  <span>客服小幫手</span>
-                </div>
-                <div className="size-7 m-size-7 rounded-pill content py-1 px-2">
-                  您好，請問有什麼需要為您服務的嗎？
-                </div>
-              </div>
-            </div> */}
-            {/* 自己 */}
             {chatContent.map((v, i) => {
               return (
-                <div className="user p-3">
-                  <div className="d-flex align-items-center justify-content-end my-1 chat-box">
-                    <div className="size-7 m-size-7 rounded-pill content py-1 px-2">
-                      {v.chat_content}
+                <div className="user p-3" key={i}>
+                  {v.talk_userId === decodedToken.id ? ( // 自己的消息
+                    <div className="d-flex align-items-center justify-content-end my-1 chat-box">
+                      <div className="size-7 m-size-7 rounded-pill content py-1 px-2">
+                        {v.chat_content}
+                      </div>
+                      <div className="avatar rounded-circle mr-3 overflow-hidden rounded-circle ms-2">
+                        <img
+                          src={v.cover_photo}
+                          className="img-fluid object-fit-cover"
+                        />
+                      </div>
                     </div>
-                    <div className="avatar rounded-circle mr-3 overflow-hidden rounded-circle ms-2">
-                      <img
-                        src={v.cover_photo}
-                        className="img-fluid object-fit-cover"
-                      />
+                  ) : (
+                    // 聊天对方的消息
+                    <div className="chat-content-target-user p-3">
+                      <div className="d-flex align-items-center">
+                        <div className="avatar rounded-circle mr-3 overflow-hidden rounded-circle">
+                          <img
+                            src={v.cover_photo}
+                            className="img-fluid object-fit-cover"
+                          />
+                        </div>
+                        <div className="mx-3 size-6 m-size-6">
+                          <span>{v.name}</span>
+                        </div>
+                        <div className="size-7 m-size-7 rounded-pill content py-1 px-2">
+                          {v.chat_content}
+                        </div>
+                      </div>
                     </div>
-                  </div>
+                  )}
                 </div>
               );
             })}
