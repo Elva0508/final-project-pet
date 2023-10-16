@@ -28,7 +28,7 @@ function ProductDescription({ htmlContent }) {
 
 export default function ProductDetail() {
 
-   
+
     // 用於儲存解析後的userID
     const [userId, setUserId] = useState(null);
     console.log(userId);
@@ -154,14 +154,14 @@ export default function ProductDetail() {
             });
     }, []);
 
-    
+
 
     // 添加商品到購物車的函式
     const { cart, setCart } = useCart();
     //儲存選中的type_id-selectedTypeId
     const [selectedTypeId, setSelectedTypeId] = useState('');
     const getCart = (id) => {
-        axios.get(`http://localhost:3005/api/product/cart/${id}`)
+        axios.get(`http://localhost:3005/api/product/cart/cart/${id}`)
             .then((response) => {
                 const data = response.data.result;
                 const newData = data.map((v) => {
@@ -314,13 +314,13 @@ export default function ProductDetail() {
         getCollection(userId);
     }, [userId]);
 
-  
+
     //type款式按鈕
     const handleButtonClick = (typeId) => {
         setSelectedTypeId(typeId);
     };
 
- 
+
 
 
     return (
@@ -486,7 +486,7 @@ export default function ProductDetail() {
                                             >
                                                 取消收藏
                                             </button> */}
-                                            
+
                                         </div>
 
                                     </div>

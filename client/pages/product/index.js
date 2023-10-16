@@ -86,7 +86,7 @@ export default function ProductList() {
         axios.get("http://localhost:3005/api/product").then((response) => {
             const data = response.data.result;
             console.log(data);
-            setProductData(data); 
+            setProductData(data);
             setProductDataOrigin(data)
             // 將伺服器端的 result 放入物件中
             setMainPic(data[0].images_one)
@@ -136,7 +136,6 @@ export default function ProductList() {
             setSubcategoryData({ result: response.data.result });
         });
     }, [])
-<<<<<<< HEAD
     //讀出小類
     const [subcategoryDataOne, setSubcategoryDataOne] = useState([]);
     useEffect(() => {
@@ -146,17 +145,6 @@ export default function ProductList() {
         });
 
     }, [])
-=======
-        //讀出小類
-        const [subcategoryDataOne, setSubcategoryDataOne] = useState([]);
-        useEffect(() => {
-            axios.get("http://localhost:3005/api/product/subcategory").then((response) => {
-                setSubcategoryDataOne(response.data.result );
-                console.log(subcategoryDataOne);
-            });
-            
-        }, [])
->>>>>>> 51b7b55a2f07ef6bf0c752c15aa7111f0e99b29b
 
     //篩選＋排序+關鍵字
     // 狀態變數，用於存儲商品數據、加載狀態和其他篩選選項
@@ -184,22 +172,14 @@ export default function ProductList() {
     //             // 请求完成后隐藏加载蒙层
     //             setIsLoading(false);
     //             setProductData(response.data.result);
-<<<<<<< HEAD
 
-=======
-                
->>>>>>> 51b7b55a2f07ef6bf0c752c15aa7111f0e99b29b
     //         })
     //         .catch(error => {
     //             console.error('Error:', error);
     //             setIsLoading(false);
     //         });
     // }, [selectedSort]);
-<<<<<<< HEAD
 
-=======
-    
->>>>>>> 51b7b55a2f07ef6bf0c752c15aa7111f0e99b29b
 
     // 當選擇不同的篩選條件時，更新相應的狀態
     // 透過 event.target.value 來找到用戶輸入的值
@@ -236,26 +216,16 @@ export default function ProductList() {
     // 處理排序選擇的變化
     const handleSortChange = (event) => {
         const selectedValue = event.target.value;
-<<<<<<< HEAD
         if (selectedValue == "price_desc") {
             const newProduct = productData.sort((a, b) => b.specialoffer - a.specialoffer);
             setProductData(newProduct)
-        } else {
+        } else if (selectedValue == "price_asc") {
             const newProduct = productData.sort((a, b) => a.specialoffer - b.specialoffer);
             setProductData(newProduct)
 
-=======
-        if(selectedValue=="price_desc"){
-            const newProduct=productData.sort((a, b) => b.specialoffer - a.specialoffer);
+        } else {
+            const newProduct = productData.sort((a, b) => a.product_id - b.product_id);
             setProductData(newProduct)
-        }else if(selectedValue=="price_asc"){
-            const newProduct=productData.sort((a, b) => a.specialoffer - b.specialoffer);
-            setProductData(newProduct)
-
-        }else{
-            const newProduct=productData.sort((a, b) => a.product_id - b.product_id);
-            setProductData(newProduct)
->>>>>>> 51b7b55a2f07ef6bf0c752c15aa7111f0e99b29b
         }
         setSelectedSort(selectedValue); // 更新選擇的排序方式
         console.log(selectedValue)
@@ -339,55 +309,33 @@ export default function ProductList() {
 
     const handlePriceVendorfilter = (vendor, minPrice, maxPrice) => {
         console.log("handlePriceVendorfilter 函数被使用，search結果:", vendor, minPrice, maxPrice);
-<<<<<<< HEAD
-        axios.get('http://localhost:3005/api/product/filter_sort', {
-            params: {
-                vendor,
-                minPrice,
-                maxPrice
-            }
-        })
-            .then(response => {
-                // 请求完成后隐藏加载蒙层
-                setIsLoading(false);
-                setProductData(response.data.result);
-                setVendor(''); //搜尋之後清空搜尋文字
-                setMinPrice('');
-                setMaxPrice('');
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                setIsLoading(false);
-            });
-=======
-        let lowPrice,highPrice,finalData
+        let lowPrice, highPrice, finalData
 
-        if(minPrice===""||minPrice==null){
-            lowPrice=productDataOrigin    
-        }else{
-            lowPrice=productDataOrigin.filter((v)=>v.specialoffer>=minPrice) 
+        if (minPrice === "" || minPrice == null) {
+            lowPrice = productDataOrigin
+        } else {
+            lowPrice = productDataOrigin.filter((v) => v.specialoffer >= minPrice)
         }
-        if(maxPrice===""||maxPrice==null){
-            highPrice=lowPrice
-        }else{
-            highPrice=lowPrice.filter((v)=>v.specialoffer<=maxPrice)
+        if (maxPrice === "" || maxPrice == null) {
+            highPrice = lowPrice
+        } else {
+            highPrice = lowPrice.filter((v) => v.specialoffer <= maxPrice)
         }
-        if(vendor==="" ||vendor==null){
-            finalData=highPrice          
-        }else{
-            finalData=highPrice.filter((v)=>v.vendor==vendor)
+        if (vendor === "" || vendor == null) {
+            finalData = highPrice
+        } else {
+            finalData = highPrice.filter((v) => v.vendor == vendor)
         }
-        if(selectedSort==="" ||selectedSort==null){
+        if (selectedSort === "" || selectedSort == null) {
             setProductData(finalData)
-        }else if(selectedSort=="price_desc"){
-            const newProduct=finalData.sort((a, b) => b.specialoffer - a.specialoffer);
+        } else if (selectedSort == "price_desc") {
+            const newProduct = finalData.sort((a, b) => b.specialoffer - a.specialoffer);
             setProductData(newProduct)
-        }else if(selectedSort=="price_asc"){
-            const newProduct=finalData.sort((a, b) => a.specialoffer - b.specialoffer);
+        } else if (selectedSort == "price_asc") {
+            const newProduct = finalData.sort((a, b) => a.specialoffer - b.specialoffer);
             setProductData(newProduct)
         }
-        
->>>>>>> 51b7b55a2f07ef6bf0c752c15aa7111f0e99b29b
+
     };
 
 
@@ -474,7 +422,6 @@ export default function ProductList() {
                                             </h2>
                                             <div id={`panelsStayOpen-collapseCategory-${index}`} className={`accordion-collapse collapse ${activeKey === index ? 'show' : ''}`}>
                                                 <div className="accordion-body row">
-<<<<<<< HEAD
                                                     {subcategoryDataOne.map((v, i) => {
                                                         if (v.category_id === category.category_id) {
                                                             return (
@@ -494,27 +441,6 @@ export default function ProductList() {
                                                         }
                                                         return null; // 或者直接不返回任何内容
                                                     })}
-=======
-                                                {subcategoryDataOne.map((v, i) => {
-                                                if (v.category_id === category.category_id) {
-                                                    return (
-                                                        <button
-                                                            className="button-subcategory size-7"
-                                                            type="button"
-                                                            key={i}
-                                                            onClick={() => {
-                                                                router.push(`/product/${category.category_id}/${v.subcategory_id}`);
-                                                                // handlesubCategoryChange(subcategory.trim());
-                                                                // console.log(`Button for subcategory ${subcategory.trim()} clicked.`);
-                                                            }}
-                                                        >
-                                                            {v.subcategory_name}
-                                                        </button>
-                                                    );
-                                                }
-                                                return null; // 或者直接不返回任何内容
-                                            })}
->>>>>>> 51b7b55a2f07ef6bf0c752c15aa7111f0e99b29b
                                                 </div>
                                             </div>
                                         </div>
@@ -620,7 +546,6 @@ export default function ProductList() {
                                         </h2>
                                         <div id={`panelsStayOpen-collapseCategory-${index}`} className={`accordion-collapse collapse ${activeKey === index ? 'show' : ''}`}>
                                             <div className="accordion-body row">
-<<<<<<< HEAD
                                                 {subcategoryDataOne.map((v, i) => {
                                                     if (v.category_id === category.category_id) {
                                                         return (
@@ -641,28 +566,6 @@ export default function ProductList() {
                                                     return null; // 或者直接不返回任何内容
                                                 })}
 
-=======
-                                            {subcategoryDataOne.map((v, i) => {
-                                                if (v.category_id === category.category_id) {
-                                                    return (
-                                                        <button
-                                                            className="button-subcategory size-7"
-                                                            type="button"
-                                                            key={i}
-                                                            onClick={() => {
-                                                                router.push(`/product/${category.category_id}/${v.subcategory_id}`);
-                                                                // handlesubCategoryChange(subcategory.trim());
-                                                                // console.log(`Button for subcategory ${subcategory.trim()} clicked.`);
-                                                            }}
-                                                        >
-                                                            {v.subcategory_name}
-                                                        </button>
-                                                    );
-                                                }
-                                                return null; // 或者直接不返回任何内容
-                                            })}
-                                                
->>>>>>> 51b7b55a2f07ef6bf0c752c15aa7111f0e99b29b
                                             </div>
                                         </div>
                                     </div>
