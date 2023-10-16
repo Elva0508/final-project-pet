@@ -8,6 +8,7 @@ const HelperInfoPage = () => {
   const { isAuthenticated, userId } = useAuth();
   const router = useRouter();
   console.log(isAuthenticated);
+  // console.log(userId);
   useEffect(() => {
     // 初始狀態時isAuthenticated為null，等到isAuthenticated有值時(true or false)才做驗證判斷
     if (isAuthenticated === null) {

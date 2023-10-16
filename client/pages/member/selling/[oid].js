@@ -8,12 +8,11 @@ import memberService from "@/services/member-service";
 import { MdHomeRepairService } from "react-icons/md";
 import { RecordDetailTemplate } from "@/components/member/Record-template";
 import { useAuth } from "@/context/fakeAuthContext";
-import { useRouter } from "next/router";
 const SellingDetailPage = () => {
   const router = useRouter();
   const [status, setStatus] = useState(1);
   const [detail, setDetail] = useState({});
-  const { pid } = router.query;
+  const { oid } = router.query;
   const { isAuthenticated, userId } = useAuth();
 
   useEffect(() => {
@@ -28,7 +27,7 @@ const SellingDetailPage = () => {
   }, [isAuthenticated]);
   useEffect(() => {
     memberService
-      .getRequestDetail(pid)
+      .getReserveDetail(oid)
       .then((response) => {
         const info = response.data.data;
         if (response?.data?.status === 200) {
@@ -52,11 +51,11 @@ const SellingDetailPage = () => {
       .catch((e) => {
         console.log(e);
       });
-  }, [pid]);
+  }, [oid]);
 
   const handleReject = () => {
     memberService
-      .setRequestStatus(pid, 4)
+      .setReserveStatus(oid, 4)
       .then((response) => {
         const result = response.data;
         console.log(response.data);
@@ -70,7 +69,7 @@ const SellingDetailPage = () => {
   };
   const handleResolve = () => {
     memberService
-      .setRequestStatus(pid, status + 1)
+      .setReserveStatus(oid, status + 1)
       .then((response) => {
         const result = response.data;
         // console.log(response.data);
@@ -86,16 +85,13 @@ const SellingDetailPage = () => {
     <>
       {isAuthenticated && (
         <>
-          <div className="d-flex justify-content-end">
-            {/* mobile版的左側tab */}
-          </div>
           <ListUserM />
           <div className="d-flex container-fluid flex-column justify-content-around flex-md-row my-3">
             <ListD />
             <div className="col-12 col-sm-8 sales-record-detail">
               <RecordDetailTemplate
                 icon={<MdHomeRepairService className="icon me-1" />}
-                title={"銷售紀錄"}
+                title={"幫手訂單"}
                 detail={detail}
                 setDetail={setDetail}
               />

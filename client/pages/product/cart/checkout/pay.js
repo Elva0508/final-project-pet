@@ -4,11 +4,9 @@ import { useState ,useEffect} from 'react'
 // import 'react-confirm-alert/src/react-confirm-alert.css'
 import { useRouter } from 'next/router';
 import {BsCheckCircle} from 'react-icons/bs';
-import { useAuth } from '@/context/fakeAuthContext';
+
 
 function Pay(props) {
-  const {userId} = useAuth()
-  const id=parseInt(userId)
   const router = useRouter();
   const [orderPrice, setOrderPrice] = useState(0)
   const [orderNumber, setOrderNumber] = useState(0)

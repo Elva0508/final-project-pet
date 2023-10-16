@@ -1,12 +1,9 @@
 import React, { useState ,useEffect} from 'react';
 import Cards from 'react-credit-cards-2';
 import { useRouter } from 'next/router';
-import { useAuth } from '@/context/fakeAuthContext';
 import 'react-credit-cards-2/dist/lib/styles.scss';
 
 export default function CreditCard() {
-  const {userId} = useAuth()
-  const id=parseInt(userId)
   const router = useRouter();
   const [orderPrice, setOrderPrice] = useState(0)
   const [orderNumber, setOrderNumber] = useState(0)
@@ -50,7 +47,7 @@ export default function CreditCard() {
       
         return (
 
-          <div className='credit-card'>
+          <div className='credit-card mt-5'>
           <div className='d-flex justify-content-center mb-4 '>
             <div className=' title'>
               <p className='size-5 fw-bold' >訂單編號：<span>{orderNumber}</span></p>

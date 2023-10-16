@@ -26,6 +26,10 @@
         position: relative;
         padding-left: 0.5rem;
 
+        &.active {
+            color: $hover;
+        }
+
         .left-background {
             position: absolute;
             top: 0;

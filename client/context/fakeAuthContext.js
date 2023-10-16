@@ -51,13 +51,14 @@ function AuthProvider({ children }) {
 
   useEffect(() => {
     const data = JSON.parse(localStorage.getItem("data"));
+    // 麻煩不要改上面這一行，會全部API報錯
     const token = localStorage.getItem("token");
     if (data && token) {
-      setUserId(data);
+      setUserId(data.id);
       dispatch({ type: "login", payload: jwt(token) });
     }
   }, []);
-
+  console.log(userId);
   function login(token) {
     dispatch({ type: "login", payload: token });
   }

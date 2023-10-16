@@ -53,6 +53,7 @@ router.get("/helper", async (req, res) => {
 });
 router.patch("/helper/valid", async (req, res) => {
   const { user_id, valid } = req.body;
+  console.log(user_id);
 
   // 驗證使用者是否存在
   const checkUser = await new Promise((resolve, reject) => {
@@ -359,10 +360,10 @@ router.get("/reserve", (req, res) => {
   );
 });
 router.get("/reserve/review", (req, res) => {
-  const { pid } = req.query;
+  const { case_id } = req.query;
   conn.execute(
     `SELECT r.*,u.cover_photo,u.name ,COUNT(*) AS review_count FROM mission_helper_reviews r LEFT JOIN userinfo u ON u.user_id = r.user_id WHERE request_id = ?`,
-    [pid],
+    [case_id],
     (err, result) => {
       if (err) {
         console.log(err);
@@ -371,33 +372,33 @@ router.get("/reserve/review", (req, res) => {
       result = result.map((item) => {
         return { ...item, review_date: transferDate(item.review_date) };
       });
+      console.log(result);
       return res.send({ status: 200, data: result[0] });
     }
   );
 });
 router.post("/reserve/review", (req, res) => {
-  const { pid, user_id, helper_id, review_content, star_rating } = req.body;
+  const { case_id, user_id, helper_id, review_content, star_rating } = req.body;
   console.log(req.body);
   conn.execute(
     "INSERT INTO `mission_helper_reviews` (`review_id`, request_id,`user_id`, `helper_id`, `review_content`, `star_rating`, `review_date`) VALUES (NULL,?, ?, ?, ?, ?, current_timestamp())",
-    [pid, user_id, helper_id, review_content, star_rating],
+    [case_id, user_id, helper_id, review_content, star_rating],
     (err, results) => {
       if (err) {
         console.log(err);
         return res.status(500).send("資料庫寫入錯誤");
       }
-      console.log(results);
       return res.send({ status: 200, data: results });
     }
   );
 });
-router.patch("/request/detail/status", (req, res) => {
-  const { pid, status } = req.body;
-  console.log(pid, status);
+router.patch("/reserve/detail/status", (req, res) => {
+  const { oid, status } = req.body;
+  // console.log(pid, status);
 
   conn.execute(
     "UPDATE `mission_req_orders` SET `status` = ? WHERE `mission_req_orders`.`oid` = ?",
-    [status, pid],
+    [status, oid],
     (err, results) => {
       if (err) {
         console.log(err);
@@ -408,12 +409,12 @@ router.patch("/request/detail/status", (req, res) => {
     }
   );
 });
-router.get("/request/detail/:pid", (req, res) => {
-  const { pid } = req.params;
+router.get("/reserve/detail/:oid", (req, res) => {
+  const { oid } = req.params;
   // console.log(pid);
   conn.execute(
     `SELECT q.*,p.* FROM mission_req_orders q LEFT JOIN users_pet_info p ON q.pet_info_id = p.pet_id WHERE q.oid = ?`,
-    [pid],
+    [oid],
     (err, results) => {
       if (err) {
         console.log(err);
@@ -432,6 +433,7 @@ router.get("/request/detail/:pid", (req, res) => {
 
 router.get("/selling", (req, res) => {
   const { user_id, status } = req.query;
+  // console.log(user_id);
   conn.execute(
     `SELECT * FROM mission_req_orders WHERE status = ? AND helper_userId = ?`,
     [status, user_id],
@@ -440,7 +442,6 @@ router.get("/selling", (req, res) => {
         console.log(err);
         return res.status(500).send({ status: 500, error: "資料查詢錯誤" });
       }
-      console.log(results);
       results = results.map((item) => {
         const start_day = transferDate(item.start_day);
         const end_day = transferDate(item.end_day);

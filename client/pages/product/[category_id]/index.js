@@ -19,7 +19,11 @@ import { useRouter } from "next/router";
 
 const Search = ({ handleSearch, placeholder, color, onClick, search, setSearch }) => {
 
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 51b7b55a2f07ef6bf0c752c15aa7111f0e99b29b
     const rippleBtnRef = useRef(null);
     const inputRef = useRef(null);
     const handleRipple = () => {
@@ -64,6 +68,7 @@ export default function ProductList() {
     // 讀取資料庫資料
     const [productDataOrigin, setProductDataOrigin] = useState([]);
     const [productData, setProductData] = useState([]); // 初始化為一個帶有 result 屬性的物件
+<<<<<<< HEAD
     useEffect(() => {
         if (router.isReady) {
             // 確保能得到router.query有值
@@ -83,6 +88,27 @@ export default function ProductList() {
         }
         // eslint-disable-next-line
     }, [router.query]);
+=======
+    useEffect(() => {    
+        if (router.isReady) {
+          // 確保能得到router.query有值
+          const {category_id } = router.query;
+          console.log(category_id);
+          setActiveKey(parseInt(category_id)-1)
+          // 有pid後，向伺服器要求資料，設定到狀態中
+          axios.get(`http://localhost:3005/api/product/product/category/${category_id}`).then((response) => {
+            const data = response.data.result;
+            console.log(data);
+            setProductData(data); 
+            setProductDataOrigin(data)
+            // 將伺服器端的 result 放入物件中
+            // setMainPic(data[0].images_one)
+            // console.log(response.data.result[0].images_one)
+        })
+        }
+        // eslint-disable-next-line
+      }, [router.query]);
+>>>>>>> 51b7b55a2f07ef6bf0c752c15aa7111f0e99b29b
 
     // 用於儲存解析後的userID
     const [userId, setUserId] = useState(null);
@@ -161,7 +187,11 @@ export default function ProductList() {
     //     });
     // }, [])
 
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 51b7b55a2f07ef6bf0c752c15aa7111f0e99b29b
     //讀出大類
     const [subcategoryData, setSubcategoryData] = useState({ result: [] });
     useEffect(() => {
@@ -169,6 +199,7 @@ export default function ProductList() {
             setSubcategoryData({ result: response.data.result });
         });
     }, [])
+<<<<<<< HEAD
     //讀出小類
     const [subcategoryDataOne, setSubcategoryDataOne] = useState([]);
     useEffect(() => {
@@ -178,6 +209,17 @@ export default function ProductList() {
         });
 
     }, [])
+=======
+        //讀出小類
+        const [subcategoryDataOne, setSubcategoryDataOne] = useState([]);
+        useEffect(() => {
+            axios.get("http://localhost:3005/api/product/subcategory").then((response) => {
+                setSubcategoryDataOne(response.data.result );
+                console.log(subcategoryDataOne);
+            });
+            
+        }, [])
+>>>>>>> 51b7b55a2f07ef6bf0c752c15aa7111f0e99b29b
 
     //篩選＋排序+關鍵字
     // 狀態變數，用於存儲商品數據、加載狀態和其他篩選選項
@@ -206,7 +248,11 @@ export default function ProductList() {
     //             // 请求完成后隐藏加载蒙层
     //             setIsLoading(false);
     //             setProductData(response.data.result);
+<<<<<<< HEAD
 
+=======
+                
+>>>>>>> 51b7b55a2f07ef6bf0c752c15aa7111f0e99b29b
     //         })
     //         .catch(error => {
     //             console.error('Error:', error);
@@ -249,6 +295,7 @@ export default function ProductList() {
     // 處理排序選擇的變化
     const handleSortChange = (event) => {
         const selectedValue = event.target.value;
+<<<<<<< HEAD
         if (selectedValue == "price_desc") {
             const newProduct = productData.sort((a, b) => b.specialoffer - a.specialoffer);
             setProductData(newProduct)
@@ -258,6 +305,20 @@ export default function ProductList() {
 
         } else {
             const newProduct = productData.sort((a, b) => a.product_id - b.product_id);
+<<<<<<< Updated upstream
+=======
+=======
+        if(selectedValue=="price_desc"){
+            const newProduct=productData.sort((a, b) => b.specialoffer - a.specialoffer);
+            setProductData(newProduct)
+        }else if(selectedValue=="price_asc"){
+            const newProduct=productData.sort((a, b) => a.specialoffer - b.specialoffer);
+            setProductData(newProduct)
+
+        }else{
+            const newProduct=productData.sort((a, b) => a.product_id - b.product_id);
+>>>>>>> 51b7b55a2f07ef6bf0c752c15aa7111f0e99b29b
+>>>>>>> Stashed changes
             setProductData(newProduct)
         }
         setSelectedSort(selectedValue); // 更新選擇的排序方式
@@ -288,13 +349,25 @@ export default function ProductList() {
     // };
 
     //篩選重複的廠商
+<<<<<<< Updated upstream
     const [vendorData, setVendorData] = useState([]);
+=======
+<<<<<<< HEAD
+    const [vendorData, setVendorData] = useState([]);
+=======
+    const [vendorData, setVendorData] =useState([]);
+>>>>>>> 51b7b55a2f07ef6bf0c752c15aa7111f0e99b29b
+>>>>>>> Stashed changes
     // useEffect(() => {
     //     axios.get("http://localhost:3005/api/product/vendor").then((response) => {
     //         console.log(response.data.result);
     //         setVendorData({ result: response.data.result });
     //     });
     // }, []);
+<<<<<<< Updated upstream
+=======
+<<<<<<< HEAD
+>>>>>>> Stashed changes
     useEffect(() => {
         let newvendor = [];
         for (let i = 0; i < productData.length; i++) {
@@ -306,6 +379,19 @@ export default function ProductList() {
         setVendorData(newvendor)
     }, [productDataOrigin]);
 
+=======
+        useEffect(() => {
+            let newvendor = [];
+            for (let i = 0; i < productData.length; i++) {
+                let currentVendor = productData[i].vendor;   
+                if (newvendor.indexOf(currentVendor) === -1) {
+                    newvendor.push(currentVendor);
+                }
+            }
+            setVendorData(newvendor)        
+    }, [productDataOrigin]);
+    
+>>>>>>> 51b7b55a2f07ef6bf0c752c15aa7111f0e99b29b
     //傳送search的到後端
     const handleSearch = (search) => {
         console.log("handleSearch 函数被使用，search結果:", search);
@@ -352,6 +438,10 @@ export default function ProductList() {
 
     const handlePriceVendorfilter = (vendor, minPrice, maxPrice) => {
         console.log("handlePriceVendorfilter 函数被使用，search結果:", vendor, minPrice, maxPrice);
+<<<<<<< Updated upstream
+=======
+<<<<<<< HEAD
+>>>>>>> Stashed changes
         let lowPrice, highPrice, finalData
 
         if (minPrice === "" || minPrice == null) {
@@ -379,6 +469,38 @@ export default function ProductList() {
             setProductData(newProduct)
         }
 
+<<<<<<< Updated upstream
+=======
+=======
+        let lowPrice,highPrice,finalData
+
+        if(minPrice===""||minPrice==null){
+            lowPrice=productDataOrigin    
+        }else{
+            lowPrice=productDataOrigin.filter((v)=>v.specialoffer>=minPrice) 
+        }
+        if(maxPrice===""||maxPrice==null){
+            highPrice=lowPrice
+        }else{
+            highPrice=lowPrice.filter((v)=>v.specialoffer<=maxPrice)
+        }
+        if(vendor==="" ||vendor==null){
+            finalData=highPrice          
+        }else{
+            finalData=highPrice.filter((v)=>v.vendor==vendor)
+        }
+        if(selectedSort==="" ||selectedSort==null){
+            setProductData(finalData)
+        }else if(selectedSort=="price_desc"){
+            const newProduct=finalData.sort((a, b) => b.specialoffer - a.specialoffer);
+            setProductData(newProduct)
+        }else if(selectedSort=="price_asc"){
+            const newProduct=finalData.sort((a, b) => a.specialoffer - b.specialoffer);
+            setProductData(newProduct)
+        }
+        
+>>>>>>> 51b7b55a2f07ef6bf0c752c15aa7111f0e99b29b
+>>>>>>> Stashed changes
     };
 
 
@@ -466,6 +588,7 @@ export default function ProductList() {
                                             <div id={`panelsStayOpen-collapseCategory-${index}`} className={`accordion-collapse collapse ${activeKey === index ? 'show' : ''}`}>
                                                 <div className="accordion-body row">
                                                     {subcategoryDataOne.map((v, i) => {
+<<<<<<< HEAD
                                                         if (v.category_id === category.category_id) {
                                                             return (
                                                                 <button
@@ -484,6 +607,26 @@ export default function ProductList() {
                                                         }
                                                         return null; // 或者直接不返回任何内容
                                                     })}
+=======
+                                                    if (v.category_id === category.category_id) {
+                                                        return (
+                                                            <button
+                                                                className="button-subcategory size-7"
+                                                                type="button"
+                                                                key={i}
+                                                                onClick={() => {
+                                                                    router.push(`/product/${category.category_id}/${v.subcategory_id}`);
+                                                                    // handlesubCategoryChange(subcategory.trim());
+                                                                    // console.log(`Button for subcategory ${subcategory.trim()} clicked.`);
+                                                                }}
+                                                            >
+                                                                {v.subcategory_name}
+                                                            </button>
+                                                        );
+                                                    }
+                                                    return null; // 或者直接不返回任何内容
+                                                })}
+>>>>>>> 51b7b55a2f07ef6bf0c752c15aa7111f0e99b29b
                                                 </div>
                                             </div>
                                         </div>

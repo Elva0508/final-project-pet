@@ -13,14 +13,48 @@
       padding: 30px 0 40px 0;
       // background-clip: border-box;
       background-color: $content-bg;
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
       .body-item {
         width: calc(100% - 160px);
+        max-width: 800px;
         margin: auto;
         margin-top: 10px;
+        display: flex;
+        // justify-content: center;
+
+        // flex-direction: ;
+        & > :first-child {
+          width: 30%;
+          max-width: 150px;
+        }
+        .semi-upload {
+          width: 80%;
+        }
+        .semi-upload-file-list {
+          width: 100%;
+        }
         input,
         textarea,
-        select {
+        select,
+        .semi-datepicker,
+        .semi-select {
           width: 100%;
+          max-width: 400px;
+        }
+        .semi-select {
+          width: 100%;
+          border: 1px solid rgba(0, 0, 0, 0.1);
+          height: 40px;
+          background-color: $cos-white;
+          border-radius: 2px;
+          .semi-tag-white-light {
+            background-color: $light-gray;
+            &:hover {
+              background-color: darken($light-gray, 5%);
+            }
+          }
         }
         .start,
         .end {

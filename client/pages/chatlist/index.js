@@ -22,6 +22,7 @@ export default function ChatList() {
 
     // 解token後，拿到user_id
     getChatList(decodedToken.id);
+    getChatContent(decodedToken.id);
   }, []);
 
   const decodeToken = (token) => {
@@ -41,9 +42,23 @@ export default function ChatList() {
 
     const data = await res.json();
 
-    console.log("data" + data);
+    console.log("data.chatlist_id" + data.chatlist_id);
     // 設定到狀態中 -> 會觸發重新渲染(re-render)
     if (Array.isArray(data)) setChatList(data);
+  };
+
+  // 利用user_id向伺服器要求聊天室內最新一筆資料並設定到狀態中
+  const getChatContent = async (user_id) => {
+    console.log(user_id);
+    const res = await fetch(
+      "http://localhost:3005/api/chatroom/newest/" + user_id
+    );
+
+    const data = await res.json();
+
+    console.log("data" + data);
+    // 設定到狀態中 -> 會觸發重新渲染(re-render)
+    if (Array.isArray(data)) setChatContent(data);
   };
 
   return (
@@ -60,7 +75,8 @@ export default function ChatList() {
                 我的訊息
               </Link>
             </div>
-            {chatList.map((v, i) => {
+            {chatContent.map((v, i) => {
+              const latestMessage = v.latestMessage;
               return (
                 <div className="list" key={v.user_id}>
                   <Link
@@ -78,7 +94,13 @@ export default function ChatList() {
                         <span>{v.name}</span>
                       </div>
                       <div className="size-7 m-size-7 text-secondary">
-                        <span>我跟你說你不要跟別人說</span>
+                        {latestMessage ? (
+                          <span key={latestMessage.timestamp}>
+                            {latestMessage.chat_content}
+                          </span>
+                        ) : (
+                          <span></span>
+                        )}
                       </div>
                     </div>
                   </Link>
