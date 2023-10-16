@@ -113,10 +113,10 @@ export const RecordTemplate = ({
   console.log(info);
   return (
     <>
-      <h5 className="main-title size-5 d-flex align-items-start fw-bold">
-        {/* {icon || <MdHomeRepairService className="icon me-1" />} */}
-        {title || ""}
-      </h5>
+      <p className="size-4 big mb-2 fw-bold">
+        <span className="my">▍</span>
+        {title}
+      </p>
 
       <nav className="tab-nav" onClick={handleStatus}>
         <button
@@ -283,11 +283,10 @@ export const RecordDetailTemplate = ({ icon, title, detail, setDetail }) => {
 
   return (
     <>
-      <h5 className="main-title size-5 d-flex align-items-start fw-bold">
-        {/* {icon || <MdHomeRepairService className="icon me-1" />} */}
-
-        {title || "銷售服務"}
-      </h5>
+      <p className="size-4 big mb-2 fw-bold">
+        <span className="my">▍</span>
+        {title}
+      </p>
       <p className="date my-4 size-7 p-1">{detail?.created_at}</p>
       <span className="status size-6">狀態 :</span>
       <span className="status-text ms-2 size-6">{detail.status}</span>
