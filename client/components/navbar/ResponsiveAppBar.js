@@ -79,10 +79,7 @@ const pages = [
   { path: "http://localhost:3000/article", name: "小貓兩三知", id: 4 },
   { path: "http://localhost:3000/support", name: "常見問題", id: 5 },
 ];
-// const settings = [
-//   { path: "/register", name: "註冊", id: 1 },
-//   { path: "/login", name: "登入", id: 2 },
-// ];
+
 
 function ResponsiveAppBar() {
   //會員狀態
@@ -182,7 +179,7 @@ function ResponsiveAppBar() {
                   </Link>
                 ))}
               </Menu>
-              <Button>
+              <Button href="/">
                 <Image src={McatLogo} alt="logo" />
               </Button>
             </Box>
@@ -190,7 +187,7 @@ function ResponsiveAppBar() {
             {/* Desktop 裝置*/}
             {/* logo */}
             <Box sx={{ flexShrink: 0, display: { xs: "none", md: "flex" } }}>
-              <Button>
+              <Button href="/">
                 <Image src={catLogo} alt="logo" />
               </Button>
             </Box>

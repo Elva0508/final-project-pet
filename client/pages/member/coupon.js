@@ -5,7 +5,7 @@ import ListUserM from "@/components/member/list-user-m";
 import SingleCoupon from "@/components/user/SingleCoupon";
 import SingleCouponFree from "@/components/user/singleCouponFree";
 import Image from "next/image";
-import myProfile from "@/assets/myProfile.svg";
+
 
 import Cat2 from "@/assets/cat-02.png";
 
@@ -69,29 +69,21 @@ const UserCouponPage = () => {
   return (
     <div className=" my-3">
       <div className="d-flex justify-content-around pt-2">
-        <div className="d-flex justify-content-end">
-          {/* mobile版的左側tab */}
-        </div>
+       
         <ListUserM />
         <ListD />
 
-        <div className="user-coupon row col-lg-8 col-md-8 col-12 ">
+        <div className="user-coupon  col-lg-8 col-md-8 col-12 ">
           <div className="title">
             <p className=" size-4">
-              <Image src={myProfile} alt="myProfile-logo" />
               我的優惠券
             </p>
           </div>
-          <ListUserM />
-          <ListD />
+     
+    
 
-          <div className="user-coupon row col-lg-8 col-md-8 col-12 ">
-            <div className="title">
-              <p className=" size-4">
-                <Image src={myProfile} alt="myProfile-logo" />
-                我的優惠券
-              </p>
-            </div>
+          <div className="user-coupon  ">
+            
 
             <div className="couponSearch d-flex gap-3 ">
               <input
@@ -179,8 +171,8 @@ const UserCouponPage = () => {
                   </div>
                 </div>
               ))}
-              {/* <SingleCoupon />
-        <SingleCoupon /> */}
+              <SingleCoupon />
+        {/* <SingleCoupon /> */}
             </div>
           </div>
         </div>

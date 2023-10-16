@@ -37,7 +37,7 @@ export default function ForgetPassword() {
       }
     )
 
-    console.log(res.data)
+    //console.log(res.data)
     if (res.data.message === 'fail') {
       setMessage('驗証碼取得失敗，請確認Email是否已經註冊')
     }

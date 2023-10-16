@@ -4,7 +4,6 @@ import ListD from "@/components/member/list-d";
 import ListUserM from "@/components/member/list-user-m";
 import useRWD from "@/hooks/useRWD";
 import Image from "next/image";
-import myProfile from "@/assets/myProfile.svg";
 import data from "@/data/taiwan.json";
 import TWZipCode from "@/components/user/TWZipCode";
 
@@ -181,8 +180,8 @@ const ProfilePage = () => {
         <div className="user-profile row col-lg-8 col-md-8 col-12 ">
           <div className="title">
             <p className=" size-4">
-              <Image src={myProfile} alt="myProfile-logo" />
-              我的資料
+         
+            個人資料
             </p>
           </div>
           <div className="user-form">
@@ -278,7 +277,10 @@ const ProfilePage = () => {
               />
             </div>
 
-            <TWZipCode
+          
+            <div className="ws20   d-flex justify-content-center">
+              <label className={`fs3 py-2 ${userRfs}`}>地址</label>
+              <TWZipCode
               initPostcode={address.postcode}
               onPostcodeChange={(country, township, postcode) => {
                 setAddress({
@@ -288,8 +290,6 @@ const ProfilePage = () => {
                 });
               }}
             />
-            <div className="ws20   d-flex justify-content-center">
-              <label className={`fs3 py-2 ${userRfs}`}>地址</label>
               {/* <div className="fs11 ">
                 <select
                   className="form-select fs5"
