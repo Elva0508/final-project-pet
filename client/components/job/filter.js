@@ -79,9 +79,7 @@ const Filter = ({
                 }
               }}
             >
-              <motion.span value={item.value} onTap={handleHelperAnimate}>
-                {item.label}
-              </motion.span>
+              <motion.span value={item.value}>{item.label}</motion.span>
             </MenuItem>
           );
         })}

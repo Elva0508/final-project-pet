@@ -23,15 +23,17 @@ const MemberSelling = () => {
     }
   }, [isAuthenticated]);
   useEffect(() => {
-    memberService
-      .getSelling(user_id, status)
-      .then((response) => {
-        console.log(response);
-        setSelling(response?.data?.data);
-      })
-      .catch((e) => {
-        console.log(e);
-      });
+    if (user_id) {
+      memberService
+        .getSelling(user_id, status)
+        .then((response) => {
+          console.log(response);
+          setSelling(response?.data?.data);
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    }
   }, [status]);
   return (
     <>

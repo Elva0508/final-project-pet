@@ -84,7 +84,6 @@ button,
     z-index: 2;
     animation: roll 3s ease-in-out infinite;
   }
-
   .shadow {
     position: absolute;
     width: 30%;
@@ -96,14 +95,12 @@ button,
     border-radius: 50%;
     z-index: 1;
   }
-
   .scale {
     animation: scale 1s ease-in infinite;
   }
   .move {
     animation: move 3s ease-in-out infinite;
   }
-
   .message-coupon {
     position: absolute;
     width: 100%;

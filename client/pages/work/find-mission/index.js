@@ -13,9 +13,13 @@ import RoleSelection from "@/components/job/role-selection";
 // import MissionCard from '@/components/job/mission-card'
 import Pagination from "@/components/pagination";
 // react-icons
-import { FaCaretUp, FaCaretDown } from "react-icons/fa";
+import { FaCaretUp, FaCaretDown, FaRegHeart, FaHeart } from "react-icons/fa";
 import { BiSolidDownArrow, BiSolidUpArrow } from "react-icons/bi";
 import { BiSearchAlt } from "react-icons/bi";
+import { CiLocationOn } from "react-icons/ci";
+import { FaLocationDot, FaRegCalendarCheck } from "react-icons/fa6";
+import { MdDateRange } from "react-icons/md";
+import { BsFillCalendar2DateFill } from "react-icons/bs";
 // Swiper
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
@@ -178,25 +182,92 @@ const MyFilter = ({ missionType, setMissionType, missionCity, setMissionCity, mi
     console.log("現在的missionType是" + missionType + "現在的updateDate是" + updateDate + "現在的missionCity是" + missionCity + "現在的missionArea是" + missionArea);
   };
 
+  // 點擊標題時 讓button為active（修改樣式用）
+  // const buttonRef = useRef(null);  //僅適用只有一組標題時
+  const buttonRef1 = useRef(null);
+  const buttonRef2 = useRef(null);
+  const buttonRef3 = useRef(null);
+  const buttonRef4 = useRef(null);
+  // const [isActive, setIsActive] = useState(false);  //僅適用只有一組標題時
+  const [buttonStates, setButtonStates] = useState({
+    button1: false,
+    button2: false,
+    button3: false,
+    button4: false,
+  });
+
+  useEffect(() => {
+    // 添加點擊頁面其他地方關閉下拉選單的事件監聽器
+    function handleClickOutside(event) {
+      // 如果按鈕元素存在（即buttonRef.current不為null）且點擊事件發生在按鈕元素之外
+      // if (buttonRef.current && !buttonRef.current.contains(event.target)) {   //僅適用只有一組標題時
+      //   setIsActive(false);
+      // }
+      if (buttonRef1.current && !buttonRef1.current.contains(event.target)) {
+        setButtonStates((prevButtonStates) => ({
+          ...prevButtonStates,
+          button1: false,
+        }));
+      }
+      if (buttonRef2.current && !buttonRef2.current.contains(event.target)) {
+        setButtonStates((prevButtonStates) => ({
+          ...prevButtonStates,
+          button2: false,
+        }));
+      }
+      if (buttonRef3.current && !buttonRef3.current.contains(event.target)) {
+        setButtonStates((prevButtonStates) => ({
+          ...prevButtonStates,
+          button3: false,
+        }));
+      }
+      if (buttonRef4.current && !buttonRef4.current.contains(event.target)) {
+        setButtonStates((prevButtonStates) => ({
+          ...prevButtonStates,
+          button4: false,
+        }));
+      }
+    }
+
+    document.addEventListener('click', handleClickOutside);
+
+    // 組件卸載時移除事件監聽器（組件卸載時會自動執行return語句)
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, []);
+
+  // const handleButtonActive = () => {    //僅適用只有一組標題時
+  //   setIsActive(!isActive);
+  // };
+  const handleButtonActive = (buttonName) => {
+    setButtonStates((prevButtonStates) => ({
+      ...prevButtonStates,
+      [buttonName]: !prevButtonStates[buttonName],
+    }));
+  };
+
   return (
     <>
       <div className='filters d-sm-flex justify-content-center align-items-center d-none '>
         {/* 一：任務類型 */}
-        <div className="btn-group mx-2">
+        <div className={`btn-group mx-2 ${buttonStates.button1 ? 'active' : ''}`}>
           <button
-            className="btn dropdown-toggle"
+            ref={buttonRef1}
+            className={`btn dropdown-toggle ${buttonStates.button1 ? 'active' : ''}`}
             type="button"
             id="defaultDropdown1"
             data-bs-toggle="dropdown"
             data-bs-auto-close="true"
-            aria-expanded="false"
+            aria-expanded={buttonStates.button1}
+            onClick={() => handleButtonActive('button1')}
           >
             <div className="left-background"></div>
             <img src="/job-icon/plus-service.svg" className="me-3" />
             {buttonText1} {/* 按鈕文字狀態 */}
             <BiSolidDownArrow className="ms-2" />
           </button>
-          <ul className="dropdown-menu" aria-labelledby="defaultDropdown1">
+          <ul className={`dropdown-menu ${buttonStates.button1 ? 'show' : ''}`} aria-labelledby="defaultDropdown1">
             {/* 使用map函數動態生成下拉選單項 */}
             {options1.map((option) => (
               <li
@@ -211,21 +282,23 @@ const MyFilter = ({ missionType, setMissionType, missionCity, setMissionCity, mi
         </div>
 
         {/* 二：更新日期 */}
-        <div className="btn-group mx-2">
+        <div className={`btn-group mx-2 ${buttonStates.button2 ? 'active' : ''}`}>
           <button
-            className="btn dropdown-toggle"
+            ref={buttonRef2}
+            className={`btn dropdown-toggle ${buttonStates.button2 ? 'active' : ''}`}
             type="button"
             id="defaultDropdown2"
             data-bs-toggle="dropdown"
             data-bs-auto-close="true"
-            aria-expanded="false"
+            aria-expanded={buttonStates.button2}
+            onClick={() => handleButtonActive('button2')}
           >
             <div className="left-background"></div>
             <img src="/job-icon/Calendar.svg" className="me-3" />
             {buttonText2}
             <BiSolidDownArrow className="ms-2" />
           </button>
-          <ul className="dropdown-menu" aria-labelledby="defaultDropdown2">
+          <ul className={`dropdown-menu ${buttonStates.button2 ? 'show' : ''}`} aria-labelledby="defaultDropdown2">
             {options2.map((option) => (
               <li
                 key={option.label}
@@ -239,21 +312,23 @@ const MyFilter = ({ missionType, setMissionType, missionCity, setMissionCity, mi
         </div>
         {/* 三：任務地區 */}
         {/* 城市下拉選單 */}
-        <div className="btn-group ms-2">
+        <div className={`btn-group ms-2 ${buttonStates.button3 ? 'active' : ''}`}>
           <button
-            className="btn dropdown-toggle"
+            ref={buttonRef3}
+            className={`btn dropdown-toggle ${buttonStates.button3 ? 'active' : ''}`}
             type="button"
-            id="defaultDropdown1"
+            id="defaultDropdown3"
             data-bs-toggle="dropdown"
             data-bs-auto-close="true"
-            aria-expanded="false"
+            aria-expanded={buttonStates.button3}
+            onClick={() => handleButtonActive('button3')}
           >
             <div className="left-background"></div>
             <img src="/job-icon/Discovery-date.svg" className="me-3" />
             {selectedCity ? selectedCity.CityName : '任務地區'}
             <BiSolidDownArrow className="ms-2" />
           </button>
-          <ul className="dropdown-menu" aria-labelledby="defaultDropdown1">
+          <ul className={`dropdown-menu ${buttonStates.button3 ? 'show' : ''}`} aria-labelledby="defaultDropdown3">
             {cityData.map((city) => (
               <li
                 key={city.CityName}
@@ -267,19 +342,21 @@ const MyFilter = ({ missionType, setMissionType, missionCity, setMissionCity, mi
         </div>
         {/* 地區下拉選單，有選city才會出現 */}
         {selectedCity && (
-          <div className="btn-group">
+          <div className={`btn-group ${buttonStates.button4 ? 'active' : ''}`}>
             <button
-              className="btn dropdown-toggle"
+              ref={buttonRef4}
+              className={`btn dropdown-toggle ${buttonStates.button4 ? 'active' : ''}`}
               type="button"
-              id="defaultDropdown1"
+              id="defaultDropdown4"
               data-bs-toggle="dropdown"
               data-bs-auto-close="true"
-              aria-expanded="false"
+              aria-expanded={buttonStates.button4}
+              onClick={() => handleButtonActive('button4')}
             >
               {selectedArea ? selectedArea.AreaName : '選擇地區'}
               <BiSolidDownArrow className="ms-2" />
             </button>
-            <ul className="dropdown-menu" aria-labelledby="defaultDropdown1">
+            <ul className={`dropdown-menu ${buttonStates.button4 ? 'show' : ''}`} aria-labelledby="defaultDropdown4">
               {selectedCity.AreaList.map((area) => (
                 <li
                   key={area.ZipCode}
@@ -571,7 +648,7 @@ const Sort = ({ missionType, setMissionType, missionCity, setMissionCity, missio
 
 
 // 最新任務（電腦版）
-const LatestMission = ({ userId }) => {
+const LatestMission = ({ userId, handleMouseEnter, handleMouseLeave, isHovered }) => {
 
   const [latestMissions, setLatestMissions] = useState([])
 
@@ -655,7 +732,7 @@ const LatestMission = ({ userId }) => {
     <>
       {latestMissions.map((v, i) => {
         return (
-          <div className='latest-mission-card d-flex'>
+          <div className='latest-mission-card d-flex align-items-center'>
             <Link href={`/work/find-mission/${v.mission_id}`} >
               <div className='mission-img'>
                 <img src={v.file_path} alt="任務" />
@@ -664,14 +741,61 @@ const LatestMission = ({ userId }) => {
             <div className='mission-content ms-2'>
               <Link href={`/work/find-mission/${v.mission_id}`} >
                 <div className='title size-6'>{v.title}</div>
+
+                <div className='d-flex justify-content-between mt-1 '>
+                  <div className='size-7'>
+                    <div className="d-flex align-items-center mb-1">
+                      <span className="tag-btn mb-1">{(() => {
+                        switch (v.mission_type) {
+                          case 1:
+                            return '到府照顧';
+                          case 2:
+                            return '安親寄宿';
+                          case 3:
+                            return '到府美容';
+                          case 4:
+                            return '行為訓練';
+                          case 5:
+                            return '醫療護理';
+                          default:
+                            return '其他';
+                        }
+                      })()}</span>
+                    </div>
+                    <div className="d-flex align-items-center mb-1">
+                      <FaLocationDot className="me-1" />
+                      {v.city}
+                      {v.area}
+                    </div>
+                    <div className="d-flex align-items-center mb-1">
+                      <FaRegCalendarCheck className="me-1" />
+                      {formatDate(v.update_date)}<span className="update-title" >（最後更新）</span>
+                    </div>
+                  </div>
+                  {/* <img src={isFavorites[i] ? "/heart-clicked.svg" : "/heart.svg"} alt={isFavorites[i] ? "已收藏" : "未收藏"} onClick={() => toggleFavorite(i)} /> */}
+                </div>
               </Link>
-              <div className='d-flex justify-content-between mt-1 mt-sm-2'>
-                <div className='size-7'>{v.city}{v.area}<br />{formatDate(v.post_date)}</div>
-                <img src={isFavorites[i] ? "/heart-clicked.svg" : "/heart.svg"} alt={isFavorites[i] ? "已收藏" : "未收藏"} onClick={() => toggleFavorite(i)} />
-              </div>
-              <div className='d-flex justify-content-between align-items-end price'>
+              <div className='d-flex justify-content-between align-items-center price'>
                 <div >單次<span className='size-6'> NT${v.price}</span></div>
-                <button className='btn-confirm size-6'>應徵</button>
+                {/* <Link href={`/work/find-mission/${v.mission_id}`} >
+                  <button className='btn-confirm size-6'>應徵</button>
+                </Link> */}
+                <button className=" heart-btn" onClick={() => toggleFavorite(i)} onMouseEnter={() => handleMouseEnter(i)}
+                  onMouseLeave={() => handleMouseLeave(i)}>
+                  {isFavorites[i] ? (
+                    <>
+                      <FaHeart className="fill-icon" />
+                    </>
+                  ) : (
+                    <>
+                      {isHovered[i] ? (
+                        <FaHeart className="empty-icon-hover" />
+                      ) : (
+                        <FaRegHeart className="empty-icon" />
+                      )}
+                    </>
+                  )}
+                </button>
               </div>
             </div>
           </div>
@@ -838,7 +962,9 @@ const MobileLatestMission = ({ userId }) => {
                 </div>
                 <div className='d-flex justify-content-between align-items-end price'>
                   <div >單次<span className='size-6'> NT${v.price}</span></div>
-                  <button className='btn-confirm size-6'>應徵</button>
+                  <Link href={`/work/find-mission/${v.mission_id}`} >
+                    <button className='btn-confirm size-6'>應徵</button>
+                  </Link>
                 </div>
               </div>
             </div>
@@ -867,18 +993,22 @@ function ImageWithEqualDimensions({ file_path }) {
 
   // 使得圖片高度會在螢幕大小改變時跟著改變 而非在重整時才改變
   const handleResize = () => {
-    const image = imgRef.current;
-    const imageWidth = image.offsetWidth;
-    image.style.height = imageWidth + "px";
-  };
-
-  useEffect(() => {
     // 獲取圖片元素的引用
     const image = imgRef.current;
     // 獲取圖片的寬度
     const imageWidth = image.offsetWidth;
     // 將寬度值分配给高度
     image.style.height = imageWidth + "px";
+  };
+
+  // // 立即在組件加載時調整照片的高度
+  // useEffect(() => {
+  //   handleResize();
+  // }, []);
+
+  useEffect(() => {
+    // 立即在組件加載時調整照片的高度
+    handleResize();
     // 添加螢幕大小變化事件監聽器
     window.addEventListener("resize", handleResize);
     // 在組件卸載時移除事件監聽器
@@ -894,7 +1024,7 @@ function ImageWithEqualDimensions({ file_path }) {
 }
 
 // 任務卡片（這邊的參數如果忘記設定會讓卡片出不來）
-const MissionCard = ({ missionType, missionCity, missionArea, setMissionType, updateDate, setUpdateDate, sortOrder, setSortOrder, sortBy, setSortBy, allMissions, currentData, userId, setUserId, isFavorites, toggleFavorite }) => {
+const MissionCard = ({ missionType, missionCity, missionArea, setMissionType, updateDate, setUpdateDate, sortOrder, setSortOrder, sortBy, setSortBy, allMissions, currentData, userId, setUserId, isFavorites, toggleFavorite, handleMouseEnter, handleMouseLeave, isHovered }) => {
 
   // 格式化日期
   function formatDate(dateString) {
@@ -918,25 +1048,64 @@ const MissionCard = ({ missionType, missionCity, missionArea, setMissionType, up
               <div className="mission-content mx-1 mt-2">
                 <Link href={`/work/find-mission/${v.mission_id}`}>
                   <div className="title size-6">{v.title}</div>
-                </Link>
-                <div className="d-flex justify-content-between mt-2">
-                  <div className="size-7">
-                    {v.city}
-                    {v.area}
-                    <br />
-                    {formatDate(v.post_date)}
-                  </div>
-                  <img
+                  <div className="d-flex justify-content-between mt-1 mb-1">
+                    <div className="size-7">
+                      <div className="d-flex align-items-center mb-1">
+                        <span className="tag-btn mb-1">{(() => {
+                          switch (v.mission_type) {
+                            case 1:
+                              return '到府照顧';
+                            case 2:
+                              return '安親寄宿';
+                            case 3:
+                              return '到府美容';
+                            case 4:
+                              return '行為訓練';
+                            case 5:
+                              return '醫療護理';
+                            default:
+                              return '其他';
+                          }
+                        })()}</span>
+                      </div>
+                      <div className="d-flex align-items-center mb-1">
+                        <FaLocationDot className="me-1" />
+                        {v.city}
+                        {v.area}
+                      </div>
+                      <div className="d-flex align-items-center">
+                        <FaRegCalendarCheck className="me-1" />
+                        {formatDate(v.update_date)}<span className="update-title" >（最後更新）</span>
+                      </div>
+                    </div>
+                    {/* <img
                     src={isFavorites[i] ? "/heart-clicked.svg" : "/heart.svg"}
                     alt={isFavorites[i] ? "已收藏" : "未收藏"}
                     onClick={() => toggleFavorite(i)}
-                  />
-                </div>
-                <div className='d-flex justify-content-between align-items-end price'>
+                  /> */}
+                  </div>
+                </Link>
+                <div className='d-flex justify-content-between align-items-center price'>
                   <div  >單次<span className='size-6'> NT${v.price}</span></div>
-                  <Link href={`/work/find-mission/${v.mission_id}`} >
+                  {/* <Link href={`/work/find-mission/${v.mission_id}`} >
                     <button className='btn-confirm size-6'>應徵</button>
-                  </Link>
+                  </Link> */}
+                  <button className=" heart-btn" onClick={() => toggleFavorite(i)} onMouseEnter={() => handleMouseEnter(i)}
+                    onMouseLeave={() => handleMouseLeave(i)}>
+                    {isFavorites[i] ? (
+                      <>
+                        <FaHeart className="fill-icon" />
+                      </>
+                    ) : (
+                      <>
+                        {isHovered[i] ? (
+                          <FaHeart className="empty-icon-hover" />
+                        ) : (
+                          <FaRegHeart className="empty-icon" />
+                        )}
+                      </>
+                    )}
+                  </button>
                 </div>
               </div>
             </div>
@@ -1038,6 +1207,22 @@ export default function MissionList() {
 
   // 收藏
   const [isFavorites, setIsFavorites] = useState([]);
+  // 初始化每個按鈕的初始懸停狀態（空心愛心hover時要替換成實心）
+  const initialHoverStates = Array(currentData.length).fill(false);
+  const [isHovered, setIsHovered] = useState(initialHoverStates);
+  // 設置 onMouseEnter 處理程序來處理懸停狀態
+  const handleMouseEnter = (index) => {
+    const newHoverStates = [...isHovered];
+    newHoverStates[index] = true;
+    setIsHovered(newHoverStates);
+  };
+
+  // 設置 onMouseLeave 處理程序來處理取消懸停狀態
+  const handleMouseLeave = (index) => {
+    const newHoverStates = [...isHovered];
+    newHoverStates[index] = false;
+    setIsHovered(newHoverStates);
+  };
 
   useEffect(() => {
     // 在組件加載時從後端獲取已收藏的任務
@@ -1110,6 +1295,10 @@ export default function MissionList() {
     setUpdateDate(null);
     setMissionCity("");
     setMissionArea(null);
+    setButtonText1('任務類型');
+    setButtonText2('更新時間');
+    setSelectedCity(null);
+    setSelectedArea(null);
     setSortOrder('asc');
     setSortBy('post_date');
     setInputValue('');
@@ -1117,6 +1306,12 @@ export default function MissionList() {
     setActivePage(1);
     getAllMissions()
     console.log("狀態變數已重置為預設值");
+  };
+  const handleClearSettings = () => {
+    // 使用 setTimeout 延遲執行 clearSettings 本來沒有寫 但clearSettings要點2次才反應
+    setTimeout(() => {
+      clearSettings();
+    }, 0);
   };
 
 
@@ -1131,7 +1326,7 @@ export default function MissionList() {
               <Link href="/">首頁</Link>
             </li>
             <li className="breadcrumb-item" aria-current="page">
-              <Link href="/work/find-mission" onClick={clearSettings}>小貓上工(找任務)</Link>
+              <Link href="/work/find-mission" onClick={handleClearSettings}>小貓上工(找任務)</Link>
             </li>
             {search ? (
               <>
@@ -1184,13 +1379,13 @@ export default function MissionList() {
 
         <section className="d-flex all-mission flex-column flex-lg-row mt-3">
           {/* 最新任務桌機 */}
-          <div className="latest-mission latest-mission-pc d-none d-lg-flex flex-column">
-            <h3 className="size-4  ">最新任務</h3>
-            <LatestMission userId={userId} />
+          <div className="latest-mission latest-mission-pc d-none d-lg-flex flex-column mb-3">
+            <h3 className="size-5  ">最新任務</h3>
+            <LatestMission userId={userId} handleMouseEnter={handleMouseEnter} handleMouseLeave={handleMouseLeave} isHovered={isHovered} />
           </div>
           {/* 最新任務手機 */}
           <div className="latest-mission latest-mission-mobile d-lg-none mb-3 mt-1">
-            <h3 className="size-4">最新任務</h3>
+            <h3 className="size-5">最新任務</h3>
             <MobileLatestMission userId={userId} />
           </div>
           {/* 任務列表 */}
@@ -1199,7 +1394,7 @@ export default function MissionList() {
             <div className="row d-flex mb-3 g-3 g-md-4">
               {/* 使用g-3 不用justify-content-between 預設是start 卡片就會照順序排列 */}
               <MissionCard sortOrder={sortOrder} sortBy={sortBy} missionType={missionType} setMissionType={setMissionType} missionCity={missionCity} setMissionCity={setMissionCity} missionArea={missionArea} setMissionArea={setMissionArea}
-                updateDate={updateDate} setUpdateDate={setUpdateDate} allMissions={allMissions} currentData={currentData} userId={userId} setUserId={setUserId} isFavorites={isFavorites} toggleFavorite={toggleFavorite} />
+                updateDate={updateDate} setUpdateDate={setUpdateDate} allMissions={allMissions} currentData={currentData} userId={userId} setUserId={setUserId} isFavorites={isFavorites} toggleFavorite={toggleFavorite} handleMouseEnter={handleMouseEnter} handleMouseLeave={handleMouseLeave} isHovered={isHovered} />
             </div>
           </div>
         </section>

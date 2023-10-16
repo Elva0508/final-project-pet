@@ -1,4 +1,3 @@
-
 //商品列表頁
 import { React, useState, useRef } from 'react';
 import ProductCard2 from '@/components/product/product-card2';

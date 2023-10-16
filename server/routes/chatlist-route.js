@@ -40,6 +40,7 @@ router.get("/:uid", (req, res) => {
   );
 });
 
+//
 router.get("/:uid/:cid", (req, res) => {
   const uid = req.params.uid;
   const cid = req.params.cid;
@@ -104,10 +105,13 @@ router.post("/creatchat", (req, res) => {
       if (results.length > 0) {
         // 如果已存在對應的資料，取得該資料的 chatlist_id
         const existingChatlistId = results[0].chatlist_id;
+        const chatlistId = results[0].chatlist_id;
         console.log("existingChatlistId", existingChatlistId);
         const chatUrl = `/chatlist/${existingChatlistId}`;
         console.log("chatUrl", chatUrl);
-        return res.status(200).json({ message: "訊息已成功傳送", chatUrl });
+        return res
+          .status(200)
+          .json({ message: "訊息已成功傳送", chatUrl, chatlistId });
       }
 
       // 如果没有就新增一筆
@@ -122,10 +126,13 @@ router.post("/creatchat", (req, res) => {
           }
 
           const newChatlistId = insertResult.insertId;
+          const chatlistId = insertResult.insertId;
           console.log("newChatlistId", newChatlistId);
           const chatUrl = `/chatlist/${newChatlistId}`;
           console.log("newchatUrl", chatUrl);
-          return res.status(201).json({ message: "訊息已成功傳送", chatUrl });
+          return res
+            .status(201)
+            .json({ message: "訊息已成功傳送", chatUrl, chatlistId });
         }
       );
     }

@@ -23,16 +23,15 @@
     .accordion-button{
         background-color: $content-bg;
         color: $text-main;
-        font-size: 1.25rem;
         text-align: center ; 
         border-bottom: 1px dashed $text-mark;
         display: block;
+        padding: 10px 0;
     }
     }
     .button-subcategory{
         background-color:var(--bs-body-bg);
         color: $text-main;
-        font-size: 1.25rem;
         border: none;
         margin-top: 5px;
         padding: 0;
@@ -40,7 +39,6 @@
      .button-subcategory:hover{
         border-bottom: 2px solid $light-gray;
     }
-   
    }
 }
 
@@ -65,10 +63,13 @@
 
 .sort-btn{
     // border: 3px solid;
-    border-radius: 20px;
-    background-color: $cos-white;
-    width: 200px;
-    width: 100%;
+    // border-radius: 20px;
+    // background-color: $cos-white;
+    // width: 200px;
+    // width: 100%;
+    .form-label{
+        margin-bottom: 0;
+    }
     
     button{
         border: none;

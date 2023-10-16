@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import ListD from "@/components/member/list-d";
 import ListUserM from "@/components/member/list-user-m";
 import Link from "next/link";
-import { useRouter } from "next/router";
 import { RecordDetailTemplate } from "@/components/member/Record-template";
 import { BsCalendarDateFill } from "react-icons/bs";
 import memberService from "@/services/member-service";
@@ -107,7 +106,7 @@ const CreateReview = ({ user_id, detail, pid, setIsReviewed }) => {
 };
 
 const CheckReview = ({ review }) => {
-  const user = 1;
+  // const user = 1;
   const [visible, setVisible] = useState(false);
 
   const showDialog = () => {
@@ -239,6 +238,7 @@ const ReserveDetailPage = () => {
     }
   }, [status]);
   const handleReject = () => {
+    alert("是否確定取消預約?");
     memberService
       .setRequestStatus(pid, 4)
       .then((response) => {

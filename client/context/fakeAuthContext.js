@@ -53,7 +53,7 @@ function AuthProvider({ children }) {
     const data = JSON.parse(localStorage.getItem("id"));
     const token = localStorage.getItem("token");
     if (data && token) {
-      setUserId(data);
+      setUserId(data.id);
       dispatch({ type: "login", payload: jwt(token) });
     }
   }, []);
