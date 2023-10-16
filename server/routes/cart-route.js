@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const connection=require("../db");
 
-router.get("/:id",(req,res)=>{   
+router.get("/cart/:id",(req,res)=>{   
   console.log(req);
   const id= req.params.id;  
   console.log(req.params);
