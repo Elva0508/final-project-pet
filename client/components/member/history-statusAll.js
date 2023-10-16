@@ -5,7 +5,18 @@ import dayjs from "dayjs";
 import axios from "axios";
 import Pagination from '@/components/pagination'
 
-export default function HistoryStatusOne({ history ,getHistory ,idCounts,activePage,setActivePage}) {
+export default function HistoryStatusOne({ history ,getHistory ,idCounts,activePage,setActivePage,sort,setHistory}) {
+
+  if (sort == 1) {
+    console.log(sort);
+    const newHistory = history.sort((a, b) => b.mission_id - a.mission_id)
+    console.log(newHistory );
+    setHistory(newHistory )
+  } else if (sort == 2) {
+    const newHistory  = history.sort((a, b) => a.mission_id - b.mission_id)
+    console.log(newHistory );
+    setHistory(newHistory )
+  }
 
   const itemsPerPage = 5;
 
