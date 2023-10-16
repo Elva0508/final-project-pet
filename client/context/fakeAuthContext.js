@@ -50,7 +50,7 @@ function AuthProvider({ children }) {
   const [userId, setUserId] = useState(null);
 
   useEffect(() => {
-    const data = JSON.parse(localStorage.getItem("data"));
+    const data = JSON.parse(localStorage.getItem("id"));
     const token = localStorage.getItem("token");
     if (data && token) {
       setUserId(data);

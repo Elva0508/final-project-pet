@@ -18,6 +18,9 @@ router.get("/", (req, res) => {
   );
 });
 
+
+
+
 //category/subcategory類別
 router.get("/category", (req, res) => {
   connection.execute(
