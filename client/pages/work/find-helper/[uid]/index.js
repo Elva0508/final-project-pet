@@ -22,6 +22,7 @@ import { useAuth } from "@/context/fakeAuthContext";
 import { useHelper } from "@/context/helperContext";
 import { Pagination } from "antd";
 // import { Button, Modal } from "antd";
+import axios from "axios";
 import {
   DatePicker,
   Modal,
@@ -35,6 +36,10 @@ import {
   IllustrationConstruction,
   IllustrationConstructionDark,
 } from "@douyinfe/semi-illustrations";
+import {
+  ScrollMotionContainer,
+  ScrollMotionItem,
+} from "@/components/ScrollMotion";
 
 import dayjs from "dayjs";
 import { set } from "react-hook-form";
@@ -837,6 +842,58 @@ const HelperDetail = () => {
         console.log(e);
       });
   }, [currentPage]);
+  const handleButtonClick = async () => {
+    console.log("有執行handleButtonClick");
+    if (!userId) {
+      alert("請先登入會員");
+      return;
+    }
+    // setIsLoading(true);
+
+    // 檢查是否有有效的 userId
+    //如果放入targetID 變數 這邊也要把targetID 變數放進來檢查
+    if (userId) {
+      // 建立要傳送的數據
+      const requestData = {
+        chatlist_userId1: userId,
+        chatlist_userId2: uid, // 放要對話的 targetID 變數
+      };
+      console.log("userId1是" + userId);
+
+      try {
+        const response = await axios.post(
+          "http://localhost:3005/api/chatlist/creatchat",
+          requestData
+        );
+
+        if (response.status === 201) {
+          console.log("請求成功");
+          // 請求成功
+          // setMessage("請求成功");
+          const chatUrl = response.data.chatUrl;
+          console.log("chatUrl" + chatUrl);
+          // 在這裡導向到 chatUrl
+          window.location.href = chatUrl;
+        } else if (response.status === 200) {
+          // 消息已存在
+          // setMessage("消息已存在");
+          const chatUrl = response.data.chatUrl;
+          console.log("已存在chatUrl" + chatUrl);
+          // 在這裡導向到 chatUrl
+          window.location.href = chatUrl;
+        } else {
+          // 請求失敗
+          // setMessage("請求失敗: " + response.data.error);
+        }
+      } catch (error) {
+        // 處理錯誤
+        // setMessage(error.message || "發生錯誤");
+        // } finally {
+        // setIsLoading(false);
+        console.log(error);
+      }
+    }
+  };
 
   return (
     <>
@@ -870,7 +927,7 @@ const HelperDetail = () => {
 
               <div className="left-block-btns-group pc d-none d-lg-flex">
                 <div className="d-flex">
-                  <button className="btn-message">
+                  <button className="btn-message" onClick={handleButtonClick}>
                     <BiMessageRounded />
                     <span>傳送訊息</span>
                   </button>
@@ -892,7 +949,7 @@ const HelperDetail = () => {
                 </button>
               </div>
               <div className="left-block-btns-group mobile d-flex d-lg-none">
-                <button className="btn-message">
+                <button className="btn-message" onClick={handleButtonClick}>
                   <div className="icon-wrapper">
                     <BiMessageRounded />
                   </div>

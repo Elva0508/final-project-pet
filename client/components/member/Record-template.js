@@ -10,6 +10,7 @@ import {
 } from "@douyinfe/semi-illustrations";
 import lottie from "lottie-web";
 import animation from "@/data/animation_lnqha2jt.json";
+import memberService from "@/services/member-service";
 export const RecordTemplate = ({
   icon,
   title,
@@ -41,6 +42,45 @@ export const RecordTemplate = ({
         break;
     }
   };
+  const handleReviewBubble = (e, case_id) => {
+    console.log(e.currentTarget, e.target);
+    if (router.pathname === "/member/reserve" && status === 3) {
+      const currentTarget = e.currentTarget;
+      memberService
+        .getReview(case_id)
+        .then((response) => {
+          console.log(response);
+          if (response?.data?.data?.review_id !== null) {
+            if (e.type === "mouseenter") {
+              console.log("滑鼠移進");
+              currentTarget.classList.add("bubble-tip-success");
+            } else if (e.type === "mouseleave") {
+              console.log("滑鼠移出");
+              currentTarget.classList.remove("bubble-tip-success");
+            }
+          } else {
+            if (e.type === "mouseenter") {
+              console.log("滑鼠移進");
+              currentTarget.classList.add("bubble-tip-todo");
+            } else if (e.type === "mouseleave") {
+              console.log("滑鼠移出");
+              currentTarget.classList.remove("bubble-tip-todo");
+            }
+          }
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    }
+
+    // if (e.type === "mouseenter") {
+    //   console.log("滑鼠移進");
+    //   e.target.classList.add(".bubble-tip-success");
+    // } else if (e.type === "mouseleave") {
+    //   console.log("滑鼠移出");
+    //   e.target.classList.remove(".bubble-tip-success");
+    // }
+  };
 
   useEffect(() => {
     for (let i = 1; i <= 4; i++) {
@@ -70,11 +110,12 @@ export const RecordTemplate = ({
       lottie.destroy();
     };
   }, [status]);
+  console.log(info);
   return (
     <>
-      <h5 className="size-5 d-flex align-items-start fw-bold">
-        {icon || <MdHomeRepairService className="icon me-1" />}
-        {title || "銷售紀錄"}
+      <h5 className="main-title size-5 d-flex align-items-start fw-bold">
+        {/* {icon || <MdHomeRepairService className="icon me-1" />} */}
+        {title || ""}
       </h5>
 
       <nav className="tab-nav" onClick={handleStatus}>
@@ -129,13 +170,21 @@ export const RecordTemplate = ({
             image={
               <IllustrationNoContent style={{ width: 300, height: 300 }} />
             }
-            title="尚未有銷售紀錄"
+            title="尚未有訂單紀錄"
           ></Empty>
         ) : (
           <>
             {info &&
               info.map((item) => (
-                <div className="info-content d-flex align-items-center justify-content-around">
+                <div
+                  className="info-content d-flex align-items-center justify-content-around"
+                  onMouseEnter={(e) => {
+                    handleReviewBubble(e, item.case_id);
+                  }}
+                  onMouseLeave={(e) => {
+                    handleReviewBubble(e, item.case_id);
+                  }}
+                >
                   <p>{item.created_at}</p>
                   <p>{item.oid}</p>
                   <p>
@@ -169,7 +218,7 @@ export const RecordTemplate = ({
             image={
               <IllustrationNoContent style={{ width: 300, height: 300 }} />
             }
-            title="尚未有銷售紀錄"
+            title="尚未有訂單紀錄"
             className="d-flex d-sm-none"
           ></Empty>
         </div>
@@ -199,7 +248,7 @@ export const RecordTemplate = ({
                     <button
                       className="btn-outline-confirm"
                       onClick={() => {
-                        if (title === "銷售紀錄") {
+                        if (title === "幫手訂單") {
                           router.push(`/member/selling/${item.oid}`);
                         }
                         if (title === "預約紀錄") {
@@ -207,7 +256,7 @@ export const RecordTemplate = ({
                         }
                       }}
                     >
-                      查看明細
+                      查看詳細
                     </button>
                   </div>
                 </div>
@@ -234,8 +283,8 @@ export const RecordDetailTemplate = ({ icon, title, detail, setDetail }) => {
 
   return (
     <>
-      <h5 className="size-5 d-flex align-items-start fw-bold">
-        {icon || <MdHomeRepairService className="icon me-1" />}
+      <h5 className="main-title size-5 d-flex align-items-start fw-bold">
+        {/* {icon || <MdHomeRepairService className="icon me-1" />} */}
 
         {title || "銷售服務"}
       </h5>
