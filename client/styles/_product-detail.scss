@@ -49,9 +49,6 @@ a{
 }}
 
 
-
-
-
 //product-detail
 .product-detail{
      max-width: 648px;
@@ -79,13 +76,20 @@ a{
   color:$text-mark;
 }
 
-.add-to-cart{
-    button {
-     max-width: 600px;
-     width: 100%;
-     padding: 9px;
-    }
+.add-to-cart-fav {
+  .add-to-cart{
+    max-width: 500px;
+    width: 100%;
+     .btn{
+      width: 100%;
+     }
+  }
+  .add-to-fav{
+    padding: 5px;
+
+  }
 }
+ 
 .add-to-favorites{
     margin-top: 20px;
     button {

@@ -13,6 +13,8 @@ import { FiMinus } from 'react-icons/fi';
 import jwt_decode from "jwt-decode";
 import { FaPaw } from 'react-icons/fa';
 import ProductSlick from '@/components/product/product-slick';
+import { FaHeart, FaRegHeart } from 'react-icons/fa';
+// import HeartButton from '@/components/product/product-heartbutton';
 
 
 //next裡innerhtml語法
@@ -24,12 +26,9 @@ function ProductDescription({ htmlContent }) {
 }
 
 
-
 export default function ProductDetail() {
 
-    //用來儲存收藏
-    const [collection, setCollection] = useState([]);
-
+   
     // 用於儲存解析後的userID
     const [userId, setUserId] = useState(null);
     console.log(userId);
@@ -155,8 +154,7 @@ export default function ProductDetail() {
             });
     }, []);
 
-    //查看收藏商品
-    // getCollection()
+    
 
     // 添加商品到購物車的函式
     const { cart, setCart } = useCart();
@@ -222,8 +220,9 @@ export default function ProductDetail() {
         }
     };
 
-    // 添加商品到收藏的函式
+    //添加商品到收藏的函式
     //儲存選中的type_id-selectedTypeId 加到購物車時已經有寫了
+    const [collection, setCollection] = useState([]); //用來儲存收藏
     // const [selectedTypeId, setSelectedTypeId] = useState('');
     const getCollection = () => {
         axios.get(`http://localhost:3005/api/product/collections/${userId}`)
@@ -300,12 +299,28 @@ export default function ProductDetail() {
         }
     };
 
-    //款式按鈕
+    const toggleCollection = async (product_id) => {
+        const isProductInCollection = collection.some((item) => item.product_id === product_id);
+        if (isProductInCollection) {
+            await deleteCollection(product_id);
+        } else {
+            await addCollection(product_id);
+        }
+        getCollection(userId);
+    };
+
+    useEffect(() => {
+        // 獲取商品列表
+        getCollection(userId);
+    }, [userId]);
+
+  
+    //type款式按鈕
     const handleButtonClick = (typeId) => {
         setSelectedTypeId(typeId);
     };
 
-
+ 
 
 
     return (
@@ -418,25 +433,38 @@ export default function ProductDetail() {
                                                 </button>
                                             </div>
                                         </div>
+                                        <div className='additional-information mt-3'>
+                                            <li><FaPaw />  商品享7日鑑賞期</li>
+                                            <li><FaPaw />  付款後，3日內配送，台灣本島最快隔天送達</li>
+                                            <li><FaPaw />  商品提供宅配到府和超商取貨付款服務</li>
+                                            <li><FaPaw />  小貓上工服務上線! </li>
+                                            <li><FaPaw />  如有任何問題，歡迎詢問</li>
+                                        </div>
 
-                                        <div className="add-to-cart mt-3">
-                                            <button
-                                                className="btn btn-confirm  size-7  m-size-7"
-                                                data-bs-toggle="offcanvas"
-                                                data-bs-target="#offcanvasRight"
-                                                aria-controls="offcanvasRight"
-                                                onClick={() => {
-                                                    addCart(v.product_id, selectedTypeId, count);
-                                                    console.log(v.product_id, selectedTypeId, count)
-                                                }
-                                                }
-                                            >
-                                                加入購物車
+                                        <div className="add-to-cart-fav mt-3 d-flex flex-row">
+                                            <div className='add-to-cart'>
+                                                <button
+                                                    className="btn btn-confirm size-7  m-size-7"
+                                                    data-bs-toggle="offcanvas"
+                                                    data-bs-target="#offcanvasRight"
+                                                    aria-controls="offcanvasRight"
+                                                    onClick={() => {
+                                                        addCart(v.product_id, selectedTypeId, count);
+                                                        console.log(v.product_id, selectedTypeId, count)
+                                                    }
+                                                    }
+                                                >
+                                                    加入購物車
+                                                </button>
+                                            </div>
+                                            <button onClick={() => toggleCollection(v.product_id)} style={{ background: 'transparent', border: 'none' }}>
+                                                {collection.some((item) => item.product_id === v.product_id) ? <FaHeart color="#ca526f" size={29} /> : <FaRegHeart color="#d7965b" size={29} />}
                                             </button>
+
                                         </div>
 
                                         <div className="add-to-favorites mt-3">
-                                            <button
+                                            {/* <button
                                                 type="button"
                                                 className=" btn-second"
                                                 onClick={() => {
@@ -447,7 +475,8 @@ export default function ProductDetail() {
                                             >
                                                 加入收藏
                                             </button>
-                                            {/* <button
+
+                                            <button
                                                 type="button"
                                                 className=" btn-second"
                                                 onClick={() => {
@@ -457,12 +486,9 @@ export default function ProductDetail() {
                                             >
                                                 取消收藏
                                             </button> */}
+                                            
                                         </div>
-                                        <div className='additional-information mt-3'>
-                                            <li><FaPaw />  商品享7日鑑賞期</li>
-                                            <li><FaPaw />   付款後，3日內配送，台灣本島最快隔天送達</li>
-                                            <li><FaPaw />  提供宅配到府和超商取貨付款服務。</li>
-                                        </div>
+
                                     </div>
                                     {/* 加到購物車 */}
                                     <div className="offcanvas offcanvas-end" tabIndex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel" >
