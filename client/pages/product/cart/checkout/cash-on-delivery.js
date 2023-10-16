@@ -1,11 +1,9 @@
 import { useState ,useEffect} from 'react'
 import { useRouter } from 'next/router';
 import {BsCheckCircle} from 'react-icons/bs';
-import { useAuth } from '@/context/fakeAuthContext';
+
 
 function cashOnDelivery(props) {
-  const {userId} = useAuth()
-  const id=parseInt(userId)
   const router = useRouter();
   const [orderPrice, setOrderPrice] = useState(0)
   const [orderNumber, setOrderNumber] = useState(0)
@@ -14,11 +12,6 @@ function cashOnDelivery(props) {
   const [freight,setFreight]=useState(0)
   const [sale,setSale]=useState(0)
 
-  useEffect(()=>{
-    if (!id) {
-        router.push("/")
-      }
-  })
 
   useEffect(() => {
     if(!localStorage.getItem('finalCart')){
