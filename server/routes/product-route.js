@@ -41,21 +41,42 @@ router.get("/", (req, res) => {
 });
 
 //category&subcategory類別
+// router.get("/category", (req, res) => {
+//   connection.execute(
+//     `SELECT
+//     category.category_id,
+//     category.category_name,
+//     GROUP_CONCAT(subcategory.subcategory_id) as subcategoriesid,
+//     GROUP_CONCAT(subcategory.subcategory_name) as subcategories
+//     FROM category
+//     JOIN subcategory ON subcategory.category_id = category.category_id
+//     GROUP BY category.category_name
+//     ORDER BY category.category_id; `,
+//     (error, result) => {
+//       res.json({ result });
+//     }
+//   );
+// });
+
+//找大類
 router.get("/category", (req, res) => {
-  connection.execute(
-    `SELECT
-        category.category_id,
-        category.category_name,
-        GROUP_CONCAT(subcategory.subcategory_name) as subcategories
-        FROM category
-        JOIN subcategory ON subcategory.category_id = category.category_id
-        GROUP BY category.category_name
-        ORDER BY category.category_id; `,
-    (error, result) => {
-      res.json({ result });
-    }
-  );
-});
+    connection.execute(
+      `SELECT * FROM category`,
+      (error, result) => {
+        res.json({ result });
+      }
+    );
+  });
+
+  //找小類
+router.get("/subcategory", (req, res) => {
+    connection.execute(
+      `SELECT * FROM subcategory`,
+      (error, result) => {
+        res.json({ result });
+      }
+    );
+  });
 
 //商品細節頁
 router.get("/product-detail/:product_id", (req, res) => {
@@ -188,6 +209,31 @@ router.put("/cartplus", (req, res) => {
         }
     )
 })
+
+//大類重新更新productdata
+router.get("/product/category/:category_id", (req, res) => {
+    const category_id = req.params.category_id;
+    connection.execute(
+      `SELECT products.*, category.category_name AS category_name, subcategory.subcategory_name AS subcategory_name FROM products JOIN category ON category.category_id = products.category_id JOIN subcategory ON subcategory.subcategory_id = products.subcategory_id WHERE category.category_id=?;`,
+      [category_id],
+      (error, result) => {
+        res.json({ result });
+      }
+    );
+  });
+//小類重新更新productdata
+  router.get("/product/subcategory/:subcategory_id", (req, res) => {
+    const subcategory_id = req.params.subcategory_id;
+    connection.execute(
+      `SELECT products.*, category.category_name AS category_name, subcategory.subcategory_name AS subcategory_name FROM products JOIN category ON category.category_id = products.category_id JOIN subcategory ON subcategory.subcategory_id = products.subcategory_id WHERE subcategory.subcategory_id=?;`,
+      [subcategory_id],
+      (error, result) => {
+        res.json({ result });
+      }
+    );
+  });
+
+
 
 //產品列表頁大類小類篩選＋價格篩選＋上架時間與價格排序
 router.get("/filter_sort", (req, res) => {

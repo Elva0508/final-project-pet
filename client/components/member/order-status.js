@@ -6,8 +6,21 @@ import Pagination from '@/components/pagination'
 
 
 
-export default function OrderStatusOne({order ,currentScreen,activePage,setActivePage}) {
+export default function OrderStatus({order ,currentScreen,activePage,setActivePage ,sort,setOrder}) {
+      if (sort == 1) {
+        console.log(sort);
+        const newOrder = order.sort((a, b) => b.order_id - a.order_id)
+        console.log(newOrder);
+        setOrder(newOrder)
+      } else if (sort == 2) {
+        const newOrder = order.sort((a, b) => a.order_id - b.order_id)
+        console.log(newOrder);
+        setOrder(newOrder)
+        console.log(order);
+      }
 
+
+  console.log(order)
     const itemsPerPage = 5
 ;
     const startIndex = (activePage - 1) * itemsPerPage;
