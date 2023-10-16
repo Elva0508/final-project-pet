@@ -2,7 +2,7 @@
 .order{
     border-radius: 10px 10px 10px 10px;
     background: $main-bg;
-    color:$text-main;
+    color:$text-main;    
     @media screen and (max-width: 768px) {
         background: $main-bg;
     }
@@ -50,8 +50,7 @@
         
     }
     .bg{
-        background:#fff;
-        
+        background:#fff;        
     }
     span{
         color:$text-main;

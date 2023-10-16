@@ -62,6 +62,7 @@ const Search = ({ handleSearch, placeholder, color, onClick, search, setSearch }
 export default function ProductList() {
     const router = useRouter();
     // 讀取資料庫資料
+    const [productDataOrigin, setProductDataOrigin] = useState([]);
     const [productData, setProductData] = useState([]); // 初始化為一個帶有 result 屬性的物件
     useEffect(() => {
         if (router.isReady) {
@@ -73,7 +74,9 @@ export default function ProductList() {
             axios.get(`http://localhost:3005/api/product/product/category/${category_id}`).then((response) => {
                 const data = response.data.result;
                 console.log(data);
-                setProductData(data); // 將伺服器端的 result 放入物件中
+                setProductData(data);
+                setProductDataOrigin(data)
+                // 將伺服器端的 result 放入物件中
                 // setMainPic(data[0].images_one)
                 // console.log(response.data.result[0].images_one)
             })
@@ -249,10 +252,13 @@ export default function ProductList() {
         if (selectedValue == "price_desc") {
             const newProduct = productData.sort((a, b) => b.specialoffer - a.specialoffer);
             setProductData(newProduct)
-        } else {
+        } else if (selectedValue == "price_asc") {
             const newProduct = productData.sort((a, b) => a.specialoffer - b.specialoffer);
             setProductData(newProduct)
 
+        } else {
+            const newProduct = productData.sort((a, b) => a.product_id - b.product_id);
+            setProductData(newProduct)
         }
         setSelectedSort(selectedValue); // 更新選擇的排序方式
         console.log(selectedValue)
@@ -282,13 +288,23 @@ export default function ProductList() {
     // };
 
     //篩選重複的廠商
-    const [vendorData, setVendorData] = useState({ result: [] });
+    const [vendorData, setVendorData] = useState([]);
+    // useEffect(() => {
+    //     axios.get("http://localhost:3005/api/product/vendor").then((response) => {
+    //         console.log(response.data.result);
+    //         setVendorData({ result: response.data.result });
+    //     });
+    // }, []);
     useEffect(() => {
-        axios.get("http://localhost:3005/api/product/vendor").then((response) => {
-            console.log(response.data.result);
-            setVendorData({ result: response.data.result });
-        });
-    }, []);
+        let newvendor = [];
+        for (let i = 0; i < productData.length; i++) {
+            let currentVendor = productData[i].vendor;
+            if (newvendor.indexOf(currentVendor) === -1) {
+                newvendor.push(currentVendor);
+            }
+        }
+        setVendorData(newvendor)
+    }, [productDataOrigin]);
 
     //傳送search的到後端
     const handleSearch = (search) => {
@@ -311,28 +327,60 @@ export default function ProductList() {
     };
 
     //傳送vendor, minPrice, maxPrice的到後端
+    // const handlePriceVendorfilter = (vendor, minPrice, maxPrice) => {
+    //     console.log("handlePriceVendorfilter 函数被使用，search結果:", vendor, minPrice, maxPrice);
+    //     axios.get('http://localhost:3005/api/product/filter_sort', {
+    //         params: {
+    //             vendor, 
+    //             minPrice, 
+    //             maxPrice
+    //         }
+    //     })
+    //         .then(response => {
+    //             // 请求完成后隐藏加载蒙层
+    //             setIsLoading(false);
+    //             setProductData(response.data.result);
+    //             setVendor(''); //搜尋之後清空搜尋文字
+    //             setMinPrice('');
+    //             setMaxPrice('');
+    //         })
+    //         .catch(error => {
+    //             console.error('Error:', error);
+    //             setIsLoading(false);
+    //         });
+    // };
+
     const handlePriceVendorfilter = (vendor, minPrice, maxPrice) => {
         console.log("handlePriceVendorfilter 函数被使用，search結果:", vendor, minPrice, maxPrice);
-        axios.get('http://localhost:3005/api/product/filter_sort', {
-            params: {
-                vendor,
-                minPrice,
-                maxPrice
-            }
-        })
-            .then(response => {
-                // 请求完成后隐藏加载蒙层
-                setIsLoading(false);
-                setProductData(response.data.result);
-                setVendor(''); //搜尋之後清空搜尋文字
-                setMinPrice('');
-                setMaxPrice('');
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                setIsLoading(false);
-            });
+        let lowPrice, highPrice, finalData
+
+        if (minPrice === "" || minPrice == null) {
+            lowPrice = productDataOrigin
+        } else {
+            lowPrice = productDataOrigin.filter((v) => v.specialoffer >= minPrice)
+        }
+        if (maxPrice === "" || maxPrice == null) {
+            highPrice = lowPrice
+        } else {
+            highPrice = lowPrice.filter((v) => v.specialoffer <= maxPrice)
+        }
+        if (vendor === "" || vendor == null) {
+            finalData = highPrice
+        } else {
+            finalData = highPrice.filter((v) => v.vendor == vendor)
+        }
+        if (selectedSort === "" || selectedSort == null) {
+            setProductData(finalData)
+        } else if (selectedSort == "price_desc") {
+            const newProduct = finalData.sort((a, b) => b.specialoffer - a.specialoffer);
+            setProductData(newProduct)
+        } else if (selectedSort == "price_asc") {
+            const newProduct = finalData.sort((a, b) => a.specialoffer - b.specialoffer);
+            setProductData(newProduct)
+        }
+
     };
+
 
 
 
@@ -491,8 +539,8 @@ export default function ProductList() {
                                                     onChange={handleVendorChange}
                                                 >
                                                     <option value="">請選擇</option>
-                                                    {vendorData.result.map((vendor, index) => (
-                                                        <option key={index} value={vendor.vendor}>{vendor.vendor}</option>
+                                                    {vendorData.map((vendor, index) => (
+                                                        <option key={index} value={vendor}>{vendor}</option>
                                                     ))}
                                                 </select>
                                             </div>
@@ -614,8 +662,8 @@ export default function ProductList() {
                                                 onChange={handleVendorChange}
                                             >
                                                 <option value="">請選擇</option>
-                                                {vendorData.result.map((vendor, index) => (
-                                                    <option key={index} value={vendor.vendor}>{vendor.vendor}</option>
+                                                {vendorData.map((vendor, index) => (
+                                                    <option key={index} value={vendor}>{vendor}</option>
                                                 ))}
                                             </select>
                                         </div>

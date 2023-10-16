@@ -224,6 +224,22 @@ router.put("/cart2/:user_id", (req, res) => {
     )
 })
 
+//用來修改購物車裡已經有的商品數量
+router.put("/cart2/:user_id", (req, res) => {
+    console.log(req);
+    const userid = req.params.user_id
+    console.log(userid);
+    const { product_id, newQuantity, product_type_id } = req.body
+    console.log(product_id);
+    connection.execute(
+        `UPDATE cart SET quantity=? WHERE user_id=? AND product_id=? AND product_type_id=?`,
+        [newQuantity, userid, product_id, product_type_id]
+        , (error, result) => {
+            res.json({ result })
+        }
+    )
+})
+
 //大類重新更新productdata
 router.get("/product/category/:category_id", (req, res) => {
     const category_id = req.params.category_id;

@@ -8,7 +8,7 @@ import { FaHeart, FaRegHeart } from 'react-icons/fa';
 
 
 export default function ProductCard2({ productData, mainPic, setMainPic }) {
-  
+
   // 用於儲存解析後的userID
   const [userId, setUserId] = useState(null);
   console.log(userId);
@@ -161,8 +161,7 @@ export default function ProductCard2({ productData, mainPic, setMainPic }) {
                     </button>
                   </div>
                   <Link href={`/product/${v.category_id}/${v.subcategory_id}/${v.product_id}`} >
-                    <div className="card-text-vendor size-7 m-size-7">{v.vendor}</div>
-                    <div className="card-text size-7 m-size-7">{v.product_name}</div>
+                    <div className="card-text size-6 m-size-7">{v.product_name}</div>
                     <div className="product-sale-price d-flex align-items-center" href="#">
                       <div className="price fs-4  size-6 m-size-7 me-3">NT${v.specialoffer}</div>
                       <del>NT${v.price}</del>
