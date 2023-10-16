@@ -157,17 +157,10 @@ export default function Index() {
           </div>
 
           <div className="block-six my-5">
-            <div className="photo mb-3">
-              {/* <img
-                src="https://images.unsplash.com/photo-1555685812-4b943f1cb0eb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80"
-                className="img-fluid"
-                alt="..."
-              ></img> */}
-              <div className="size-3 mt-3 home-tilte d-flex justify-content-center">
+            <div className="px-5 py-5">
+              <div className="size-3 my-5 home-tilte d-flex justify-content-center">
                 小貓兩三知
               </div>
-            </div>
-            <div className="px-5 py-5">
               <BlockSix />
             </div>
           </div>
