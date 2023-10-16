@@ -39,7 +39,7 @@ export default function BlockTwoMobile() {
     }
   }
 
-  // 将产品数据分组成每组两个产品
+  //將產品兩兩一組
   const productGroups = [];
   for (let i = 0; i < productData.result.length; i += 2) {
     const group = productData.result.slice(i, i + 2);
