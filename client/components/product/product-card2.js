@@ -1,9 +1,6 @@
-import { Fragment, useState } from "react";
-import { BiSolidCart } from "react-icons/bi";
 import axios from 'axios';
-import { useEffect } from "react";
+import { useEffect , useState} from "react";
 import Link from "next/link";
-import Counter from '@/components/product/quantity-counter';
 import { FaHeart, FaRegHeart } from 'react-icons/fa';
 import jwt_decode from "jwt-decode";
 
@@ -142,6 +139,10 @@ export default function ProductCard2({ productData, mainPic, setMainPic }) {
     getCollection(userId);
   }, [userId]);
 
+  
+
+  
+
   return (
     <>
       {productData.map((v, i) => {
@@ -149,9 +150,11 @@ export default function ProductCard2({ productData, mainPic, setMainPic }) {
           <div className="col-6 col-md-4 col-lg-6 col-xl-4">
             <div className="product-card2" key={v.product_id}>
               <div className="card" >
+                <div className='card-img'> 
                 <Link href={`/product/${v.category_id}/${v.subcategory_id}/${v.product_id}`} >
                   <img src={v.images_one} className="card-img-top" alt="..." />
                 </Link>
+                </div>
                 <div className="card-body p-3" >
                   <div className="d-flex justify-content-between align-items-center">
                     {/* 類別按鈕顏色已建好 btn-color-1 一直到btn-color-7 再依需求調整className即可 */}

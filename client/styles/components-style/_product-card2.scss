@@ -5,11 +5,7 @@
         border-bottom: 0;
     }
 
-    .card {
-        width: 100%;
-        border: 1px solid $light-gray;
-        border-radius: 2px;
-      
+    .card  {
         .card-body {
             background-color: $main-bg;
 
@@ -103,5 +99,20 @@
                 width: 38px;
             }
         } 
+    }
+    .card-img{
+        width: 100%;
+        border-radius: 2px;
+        overflow: hidden;
+        height: auto;
+    
+        img{
+            transform:scale(1,1);
+            transition: all 1s ease-out;
+               
+        }
+        img:hover{
+            transform:scale(1.2,1.2);
+        }
     }
 }

@@ -196,9 +196,11 @@ export default function ProductSlick() {
                     return (
                         <div className="product-card2" key={v.product_id}>
                             <div className="card" >
-                                <Link href={`/product/${v.category_id}/${v.subcategory_id}/${v.product_id}`} >
-                                    <img src={v.images_one} className="card-img-top" alt="..." />
-                                </Link>
+                                <div className='card-img'>
+                                    <Link href={`/product/${v.category_id}/${v.subcategory_id}/${v.product_id}`} >
+                                        <img src={v.images_one} className="card-img-top" alt="..." />
+                                    </Link>
+                                </div>
                                 <div className="card-body p-3" >
                                     <div className="d-flex justify-content-between align-items-center">
 

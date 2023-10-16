@@ -12,11 +12,6 @@ import jwt_decode from 'jwt-decode';
 import { useCart } from "@/hooks/useCart"
 import { useRouter } from "next/router";
 
-
-
-
-
-
 const Search = ({ handleSearch, placeholder, color, onClick, search, setSearch }) => {
 
     
