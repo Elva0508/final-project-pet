@@ -1,36 +1,91 @@
-const dotenv = require('dotenv');
-dotenv.config();
+//const promisePool = require('../config/mysql.js').promisePool
+const base = require('./base.js')
+const insertOne = base.insertOne
+const findOne = base.findOne
+const updateById = base.updateById
+const removeById = base.removeById
 
-const OTPAuth = require('otpauth');
+const configOtp = require('../config/otp.js')
+const generateToken = configOtp .generateToken
 
-const otpSecret = process.env.OTP_SECRECT;
+// 資料表名稱
+const otpTable = 'otp';
+const userTable = 'userinfo';
 
-let totp = null;
 
-//產生token
-const generateToken = (email = '')=>{
-     // 建立新的 TOTP 物件
-  // 註: issuer和label是當需要整合Google Authenticator使用的
-    totp = new OTPAuth.TOTP({
-        issuer: 'express-base',
-        label: email,
-        algorithm: 'SHA1',
-        digits: 6,
-        period: 30,
-        secret: OTPAuth.Secret.fromLatin1(email + otpSecret)
-    })
-    return totp.generate();
-    //函數返回由 TOTP 生成的 OTP 令牌
-}
+// 預設 exp = 30 分鐘到期(對應的是otp資料表中的exp_timestamp)
+const createOtp = async (email, exp = 30) => {
+    // 檢查使用者email是否存在
+    const user = await findOne(userTable, { email })
+  
+    if (!user.id) return {}
+  
+    // 檢查otp是否已經存在(失敗or逾時重傳)
+    const foundOtp = await findOne(otpTable, { email })
+  
+    // 有找到記錄，但因為在60s(秒)內不繼續產生新的otp
+    if (
+      foundOtp.id &&
+      +new Date() - (foundOtp.exp_timestamp - exp * 60 * 1000) < 60 * 1000
+    ) {
+      console.log('錯誤: 60s(秒)內要求要重新產生otp')
+      return {}
+    }
+    // 以下為"超過60s產生新的otp"或"沒找到記錄=沒產生過otp"
+  
+    // 以使用者輸入的Email作為secret產生otp token
+    const token = generateToken(email)
+  
+    // 到期時間
+    const exp_timestamp = +new Date() + exp * 60 * 1000
+  
+    // 建立otp物件
+    const otp = {
+      user_id: user.id,
+      email,
+      token,
+      exp_timestamp,
+    }
+  
+    // 建立新記錄
+    const result = await insertOne(otpTable, otp)
+  
+    return result.insertId ? { id: result.insertId, ...otp } : {}
+  }
 
-// Validate a token (returns the token delta or null if it is not found in the search window, in which case it should be considered invalid).
-// 驗証totp在step window期間產生的token一致用的(預設30s)
-//定義 verifyToken 函數，它接受一個令牌（token）作為參數。
-const verifyToken = (token)=>{
-    //使用 totp 物件的 validate 方法來驗證令牌
-    //如果令牌在驗證窗口內有效，則 validate 方法將返回一個非空的 delta 值，否則返回 null
-    const delta = totp.validate({token, window:1});
-    return delta === null ? false : true;
-}
+  // 內部用不導出: 尋找合法的(未過期的)otp記錄
+// 有找到會回傳otp物件，沒找到會回傳空物件{}
+const findOneValidOtp = async (email, token) => {
+    // 回傳 {id, user_id, email, token, exp_timestamp}
+    const otp = await findOne(otpTable, { email, token })
+  
+    // 沒找到資料
+    if (!otp.id) return {}
+  
+    // 計算目前時間比對是否超過，到期的timestamp
+    if (+new Date() > otp.exp_timestamp) return {}
+  
+    return otp
+  }
 
-module.exports ={generateToken, verifyToken}
+  // 內部用不導出: 刪除otp記錄(註: 在使用者成功更新密碼後)
+const removeOtpById = async (id) => {
+    return removeById(otpTable, id)
+  }
+  
+  // 更新密碼
+const updatePassword = async (email, token, password) => {
+    const otp = await findOneValidOtp(email, token)
+  
+    if (!otp.id) return false
+  
+    // 修改密碼
+    await updateById(userTable, { password }, otp.user_id)
+  
+    // 移除otp記錄
+    await removeOtpById(otp.id)
+  
+    return true
+  }
+
+  module.export = {createOtp, updatePassword}

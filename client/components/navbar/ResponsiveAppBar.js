@@ -260,7 +260,7 @@ function ResponsiveAppBar() {
                         <Typography textAlign="center">會員中心</Typography>
                       </MenuItem>
                     </Link>
-                    <Link href="/article">
+                    <Link href="/chatlist">
                       <MenuItem>
                         <Typography textAlign="center">來聊聊</Typography>
                       </MenuItem>
