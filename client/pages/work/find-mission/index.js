@@ -754,7 +754,7 @@ const LatestMission = ({ userId }) => {
                 <img src={v.file_path} alt="任務" />
               </div>
             </Link>
-            <div className='mission-content ms-2'>
+            <div className='mission-content ms-3'>
               <Link href={`/work/find-mission/${v.mission_id}`} >
                 <div className='title size-6'>{v.title}</div>
 
@@ -945,7 +945,7 @@ const MobileLatestMission = ({ userId }) => {
   };
 
   return (
-    <div id="carouselExampleIndicators" className="carousel slide pb-3" data-bs-ride="carousel">
+    <div id="carouselExampleIndicators" className="carousel slide pb-4" data-bs-ride="carousel">
       <div className="carousel-indicators mt-5">
         {latestMissions.map((_, index) => (
           <button
@@ -966,21 +966,64 @@ const MobileLatestMission = ({ userId }) => {
       <div className="carousel-inner">
         {latestMissions.map((v, index) => (
           <div key={v.id} className={`carousel-item ${index === activeIndex ? "active" : ""}`}>
-            <div className='latest-mission-card d-flex'>
-              <div className='mission-img'>
-                <img src={v.file_path} alt="任務" />
-              </div>
-              <div className='mission-content ms-2'>
-                <div className='title size-6'>{v.title}</div>
-                <div className='d-flex justify-content-between mt-1 mt-sm-2'>
-                  <div className='size-7'>{v.city}{v.area}<br />{formatDate(v.post_date)}</div>
-                  <img src={isFavorites[index] ? "/heart-clicked.svg" : "/heart.svg"} alt={isFavorites[index] ? "已收藏" : "未收藏"} onClick={() => toggleFavorite(index)} />
+            <div className='latest-mission-card d-flex align-items-center'>
+              <Link href={`/work/find-mission/${v.mission_id}`} >
+                <div className='mission-img'>
+                  <img src={v.file_path} alt="任務" />
                 </div>
+              </Link>
+              <div className='mission-content ms-2'>
+                <Link href={`/work/find-mission/${v.mission_id}`} >
+                  <div className='title size-6'>{v.title}</div>
+                  <div className='d-flex justify-content-between mt-1 mt-sm-2'>
+                    <div className='size-7'>
+                      <div className="d-flex align-items-center mb-1">
+                        <span className="tag-btn mb-1">{(() => {
+                          switch (v.mission_type) {
+                            case 1:
+                              return '到府照顧';
+                            case 2:
+                              return '安親寄宿';
+                            case 3:
+                              return '到府美容';
+                            case 4:
+                              return '行為訓練';
+                            case 5:
+                              return '醫療護理';
+                            default:
+                              return '其他';
+                          }
+                        })()}</span>
+                      </div>
+                      <div className="d-flex align-items-center mb-1">
+                        <FaLocationDot className="me-1" />
+                        {v.city}
+                        {v.area}
+                      </div>
+                      <div className="d-flex align-items-center mb-1">
+                        <FaRegCalendarCheck className="me-1" />
+                        {formatDate(v.update_date)}
+                      </div>
+                    </div>
+                    {/* <img src={isFavorites[index] ? "/heart-clicked.svg" : "/heart.svg"} alt={isFavorites[index] ? "已收藏" : "未收藏"} onClick={() => toggleFavorite(index)} /> */}
+                  </div>
+                </Link>
                 <div className='d-flex justify-content-between align-items-end price'>
                   <div >單次<span className='size-6'> NT${v.price}</span></div>
-                  <Link href={`/work/find-mission/${v.mission_id}`} >
+                  {/* <Link href={`/work/find-mission/${v.mission_id}`} >
                     <button className='btn-confirm size-6'>應徵</button>
-                  </Link>
+                  </Link> */}
+                  <button className=" heart-btn" onClick={() => toggleFavorite(index)}>
+                    {isFavorites[index] ? (
+                      <>
+                        <FaHeart className="fill-icon" />
+                      </>
+                    ) : (
+                      <>
+                        <FaRegHeart className="empty-icon" />
+                      </>
+                    )}
+                  </button>
                 </div>
               </div>
             </div>
@@ -1122,9 +1165,9 @@ const MissionCard = ({ missionType, missionCity, missionArea, setMissionType, up
   // 初始化每個按鈕的初始hover狀態（空心愛心hover時要替換成實心）
   // 設一個陣列，包含了與 currentData 中任務數量相同數量的布林值false，用來表示每個按鈕的初始 hover 狀態。
   const initialHoverStates = Array(currentData.length).fill(false);
-  console.log("initialHoverStates是"+initialHoverStates);
+  console.log("initialHoverStates是" + initialHoverStates);
   const [isHovered, setIsHovered] = useState(initialHoverStates);
-  console.log("isHovered是"+isHovered)
+  console.log("isHovered是" + isHovered)
 
   // 設置 onMouseEnter 處理程序來處理hover狀態
   const handleMouseEnter = (index) => {
@@ -1181,7 +1224,7 @@ const MissionCard = ({ missionType, missionCity, missionArea, setMissionType, up
                       </div>
                       <div className="d-flex align-items-center">
                         <FaRegCalendarCheck className="me-1" />
-                        {formatDate(v.update_date)}<span className="update-title" >（最後更新）</span>
+                        {formatDate(v.update_date)}<span className="update-title d-none d-sm-inline" >（最後更新）</span>
                       </div>
                     </div>
                     {/* <img
@@ -1462,12 +1505,12 @@ export default function MissionList() {
           </Link>
         </div>
 
-        <div className='d-flex my-2'>
+        <div className='d-flex my-lg-2'>
           <Sort missionType={missionType} setMissionType={setMissionType} missionCity={missionCity} setMissionCity={setMissionCity} missionArea={missionArea} setMissionArea={setMissionArea}
             updateDate={updateDate} setUpdateDate={setUpdateDate} sortOrder={sortOrder} setSortOrder={setSortOrder} sortBy={sortBy} setSortBy={setSortBy} />
         </div>
 
-        <section className="d-flex all-mission flex-column flex-lg-row mt-3">
+        <section className="d-flex all-mission flex-column flex-lg-row mt-2 mt-lg-3">
           {/* 最新任務桌機 */}
           <div className="latest-mission latest-mission-pc d-none d-lg-flex flex-column mb-3">
             <h3 className="size-5  ">最新任務</h3>

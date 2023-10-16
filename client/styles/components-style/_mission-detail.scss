@@ -121,6 +121,10 @@
   }
 
   @media screen and (max-width: 576px) {
+    .left-block-btn {
+      left: 10%
+    }
+
     .apply-now-btn {
       // left: 160px;
       left: 60%;
@@ -134,6 +138,13 @@
     background-color: $cos-white;
     align-items: center;
     border: 0;
+    position: relative;
+    top: 0;
+
+    &:hover {
+        top: -5px;
+        background-color: $main-bg;
+    }
   }
 
   .MuiAspectRatio-content {
@@ -165,6 +176,13 @@
       .popular-card-title {
         min-height: 2rem;
       }
+    }
+  }
+
+  @media screen and (max-width: 576px) {
+    .MuiCard-root {
+      padding-left: 2rem;
+      padding-right: 2rem;
     }
   }
 
