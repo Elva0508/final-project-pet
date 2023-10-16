@@ -67,12 +67,13 @@ export default function HistoryStatusOne({ history ,getHistory ,currentScreen,id
 
   return (
     <>
+    <div className="bg">
       {currentData.map((v, i) => {
         return (
           <> 
           <p className="size-6 title d-md-none d-block ps-3 bg">任務主題：{v.title}</p>
-            <div className="d-flex justify-content-between py-2 border-bottom px-md-5 ps-3 bg">
-              <div className="col-md-9 col-8">
+            <div className="d-flex justify-content-between py-2 border-bottom mx-md-5 mx-3">
+              <div className="col-md-8 col-9">
                 <p className="size-6 title d-md-block d-none">任務主題：{v.title}</p>
                 <p className="size-7" key={i}><span>刊登日期：</span>{transferDate(v.post_date)}</p>
                 <p className="size-7">
@@ -99,22 +100,22 @@ export default function HistoryStatusOne({ history ,getHistory ,currentScreen,id
 
                 <p className="size-7 follow">{idCounts[v.mission_id]==undefined?("0"):(idCounts[v.mission_id])}人追蹤</p>
               </div>
-              <div className="d-flex align-items-center col-4 col-md-3 ps-md-5 ms-md-5 ms-0">
+              <div className="d-flex align-items-center col-3 col-md-4 ps-md-5 ms-md-5 ms-0">
                 {v.mission_status === 1 ? (
                   <button className=" btn-confirm m-2 size-6" 
                   onClick={() =>{removetype(v.post_user_id,v.mission_id)}}
                   >下架任務</button>
                 ) : (
-                  <div className="m-2 size-6 remove px-4 py-2">已下架</div>
+                  <div className="m-2 size-6 remove px-2 py-2">已下架</div>
                 )}
               </div>
             </div>
           </>
         );
       })}
-
-
-      <Pagination  itemsPerPage={itemsPerPage} total={type} activePage={activePage} setActivePage={setActivePage}/>
+<Pagination  itemsPerPage={itemsPerPage} total={type} activePage={activePage} setActivePage={setActivePage}/>
+</div>
+      
     </>
   );
 }

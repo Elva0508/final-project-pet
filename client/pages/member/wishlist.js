@@ -144,12 +144,12 @@ export default function Wishlist() {
           <div className="d-flex flex-column col-md-8 col-12 wishlist">
 
               <div className="d-flex justify-content-between">
-              <p className="size-4 big  mt-3 ms-md-5 ms-3">
+              <p className="size-4 big mb-2">
                  <span className="my">▍</span>追蹤清單
                 </p>
-                <p className="size-7 mt-3 me-md-5 pe-md-5 pe-2">已追蹤{wishlist.length}樣商品</p>
+                <p className="size-7 mt-2">已追蹤{wishlist.length}樣商品</p>
               </div>
-
+    <div className="bg">
               {currentData.map((v, i) => {
                 return (
                   <>
@@ -234,7 +234,10 @@ export default function Wishlist() {
                   </>
                 );
               })}
-
+              <div className="mt-4">
+                <Pagination  itemsPerPage={itemsPerPage} total={wishlist} activePage={activePage} setActivePage={setActivePage}/>
+              </div>
+</div>
 
               <div className="offcanvas offcanvas-end" tabIndex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel" >
                 <div className="offcanvas-header">
@@ -277,9 +280,7 @@ export default function Wishlist() {
 
                 </div>
               </div>
-              <div className="mt-4">
-                <Pagination  itemsPerPage={itemsPerPage} total={wishlist} activePage={activePage} setActivePage={setActivePage}/>
-              </div>
+
               
             </div>
           </div>
