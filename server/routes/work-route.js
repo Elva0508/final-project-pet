@@ -589,6 +589,7 @@ router.post("/helpers/request", (req, res) => {
 });
 router.post("/mission", upload.array("missionImage"), async (req, res) => {
   // const { formData } = req.body;
+  console.log(req.body);
   const {
     user_id,
     title,
@@ -602,25 +603,14 @@ router.post("/mission", upload.array("missionImage"), async (req, res) => {
     city,
     area,
     missionImage,
+    morning,
+    noon,
+    night,
   } = req.body;
-  // console.log(
-  //   user_id,
-  //   title,
-  //   location_detail,
-  //   mission_type,
-  //   description,
-  //   price,
-  //   payment,
-  //   startDay,
-  //   endDay,
-  //   city,
-  //   area,
-  //   missionImage
-  // );
-  // console.log(req.files);
+
   const taskId = generateOrderNumber();
   conn.execute(
-    "INSERT INTO `mission_detail` (`mission_id`, `pid`, `title`, `price`, `start_date`, `end_date`, `city`, `area`, `location_detail`, `description`, `mission_type`, `payment_type`,`post_user_id`) VALUES (NULL, ?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?,?)",
+    "INSERT INTO `mission_detail` (`mission_id`, `pid`, `title`, `price`, `start_date`, `end_date`, `city`, `area`, `location_detail`, `description`, `mission_type`, `payment_type`,`post_user_id`,`mission_status`,`contact_morning`,`contact_noon`,`contact_night`) VALUES (NULL, ?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?, ?, ?,?,?)",
     [
       taskId,
       title,
@@ -634,6 +624,10 @@ router.post("/mission", upload.array("missionImage"), async (req, res) => {
       mission_type,
       payment,
       user_id,
+      true,
+      parseBoolean(morning),
+      parseBoolean(noon),
+      parseBoolean(night),
     ],
     async (err, results) => {
       if (err) {
@@ -818,4 +812,11 @@ function generateOrderNumber() {
   // 組合訂單編號
   const orderNumber = randomLetters + timestamp;
   return orderNumber;
+}
+function parseBoolean(str) {
+  if (str === "true" || str === "1") {
+    return true;
+  } else if (str === "false" || str === "0") {
+    return false;
+  }
 }

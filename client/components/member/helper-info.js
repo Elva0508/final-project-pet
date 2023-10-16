@@ -497,6 +497,7 @@ const HelperInfo = ({ user_id }) => {
   const [images, setImages] = useState([]);
   // const { isAuthenticated, userId } = useAuth();
   let defaultInfo, defaultImages;
+  // console.log(user_id);
   useEffect(() => {
     if (user_id) {
       memberService
