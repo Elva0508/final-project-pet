@@ -4,6 +4,7 @@ import ListUserM from "@/components/member/list-user-m";
 import {useCart} from "@/hooks/useCart"
 import axios from "axios";
 import Pagination from '@/components/pagination'
+import { useRouter } from "next/router";
 
 export default function Wishlist() {
   const [wishlist, setWishlist] = useState([]);
@@ -105,7 +106,7 @@ export default function Wishlist() {
   };
 
   const getCart =  (id) => {
-    axios.get(`http://localhost:3005/api/product/cart/${id}`)
+    axios.get(`http://localhost:3005/api/product/cart/cart/${id}`)
         .then((response) => {
         const data = response.data.result;
         const newData=data.map((v)=>{

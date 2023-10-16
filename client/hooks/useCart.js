@@ -13,7 +13,7 @@ export function CartProvider({ children }) {
 
     //抓購物車內所有商品 ，並增加屬性
     const getCart =  (id) => {
-        axios.get(`http://localhost:3005/api/product/cart/${id}`)
+        axios.get(`http://localhost:3005/api/product/cart/cart/${id}`)
             .then((response) => {
             const data = response.data.result;
             const newData=data.map((v)=>{
