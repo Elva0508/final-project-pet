@@ -56,7 +56,7 @@ export default function Order() {
         <div className="d-flex flex-column col-md-8 col-12 order">
 
           <div className="d-flex justify-content-between">
-            <p className="size-4  mb-2">
+            <p className="size-4 big mb-2">
               <span className="my">▍</span>我的訂單
             </p>
 
