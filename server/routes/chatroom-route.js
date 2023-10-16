@@ -152,6 +152,58 @@ router.post("/sendchat", (req, res) => {
   );
 });
 
+
+router.post("/sendchat2", (req, res) => {
+  console.log("接收到消息請求");
+  const { chatlist_id, talk_userId, chat_content } = req.body;
+  // 把 chatlist_id 轉換為整數
+  const chatlistIdAsInt = parseInt(chatlist_id, 10);
+  console.log("chatlist_id:", chatlist_id);
+  console.log("talk_userId:", talk_userId);
+  console.log("chat_content:", chat_content);
+
+  const timestamp = new Date(); // 建立時間戳記
+
+  // 檢查是否有聊天內容
+  if (!chatlist_id || !talk_userId || !chat_content) {
+    return res.status(400).json({ error: "請提供有效的聊天訊息" });
+  }
+
+  if (!Array.isArray(chat_content)) {
+    // 如果 chat_content 不是陣列，轉換為包含單個聊天內容的陣列
+    chat_content = [chat_content];
+  }
+
+  // 使用 Promise.all 來處理多個 INSERT 查詢
+  const insertQueries = chat_content.map((content) => {
+    return new Promise((resolve, reject) => {
+      connection.execute(
+        `INSERT INTO chat_content(chatlist_id, talk_userId, chat_content, timestamp)
+        VALUES (?, ?, ?, ?);`,
+        [chatlistIdAsInt, talk_userId, content, timestamp],
+        (error, result) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve(result);
+          }
+        }
+      );
+    });
+  });
+
+  // 使用 Promise.all 執行多個 INSERT 查詢
+  Promise.all(insertQueries)
+    .then(() => {
+      res.status(201).json({ message: "訊息已成功傳送" });
+    })
+    .catch((error) => {
+      console.error("傳送訊息時出錯", error);
+      res.status(500).json({ error: "伺服器錯誤" });
+    });
+});
+
+
 router.get("/", (req, res) => {
   res.send("測試");
 });
