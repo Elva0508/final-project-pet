@@ -27,8 +27,10 @@ const MemberSelling = () => {
       memberService
         .getSelling(user_id, status)
         .then((response) => {
-          console.log(response);
-          setSelling(response?.data?.data);
+          let result = response?.data?.data;
+          console.log(result);
+          result.reverse();
+          setSelling(result);
         })
         .catch((e) => {
           console.log(e);

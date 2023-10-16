@@ -27,8 +27,10 @@ const MemberReserve = () => {
       memberService
         .getReserve(user_id, status)
         .then((response) => {
+          let result = response?.data?.data;
           console.log(response);
-          setRequests(response?.data?.data);
+          result.reverse();
+          setRequests(result);
         })
         .catch((e) => {
           console.log(e);

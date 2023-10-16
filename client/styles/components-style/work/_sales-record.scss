@@ -207,6 +207,8 @@
   }
   .date {
     background: $main-bg;
+    max-width: 150px;
+    text-align: center;
   }
   .status-text {
     font-size: 1.2rem;

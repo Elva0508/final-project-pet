@@ -187,7 +187,11 @@
     width: calc(100% - 360px);
     // justify-content: space-evenly;
     gap: 35px;
+    .card-wrapper {
+      width: calc((100% - 70px) / 3);
+    }
   }
+
   .single-card {
     a,
     a:hover {
@@ -196,7 +200,8 @@
     & > *:not(.single-card-footer, img) {
       padding: 0.4rem 1rem;
     }
-    width: calc((100% - 70px) / 3);
+    width: 100%;
+    height: 100%;
     // height: 410px;
     // margin: 0 0 20px 10px;
     // min-width: 220px;

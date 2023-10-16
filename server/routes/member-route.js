@@ -53,6 +53,7 @@ router.get("/helper", async (req, res) => {
 });
 router.patch("/helper/valid", async (req, res) => {
   const { user_id, valid } = req.body;
+  console.log(user_id);
 
   // 驗證使用者是否存在
   const checkUser = await new Promise((resolve, reject) => {
