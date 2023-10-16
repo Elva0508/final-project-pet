@@ -193,6 +193,7 @@ const ProfilePage = () => {
                   className="form-input fs11"
                   type="text"
                   value={email}
+                  disabled="true"
                   onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
