@@ -452,4 +452,62 @@ router.get("/helper-info", (req, res) => {
   );
 });
 
+//加入收藏
+//查看收藏內有什麼任務
+router.get("/collections/:user_id", (req, res) => {
+  const userid = req.params.user_id
+  console.log("收藏的id" + userid)
+  conn.execute(
+    `SELECT mf.*
+      FROM mission_fav AS mf
+      WHERE user_id=?;`,
+    [userid],
+    (error, result) => {
+      res.json({ result });
+    }
+  );
+});
+
+//用來新增收藏裡沒有的商品
+router.put("/collections/:user_id", (req, res) => {
+  const userid = req.params.user_id
+  console.log("收藏的id" + userid)
+  const { missionId } = req.body;
+  console.log(missionId);
+
+  conn.execute(
+    `INSERT INTO mission_fav(mission_id, user_id) VALUES (?,?)`,
+    [missionId, userid],
+    (error, result) => {
+      if (error) {
+        console.error(error);
+        res.status(500).json({ error: "Internal Server Error" });
+      } else {
+        res.json({ result });
+      }
+    }
+  );
+});
+
+//取消收藏
+router.delete("/collections/:user_id/:mission_id", (req, res) => {
+  const userid = req.params.user_id;
+  console.log("取消收藏的id:" + userid);
+  const mission_id = req.params.mission_id; // 從路由參數中取得 mission_id
+  console.log("取消收藏的mission_id:" + mission_id);
+
+  conn.execute(
+    "DELETE FROM mission_fav WHERE mission_id = ? AND user_id = ?;",
+    [mission_id, userid],
+    (error, result) => {
+      if (error) {
+        console.error(error);
+        res.status(500).json({ error: "Internal Server Error" });
+      } else {
+        res.json({ result });
+      }
+    }
+  );
+});
+
 module.exports = router;

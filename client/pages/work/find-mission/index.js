@@ -1040,7 +1040,7 @@ function ImageWithEqualDimensions({ file_path }) {
 }
 
 // 任務卡片（這邊的參數如果忘記設定會讓卡片出不來）
-const MissionCard = ({ missionType, missionCity, missionArea, setMissionType, updateDate, setUpdateDate, sortOrder, setSortOrder, sortBy, setSortBy, allMissions, currentData, userId, setUserId, isFavorites, toggleFavorite, handleMouseEnter, handleMouseLeave, isHovered }) => {
+const MissionCard = ({ missionType, missionCity, missionArea, setMissionType, updateDate, setUpdateDate, sortOrder, setSortOrder, sortBy, setSortBy, allMissions, currentData, userId, setUserId }) => {
 
   // 格式化日期
   function formatDate(dateString) {
@@ -1050,6 +1050,72 @@ const MissionCard = ({ missionType, missionCity, missionArea, setMissionType, up
     const day = String(date.getDate()).padStart(2, "0");
     return `${year}/${month}/${day}`;
   }
+
+  //添加任務到收藏的函式
+  const [collection, setCollection] = useState([]); //用來儲存收藏
+  const getCollection = () => {
+    axios.get(`http://localhost:3005/api/mission/collections/${userId}`)
+      .then((response) => {
+        setCollection(response.data.result);
+        console.log(response.data.result);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  }
+  useEffect(() => {
+    getCollection(userId);
+  }, [userId]);
+
+  const addCollection = async (mission_id) => {
+    // 檢查收藏中是否已經存在具有相同 id 的任務
+    const have = collection.find((v) => v.mission_id === mission_id);
+    console.log(have);
+    // 如果收藏中沒有相同的任務
+    if (have === undefined) {
+      try {
+        // 發送HTTP請求將商品添加到購物車
+        const response = await axios.put(
+          `http://localhost:3005/api/mission/collections/${userId}`,
+          { mission_id }
+        );
+        alert('已加入收藏囉');
+      } catch (error) {
+        console.error("錯誤：", error);
+      }
+      getCollection(userId)
+    }
+  };
+
+  const deleteCollection = async (mission_id) => {
+    // 檢查收藏中是否已經存在具有相同 id 的商品
+    const have = collection.find((v) => v.mission_id === mission_id);
+    console.log(have);
+     // 如果收藏中沒有相同的任務
+    if (have) {
+      try {
+        // 發送HTTP請求將商品添加到購物車，product_id 放在 URL 中
+        const response = await axios.delete(
+          `http://localhost:3005/api/mission/collections/${userId}/${mission_id}`
+        );
+        alert('已取消收藏');
+      } catch (error) {
+        console.error("錯誤：", error);
+      }
+
+      getCollection(userId);
+    } 
+  };
+
+  const toggleCollection = async (mission_id) => {
+    const isMissionInCollection = collection.some((item) => item.mission_id === mission_id);
+    if (isMissionInCollection) {
+      await deleteCollection(mission_id);
+    } else {
+      await addCollection(mission_id);
+    }
+    getCollection(userId);
+  };
 
 
   return (
@@ -1106,19 +1172,18 @@ const MissionCard = ({ missionType, missionCity, missionArea, setMissionType, up
                   {/* <Link href={`/work/find-mission/${v.mission_id}`} >
                     <button className='btn-confirm size-6'>應徵</button>
                   </Link> */}
-                  <button className=" heart-btn" onClick={() => toggleFavorite(i)} onMouseEnter={() => handleMouseEnter(i)}
-                    onMouseLeave={() => handleMouseLeave(i)}>
-                    {isFavorites[i] ? (
+                  <button className=" heart-btn" onClick={() => toggleCollection(v.mission_id)} >
+                    {collection.some((item) => item.mission_id === v.mission_id) ? (
                       <>
                         <FaHeart className="fill-icon" />
                       </>
                     ) : (
                       <>
-                        {isHovered[i] ? (
+                        {/* {isHovered[i] ? (
                           <FaHeart className="empty-icon-hover" />
-                        ) : (
-                          <FaRegHeart className="empty-icon" />
-                        )}
+                        ) : ( */}
+                        <FaRegHeart className="empty-icon" />
+                        {/* )} */}
                       </>
                     )}
                   </button>
@@ -1221,74 +1286,74 @@ export default function MissionList() {
     // console.log("currentData這頁的資料是", currentData);
   }, [currentData]);
 
-  // 收藏
-  const [isFavorites, setIsFavorites] = useState([]);
-  // 初始化每個按鈕的初始懸停狀態（空心愛心hover時要替換成實心）
-  const initialHoverStates = Array(currentData.length).fill(false);
-  const [isHovered, setIsHovered] = useState(initialHoverStates);
-  // 設置 onMouseEnter 處理程序來處理懸停狀態
-  const handleMouseEnter = (index) => {
-    const newHoverStates = [...isHovered];
-    newHoverStates[index] = true;
-    setIsHovered(newHoverStates);
-  };
+  // // 收藏
+  // const [isFavorites, setIsFavorites] = useState([]);
+  // // 初始化每個按鈕的初始懸停狀態（空心愛心hover時要替換成實心）
+  // const initialHoverStates = Array(currentData.length).fill(false);
+  // const [isHovered, setIsHovered] = useState(initialHoverStates);
+  // // 設置 onMouseEnter 處理程序來處理懸停狀態
+  // const handleMouseEnter = (index) => {
+  //   const newHoverStates = [...isHovered];
+  //   newHoverStates[index] = true;
+  //   setIsHovered(newHoverStates);
+  // };
 
-  // 設置 onMouseLeave 處理程序來處理取消懸停狀態
-  const handleMouseLeave = (index) => {
-    const newHoverStates = [...isHovered];
-    newHoverStates[index] = false;
-    setIsHovered(newHoverStates);
-  };
+  // // 設置 onMouseLeave 處理程序來處理取消懸停狀態
+  // const handleMouseLeave = (index) => {
+  //   const newHoverStates = [...isHovered];
+  //   newHoverStates[index] = false;
+  //   setIsHovered(newHoverStates);
+  // };
 
-  useEffect(() => {
-    // 在組件加載時從後端獲取已收藏的任務
-    const fetchFavoriteMissions = async () => {
-      try {
-        const response = await axios.get(`http://localhost:3005/api/mission/fav?userId=${userId}`);
-        const favoriteMissionIds = response.data.result.map((fav) => fav.mission_id);
+  // useEffect(() => {
+  //   // 在組件加載時從後端獲取已收藏的任務
+  //   const fetchFavoriteMissions = async () => {
+  //     try {
+  //       const response = await axios.get(`http://localhost:3005/api/mission/fav?userId=${userId}`);
+  //       const favoriteMissionIds = response.data.result.map((fav) => fav.mission_id);
 
-        // 根據已收藏的任務和當前任務列表來初始化 isFavorites 數組
-        const initialFavorites = currentData.map((mission) =>
-          favoriteMissionIds.includes(mission.mission_id)
-        );
-        setIsFavorites(initialFavorites);
-      } catch (error) {
-        console.error('前端請求錯誤：', error);
-      }
-    };
+  //       // 根據已收藏的任務和當前任務列表來初始化 isFavorites 數組
+  //       const initialFavorites = currentData.map((mission) =>
+  //         favoriteMissionIds.includes(mission.mission_id)
+  //       );
+  //       setIsFavorites(initialFavorites);
+  //     } catch (error) {
+  //       console.error('前端請求錯誤：', error);
+  //     }
+  //   };
 
-    fetchFavoriteMissions();
-  }, [currentData]);
+  //   fetchFavoriteMissions();
+  // }, [currentData]);
 
-  const toggleFavorite = async (index) => {
-    // 檢查用戶是否已登入
-    if (!userId) {
-      alert('請先登入會員');
-      return;
-    }
+  // const toggleFavorite = async (index) => {
+  //   // 檢查用戶是否已登入
+  //   if (!userId) {
+  //     alert('請先登入會員');
+  //     return;
+  //   }
 
-    try {
-      const newFavorites = [...isFavorites];
-      newFavorites[index] = !newFavorites[index];
-      setIsFavorites(newFavorites); // 立即更新圖標狀態
+  //   try {
+  //     const newFavorites = [...isFavorites];
+  //     newFavorites[index] = !newFavorites[index];
+  //     setIsFavorites(newFavorites); // 立即更新圖標狀態
 
-      const missionId = currentData[index].mission_id;
-      console.log(missionId)
+  //     const missionId = currentData[index].mission_id;
+  //     console.log(missionId)
 
-      if (!isFavorites[index]) {
-        // 如果任務未被收藏，發送加入收藏的請求
-        await axios.put(`http://localhost:3005/api/mission/add-fav?userId=${userId}`, { missionId });
-        console.log('已加入收藏');
-      } else {
-        // 如果任務已被收藏，發送取消收藏的請求
-        await axios.delete(`http://localhost:3005/api/mission/delete-fav?userId=${userId}`, { data: { missionId } });
-        console.log('已取消收藏');
-      }
+  //     if (!isFavorites[index]) {
+  //       // 如果任務未被收藏，發送加入收藏的請求
+  //       await axios.put(`http://localhost:3005/api/mission/add-fav?userId=${userId}`, { missionId });
+  //       console.log('已加入收藏');
+  //     } else {
+  //       // 如果任務已被收藏，發送取消收藏的請求
+  //       await axios.delete(`http://localhost:3005/api/mission/delete-fav?userId=${userId}`, { data: { missionId } });
+  //       console.log('已取消收藏');
+  //     }
 
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
 
   // 在組件加載時重置篩選條件為默認值
   useEffect(() => {
@@ -1410,7 +1475,7 @@ export default function MissionList() {
             <div className="row d-flex mb-3 g-3 g-md-4">
               {/* 使用g-3 不用justify-content-between 預設是start 卡片就會照順序排列 */}
               <MissionCard sortOrder={sortOrder} sortBy={sortBy} missionType={missionType} setMissionType={setMissionType} missionCity={missionCity} setMissionCity={setMissionCity} missionArea={missionArea} setMissionArea={setMissionArea}
-                updateDate={updateDate} setUpdateDate={setUpdateDate} allMissions={allMissions} currentData={currentData} userId={userId} setUserId={setUserId} isFavorites={isFavorites} toggleFavorite={toggleFavorite} handleMouseEnter={handleMouseEnter} handleMouseLeave={handleMouseLeave} isHovered={isHovered} />
+                updateDate={updateDate} setUpdateDate={setUpdateDate} allMissions={allMissions} currentData={currentData} userId={userId} setUserId={setUserId} />
             </div>
           </div>
         </section>
