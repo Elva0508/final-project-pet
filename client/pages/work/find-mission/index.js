@@ -4,6 +4,7 @@ import Link from "next/link";
 import jwt_decode from "jwt-decode";
 // components
 import RoleSelection from "@/components/job/role-selection";
+import { ScrollMotionContainer, ScrollMotionItem, } from "@/components/ScrollMotion";
 // 用 {} 導入的內容是命名導出的，而不加{}導入的內容是默認導出的。
 // import LatestMission, {
 //   MobileLatestMission,
@@ -31,6 +32,12 @@ import MenuItem from "@mui/material/MenuItem";
 // import { Cascader } from '@douyinfe/semi-ui';
 import { Cascader } from "antd";
 import cityData from "@/data/CityCountyData.json";
+import {
+  motion,
+  useAnimationControls,
+  AnimatePresence,
+  useInView,
+} from "framer-motion";
 
 // 搜尋
 const Search = ({ placeholder, color, onClick, search, setSearch, inputValue, setInputValue, setActivePage, setMissionType, setUpdateDate, setMissionCity, setMissionArea, setSortOrder, setSortBy, setButtonText1, setButtonText2, setSelectedCity, setSelectedArea }) => {
@@ -744,77 +751,95 @@ const LatestMission = ({ userId }) => {
     }
   };
 
+  // 動畫
+  const LatestState = {
+    initial: { y: 50, opacity: 0 },
+    move: (i) => ({
+      y: 0,
+      opacity: 1,
+      transition: { layout: { duration: 1 }, duration: 1, delay: i * 0.2 },
+    }),
+    exit: { x: 20, y: 15, opacity: 0 },
+  };
+
   return (
     <>
       {latestMissions.map((v, i) => {
         return (
-          <div className='latest-mission-card d-flex align-items-center'>
-            <Link href={`/work/find-mission/${v.mission_id}`} >
-              <div className='mission-img'>
-                <img src={v.file_path} alt="任務" />
-              </div>
-            </Link>
-            <div className='mission-content ms-3'>
+          <AnimatePresence>
+            <motion.div custom={i}
+              variants={LatestState}
+              animate="move"
+              initial="initial"
+              exit="exit"
+              className='latest-mission-card d-flex align-items-center'>
               <Link href={`/work/find-mission/${v.mission_id}`} >
-                <div className='title size-6'>{v.title}</div>
-
-                <div className='d-flex justify-content-between mt-1 '>
-                  <div className='size-7'>
-                    <div className="d-flex align-items-center mb-1">
-                      <span className="tag-btn mb-1">{(() => {
-                        switch (v.mission_type) {
-                          case 1:
-                            return '到府照顧';
-                          case 2:
-                            return '安親寄宿';
-                          case 3:
-                            return '到府美容';
-                          case 4:
-                            return '行為訓練';
-                          case 5:
-                            return '醫療護理';
-                          default:
-                            return '其他';
-                        }
-                      })()}</span>
-                    </div>
-                    <div className="d-flex align-items-center mb-1">
-                      <FaLocationDot className="me-1" />
-                      {v.city}
-                      {v.area}
-                    </div>
-                    <div className="d-flex align-items-center mb-1">
-                      <FaRegCalendarCheck className="me-1" />
-                      {formatDate(v.update_date)}<span className="update-title" >（最後更新）</span>
-                    </div>
-                  </div>
-                  {/* <img src={isFavorites[i] ? "/heart-clicked.svg" : "/heart.svg"} alt={isFavorites[i] ? "已收藏" : "未收藏"} onClick={() => toggleFavorite(i)} /> */}
+                <div className='mission-img'>
+                  <img src={v.file_path} alt="任務" />
                 </div>
               </Link>
-              <div className='d-flex justify-content-between align-items-center price'>
-                <div >單次<span className='size-6'> NT${v.price}</span></div>
-                {/* <Link href={`/work/find-mission/${v.mission_id}`} >
+              <div className='mission-content ms-3'>
+                <Link href={`/work/find-mission/${v.mission_id}`} >
+                  <div className='title size-6'>{v.title}</div>
+
+                  <div className='d-flex justify-content-between mt-1 '>
+                    <div className='size-7'>
+                      <div className="d-flex align-items-center mb-1">
+                        <span className="tag-btn mb-1">{(() => {
+                          switch (v.mission_type) {
+                            case 1:
+                              return '到府照顧';
+                            case 2:
+                              return '安親寄宿';
+                            case 3:
+                              return '到府美容';
+                            case 4:
+                              return '行為訓練';
+                            case 5:
+                              return '醫療護理';
+                            default:
+                              return '其他';
+                          }
+                        })()}</span>
+                      </div>
+                      <div className="d-flex align-items-center mb-1">
+                        <FaLocationDot className="me-1" />
+                        {v.city}
+                        {v.area}
+                      </div>
+                      <div className="d-flex align-items-center mb-1">
+                        <FaRegCalendarCheck className="me-1" />
+                        {formatDate(v.update_date)}<span className="update-title" >（最後更新）</span>
+                      </div>
+                    </div>
+                    {/* <img src={isFavorites[i] ? "/heart-clicked.svg" : "/heart.svg"} alt={isFavorites[i] ? "已收藏" : "未收藏"} onClick={() => toggleFavorite(i)} /> */}
+                  </div>
+                </Link>
+                <div className='d-flex justify-content-between align-items-center price'>
+                  <div >單次<span className='size-6'> NT${v.price}</span></div>
+                  {/* <Link href={`/work/find-mission/${v.mission_id}`} >
                   <button className='btn-confirm size-6'>應徵</button>
                 </Link> */}
-                <button className=" heart-btn" onClick={() => toggleFavorite(i)} onMouseEnter={() => handleLatestMouseEnter(i)}
-                  onMouseLeave={() => handleLatestMouseLeave(i)}>
-                  {isFavorites[i] ? (
-                    <>
-                      <FaHeart className="fill-icon" />
-                    </>
-                  ) : (
-                    <>
-                      {latestIsHovered[i] ? (
-                        <FaHeart className="empty-icon-hover" />
-                      ) : (
-                        <FaRegHeart className="empty-icon" />
-                      )}
-                    </>
-                  )}
-                </button>
+                  <button className=" heart-btn" onClick={() => toggleFavorite(i)} onMouseEnter={() => handleLatestMouseEnter(i)}
+                    onMouseLeave={() => handleLatestMouseLeave(i)}>
+                    {isFavorites[i] ? (
+                      <>
+                        <FaHeart className="fill-icon" />
+                      </>
+                    ) : (
+                      <>
+                        {latestIsHovered[i] ? (
+                          <FaHeart className="empty-icon-hover" />
+                        ) : (
+                          <FaRegHeart className="empty-icon" />
+                        )}
+                      </>
+                    )}
+                  </button>
+                </div>
               </div>
-            </div>
-          </div>
+            </motion.div>
+          </AnimatePresence>
         )
       })
       }
