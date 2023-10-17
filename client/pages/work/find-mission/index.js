@@ -1079,10 +1079,12 @@ function ImageWithEqualDimensions({ file_path }) {
   const handleResize = () => {
     // 獲取圖片元素的引用
     const image = imgRef.current;
-    // 獲取圖片的寬度
-    const imageWidth = image.offsetWidth;
-    // 將寬度值分配给高度
-    image.style.height = imageWidth + "px";
+    if (image) {   // 異步操作: 可能需要時間下載圖片，導致handleResize在圖片載入之前被調用，圖片高度仍不等於寬度。增加判斷確保 handleResize 僅在 image 有值時才執行。
+      // 獲取圖片的寬度
+      const imageWidth = image.offsetWidth;
+      // 將寬度值分配给高度
+      image.style.height = imageWidth + "px";
+    }
   };
 
   // // 立即在組件加載時調整照片的高度
@@ -1132,7 +1134,9 @@ const MissionCard = ({ missionType, missionCity, missionArea, setMissionType, up
       });
   }
   useEffect(() => {
-    getCollection(userId);
+    if (userId) {   // userId存在時才調用getCollection 避免依賴項userId在組件加載前還沒被設置 觸發無效請求
+      getCollection(userId);
+    }
   }, [userId]);
 
   const addCollection = async (mission_id) => {
@@ -1519,8 +1523,8 @@ export default function MissionList() {
           </div>
           <Link href="/work/create-mission" className="position-absolute add-mission-btn-pc-link">
             <button className="add-mission-btn-pc  d-none d-lg-block btn-confirm ">
-              <img src="/add-mission.svg" className="me-2" />
-              新增任務
+              <img src="/add-mission.svg" className="me-1 mb-1" />
+              新增
             </button>
           </Link>
           <Link href="/work/create-mission">

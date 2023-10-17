@@ -140,10 +140,12 @@
     border: 0;
     position: relative;
     top: 0;
+    box-shadow: 0px 0px 2px rgba(167, 167, 167, 0.39);
 
     &:hover {
         top: -5px;
         background-color: $main-bg;
+        box-shadow: 0px 0px 8px rgba(167, 167, 167, 0.49);
     }
   }
 
