@@ -194,7 +194,7 @@ export const RecordTemplate = ({
                   <div className="d-flex flex-column justify-content-center align-items-center">
                     <p className="mb-1 size-6 price">NT$ {item.total_price}</p>
                     <button className="animate-button-one">
-                      {title === "銷售紀錄" && (
+                      {title === "幫手訂單" && (
                         <Link href={`/member/selling/${item.oid}`}>
                           查看詳細
                         </Link>

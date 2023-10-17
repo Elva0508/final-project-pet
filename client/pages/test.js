@@ -1,6 +1,8 @@
 import React from "react";
 import { motion } from "framer-motion";
 import CatLoading from "@/components/cat-loading";
+import CatRun from "@/components/cat-run";
+import "animate.css";
 
 const container = {
   hidden: { opacity: 0 },
@@ -20,20 +22,7 @@ const allHelpers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
 const Test = () => {
   return (
     <>
-      <motion.section
-        className="helper-list d-flex flex-wrap"
-        variants={container}
-        initial="hidden"
-        animate="show"
-      >
-        {allHelpers?.map((helper, index) => (
-          <motion.div
-            key={helper.user_id}
-            variants={item}
-            style={{ background: "pink", width: "50px", height: "50px" }}
-          ></motion.div>
-        ))}
-      </motion.section>
+      <CatRun />
     </>
   );
 };
