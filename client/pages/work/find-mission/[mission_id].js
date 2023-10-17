@@ -172,8 +172,8 @@ const ImageSwiper = ({ missionImages }) => {
         .swiper-button-next,
         .swiper-button-prev {
           background-color: #FFFDFB;
-          width:50px;
-          height:50px;
+          width:45px;
+          height:45px;
           border-radius: 50%;
           color: #F8CB9F;
           box-shadow: 0 0 9px rgba(0, 0, 0, 0.5);
@@ -183,11 +183,11 @@ const ImageSwiper = ({ missionImages }) => {
         }
 
         .swiper-button-prev {
-          background-image: url("/caret-left.svg");
+          background-image: url("/job-icon/angle-left-solid.svg");
 
         }
         .swiper-button-next {
-          background-image: url("/caret-right.svg");    
+          background-image: url("/job-icon/angle-right-solid.svg");    
         }
         .swiper-button-next svg,
         .swiper-button-prev svg {
@@ -621,6 +621,7 @@ export default function MissionDetail() {
             if (helperInfo.cat_helper === 0) {
                 alert('您尚未開啟小幫手資料 請先至會員中心開啟 才可自動發送履歷唷');
                 setAutoSend(false); // 清除勾勾
+                router.push('/member/helper');
                 return;
             }
             chatContentArray.push(helperInfo.introduction);
