@@ -359,6 +359,12 @@
       color: $text-main;
       opacity: 0.8;
       font-weight: bold;
+      
+      .animation-cat{
+        right: 0;
+        top: -25px;
+        width: 100px;
+      }
     }
 
     &-divider {
@@ -409,11 +415,14 @@
       &-introduction {
         margin-left: 0;
       }
-      // &-title {
-      //   &::before {
-      //     height: 30px;
-      //   }
-      // }
+      &-title {
+        // &::before {
+        //   height: 30px;
+        // }
+        .animation-cat{
+          top: -27px;
+        }
+      }
     }
     
   }

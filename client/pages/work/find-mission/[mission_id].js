@@ -982,8 +982,9 @@ export default function MissionDetail() {
                                 </header>
                                 <section className='description my-4 py-1 '>
                                     <div className="item d-flex flex-column ">
-                                        <div className="item-title size-6">
+                                        <div className="item-title size-6 position-relative">
                                             <GiMoneyStack className='me-1' />預算金額
+                                            <img src='/job-icon/Animation.gif' className='position-absolute animation-cat' />
                                         </div>
                                         <hr class="item-divider" />
                                         <p className="size-7 d-flex align-items-center salary">NT$ {v.price} / 次</p>
