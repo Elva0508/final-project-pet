@@ -4,7 +4,7 @@ import Link from "next/link";
 import jwt_decode from "jwt-decode";
 // components
 import RoleSelection from "@/components/job/role-selection";
-import { ScrollMotionContainer, ScrollMotionItem, } from "@/components/ScrollMotion";
+// import { ScrollMotionContainer, ScrollMotionItem, } from "@/components/ScrollMotion";
 // 用 {} 導入的內容是命名導出的，而不加{}導入的內容是默認導出的。
 // import LatestMission, {
 //   MobileLatestMission,
@@ -38,6 +38,8 @@ import {
   AnimatePresence,
   useInView,
 } from "framer-motion";
+import ScrollMotionItem from 'react-scroll-motion';
+import 'animate.css'; // 導入動畫庫
 
 // 搜尋
 const Search = ({ placeholder, color, onClick, search, setSearch, inputValue, setInputValue, setActivePage, setMissionType, setUpdateDate, setMissionCity, setMissionArea, setSortOrder, setSortBy, setButtonText1, setButtonText2, setSelectedCity, setSelectedArea }) => {
