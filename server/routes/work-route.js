@@ -31,7 +31,7 @@ router.get("/helpers/famous", (req, res) => {
           console.log(err);
           return;
         }
-        console.log(result);
+        // console.log(result);
         // result.map((helper) => {
         //   const average_star = (
         //     helper.total_star / helper.review_count
@@ -60,7 +60,7 @@ router.get("/helpers/famous", (req, res) => {
 router.get("/helpers/order", async (req, res) => {
   // 排序小幫手資料
   const { filterType, orderType, orderWay, page } = req.query;
-  console.log(orderType, orderWay, page);
+  // console.log(orderType, orderWay, page);
   const pageSize = 18;
   const limitRows = (page - 1) * 18;
   const filters = ``;
@@ -77,7 +77,7 @@ router.get("/helpers/order", async (req, res) => {
               console.log(err);
               reject({ status: 500, error: "查詢錯誤" });
             }
-            console.log(results);
+            // console.log(results);
             resolve(results[0].totalRows);
           }
         );
@@ -218,7 +218,7 @@ router.get("/helper/orderAndFilter", (req, res) => {
 
 router.get("/helpers/search", async (req, res) => {
   const { search } = req.query;
-  console.log(search);
+  // console.log(search);
   let totalRows;
   try {
     totalRows = await new Promise((resolve, reject) => {
@@ -263,7 +263,7 @@ router.get("/helpers/favorite", async (req, res) => {
   // console.log(collection);
   if (collection) {
     collection = collection.reverse();
-    console.log(collection);
+    // console.log(collection);
     try {
       const results = await Promise.all(
         collection.map(async (item) => {
@@ -282,7 +282,7 @@ router.get("/helpers/favorite", async (req, res) => {
           });
         })
       );
-      console.log("異步查詢結束");
+      // console.log("異步查詢結束");
       return res.send({ status: 200, results });
     } catch (e) {
       console.log(e);
@@ -372,13 +372,16 @@ router.get("/helpers/detail/petInfo", (req, res) => {
   );
 });
 router.get("/helpers/detail/review", async (req, res) => {
-  const { star, uid } = req.query;
-  console.log(star, uid);
+  const { star, uid, page } = req.query;
+  // console.log(star, uid);
+  const pageSize = 10;
+  const limitRows = (page - 1) * 10;
+  let totalRows;
   try {
     if (star === "all") {
       const review_count = await new Promise((resolve, reject) => {
         conn.execute(
-          `SELECT COUNT(*) AS review_count FROM mission_helper_reviews  WHERE helper_id = ?`,
+          `SELECT COUNT(*) AS review_count FROM mission_helper_reviews  WHERE helper_id = ? `,
           [uid],
           (err, result) => {
             if (err) {
@@ -391,8 +394,8 @@ router.get("/helpers/detail/review", async (req, res) => {
       });
       const reviews = await new Promise((resolve, reject) => {
         conn.execute(
-          `SELECT r.*,u.cover_photo,u.name FROM mission_helper_reviews r LEFT JOIN userinfo u ON r.user_id = u.user_id WHERE r.helper_id = ?`,
-          [uid],
+          `SELECT r.*,u.cover_photo,u.name FROM mission_helper_reviews r LEFT JOIN userinfo u ON r.user_id = u.user_id WHERE r.helper_id = ? LIMIT ?,?`,
+          [uid, limitRows, pageSize],
           (err, result) => {
             if (err) {
               console.log(err);
@@ -401,7 +404,7 @@ router.get("/helpers/detail/review", async (req, res) => {
             // 在後端轉換review的日期格式
             result = result.map((review) => {
               const newDate = transferDate(review.review_date);
-              console.log(newDate);
+              // console.log(newDate);
               return { ...review, review_date: newDate };
             });
             resolve(result);
@@ -425,8 +428,8 @@ router.get("/helpers/detail/review", async (req, res) => {
       });
       const reviews = await new Promise((resolve, reject) => {
         conn.execute(
-          `SELECT r.*,u.cover_photo,u.name FROM mission_helper_reviews r LEFT JOIN userinfo u ON r.user_id = u.user_id WHERE r.helper_id = ? AND star_rating = ?`,
-          [uid, star],
+          `SELECT r.*,u.cover_photo,u.name FROM mission_helper_reviews r LEFT JOIN userinfo u ON r.user_id = u.user_id WHERE r.helper_id = ? AND star_rating = ? LIMIT ?,?`,
+          [uid, star, limitRows, pageSize],
           (err, result) => {
             if (err) {
               console.log(err);
@@ -435,7 +438,7 @@ router.get("/helpers/detail/review", async (req, res) => {
             // 在後端轉換review的日期格式
             result = result.map((review) => {
               const newDate = transferDate(review.review_date);
-              console.log(newDate);
+              // console.log(newDate);
               return { ...review, review_date: newDate };
             });
             resolve(result);
@@ -451,7 +454,34 @@ router.get("/helpers/detail/review", async (req, res) => {
 });
 router.get("/helpers/detail/:uid", async (req, res) => {
   const { uid } = req.params;
-  console.log(uid);
+  const { page } = req.query;
+  const pageSize = 10;
+  const limitRows = (page - 1) * 10;
+  let totalRows;
+  const allReviewsPromise = new Promise((resolve, reject) => {
+    conn.execute(
+      `SELECT COUNT(*) AS totalRows FROM mission_helper_reviews WHERE helper_id = ?`,
+      [uid],
+      (err, result) => {
+        if (err) {
+          console.log(err);
+          reject(err);
+        }
+        const { totalRows } = result[0];
+        conn.execute(
+          `SELECT r.*,u.cover_photo,u.name FROM mission_helper_reviews r LEFT JOIN userinfo u ON r.user_id = u.user_id WHERE r.helper_id = ?`,
+          [uid],
+          (err, result) => {
+            if (err) {
+              console.log(err);
+              reject(err);
+            }
+            resolve({ result, totalRows });
+          }
+        );
+      }
+    );
+  });
   const profilePromise = new Promise((resolve, reject) => {
     conn.execute(
       `SELECT  h.*, r.review_count, r.average_star,u.cover_photo,u.cat_helper FROM mission_helper_info h LEFT JOIN (SELECT helper_id, COUNT(*) AS review_count, SUM(star_rating) / COUNT(*) AS average_star FROM mission_helper_reviews GROUP BY helper_id) r ON h.user_id = r.helper_id LEFT JOIN userinfo u ON h.user_id = u.user_id WHERE h.user_id = ?`,
@@ -465,19 +495,19 @@ router.get("/helpers/detail/:uid", async (req, res) => {
       }
     );
   });
-  const reviewsPromise = new Promise((resolve, reject) => {
-    conn.execute(
-      `SELECT r.*,u.cover_photo,u.name FROM mission_helper_reviews r LEFT JOIN userinfo u ON r.user_id = u.user_id WHERE r.helper_id = ?`,
-      [uid],
-      (err, result) => {
-        if (err) {
-          console.log(err);
-          reject(err);
-        }
-        resolve(result);
-      }
-    );
-  });
+  // const reviewsPromise = new Promise((resolve, reject) => {
+  //   conn.execute(
+  //     `SELECT r.*,u.cover_photo,u.name FROM mission_helper_reviews r LEFT JOIN userinfo u ON r.user_id = u.user_id WHERE r.helper_id = ? LIMIT ?,?`,
+  //     [uid, limitRows, pageSize],
+  //     (err, result) => {
+  //       if (err) {
+  //         console.log(err);
+  //         reject(err);
+  //       }
+  //       resolve(result);
+  //     }
+  //   );
+  // });
   const imagesPromise = new Promise((resolve, reject) => {
     conn.execute(
       `SELECT file_path FROM image_helper WHERE group_id = ?`,
@@ -493,19 +523,18 @@ router.get("/helpers/detail/:uid", async (req, res) => {
   });
   try {
     // 使用 Promise.all 等待所有查詢完成
-    let [profile, reviews, images] = await Promise.all([
+    let [allReviews, profile, images] = await Promise.all([
+      allReviewsPromise,
       profilePromise,
-      reviewsPromise,
       imagesPromise,
     ]);
-    // 在後端轉換review的日期格式
-    reviews = reviews.map((review) => {
-      const newDate = transferDate(review.review_date);
-      console.log(newDate);
-      return { ...review, review_date: newDate };
-    });
+    // // 在後端轉換review的日期格式
+    // reviews = reviews.map((review) => {
+    //   const newDate = transferDate(review.review_date);
+    //   return { ...review, review_date: newDate };
+    // });
     // 成功執行 res.send
-    res.send({ status: 200, data: { profile, reviews, images } });
+    res.send({ status: 200, data: { allReviews, profile, images } });
   } catch (err) {
     // reject則捕捉錯誤
     console.log(err);
@@ -515,7 +544,7 @@ router.get("/helpers/detail/:uid", async (req, res) => {
 
 router.post("/helpers/request", (req, res) => {
   // const {customer_userId,start_day,end_day,pet_info_id,helper_userId,service_type,service_time,frequency,note,subtotal_price,total_price,status}
-  console.log(req.body);
+  // console.log(req.body);
   const {
     customer_id,
     startDay,
@@ -560,6 +589,7 @@ router.post("/helpers/request", (req, res) => {
 });
 router.post("/mission", upload.array("missionImage"), async (req, res) => {
   // const { formData } = req.body;
+  console.log(req.body);
   const {
     user_id,
     title,
@@ -573,25 +603,14 @@ router.post("/mission", upload.array("missionImage"), async (req, res) => {
     city,
     area,
     missionImage,
+    morning,
+    noon,
+    night,
   } = req.body;
-  console.log(
-    user_id,
-    title,
-    location_detail,
-    mission_type,
-    description,
-    price,
-    payment,
-    startDay,
-    endDay,
-    city,
-    area,
-    missionImage
-  );
-  console.log(req.files);
+
   const taskId = generateOrderNumber();
   conn.execute(
-    "INSERT INTO `mission_detail` (`mission_id`, `pid`, `title`, `price`, `start_date`, `end_date`, `city`, `area`, `location_detail`, `description`, `mission_type`, `payment_type`,`post_user_id`) VALUES (NULL, ?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?,?)",
+    "INSERT INTO `mission_detail` (`mission_id`, `pid`, `title`, `price`, `start_date`, `end_date`, `city`, `area`, `location_detail`, `description`, `mission_type`, `payment_type`,`post_user_id`,`mission_status`,`contact_morning`,`contact_noon`,`contact_night`) VALUES (NULL, ?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?, ?, ?,?,?)",
     [
       taskId,
       title,
@@ -605,6 +624,10 @@ router.post("/mission", upload.array("missionImage"), async (req, res) => {
       mission_type,
       payment,
       user_id,
+      true,
+      parseBoolean(morning),
+      parseBoolean(noon),
+      parseBoolean(night),
     ],
     async (err, results) => {
       if (err) {
@@ -664,8 +687,8 @@ router.post(
   upload.array("missionImage"),
   async (req, res) => {
     // const { formData } = req.body;
-    console.log(req.files);
-    console.log("觸發一次route");
+    // console.log(req.files);
+    // console.log("觸發一次route");
     conn.execute();
     res.send("照片上傳route");
   }
@@ -692,7 +715,7 @@ async function orders(
             if (err) {
               reject({ status: 500, error: "查詢錯誤" });
             }
-            console.log(results);
+            // console.log(results);
             resolve(results[0].totalRows);
           }
         );
@@ -704,7 +727,7 @@ async function orders(
             if (err) {
               reject({ status: 500, error: "查詢錯誤" });
             }
-            console.log(results);
+            // console.log(results);
             resolve(results[0].totalRows);
           }
         );
@@ -789,4 +812,11 @@ function generateOrderNumber() {
   // 組合訂單編號
   const orderNumber = randomLetters + timestamp;
   return orderNumber;
+}
+function parseBoolean(str) {
+  if (str === "true" || str === "1") {
+    return true;
+  } else if (str === "false" || str === "0") {
+    return false;
+  }
 }

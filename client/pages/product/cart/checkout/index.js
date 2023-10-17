@@ -6,14 +6,10 @@ import Swal from 'sweetalert2';
 import moment from "moment";
 import { useCart } from '@/hooks/useCart';
 import Pagination from '@/components/pagination'
-import { useAuth } from '@/context/fakeAuthContext';
 
 export default function Checkout() {
-    const {userId} = useAuth()
-    console.log(userId);
-    const userid=parseInt(userId)
     const router = useRouter();
-    const {setCart} = useCart();
+    const {setCart,userid} = useCart();
     const [city,setCity]=useState(0)
     const [area,setArea]=useState([])
     const [areaName,setAreaName]=useState(0)
@@ -119,7 +115,7 @@ export default function Checkout() {
             allAdress="小貓兩三隻門市"
         }   
         try {
-          const response = await axios.put(`http://localhost:3005/api/product/cart/checkout`,{ coupon,id,createtTime,totalPrice,orderNumber,allPrice ,sale,freight,payment,shipment,name,phone,allAdress});        
+          const response = await axios.put(`http://localhost:3005/api/product/cart/checkout`,{ coupon,userid,createtTime,totalPrice,orderNumber,allPrice ,sale,freight,payment,shipment,name,phone,allAdress});        
         } catch (error) {
           console.error("Error:", error);
         }

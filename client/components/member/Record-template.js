@@ -8,6 +8,9 @@ import {
   IllustrationNoContent,
   IllustrationNoContentDark,
 } from "@douyinfe/semi-illustrations";
+import lottie from "lottie-web";
+import animation from "@/data/animation_lnqha2jt.json";
+import memberService from "@/services/member-service";
 export const RecordTemplate = ({
   icon,
   title,
@@ -39,20 +42,82 @@ export const RecordTemplate = ({
         break;
     }
   };
+  const handleReviewBubble = (e, case_id) => {
+    console.log(e.currentTarget, e.target);
+    if (router.pathname === "/member/reserve" && status === 3) {
+      const currentTarget = e.currentTarget;
+      memberService
+        .getReview(case_id)
+        .then((response) => {
+          console.log(response);
+          if (response?.data?.data?.review_id !== null) {
+            if (e.type === "mouseenter") {
+              console.log("滑鼠移進");
+              currentTarget.classList.add("bubble-tip-success");
+            } else if (e.type === "mouseleave") {
+              console.log("滑鼠移出");
+              currentTarget.classList.remove("bubble-tip-success");
+            }
+          } else {
+            if (e.type === "mouseenter") {
+              console.log("滑鼠移進");
+              currentTarget.classList.add("bubble-tip-todo");
+            } else if (e.type === "mouseleave") {
+              console.log("滑鼠移出");
+              currentTarget.classList.remove("bubble-tip-todo");
+            }
+          }
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    }
+
+    // if (e.type === "mouseenter") {
+    //   console.log("滑鼠移進");
+    //   e.target.classList.add(".bubble-tip-success");
+    // } else if (e.type === "mouseleave") {
+    //   console.log("滑鼠移出");
+    //   e.target.classList.remove(".bubble-tip-success");
+    // }
+  };
+
   useEffect(() => {
     for (let i = 1; i <= 4; i++) {
       const focusBtn = document.querySelector(`#btn${i}`);
+      const lottie = document.querySelector("#lottie");
+      if (focusBtn.contains(lottie)) {
+        focusBtn.removeChild(document.querySelector("#lottie"));
+      }
       focusBtn.classList.remove("btn-focus");
     }
+    const lottie = document.createElement("div");
+    lottie.id = "lottie";
     const focusBtn = document.querySelector(`#btn${status}`);
+    focusBtn.appendChild(lottie);
     focusBtn.classList.add("btn-focus");
   }, [status]);
+  useEffect(() => {
+    lottie.loadAnimation({
+      container: document.getElementById("lottie"), // the dom element
+      renderer: "svg",
+      loop: true,
+      autoplay: true,
+      animationData: animation, // the animation data
+    });
+
+    return () => {
+      lottie.destroy();
+    };
+  }, [status]);
+  console.log(info);
   return (
     <>
-      <h5 className="size-5 d-flex align-items-start fw-bold">
-        {icon || <MdHomeRepairService className="icon me-1" />}
-        {title || "銷售紀錄"}
+      <h5 className="main-title size-5 d-flex align-items-start fw-bold">
+        {/* {icon || <MdHomeRepairService className="icon me-1" />} */}
+        {title || ""}
       </h5>
+
       <nav className="tab-nav" onClick={handleStatus}>
         <button
           id="btn1"
@@ -71,6 +136,7 @@ export const RecordTemplate = ({
             setStatus(2);
           }}
         >
+          <div id="lottie"></div>
           進行中
         </button>
         <button
@@ -104,13 +170,21 @@ export const RecordTemplate = ({
             image={
               <IllustrationNoContent style={{ width: 300, height: 300 }} />
             }
-            title="尚未有銷售紀錄"
+            title="尚未有訂單紀錄"
           ></Empty>
         ) : (
           <>
             {info &&
               info.map((item) => (
-                <div className="info-content d-flex align-items-center justify-content-around">
+                <div
+                  className="info-content d-flex align-items-center justify-content-around"
+                  onMouseEnter={(e) => {
+                    handleReviewBubble(e, item.case_id);
+                  }}
+                  onMouseLeave={(e) => {
+                    handleReviewBubble(e, item.case_id);
+                  }}
+                >
                   <p>{item.created_at}</p>
                   <p>{item.oid}</p>
                   <p>
@@ -119,18 +193,17 @@ export const RecordTemplate = ({
                   </p>
                   <div className="d-flex flex-column justify-content-center align-items-center">
                     <p className="mb-1 size-6 price">NT$ {item.total_price}</p>
-                    <button
-                      className="btn-outline-confirm"
-                      onClick={() => {
-                        if (title === "銷售紀錄") {
-                          router.push(`/member/selling/${item.oid}`);
-                        }
-                        if (title === "預約紀錄") {
-                          router.push(`/member/reserve/${item.oid}`);
-                        }
-                      }}
-                    >
-                      查看明細
+                    <button className="animate-button-one">
+                      {title === "銷售紀錄" && (
+                        <Link href={`/member/selling/${item.oid}`}>
+                          查看詳細
+                        </Link>
+                      )}
+                      {title === "預約紀錄" && (
+                        <Link href={`/member/reserve/${item.oid}`}>
+                          查看詳細
+                        </Link>
+                      )}
                     </button>
                   </div>
                 </div>
@@ -145,7 +218,7 @@ export const RecordTemplate = ({
             image={
               <IllustrationNoContent style={{ width: 300, height: 300 }} />
             }
-            title="尚未有銷售紀錄"
+            title="尚未有訂單紀錄"
             className="d-flex d-sm-none"
           ></Empty>
         </div>
@@ -175,7 +248,7 @@ export const RecordTemplate = ({
                     <button
                       className="btn-outline-confirm"
                       onClick={() => {
-                        if (title === "銷售紀錄") {
+                        if (title === "幫手訂單") {
                           router.push(`/member/selling/${item.oid}`);
                         }
                         if (title === "預約紀錄") {
@@ -183,7 +256,7 @@ export const RecordTemplate = ({
                         }
                       }}
                     >
-                      查看明細
+                      查看詳細
                     </button>
                   </div>
                 </div>
@@ -210,8 +283,8 @@ export const RecordDetailTemplate = ({ icon, title, detail, setDetail }) => {
 
   return (
     <>
-      <h5 className="size-5 d-flex align-items-start fw-bold">
-        {icon || <MdHomeRepairService className="icon me-1" />}
+      <h5 className="main-title size-5 d-flex align-items-start fw-bold">
+        {/* {icon || <MdHomeRepairService className="icon me-1" />} */}
 
         {title || "銷售服務"}
       </h5>

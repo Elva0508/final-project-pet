@@ -18,6 +18,8 @@ import Link from "next/link";
 import { useActivePage } from "@/hooks/useActivePage";
 import { useAuth } from "@/context/fakeAuthContext";
 
+
+
 //logo-icon
 import catLogo from "@/assets/catLogo.svg";
 import McatLogo from "@/assets/McatLogo.svg";
@@ -87,6 +89,7 @@ function ResponsiveAppBar() {
 
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+  
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -117,7 +120,7 @@ function ResponsiveAppBar() {
     localStorage.removeItem("data");
     localStorage.removeItem("token");
     localStorage.removeItem("id");
-    setActiveButton(0)
+    setActiveButton()
 
     localStorage.clear();
     setCart([])
@@ -253,7 +256,9 @@ function ResponsiveAppBar() {
                       <Typography textAlign="center">登出</Typography>
                     </MenuItem>
                     <Link href="http://localhost:3000/member/profile">
-                      <MenuItem>
+                      <MenuItem onClick={()=>{
+                          setActiveButton()
+                      }}>
                         <Typography textAlign="center">會員中心</Typography>
                       </MenuItem>
                     </Link>

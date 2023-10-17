@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import ListD from "@/components/member/list-d";
 import ListUserM from "@/components/member/list-user-m";
 import Link from "next/link";
-import { useRouter } from "next/router";
 import { RecordDetailTemplate } from "@/components/member/Record-template";
 import { BsCalendarDateFill } from "react-icons/bs";
 import memberService from "@/services/member-service";
@@ -12,7 +11,7 @@ import StarIcon from "@mui/icons-material/Star";
 import { useAuth } from "@/context/fakeAuthContext";
 import { useRouter } from "next/router";
 
-const CreateReview = ({ user_id, detail, pid, setIsReviewed }) => {
+const CreateReview = ({ user_id, detail, oid, setIsReviewed }) => {
   // const user = 1;
   const [visible, setVisible] = useState(false);
   const [starValue, setStarValue] = useState(0);
@@ -30,18 +29,26 @@ const CreateReview = ({ user_id, detail, pid, setIsReviewed }) => {
   };
   const handleSubmit = () => {
     memberService
-      .createReview(pid, user_id, detail.helper_userId, review, starValue)
-      .then((response) => {
-        console.log(response.data);
+      .createReview(
+        detail.case_id,
+        user_id,
+        detail.helper_userId,
+        review,
+        starValue
+      )
+      .then(async (response) => {
+        // console.log(response.data);
         if (response.data.status === 200) {
           setIsReviewed(true);
-          alert("感謝您的評價!");
+          await setVisible(false);
+          setTimeout(() => {
+            alert("感謝您的評價!");
+          }, [300]);
         }
       })
       .catch((e) => {
         console.log(e);
       });
-    setVisible(false);
   };
   const handleCancel = () => {
     setStarHover(undefined);
@@ -107,7 +114,7 @@ const CreateReview = ({ user_id, detail, pid, setIsReviewed }) => {
 };
 
 const CheckReview = ({ review }) => {
-  const user = 1;
+  // const user = 1;
   const [visible, setVisible] = useState(false);
 
   const showDialog = () => {
@@ -159,7 +166,7 @@ const CheckReview = ({ review }) => {
             <div className="ranking my-1">
               <Rating
                 disabled
-                value={review && review.star_rating}
+                value={review && review?.star_rating}
                 onHoverChange={(value) => {
                   setStarHover(value);
                 }}
@@ -168,10 +175,10 @@ const CheckReview = ({ review }) => {
                 }}
               />
             </div>
-            <div className="date size-7">{review.review_date}</div>
+            <div className="date size-7">{review?.review_date}</div>
           </div>
         </div>
-        <div className="review-card-body mt-3">{review.review_content}</div>
+        <div className="review-card-body mt-3">{review?.review_content}</div>
       </Modal>
     </>
   );
@@ -182,7 +189,7 @@ const ReserveDetailPage = () => {
   const [status, setStatus] = useState(1);
   const [review, setReview] = useState(null);
   const [isReviewed, setIsReviewed] = useState(false);
-  const { pid } = router.query;
+  const { oid } = router.query;
   const { isAuthenticated, userId: user_id } = useAuth();
   useEffect(() => {
     // 初始狀態時isAuthenticated為null，等到isAuthenticated有值時(true or false)才做驗證判斷
@@ -196,7 +203,7 @@ const ReserveDetailPage = () => {
   }, [isAuthenticated]);
   useEffect(() => {
     memberService
-      .getRequestDetail(pid)
+      .getReserveDetail(oid)
       .then((response) => {
         const info = response.data.data;
         setStatus(info.status);
@@ -220,14 +227,15 @@ const ReserveDetailPage = () => {
       .catch((e) => {
         console.log(e);
       });
-  }, [pid]);
+  }, [oid]);
   useEffect(() => {
     if (status === 3) {
       memberService
-        .getReview(pid)
+        .getReview(detail.case_id)
         .then((response) => {
           if (response.data.data.review_count === 1) {
             setIsReviewed(true);
+            console.log(response.data.data);
             setReview(response.data.data);
           } else {
             setIsReviewed(false);
@@ -237,10 +245,11 @@ const ReserveDetailPage = () => {
           console.log(e);
         });
     }
-  }, [status]);
+  }, [status, isReviewed]);
   const handleReject = () => {
+    alert("是否確定取消預約?");
     memberService
-      .setRequestStatus(pid, 4)
+      .setReserveStatus(oid, 4)
       .then((response) => {
         const result = response.data;
         console.log(response.data);
@@ -260,10 +269,10 @@ const ReserveDetailPage = () => {
             {/* mobile版的左側tab */}
           </div>
           <ListUserM />
-          <div className="d-flex container-fluid flex-column justify-content-around flex-md-row my-3">
+          <div className="d-flex container-fluid flex-column justify-content-around flex-md-row my-3 ">
             {/* <ListUserM /> */}
             <ListD />
-            <div className="col-12 col-sm-8 sales-record-detail ">
+            <div className="col-12 col-sm-8 sales-record-detail">
               <RecordDetailTemplate
                 icon={<BsCalendarDateFill className="icon me-1" />}
                 title={"預約紀錄"}
@@ -284,7 +293,7 @@ const ReserveDetailPage = () => {
                 <div className="d-flex justify-content-end mb-5">
                   <CreateReview
                     detail={detail}
-                    pid={pid}
+                    oid={oid}
                     setIsReviewed={setIsReviewed}
                     user_id={user_id}
                   />

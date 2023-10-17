@@ -7,7 +7,7 @@ import dayjs from "dayjs";
 import { Controller, useForm } from "react-hook-form";
 import { register } from "swiper/element";
 import workService from "@/services/work-service";
-import { Upload } from "@douyinfe/semi-ui";
+import { Upload, Select } from "@douyinfe/semi-ui";
 import { IconPlus } from "@douyinfe/semi-icons";
 const options = cityData.map((city) => {
   return {
@@ -30,6 +30,9 @@ const CreateMission = () => {
   const [city, setCity] = useState(undefined);
   const [area, setArea] = useState(undefined);
   const [imageList, setImageList] = useState([]);
+  const [morning, setMorning] = useState(false);
+  const [noon, setNoon] = useState(false);
+  const [night, setNight] = useState(false);
   const onChange = (value, selectedOptions) => {
     // console.log(value, selectedOptions);
     setCity(selectedOptions[0].label);
@@ -42,18 +45,15 @@ const CreateMission = () => {
   };
   const handleSubmit = (e) => {
     e.preventDefault();
+
     const form = document.querySelector("#form");
     const formData = new FormData(form);
+    const price = formData.get("price");
     const img = document.getElementById("missionImage");
-    // const dataTransfer = new DataTransfer();
-    // imageList.forEach((file) => {
-    //   dataTransfer.items.add(file);
-    // });
-    // const fileList = dataTransfer.files;
-    // console.log(dataTransfer);
-    // console.log(img.files);
-    // console.log(fileList);
-    console.log(imageList);
+    if (!startDay || !endDay || !city || !area || !price) {
+      alert("請完整填寫所有必填項目");
+      return;
+    }
     imageList.forEach((image) => {
       formData.append("missionImage", image);
     });
@@ -62,6 +62,9 @@ const CreateMission = () => {
     formData.append("endDay", endDay);
     formData.append("city", city);
     formData.append("area", area);
+    formData.append("morning", morning);
+    formData.append("noon", noon);
+    formData.append("night", night);
     // uploadRef.current.upload(); //照片手動上傳
     workService
       .createMission(formData)
@@ -91,7 +94,7 @@ const CreateMission = () => {
     };
     let style = { ...basicStyle, ...marginStyle["right"] };
 
-    return <div style={style}>请上传认证材料</div>;
+    return <div style={style}>請上傳相關相片</div>;
   };
   const positions = ["right", "bottom"];
   return (
@@ -106,7 +109,7 @@ const CreateMission = () => {
         <div className="block-body">
           <div className="body-item">
             <label className="size-6">任務名稱(必填)</label>
-            <br />
+
             <input
               className="form-input"
               type="text"
@@ -129,7 +132,7 @@ const CreateMission = () => {
           </div>
           <div className="body-item">
             <label className="size-6">任務相片</label>
-            <br />
+
             {/* <input
               id="missionImage"
               name="missionImage"
@@ -164,7 +167,7 @@ const CreateMission = () => {
           </div>
           <div className="body-item">
             <label className="size-6">任務地點</label>
-            <br />
+
             <Cascader
               options={options}
               onChange={onChange}
@@ -181,7 +184,7 @@ const CreateMission = () => {
           </div>
           <div className="body-item">
             <label className="size-6">任務類型</label>
-            <br />
+
             <div></div>
             <select className="form-select" name="mission_type">
               <option selected value={1}>
@@ -195,12 +198,29 @@ const CreateMission = () => {
           </div>
           <div className="body-item">
             <label className="size-6">任務說明</label>
-            <br />
+
             <textarea
               className="form-input"
               placeholder="請輸入任務說明"
               name="description"
             />
+          </div>
+          <div className="body-item">
+            <label className="size-6">聯絡時段</label>
+            <Select
+              multiple
+              // style={{ width: "320px" }}
+              placeholder="請選擇可聯絡時段"
+              onChange={(string, number, array) => {
+                setMorning(string.some((item) => item === "morning"));
+                setNoon(string.some((item) => item === "noon"));
+                setNight(string.some((item) => item === "night"));
+              }}
+            >
+              <Select.Option value="morning">9:00~12:00</Select.Option>
+              <Select.Option value="noon">13:00~18:00</Select.Option>
+              <Select.Option value="night">19:00~21:00</Select.Option>
+            </Select>
           </div>
         </div>
       </div>
@@ -231,7 +251,14 @@ const CreateMission = () => {
       </div>
       <div className="block"></div>
       <div className="btn-groups d-flex justify-content-center ">
-        <button className="btn-outline-brown m-2">取消</button>
+        <button
+          className="btn-outline-brown m-2"
+          onClick={() => {
+            router.push("/work/find-mission");
+          }}
+        >
+          取消
+        </button>
         <button type="submit" className="btn-brown m-2">
           送出
         </button>

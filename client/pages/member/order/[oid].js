@@ -104,9 +104,9 @@ const back =(id)=>{
 
           <div className="d-flex flex-column col-md-8 col-12 order-detail">
 
-              <h5 className="size-5 mt-3 ms-md-5 ms-3 title">
-                我的訂單
-              </h5>
+                <p className="size-4 big  mt-3 ms-md-5 ms-3 title">
+                 <span className="my">▍</span>我的訂單
+                </p>
               <div className="px-md-5 px-3">
               <p className="size-6  mt-2"><span>訂單編號：</span>{detail[0].oid}</p>
               <p className="size-7"><span>訂單時間：</span>{detail[0].created_at}</p>
@@ -216,7 +216,7 @@ const back =(id)=>{
                               </button>
                               <button
                                 className="btn btn-confirm m-2 size-6 m-size-6"
-                                onClick={() => handleSaveComment(v.user_id,v.product_id,v.order_id)}
+                                onClick={() => handleSaveComment(v.user_id,v.product_id,v.oid)}
                               >
                                 儲存
                               </button>

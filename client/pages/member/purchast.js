@@ -1,22 +1,21 @@
 import React, { useState, useEffect } from "react";
 import ListD from "@/components/member/list-d";
 import ListUserM from "@/components/member/list-user-m";
-import { useCart } from "@/hooks/useCart"
+import { useCart } from "@/hooks/useCart";
 import axios from "axios";
-import Pagination from '@/components/pagination'
-import { useRouter } from 'next/router';
+import Pagination from "@/components/pagination";
+import { useRouter } from "next/router";
 
 export default function Purchast() {
   const [product, setProduct] = useState([]);
   const { cart, setCart } = useCart();
-  const [wishlist, setWishlist] = useState([])
+  const [wishlist, setWishlist] = useState([]);
   const itemsPerPage = 5;
   const [activePage, setActivePage] = useState(1);
   const startIndex = (activePage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentData = product.slice(startIndex, endIndex);
   const router = useRouter();
-
 
   const getProduct = (id) => {
     axios
@@ -31,8 +30,7 @@ export default function Purchast() {
       });
   };
 
-
-  const addCart = async (user_id,id, type) => {
+  const addCart = async (user_id, id, type) => {
     const have = cart.find(
       (v) => v.product_id == id && v.product_type_id == type
     );
@@ -46,7 +44,7 @@ export default function Purchast() {
       } catch (error) {
         console.error("Error:", error);
       }
-      getCart(user_id)
+      getCart(user_id);
     } else {
       try {
         const newQuantity = have.quantity + 1;
@@ -59,10 +57,9 @@ export default function Purchast() {
       } catch (error) {
         console.error("Error:", error);
       }
-      getCart(user_id)
+      getCart(user_id);
     }
   };
-
 
   const getWishlist = async (id) => {
     await axios
@@ -71,17 +68,14 @@ export default function Purchast() {
         const data = response.data.result;
         console.log(data);
         setWishlist(data);
-
       })
       .catch((error) => {
         console.error("Error:", error);
       });
   };
 
-  const addWishlist = async (user_id,id) => {
-    const have = wishlist.find(
-      (v) => v.product_id === id
-    );
+  const addWishlist = async (user_id, id) => {
+    const have = wishlist.find((v) => v.product_id === id);
     console.log(have);
     if (have === undefined) {
       try {
@@ -92,13 +86,11 @@ export default function Purchast() {
       } catch (error) {
         console.error("Error:", error);
       }
-      getWishlist(user_id)
+      getWishlist(user_id);
     }
   };
 
-  
-  const deleteWishlist = async (user_id,id) => {
-
+  const deleteWishlist = async (user_id, id) => {
     console.log(id);
     try {
       const response = await axios.delete(
@@ -108,38 +100,36 @@ export default function Purchast() {
     } catch (error) {
       console.error("Error:", error);
     }
-    getWishlist(user_id)
+    getWishlist(user_id);
   };
 
-
-
   const getCart = (id) => {
-    axios.get(`http://localhost:3005/api/product/cart/${id}`)
+    axios
+      .get(`http://localhost:3005/api/product/cart/cart/${id}`)
       .then((response) => {
         const data = response.data.result;
         const newData = data.map((v) => {
-          return { ...v, buy: true }
-        })
-        setCart(newData)
+          return { ...v, buy: true };
+        });
+        setCart(newData);
       })
       .catch((error) => {
         console.error("Error:", error);
       });
-  }
-
+  };
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    const id=localStorage.getItem("id")
+    const id = localStorage.getItem("id");
     // 沒有token
     if (!token) {
-      router.push("/")
+      router.push("/");
     }
     console.log(id);
     console.log(token);
     getProduct(id);
-    getWishlist(id)
-    getCart(id)
+    getWishlist(id);
+    getCart(id);
   }, []);
 
   return (
@@ -149,20 +139,16 @@ export default function Purchast() {
         <div className="d-flex justify-content-around py-2">
           <ListD />
           <div className="d-flex flex-column col-md-8 col-12 purchast-bg ">
-
-              <h5 className="size-5 mt-3 ms-md-5 ms-3 big">
-                購買紀錄
-              </h5>
-
+            <p className="size-4 big mb-2">
+              <span className="my">▍</span>購買紀錄
+            </p>
+            <div className="bg">
               {currentData.map((v, i) => {
                 return (
                   <>
-                    <div className="d-flex border-bottom pt-4 pb-2 justify-content-between mx-md-5 ms-3">
+                    <div className="d-flex border-bottom pt-4 pb-2 justify-content-between mx-md-5">
                       <div className="d-flex  col-8 col-md-9" key={i}>
-                        <img
-                          className="picture me-4"
-                          src={v.image}
-                        ></img>
+                        <img className="picture me-4" src={v.image}></img>
 
                         <div className="">
                           <p className="size-6">{v.product_name}</p>
@@ -171,125 +157,184 @@ export default function Purchast() {
                         </div>
                       </div>
 
-                      <div className="col-4 ps-2 ps-md-5 ms-md-4 col-md-3 d-flex flex-column align-items-center">
-                        <button className="btn btn-confirm m-2 size-6 m-size-7"
+                      <div className="col-4 col-md-3 d-flex flex-column align-items-center">
+                        <button
+                          className="btn btn-confirm m-2 size-6 m-size-7"
                           data-bs-toggle="offcanvas"
                           data-bs-target="#offcanvasRight"
                           aria-controls="offcanvasRight"
-                          onClick={() => addCart(v.user_id,v.product_id, v.type_id)}
+                          onClick={() =>
+                            addCart(v.user_id, v.product_id, v.type_id)
+                          }
                         >
                           再次購買
                         </button>
 
-                        {wishlist.find((w) => w.product_id === v.product_id) === undefined ? (
-                          <button className="btn btn-outline-confirm m-2 size-6 m-size-7"
-                            data-bs-toggle="modal" data-bs-target="#exampleModal"
-                            onClick={() => addWishlist(v.user_id,v.product_id)}
+                        {wishlist.find((w) => w.product_id === v.product_id) ===
+                        undefined ? (
+                          <button
+                            className="btn btn-outline-confirm m-2 size-6 m-size-7"
+                            data-bs-toggle="modal"
+                            data-bs-target="#exampleModal"
+                            onClick={() => addWishlist(v.user_id, v.product_id)}
                           >
                             加入追蹤
                           </button>
                         ) : (
-                          <button className="btn btn-outline-confirm m-2 size-6 m-size-7"
-                          data-bs-toggle="modal" data-bs-target="#exampleModal1"
-                          onClick={() =>{deleteWishlist(v.user_id,v.product_id)} }
+                          <button
+                            className="btn btn-outline-confirm m-2 size-6 m-size-7"
+                            data-bs-toggle="modal"
+                            data-bs-target="#exampleModal1"
+                            onClick={() => {
+                              deleteWishlist(v.user_id, v.product_id);
+                            }}
                           >
                             取消追蹤
                           </button>
                         )}
-
-
-
                       </div>
                     </div>
                   </>
                 );
               })}
+              <div className="mt-4">
+              <Pagination
+                itemsPerPage={itemsPerPage}
+                total={product}
+                activePage={activePage}
+                setActivePage={setActivePage}
+              />
+            </div>
+            </div>
 
-
-              <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h5 class="modal-title" id="exampleModalLabel">通知</h5>
-                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                      已成功將商品加入收藏
-                    </div>
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-confirm" data-bs-dismiss="modal">關閉</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-
-              <div class="modal fade" id="exampleModal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h5 class="modal-title" id="exampleModalLabel">通知</h5>
-                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                      已取消收藏此商品
-                    </div>
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-confirm" data-bs-dismiss="modal">關閉</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-
-              <div className="offcanvas offcanvas-end" tabIndex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel" >
-                <div className="offcanvas-header">
-                  <p id="offcanvasRightLabel" className="size-6">我的購物車({cart.length})</p>
-                  <button type="button" className="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-                </div>
-                <div className="offcanvas-body">
-                  {cart.map((v, i) => {
-                    return (
-                      <>
-                        <div key={i} className="d-flex mb-3 border-bottom mx-2 ">
-                          <div className="">
-                            <img className="picture" src={v.images}></img>
-                          </div>
-                          <div className="">
-                            <p className="size-7">{v.product_name}</p>
-                            <p className="size-7 type">{v.type}</p>
-                            <p className="size-7 price">NT${v.newprice}</p>
-                            <p className="size-7">數量：{v.quantity}</p>
-                          </div>
-                        </div>
-                      </>
-                    );
-                  })}
-                  <div className="d-flex justify-content-center my-3">
+            <div
+              class="modal fade"
+              id="exampleModal"
+              tabindex="-1"
+              aria-labelledby="exampleModalLabel"
+              aria-hidden="true"
+            >
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">
+                      通知
+                    </h5>
                     <button
                       type="button"
-                      className="btn btn-confirm"
-                      data-bs-dismiss="offcanvas"
+                      class="btn-close"
+                      data-bs-dismiss="modal"
                       aria-label="Close"
+                    ></button>
+                  </div>
+                  <div class="modal-body">已成功將商品加入收藏</div>
+                  <div class="modal-footer">
+                    <button
+                      type="button"
+                      class="btn btn-confirm"
+                      data-bs-dismiss="modal"
                     >
-                      繼續購物
-                    </button>
-                    <button type="button" className="btn btn-confirm ms-5"onClick={()=>{
-                        window.location.href=("/product/cart")
-                      }}>
-                      前往結帳
+                      關閉
                     </button>
                   </div>
-
                 </div>
               </div>
-              <div className="mt-4">
-                <Pagination  itemsPerPage={itemsPerPage} total={product} activePage={activePage} setActivePage={setActivePage}/>
-              </div>
-              
             </div>
+
+            <div
+              class="modal fade"
+              id="exampleModal1"
+              tabindex="-1"
+              aria-labelledby="exampleModalLabel"
+              aria-hidden="true"
+            >
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">
+                      通知
+                    </h5>
+                    <button
+                      type="button"
+                      class="btn-close"
+                      data-bs-dismiss="modal"
+                      aria-label="Close"
+                    ></button>
+                  </div>
+                  <div class="modal-body">已取消收藏此商品</div>
+                  <div class="modal-footer">
+                    <button
+                      type="button"
+                      class="btn btn-confirm"
+                      data-bs-dismiss="modal"
+                    >
+                      關閉
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div
+              className="offcanvas offcanvas-end"
+              tabIndex="-1"
+              id="offcanvasRight"
+              aria-labelledby="offcanvasRightLabel"
+            >
+              <div className="offcanvas-header">
+                <p id="offcanvasRightLabel" className="size-6">
+                  我的購物車({cart.length})
+                </p>
+                <button
+                  type="button"
+                  className="btn-close text-reset"
+                  data-bs-dismiss="offcanvas"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div className="offcanvas-body">
+                {cart.map((v, i) => {
+                  return (
+                    <>
+                      <div key={i} className="d-flex mb-3 border-bottom mx-2 ">
+                        <div className="">
+                          <img className="picture" src={v.images}></img>
+                        </div>
+                        <div className="">
+                          <p className="size-7">{v.product_name}</p>
+                          <p className="size-7 type">{v.type}</p>
+                          <p className="size-7 price">NT${v.newprice}</p>
+                          <p className="size-7">數量：{v.quantity}</p>
+                        </div>
+                      </div>
+                    </>
+                  );
+                })}
+                <div className="d-flex justify-content-center my-3">
+                  <button
+                    type="button"
+                    className="btn btn-confirm"
+                    data-bs-dismiss="offcanvas"
+                    aria-label="Close"
+                  >
+                    繼續購物
+                  </button>
+                  <button
+                    type="button"
+                    className="btn btn-confirm ms-5"
+                    onClick={() => {
+                      window.location.href = "/product/cart";
+                    }}
+                  >
+                    前往結帳
+                  </button>
+                </div>
+              </div>
+            </div>
+
           </div>
         </div>
+      </div>
     </>
   );
 }

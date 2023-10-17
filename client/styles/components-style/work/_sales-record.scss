@@ -4,55 +4,82 @@
     height: 100%;
     border-bottom: none;
     color: $hover;
-    &:hover {
-      border-bottom: none;
-      color: $cos-white;
-    }
+    // &:hover {
+    //   border-bottom: none;
+    //   color: $cos-white;
+    // }
   }
-  .tab-nav .btn-focus {
-    // 被選中的btn要加上這個樣式
-    z-index: 20;
-    top: 15px;
-    border-bottom: none;
-    padding-bottom: 9px;
-    color: lighten($text-dark, 15%);
-  }
-  background: $content-bg;
-  padding: 1rem;
+  // .tab-nav .btn-focus {
+  //   // 被選中的btn要加上這個樣式
+  //   z-index: 20;
+  //   top: 8px;
+  //   border-bottom: none;
+  //   padding-bottom: 9px;
+  //   color: lighten($text-dark, 15%);
+  // }
+  background: transparent;
   p {
     margin: 0;
   }
   .icon {
     font-size: 28px;
   }
+  .main-title {
+    position: relative;
+    &::before {
+      content: "";
+      position: absolute;
+      left: -20px;
+      width: 8px;
+      height: 100%;
+      background-color: #d7965b;
+    }
+  }
+
   .tab-nav {
+    margin: 2.5rem 0 0.8rem 0;
+    display: flex;
+    justify-content: space-around;
+    position: relative;
+    #lottie {
+      position: absolute;
+      width: 150px;
+      height: 100px;
+      top: -55px;
+      left: -36px;
+    }
     button {
       color: lighten($text-mark, 15%);
-      background-color: $main-bg;
-      width: calc(100% / 4);
+      background: white;
+      width: 120px;
+      // height: 45px;
       border: 2px solid lighten($light-gray, 2%);
-      border-radius: 10px 10px 0 0;
+      border-radius: 10px;
       // box-shadow: 0px 0px 5px lighten($light-gray, 5%);
       // border-bottom: 5px solid transparent;
-      padding: 4px 0 20px 0;
+      padding: 6px 0;
       position: relative;
-      top: 20px;
+      // top: 20px;
       // margin: 0 0.3rem;
       transition: top 0.3s ease;
-      &:hover {
-        top: 15px;
-        // transform: scale(1.2);
-        color: lighten($text-dark, 15%);
+      // &:hover {
+      //   top: 8px;
+      //   // transform: scale(1.2);
+      //   color: lighten($text-dark, 15%);
+      // }
+      &::after {
+        content: "";
+        background: url("");
       }
     }
   }
   .info-title {
     padding: 0.5rem 0;
-    background-color: $main-bg;
-    border-top: 2px solid lighten($light-gray, 2%);
-    border-bottom: 2px solid lighten($light-gray, 2%);
+    background: linear-gradient(to top, #f4b67d8b, #ff9b4490);
+    border: 2px solid lighten($light-gray, 2%);
+    // border: 2px solid lighten($light-gray, 2%);
     box-shadow: 0px 0px 5px lighten($light-gray, 5%);
-    position: relative;
+    // position: relative;
     z-index: 10;
     & > * {
       margin: 0.2rem;
@@ -61,16 +88,18 @@
     }
   }
   .info-content {
-    background-color: $cos-white;
+    background-color: white;
+    margin: 0 3px;
     padding: 0.5rem 0;
     border-bottom: 1px solid $light-gray;
     color: $text-main;
     border-radius: 2px;
     font-size: 1rem;
+    // position: relative;
     // margin: 0.8rem 0;
     box-shadow: 0px 0px 5px rgba(218, 218, 218, 0.295);
     &:hover {
-      background-color: rgba(243, 238, 238, 0.788);
+      background-color: rgb(248, 239, 233);
       opacity: 0.8;
     }
     & > * {
@@ -80,6 +109,55 @@
     .price {
       color: $price;
       font-weight: bold;
+    }
+  }
+  .bubble-tip-todo {
+    position: relative;
+    &:hover {
+      &::after {
+        content: "";
+        background: url("/job-icon/bubbleCat.png") center center no-repeat;
+        background-size: 200px 150px;
+        width: 150px;
+        height: 150px;
+        position: absolute;
+        top: -37px;
+        right: -96px;
+        transform: rotate();
+      }
+      &::before {
+        content: "記得去評論喲！";
+        color: $price;
+        position: absolute;
+        top: 30px;
+        right: -73px;
+        font-size: 14px;
+        z-index: 20;
+      }
+    }
+  }
+  .bubble-tip-success {
+    position: relative;
+    &:hover {
+      &::after {
+        content: "";
+        background: url("/job-icon/bubbleCat.png") center center no-repeat;
+        background-size: 200px 150px;
+        width: 150px;
+        height: 150px;
+        position: absolute;
+        top: -37px;
+        right: -96px;
+        transform: rotate();
+      }
+      &::before {
+        content: "已經評論過啦！";
+        position: absolute;
+        top: 30px;
+        right: -73px;
+        font-size: 14px;
+        z-index: 20;
+      }
     }
   }
 
@@ -119,7 +197,7 @@
 }
 
 .sales-record-detail {
-  background: $content-bg;
+  background: white;
   padding: 1rem;
   p {
     margin: 5px 0;
@@ -129,6 +207,8 @@
   }
   .date {
     background: $main-bg;
+    max-width: 150px;
+    text-align: center;
   }
   .status-text {
     font-size: 1.2rem;
@@ -239,8 +319,58 @@
         background-color: lighten($light-gray, 2%);
       }
     }
+    .tab-nav {
+      #lottie {
+        width: 110px;
+        // height: 100px;
+        top: -55px;
+        left: -28px;
+      }
+      button {
+        width: 85px;
+        height: 35px;
+        padding: 2px 0;
+      }
+    }
   }
   .sales-record-detail {
     background: $main-bg;
   }
 }
+// .tab-nav {
+//   margin: 2.5rem 0 0.8rem 0;
+//   display: flex;
+//   justify-content: space-around;
+//   position: relative;
+//   #lottie {
+//     position: absolute;
+//     width: 150px;
+//     height: 100px;
+//     top: -55px;
+//     left: -36px;
+//   }
+//   button {
+//     color: lighten($text-mark, 15%);
+//     background: white;
+//     width: 120px;
+//     // height: 45px;
+//     border: 2px solid lighten($light-gray, 2%);
+//     border-radius: 10px;
+//     // box-shadow: 0px 0px 5px lighten($light-gray, 5%);
+//     // border-bottom: 5px solid transparent;
+//     padding: 6px 0;
+//     position: relative;
+//     // top: 20px;
+//     // margin: 0 0.3rem;
+//     transition: top 0.3s ease;
+//     // &:hover {
+//     //   top: 8px;
+//     //   // transform: scale(1.2);
+//     //   color: lighten($text-dark, 15%);
+//     // }
+//     &::after {
+//       content: "";
+//       background: url("");
+//     }
+//   }
+// }

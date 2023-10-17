@@ -4,7 +4,9 @@
   border-radius: 10px 10px 10px 10px;
   color:$text-main;
   line-height: 2;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
   @media screen and (max-width: 768px) {
+    box-shadow:0px 0px 0px transparent;
     background: $main-bg;
   }
 
@@ -62,5 +64,9 @@
   }
   .title{
     font-weight: 600;
+    color:$text-main;
   }
+  .my{
+    color: $hover;
+}  
 }

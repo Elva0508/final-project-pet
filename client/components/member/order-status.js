@@ -6,8 +6,21 @@ import Pagination from '@/components/pagination'
 
 
 
-export default function OrderStatusOne({order ,currentScreen,activePage,setActivePage}) {
+export default function OrderStatus({order ,currentScreen,activePage,setActivePage ,sort,setOrder}) {
+      if (sort == 1) {
+        console.log(sort);
+        const newOrder = order.sort((a, b) => b.order_id - a.order_id)
+        console.log(newOrder);
+        setOrder(newOrder)
+      } else if (sort == 2) {
+        const newOrder = order.sort((a, b) => a.order_id - b.order_id)
+        console.log(newOrder);
+        setOrder(newOrder)
+        console.log(order);
+      }
 
+
+  console.log(order)
     const itemsPerPage = 5
 ;
     const startIndex = (activePage - 1) * itemsPerPage;
@@ -17,11 +30,11 @@ export default function OrderStatusOne({order ,currentScreen,activePage,setActiv
     
     return (
         <>
-      
+      <div className='bg'>
         {currentData.map((v,i)=>{
                     return(
-                      <div key={i} className='bg px-md-5 border-bottom'>
-                        <div className='d-flex justify-content-between'>
+                      <div key={i} className=' mx-md-5 border-bottom '>
+                        <div className='d-flex justify-content-between '>
                         <div className='d-flex align-items-center white'>
                             <img src={v.image} className='' alt='產品圖片'></img>
                             <div className='ms-md-4 ms-1'>
@@ -43,8 +56,9 @@ export default function OrderStatusOne({order ,currentScreen,activePage,setActiv
                       
                     )
                   })}
-
-            <Pagination  itemsPerPage={itemsPerPage} total={type} activePage={activePage} setActivePage={setActivePage}/>
+                  <Pagination  itemsPerPage={itemsPerPage} total={type} activePage={activePage} setActivePage={setActivePage}/>
+        </div>
+            
         </>
     )
 }

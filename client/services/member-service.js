@@ -30,36 +30,36 @@ class MemberService {
   }
 
   // selling頁route
-  getSelling(status) {
+  getSelling(user_id, status) {
     // const user = 1;
     return axios.get(API_URL + "selling", {
-      params: { user_id: user, status },
+      params: { user_id, status },
     });
   }
 
   // selling & reserve detail頁
-  getRequestDetail(pid) {
-    return axios.get(`${API_URL}request/detail/${pid}`);
+  getReserveDetail(oid) {
+    return axios.get(`${API_URL}reserve/detail/${oid}`);
   }
-  setRequestStatus(pid, status) {
+  setReserveStatus(oid, status) {
     console.log(status);
-    return axios.patch(API_URL + "request/detail/status", {
-      pid,
+    return axios.patch(API_URL + "reserve/detail/status", {
+      oid,
       status,
     });
   }
-  createReview(pid, user_id, helper_id, review_content, star_rating) {
+  createReview(case_id, user_id, helper_id, review_content, star_rating) {
     return axios.post(API_URL + "reserve/review", {
-      pid,
+      case_id,
       user_id,
       helper_id,
       review_content,
       star_rating,
     });
   }
-  getReview(pid) {
+  getReview(case_id) {
     return axios.get(API_URL + "reserve/review", {
-      params: { pid },
+      params: { case_id },
     });
   }
 }
