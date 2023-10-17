@@ -69,6 +69,12 @@
     background-color: #fff;
     box-shadow: 0 0 10px rgba(128, 128, 128, 0.452);
 
+    .left-title{
+      font-weight: bold;
+      color: $text-main;
+      opacity: 0.8;
+    }
+
     img {
       width: 10rem;
       height: 10rem;
@@ -112,6 +118,13 @@
   .apply-now-btn {
     // left: 160px;
     left: 55%;
+  }
+
+  @media screen and (max-width: 576px) {
+    .apply-now-btn {
+      // left: 160px;
+      left: 60%;
+    }
   }
 
   // 熱門任務
@@ -291,7 +304,7 @@
         margin-bottom: 1rem;
 
         p {
-          margin-bottom: 1rem;
+          margin-top: 1rem;
         }
       }
     }
@@ -363,26 +376,26 @@
     padding: 0 12%;
   }
 
-  @media screen and (max-width: 991px) {
-    .item {
-      width: calc(100% - 50px);
-    }
-
-    .mission-place {
-      margin: 0.8rem auto;
-    }
-  }
 
   @media screen and (max-width: 575px) {
+    header{
+      padding-left: 2rem;
+      padding-right: 2rem;
+    }
     .item {
-      width: calc(100% - 40px);
+      margin: 2rem;
+      width: calc(100% - 4rem); // 減掉兩邊的margin
 
+      &-introduction {
+        margin-left: 0;
+      }
       // &-title {
       //   &::before {
       //     height: 30px;
       //   }
       // }
     }
+    
   }
 }
 

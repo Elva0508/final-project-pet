@@ -39,9 +39,9 @@ const Search = ({ placeholder, color, onClick, search, setSearch, inputValue, se
   const handleRipple = () => {
     const btn = rippleBtnRef.current;
     btn.classList.add("ripple");
-    setTimeout(() => {
-      btn.classList.remove("ripple");
-    }, 500); //動畫持續時間結束後移除動畫效果，讓動畫可以重複使用
+    // setTimeout(() => {
+    //   btn.classList.remove("ripple");
+    // }, 500); //動畫持續時間結束後移除動畫效果，讓動畫可以重複使用
   };
 
   const handleSearch = () => {
@@ -229,11 +229,11 @@ const MyFilter = ({ missionType, setMissionType, missionCity, setMissionCity, mi
       }
     }
 
-    document.addEventListener('click', handleClickOutside);
+    // document.addEventListener('click', handleClickOutside);
 
     // 組件卸載時移除事件監聽器（組件卸載時會自動執行return語句)
     return () => {
-      document.removeEventListener('click', handleClickOutside);
+      // document.removeEventListener('click', handleClickOutside);
     };
   }, []);
 
@@ -648,7 +648,7 @@ const Sort = ({ missionType, setMissionType, missionCity, setMissionCity, missio
 
 
 // 最新任務（電腦版）
-const LatestMission = ({ userId, handleMouseEnter, handleMouseLeave, isHovered }) => {
+const LatestMission = ({ userId }) => {
 
   const [latestMissions, setLatestMissions] = useState([])
 
@@ -678,6 +678,22 @@ const LatestMission = ({ userId, handleMouseEnter, handleMouseLeave, isHovered }
 
   // 收藏
   const [isFavorites, setIsFavorites] = useState([]);
+  // 初始化每個按鈕的初始懸停狀態（空心愛心hover時要替換成實心）
+  const latestInitialHoverStates = Array(latestMissions.length).fill(false);
+  const [latestIsHovered, setLatestIsHovered] = useState(latestInitialHoverStates);
+  // 設置 onMouseEnter 處理程序來處理懸停狀態
+  const handleLatestMouseEnter = (index) => {
+    const newHoverStates = [...latestIsHovered];
+    newHoverStates[index] = true;
+    setLatestIsHovered(newHoverStates);
+  };
+
+  // 設置 onMouseLeave 處理程序來處理取消懸停狀態
+  const handleLatestMouseLeave = (index) => {
+    const newHoverStates = [...latestIsHovered];
+    newHoverStates[index] = false;
+    setLatestIsHovered(newHoverStates);
+  };
 
   useEffect(() => {
     // 在組件加載時從後端獲取已收藏的任務
@@ -780,15 +796,15 @@ const LatestMission = ({ userId, handleMouseEnter, handleMouseLeave, isHovered }
                 {/* <Link href={`/work/find-mission/${v.mission_id}`} >
                   <button className='btn-confirm size-6'>應徵</button>
                 </Link> */}
-                <button className=" heart-btn" onClick={() => toggleFavorite(i)} onMouseEnter={() => handleMouseEnter(i)}
-                  onMouseLeave={() => handleMouseLeave(i)}>
+                <button className=" heart-btn" onClick={() => toggleFavorite(i)} onMouseEnter={() => handleLatestMouseEnter(i)}
+                  onMouseLeave={() => handleLatestMouseLeave(i)}>
                   {isFavorites[i] ? (
                     <>
                       <FaHeart className="fill-icon" />
                     </>
                   ) : (
                     <>
-                      {isHovered[i] ? (
+                      {latestIsHovered[i] ? (
                         <FaHeart className="empty-icon-hover" />
                       ) : (
                         <FaRegHeart className="empty-icon" />
@@ -863,11 +879,11 @@ const MobileLatestMission = ({ userId }) => {
     };
 
     const carousel = document.querySelector('.carousel-inner');
-    carousel.addEventListener('transitionend', transitionEndHandler);
+    // carousel.addEventListener('transitionend', transitionEndHandler);
 
     // 組件卸載（或下一次 useEffect 執行時）時，移除之前附加的事件處理程序
     return () => {
-      carousel.removeEventListener('transitionend', transitionEndHandler);
+      // carousel.removeEventListener('transitionend', transitionEndHandler);
     };
   }, []);
 
@@ -1010,10 +1026,10 @@ function ImageWithEqualDimensions({ file_path }) {
     // 立即在組件加載時調整照片的高度
     handleResize();
     // 添加螢幕大小變化事件監聽器
-    window.addEventListener("resize", handleResize);
+    // window.addEventListener("resize", handleResize);
     // 在組件卸載時移除事件監聽器
     return () => {
-      window.removeEventListener("resize", handleResize);
+      // window.removeEventListener("resize", handleResize);
     };
   }, []);
   return (
@@ -1307,15 +1323,18 @@ export default function MissionList() {
     getAllMissions()
     console.log("狀態變數已重置為預設值");
   };
-  const handleClearSettings = () => {
-    // 使用 setTimeout 延遲執行 clearSettings 本來沒有寫 但clearSettings要點2次才反應
-    setTimeout(() => {
-      clearSettings();
-    }, 0);
-  };
+  // const handleClearSettings = () => {
+  //   // 使用 setTimeout 延遲執行 clearSettings 本來沒有寫 但clearSettings要點2次才反應
+  //   // setTimeout(() => {
+  //   //   clearSettings();
+  //   // }, [3000]);
+  // };
 
 
-
+console.log(allMissions)
+;
+console.log(itemsPerPage);
+console.log("我愛台灣")
 
   return (
     <>
@@ -1326,7 +1345,7 @@ export default function MissionList() {
               <Link href="/">首頁</Link>
             </li>
             <li className="breadcrumb-item" aria-current="page">
-              <Link href="/work/find-mission" onClick={handleClearSettings}>小貓上工(找任務)</Link>
+              <Link href="/work/find-mission" >小貓上工(找任務)</Link>
             </li>
             {search ? (
               <>
@@ -1381,7 +1400,7 @@ export default function MissionList() {
           {/* 最新任務桌機 */}
           <div className="latest-mission latest-mission-pc d-none d-lg-flex flex-column mb-3">
             <h3 className="size-5  ">最新任務</h3>
-            <LatestMission userId={userId} handleMouseEnter={handleMouseEnter} handleMouseLeave={handleMouseLeave} isHovered={isHovered} />
+            <LatestMission userId={userId} />
           </div>
           {/* 最新任務手機 */}
           <div className="latest-mission latest-mission-mobile d-lg-none mb-3 mt-1">

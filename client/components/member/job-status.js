@@ -74,10 +74,11 @@ export default function JobStatusTwo({job,currentScreen,getJob,idCounts,activePa
 
   return (
     <>
+    <div className="bg">
       {currentData.map((v,i) => {
         return (
           <>
-          <div className="d-md-none d-flex pt-3 ps-3 bg">
+          <div className="d-md-none d-flex pt-3 ps-3 ">
                   <p className="size-6 title"><span>任務主題：</span>{v.title}
                    {v.mission_status==0?(
                     <>
@@ -93,7 +94,7 @@ export default function JobStatusTwo({job,currentScreen,getJob,idCounts,activePa
                   </p>
 
             </div>
-            <div className="d-flex border-bottom py-md-3 justify-content-between px-md-5 ps-3 bg" key={i}>
+            <div className="d-flex border-bottom py-md-3 justify-content-between mx-md-5 ps-3 bg" key={i}>
               <div className=" d-flex ">
                 {/* 1 */}
                 <div className="">
@@ -168,12 +169,15 @@ export default function JobStatusTwo({job,currentScreen,getJob,idCounts,activePa
                 ))
               )}
               </div>
+              
             </div>
             
           </>
         );
       })}
       <Pagination  itemsPerPage={itemsPerPage} total={type} activePage={activePage} setActivePage={setActivePage}/>
+      </div>
+      
     </>
   );
 }

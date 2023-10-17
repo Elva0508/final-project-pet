@@ -216,7 +216,7 @@ const back =(id)=>{
                               </button>
                               <button
                                 className="btn btn-confirm m-2 size-6 m-size-6"
-                                onClick={() => handleSaveComment(v.user_id,v.product_id,v.order_id)}
+                                onClick={() => handleSaveComment(v.user_id,v.product_id,v.oid)}
                               >
                                 儲存
                               </button>
