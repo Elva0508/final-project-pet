@@ -222,7 +222,7 @@ const ProfilePage = () => {
               <label className={`fs3 ${userRfs}`}>性別</label>
               <div className="fs11 d-flex align-items-center">
                 <div className="radio-box">
-                  <label className="gender-btn round">
+                  <label >
                     <input
                       type="radio"
                       name="label"
@@ -233,11 +233,11 @@ const ProfilePage = () => {
                       onChange={() => setGender("男")}
                       aria-label="..."
                     />
-                    <span>男</span>
+                    <span className="gender-btn round" >男</span>
                   </label>
                 </div>
                 <div className="radio-box">
-                <label className="gender-btn round">
+                <label >
                   <input
                     type="radio"
                     name="label"
@@ -248,7 +248,7 @@ const ProfilePage = () => {
                     onChange={() => setGender("女")}
                     aria-label="..."
                   />
-                  <span>女</span>
+                  <span  className="gender-btn round">女</span>
                   </label>
                   {/* <label>
                     <input type="radio" name="label" value="古裝劇" />
