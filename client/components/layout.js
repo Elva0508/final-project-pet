@@ -33,25 +33,37 @@ export default function Layout({ children }) {
   //     document.body.classList.remove("disableFlow");
   //   }
   // }, [isLoading]);
-
+  const uniqueKey = Date.now();
   useEffect(() => {
+    // const handleBeforeHistoryChange = (url, { shallow }) => {
+    //   console.log("加載前準備中");
+    //   // setIsLoading(true);
+    // };
     const handleChangeStart = (url, { shallow }) => {
       setIsLoading(true);
       console.log(
-        `App is changing to ${url} ${
-          shallow ? "with" : "without"
-        } shallow routing`
+        "路由要開始跳轉啦!!!!!!!!!!!!!!!,loading is " +
+          isLoading +
+          `App is changing to ${url});`
       );
     };
 
     const handleChangeComplete = (url) => {
+      console.log("路由跳轉成功啦!!!!!!!!!!!!!!!", "loading is " + isLoading);
       setIsLoading(false);
+      // setTimeout(() => {
+      //   setIsLoading(false);
+      // }, 2000);
     };
+    // router.events.on("beforeHistoryChange", handleBeforeHistoryChange);
     router.events.on("routeChangeStart", handleChangeStart);
     router.events.on("routeChangeComplete", handleChangeComplete);
-    router.events.on("routeChangeError", handleChangeComplete);
+    router.events.on("routeChangeError", () => {
+      "路由錯誤";
+    });
 
     return function cleanup() {
+      // router.events.off("beforeHistoryChange", handleBeforeHistoryChange);
       router.events.off("routeChangeStart", handleChangeStart);
       router.events.off("routeChangeComplete", handleChangeComplete);
       router.events.off("routeChangeError", handleChangeComplete);
@@ -63,7 +75,7 @@ export default function Layout({ children }) {
       <>
         <ResponsiveAppBar />
         {pathname && pathname == "/" ? <HomeVedio /> : null}
-        {isLoading && <CatRun />}
+        {isLoading && <CatRun key={uniqueKey} />}
         <main
           style={{
             maxWidth: "1320px",

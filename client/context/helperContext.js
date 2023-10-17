@@ -22,8 +22,5 @@ export const HelperProvider = ({ children }) => {
 };
 
 export function useHelper() {
-  const context = useContext(HelperContext);
-  if (context === undefined)
-    throw new Error("AuthContext was used outside AuthProvider");
-  return context;
+  return useContext(HelperContext);
 }
