@@ -3,7 +3,7 @@
   // min-height: 913px;
   //width: 100%;
   //margin: 0 auto 0; 
-  background-color: $content-bg;
+  background-color: #fff;
   $form-height: 80px;
   padding: 0 auto;
   position: relative;
@@ -77,12 +77,12 @@ margin: 4.5rem 0;
 
   }
 /* 隱藏 radio 輸入框 */
-// .radio-box input[type="radio"] {
-//   display: none; 
-// }
+.radio-box input[type="radio"] {
+  display: none; 
+}
 
 /* 當 radio 被選擇時，改變相鄰按鈕的樣式 */
-.radio-box input:checked + button {
+.radio-box input:checked + .gender-btn  {
   background-color: #d7965b; /* 背景顏色設為 #d7965b */
   color: #fff; /* 文字顏色設為 #fff */
 }
