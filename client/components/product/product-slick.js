@@ -153,16 +153,16 @@ export default function ProductSlick() {
     }
     const settings = {
         dots: true,
-        infinite: false,
         speed: 500,
         slidesToShow: 4, //一次顯示幾張圖片
         slidesToScroll: 4, //一次要滾動幾張圖片
-        initialSlide: 0,
+        initialSlide: 0, //顯示第一個slide
         autoplay: true,
         autoplayspeed: 500,
         cssEase: "linear",
+        infinite: true, //是否可以循環
 
-        responsive: [
+        responsive: [  //RWD
             {
                 breakpoint: 1024,
                 settings: {
