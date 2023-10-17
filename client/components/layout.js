@@ -35,27 +35,18 @@ export default function Layout({ children }) {
   // }, [isLoading]);
   const uniqueKey = Date.now();
   useEffect(() => {
-    // const handleBeforeHistoryChange = (url, { shallow }) => {
-    //   console.log("加載前準備中");
-    //   // setIsLoading(true);
-    // };
     const handleChangeStart = (url, { shallow }) => {
       setIsLoading(true);
-      console.log(
-        "路由要開始跳轉啦!!!!!!!!!!!!!!!,loading is " +
-          isLoading +
-          `App is changing to ${url});`
-      );
+      // setTimeout(() => {
+      //   // 等待1.5秒后执行路由跳转，這個會錯誤一值造成無限跳轉
+      //   router.push(url);
+      // }, 1500);
     };
-
     const handleChangeComplete = (url) => {
       console.log("路由跳轉成功啦!!!!!!!!!!!!!!!", "loading is " + isLoading);
       setIsLoading(false);
-      // setTimeout(() => {
-      //   setIsLoading(false);
-      // }, 2000);
     };
-    // router.events.on("beforeHistoryChange", handleBeforeHistoryChange);
+
     router.events.on("routeChangeStart", handleChangeStart);
     router.events.on("routeChangeComplete", handleChangeComplete);
     router.events.on("routeChangeError", () => {

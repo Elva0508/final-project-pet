@@ -768,7 +768,7 @@ const HelperDetail = () => {
             </div>
             <div className="profile row justify-content-center justify-content-md-start">
               <div className="size-5 m-size-5 username col-12 text-center my-2">
-                {profile.name}
+                {profile.name || "loading...."}
               </div>
               <hr className="profile-divider" />
               <div className="profile-info">
@@ -849,7 +849,11 @@ const HelperDetail = () => {
             <div className="item">
               <div className="item-title size-6">小幫手服務介紹</div>
               <hr className="item-divider" />
-              <di className="item-content size-7" ref={contentRef}></di>
+              <di
+                className="item-content size-7 d-block"
+                ref={contentRef}
+                style={{ minHeight: "700px" }}
+              ></di>
             </div>
             <div className="item">
               <div className="item-title size-6">服務價格說明</div>

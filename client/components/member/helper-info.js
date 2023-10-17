@@ -150,16 +150,21 @@ const Close = ({ open, setOpen, user_id }) => {
     }
   };
   useEffect(() => {
-    lottie.loadAnimation({
-      container: document.getElementById("close"), // the dom element
-      renderer: "svg",
-      loop: true,
-      autoplay: true,
-      animationData: animationClose, // the animation data
-    });
-    return () => {
-      lottie.destroy();
-    };
+    console.log(open);
+    const container = document.getElementById("close");
+    if (container) {
+      lottie.loadAnimation({
+        container: document.getElementById("close"), // the dom element
+        renderer: "svg",
+        loop: true,
+        autoplay: true,
+        animationData: animationClose, // the animation data
+      });
+    }
+
+    // return () => {
+    //   lottie.destroy();
+    // };
   }, [open]);
   return (
     <div className="close-mask">

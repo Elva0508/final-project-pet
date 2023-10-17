@@ -106,7 +106,6 @@ const MobileFilter = ({
   setTotalRows,
   setCurrentSearch,
   helperControl,
-  // handleHelperAnimate,
 }) => {
   const [titleContent, setTitleContent] = useState("服務類型");
   const handleType = (value) => {
@@ -228,10 +227,13 @@ const FamousHelperCard = ({
   famousControl,
   index,
   famousState,
+  isActive,
+  famousRef,
 }) => {
   // const [isFavorite, setIsFavorite] = useState(false); // 初始狀態為未收藏
   const [isFavHovered, setIsFavHovered] = useState(false);
   const { isAuthenticated } = useAuth();
+  const { isLoading, setIsLoading } = useHelper();
   const router = useRouter();
   const service = [
     { label: "到府代餵", value: parseInt(helper.feed_service) },
@@ -270,16 +272,28 @@ const FamousHelperCard = ({
     <>
       {/* <AnimatePresence> */}
       <motion.div
+        ref={famousRef}
         custom={index}
         variants={famousState}
-        animate={famousControl}
+        initial={"initial"}
+        animate={
+          isActive === "move"
+            ? "move"
+            : isActive === "exit"
+            ? "exit"
+            : "initial"
+        }
+        exit={"exit"}
         className={`famous-helper-card d-flex align-items-center ${
           collection.find((item) => item === helper.user_id)
             ? ""
             : "active-fav-in-fam-card"
         }`}
         onClick={() => {
-          router.push(`/work/find-helper/${helper.user_id}`);
+          setIsLoading(true);
+          setTimeout(() => {
+            router.push(`/work/find-helper/${helper.user_id}`);
+          }, [1500]);
         }}
       >
         <div className="img-wrapper">
@@ -772,9 +786,12 @@ const MissionHelperList = () => {
   const [totalRows, setTotalRows] = useState(18);
   const { collection, setCollection } = useHelper();
   const { isAuthenticated, userId } = useAuth();
-  const [isLoading, setIsLoading] = useState(false);
   const helperControl = useAnimationControls();
   const famousControl = useAnimationControls();
+  const { isLoading } = useHelper();
+  const [isActive, setIsActive] = useState("move");
+  const [helpActive, setHelperActive] = useState("move");
+  const [firstLoad, setFirstLoad] = useState(true); //用來判斷是否初次加載，式的話就不進行famousCard的篩選動畫
   const helperVariant = {
     // 一開始消失，畫面從下側往上移入出現
     initial: {
@@ -796,24 +813,36 @@ const MissionHelperList = () => {
   };
 
   const famousState = {
-    initial: { y: 50, x: 0, opacity: 0 },
+    initial: { y: 50, x: 0, opacity: 0, transition: { duration: 0.1 } },
     move: (i) => ({
       y: 0,
       x: 0,
       opacity: 1,
-      transition: { layout: { duration: 1 }, duration: 1, delay: i * 0.2 },
+      transition: { layout: { duration: 0.4 }, duration: 1, delay: i * 0.2 },
     }),
     exit: (i) => ({
       x: -150,
+      y: 0,
       opacity: 0,
-      transition: { duration: 1 },
+      transition: { duration: 0.2, delay: i * 0.1 },
     }),
   };
+  const famousRef = useRef(null);
+
+  // useEffect(() => {
+
+  // }, [isActive]);
 
   useEffect(() => {
     (async () => {
-      await helperControl.start("exit");
-      await famousControl.start("initial");
+      // 使用一個promise先等待exit動畫完成再做後續的更新資料跟move動畫
+      await new Promise((resolve, reject) => {
+        setIsActive("exit");
+        setTimeout(() => {
+          resolve();
+        }, 600);
+      });
+      setIsActive("initial");
       if (!currentSearch) {
         setPage(1);
         if (order) {
@@ -834,10 +863,10 @@ const MissionHelperList = () => {
         } else {
           WorkService.getAllHelpers(filterType, 1)
             .then((response) => {
-              // setTimeout(() => {}, [200]);
               setAllHelpers(response?.data?.data);
               setTotalRows(response?.data?.totalRows);
-              setIsLoading(false);
+
+              // setIsLoading(false);
             })
             .catch((e) => {
               console.log(e);
@@ -845,18 +874,23 @@ const MissionHelperList = () => {
         }
         WorkService.getFamousHelper(filterType)
           .then((response) => {
-            console.log(response?.data.famous);
-            // setTimeout(() => {}, [1000]);
+            // console.log(response?.data.famous);
             setFamous(response?.data.famous);
-            // console.log(res?.data.data);
+            setIsActive("move");
           })
           .catch((e) => {
             console.log(e);
           });
-        await helperControl.start("move");
       }
     })();
   }, [filterType]);
+  // useEffect(() => {
+  //   (async () => {
+  //     await famousControl.start("exit");
+  //     await famousControl.start("initial");
+  //     await famousControl.start("move");
+  //   })();
+  // }, [filterType]);
 
   useEffect(() => {
     if (order) {
@@ -934,10 +968,18 @@ const MissionHelperList = () => {
   };
 
   const handleExit = async () => {
-    await famousControl.start("exit");
-    await helperControl.start("exit");
-    famousControl.start("initial");
-    helperControl.start("initial");
+    await Promise.all([
+      famousControl.start("exit"),
+      helperControl.start("exit"),
+    ]);
+    await Promise.all([
+      famousControl.start("initial"),
+      helperControl.start("initial"),
+    ]);
+    await Promise.all([
+      famousControl.start("move"),
+      helperControl.start("singleMove"),
+    ]);
   };
 
   const handleMove = async () => {
@@ -945,17 +987,28 @@ const MissionHelperList = () => {
     helperControl.start("singleMove");
     // helperControl.start("exit"), helperControl.start("exit");
   };
+  // useEffect(() => {
+  //   if (!firstLoad) {
+  //     setTimeout(() => {
+  //       setIsActive("exit");
+  //     }, 0);
+  //     setTimeout(() => {
+  //       setIsActive("initial");
+  //     }, 2000);
+  //     setTimeout(() => {
+  //       setIsActive("move");
+  //     }, 2500);
+  //   } else {
+  //     setFirstLoad(false);
+  //     return;
+  //   }
+  // }, [filterType]);
 
-  useEffect(() => {
-    famousControl.start("move");
-    helperControl.start("singleMove");
-  }, [famousState]);
   return (
     <div className="mission-helper-list container">
       <motion.button
         onTap={async () => {
-          await handleExit();
-          handleMove();
+          handleExit();
         }}
       >
         測試
@@ -1073,19 +1126,21 @@ const MissionHelperList = () => {
         <section className="famous-helper">
           <p className="famous-helper-title size-5">熱門小幫手</p>
           <div className="famous-helper-pc d-lg-block d-none">
-            {/* <AnimatePresence> */}
-            {famous.map((helper, index) => (
-              <FamousHelperCard
-                key={helper.user_id}
-                helper={helper}
-                collection={collection}
-                setCollection={setCollection}
-                famousControl={famousControl}
-                index={index}
-                famousState={famousState}
-              />
-            ))}
-            {/* </AnimatePresence> */}
+            <AnimatePresence>
+              {famous.map((helper, index) => (
+                <FamousHelperCard
+                  // key={helper.user_id}
+                  helper={helper}
+                  collection={collection}
+                  setCollection={setCollection}
+                  famousControl={famousControl}
+                  index={index}
+                  famousState={famousState}
+                  isActive={isActive}
+                  famousRef={famousRef}
+                />
+              ))}
+            </AnimatePresence>
           </div>
           <div className="famous-helper-mobile d-block d-lg-none">
             <MobileFamousHelper

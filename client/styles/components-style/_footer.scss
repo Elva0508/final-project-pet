@@ -1,6 +1,8 @@
 .footer {
   background-color: $header-bg;
   height: 180px;
+  position: relative;
+  z-index: 500;
 
   &-links {
     margin-top: 2.7rem;

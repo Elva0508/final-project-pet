@@ -106,9 +106,9 @@ export const RecordTemplate = ({
       animationData: animation, // the animation data
     });
 
-    return () => {
-      lottie.destroy();
-    };
+    // return () => {
+    //   lottie.destroy();
+    // };
   }, [status]);
   console.log(info);
   return (
