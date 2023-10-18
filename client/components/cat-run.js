@@ -61,7 +61,7 @@ const CatRun = () => {
       <div
         id="cat-run-lottie"
         ref={catRunRef}
-        className="animate__animated animate__fadeInDownBig"
+        // className="animate__animated animate__fadeInDownBig"
         style={{ transform: `translateY(${offset}px)` }}
       ></div>
     </div>

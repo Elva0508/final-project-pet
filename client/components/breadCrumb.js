@@ -10,6 +10,7 @@ function BreadCrumb(props) {
     const { pathname,query } = useRouter();
     // console.log(pathname);
     console.log(query);
+    
     const [product, setProduct] = useState([])
     const [article, setArticle] = useState([])
     const [mission, setMission] = useState([])
