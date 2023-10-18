@@ -19,6 +19,10 @@ $dropdown-link-active-bg: #f8cb9f;
 $dropdown-bg: #fffdfb;
 $dropdown-border-width: 0;
 
+.animate__animated.animate__fadeInDownBig {
+  --animate-duration: 0.3s;
+}
+
 // ↑↑↑  變數覆蓋(Variable overrides) 要寫在這行"上面"  ↑↑↑
 // 導入所有 bootstrap 樣式
 @import "~bootstrap/scss/bootstrap";

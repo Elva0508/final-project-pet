@@ -148,7 +148,7 @@ export default function Purchast() {
                   <div className="nopurchast">
                     <div className=" d-flex justify-content-center mt-5">
                       <p className="size-3">
-                        尚無購買紀錄，快去小貓商城逛逛吧!
+                        尚無購買紀錄，快去小貓商城逛逛吧！
                       </p>
                     </div>
                     <div className="d-flex justify-content-center mt-5">
@@ -337,10 +337,10 @@ export default function Purchast() {
                     </>
                   );
                 })}
-                <div className="d-flex justify-content-center my-3">
+                <div className="d-flex justify-content-center my-3 mx-3 mx-md-0">
                   <button
                     type="button"
-                    className="btn btn-confirm"
+                    className="btn btn-outline-confirm me-2"
                     data-bs-dismiss="offcanvas"
                     aria-label="Close"
                   >
@@ -348,7 +348,7 @@ export default function Purchast() {
                   </button>
                   <button
                     type="button"
-                    className="btn btn-confirm ms-5"
+                    className="btn btn-confirm ms-md-5 ms-2"
                     onClick={() => {
                       window.location.href = "/product/cart";
                     }}

@@ -56,7 +56,7 @@ export default function Membership() {
           <div className="membership-box mb-3">
             <div>
               <div className="member-avatar">
-                <Image src={memberCat1} alt="memberCat1" width={180} />
+                <Image src={memberCat1} alt="memberCat1" className="member-avatar-img"  />
               </div>
               <div className="membership-body my-3">
                 <div className="membership-title">
@@ -71,7 +71,7 @@ export default function Membership() {
 
             <div>
             <div className="member-avatar">
-                <Image src={memberCat2} alt="memberCat2" width={180} />
+                <Image src={memberCat2} alt="memberCat2" className="member-avatar-img"   />
               </div>
               <div className="membership-body my-3">
                 <div className="membership-title my-2">
@@ -88,7 +88,7 @@ export default function Membership() {
 
             <div>
             <div className="member-avatar">
-                <Image src={memberCat3} alt="memberCat3" width={180} />
+                <Image src={memberCat3} alt="memberCat3" className="member-avatar-img"  />
               </div>
               <div>
               <div className="membership-body my-3">
