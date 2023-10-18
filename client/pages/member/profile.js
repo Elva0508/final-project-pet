@@ -172,20 +172,19 @@ const ProfilePage = () => {
 
   return (
     <div className=" my-3">
+       <ListUserM />
       <div className="d-flex justify-content-around pt-2">
-        {/* mobile版的左側tab */}
-        <ListUserM />
         <ListD />
-        {/* <UserForm /> */}
-        <div className="user-profile row col-lg-8 col-md-8 col-12 ">
-          <div className="title">
+        <div className="user-profile d-flex flex-column col-md-8 col-12  ">
+   
+          <div className="title my-1">
             <p className=" size-4">
-         
-            個人資料
+            <span className="my">▍</span> 個人資料
             </p>
           </div>
-          <div className="user-form">
-            <div></div>
+
+          <div className="user-form ">
+          
             <div className="user-form-item">
               <div className="ws20 mb-5 d-flex justify-content-center">
                 <label className={`fs3 ${userRfs}`}>Email</label>
