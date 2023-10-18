@@ -7,6 +7,7 @@ import Image from "next/image";
 import data from "@/data/taiwan.json";
 import TWZipCode from "@/components/user/TWZipCode";
 
+
 import { Padding } from "@mui/icons-material";
 import jwt_decode from "jwt-decode";
 
@@ -35,7 +36,7 @@ const ProfilePage = () => {
 
   //取得資料
 
-  const [userData, setUserData] = useState({});
+  //const [userData, setUserData] = useState({});
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [gender, setGender] = useState("male");
@@ -118,11 +119,11 @@ const ProfilePage = () => {
       return;
     }
     // 驗證手機格式
-    // const phoneRegex = /^09\d{8}$/;
-    // if (!phoneRegex.test(phone)) {
-    //   alert("請輸入正確的手機號碼格式");
-    //   return;
-    // }
+    const phoneRegex = /^09\d{8}$/;
+    if (!phoneRegex.test(phone)) {
+      alert("請輸入正確的手機號碼格式");
+      return;
+    }
     //驗證地址不為空
     if (!detailAddress) {
       alert("請輸入完整的地址");
@@ -156,23 +157,27 @@ const ProfilePage = () => {
       .then((data) => {
        
         console.log(data);
-        setUserData(data.results[0]);
+        //setUserData(data.results[0]);
+        // console.log(122334)
+        // const user = data.results[0];
+        // setName(user.name);
+        // setGender(user.gender);
+        // setBirthday(
+        //   new Date(user.birthday).toISOString().split("T")[0]
+        // );
+        // setPhone(user.phone);
 
-        setName(data.results[0].name);
-        setGender(data.results[0].gender);
-        setBirthday(
-          new Date(data.results[0].birthday).toISOString().split("T")[0]
-        );
-        setPhone(data.results[0].phone);
-
-        setDetailAddress(data.results[0].address);
-        setPetCount(data.results[0].pet_number);
-        alert("會員資料修改完成");
-        return;
-      
+        // setDetailAddress(user.address);
+        // setPetCount(user.pet_number);
+     
+       alert("會員資料修改完成");
+  
+       
      
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.error(err);
+      });
   };
 
   return (
