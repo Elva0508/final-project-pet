@@ -148,7 +148,7 @@ export default function Purchast() {
                   <div className="nopurchast">
                     <div className=" d-flex justify-content-center mt-5">
                       <p className="size-3">
-                        尚無購買紀錄，快去小貓商城逛逛吧!
+                        尚無購買紀錄，快去小貓商城逛逛吧！
                       </p>
                     </div>
                     <div className="d-flex justify-content-center mt-5">
