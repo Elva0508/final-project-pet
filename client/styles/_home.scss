@@ -58,6 +58,19 @@
     }
   }
 
+  .block-three-mobile {
+    display: none;
+  }
+
+  @media (max-width: 375px) {
+    .block-three {
+      display: none;
+    }
+    .block-three-mobile {
+      display: block;
+    }
+  }
+
   // .block-three {
   //   padding-top: 200px;
   // }
