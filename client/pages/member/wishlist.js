@@ -152,7 +152,7 @@ export default function Wishlist() {
                   <div className="nowhislist">
                     <div className=" d-flex justify-content-center mt-5">
                       <p className="size-3">
-                        尚無追蹤紀錄，快去小貓商城逛逛吧!
+                        尚無追蹤紀錄，快去小貓商城逛逛吧！
                       </p>
                     </div>
                     <div className="d-flex justify-content-center mt-5">

@@ -79,7 +79,7 @@ export default function HistoryStatusOne({
           <>
             <div className="nohistory">
               <div className=" d-flex justify-content-center mt-5">
-                <p className="size-3">尚無刊登紀錄，快去小貓上工逛逛吧!</p>
+                <p className="size-3">尚無刊登紀錄，快去小貓上工逛逛吧！</p>
               </div>
               <div className="d-flex justify-content-center mt-5">
                 <button
