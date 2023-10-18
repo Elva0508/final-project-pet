@@ -40,6 +40,10 @@
         margin-top: 5px;
         padding: 0;
     }
+    .active{
+        color: $price;
+        font-weight: 800;
+    }
    }
 
 .filter{

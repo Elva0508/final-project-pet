@@ -1,4 +1,4 @@
-import { createContext, useState, useContext} from 'react'
+import { createContext, useState, useContext,useEffect} from 'react'
 import { useRouter } from 'next/router';
 
 
@@ -6,63 +6,59 @@ const ProductActivePageContext = createContext();
 
 
 export function ProductActivePageProvider ({ children }) {
-  const { pathname } = useRouter()
-  console.log(pathname);
-  let page
-  page = 24;
-  if (pathname =="/product"){
-    page=1
-  } else if (pathname =="/product/1"){
-    page=2
-  } else if (pathname =="/product/1/1"){
-    page=3
-  } else if (pathname =="/product/1/2"){
-    page=4
-  } else if (pathname =="/product/1/3"){
-    page=5
-  } else if (pathname =="/product/2"){
-    page=6
-  } else if (pathname =="/product/2/4"){
-    page=7
-  } else if (pathname =="/product/2/5"){
-    page=8
-  } else if (pathname =="/product/2/6"){
-    page=9
-  } else if (pathname == "/product2/7") {
-    page = 10
-  } else if (pathname == "/product/3") {
-    page = 11
-  } else if (pathname == "/product/3/8") {
-    page = 12
-  } else if (pathname == "/product/3/9") {
-    page = 13
-  } else if (pathname == "/product/3/10") {
-    page = 14
-  } else if (pathname == "/product/4") {
-    page = 15
-  } else if (pathname == "/product/4/11") {
-    page = 16
-  } else if (pathname == "/product/4/12") {
-    page = 17
-  } else if (pathname == "/product/4/13") {
-    page = 18
-  } else if (pathname == "/product/4/14") {
-    page = 19
-  } else if (pathname == "/product/5") {
-    page = 20
-  } else if (pathname == "/product/5/15") {
-    page = 21
-  } else if (pathname == "/product/5/16") {
-    page = 22
-  } else if (pathname == "/product/5/17") {
-    page = 23
-  } else if (pathname == "/product/5/18") {
-    page = 24
-  }else {
-      page = 0
-  }
+  const router = useRouter()
+  const [activeButton, setActiveButton] = useState(0)
+  
+const { pathname, query } = useRouter()
+  useEffect(() => {
+    console.log(pathname);
+    console.log(query.subcategory_id);
 
-  const [activeButton, setActiveButton] = useState(page)
+    if (router.isReady) {
+      // 确保能得到 router.query 有值
+      if (query.subcategory_id == '1') {
+        setActiveButton(1)
+      } else if (query.subcategory_id == '2') {
+        setActiveButton(2)
+      } else if (query.subcategory_id == '3') {
+        setActiveButton(3)
+      } else if (query.subcategory_id == '4') {
+        setActiveButton(4)
+      } else if (query.subcategory_id == '5') {
+        setActiveButton(5)
+      } else if (query.subcategory_id == '6') {
+        setActiveButton(6)
+      } else if (query.subcategory_id == '7') {
+        setActiveButton(7)
+      } else if (query.subcategory_id == '8') {
+        setActiveButton(8)
+      } else if (query.subcategory_id == '9') {
+        setActiveButton(9)
+      } else if (query.subcategory_id == '10') {
+        setActiveButton(10)
+      } else if (query.subcategory_id == '11') {
+        setActiveButton(11)
+      } else if (query.subcategory_id == '12') {
+        setActiveButton(12)
+      } else if (query.subcategory_id == '13') {
+        setActiveButton(13)
+      } else if (query.subcategory_id == '14') {
+        setActiveButton(14)
+      } else if (query.subcategory_id == '15') {
+        setActiveButton(15)
+      } else if (query.subcategory_id == '16') {
+        setActiveButton(16)
+      } else if (query.subcategory_id == '17') {
+        setActiveButton(17)
+      } else if (query.subcategory_id == '18') {
+        setActiveButton(18)
+      }
+    }
+  }, [router.query]);
+
+  // page = 18;
+  
+
 
 
   return (

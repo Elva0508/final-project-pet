@@ -155,7 +155,7 @@ export default function ProductCard2({ productData, mainPic, setMainPic }) {
                   <img src={v.images_one} className="card-img-top" alt="..." />
                 </Link>
                 </div>
-                <div className="card-body p-3" >
+                <div className="card-body p-2" >
                   <div className="d-flex justify-content-between align-items-center">
                     {/* 類別按鈕顏色已建好 btn-color-1 一直到btn-color-7 再依需求調整className即可 */}
                     {/* 顏色設定如果需要再調整，可以到以下檔案調整 \final-project-pet\client\styles\components-style\_product-card.scss */}
@@ -168,7 +168,7 @@ export default function ProductCard2({ productData, mainPic, setMainPic }) {
                     <div className="card-text-vendor size-7 m-size-7">{v.vendor}</div>
                     <div className="card-text size-6 m-size-7">{v.product_name}</div>
                     <div className="product-sale-price d-flex align-items-center" href="#">
-                      <div className="price fs-4  size-6 m-size-7 me-3">NT${v.specialoffer}</div>
+                      <div className="price fs-4  size-6 m-size-7 me-2">NT${v.specialoffer}</div>
                       <del>NT${v.price}</del>
                     </div>
                   </Link>

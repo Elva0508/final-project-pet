@@ -13,7 +13,7 @@ import { useCart } from "@/hooks/useCart"
 import { useRouter } from "next/router";
 import ProductSlick2 from '@/components/product/product-slick2';
 import { FaPaw } from 'react-icons/fa';
-import { useActivePage } from "@/hooks/useActivePage";
+import { useProductActivePage } from "@/hooks/useProductActivePage";
 
 
 const Search = ({ handleSearch, placeholder, color, onClick, search, setSearch }) => {
@@ -412,7 +412,8 @@ const [productData, setProductData] = useState([]); // 初始化為一個帶有 
     };
 
     //sidebar
-    const { activeButton, setActiveButton } = useActivePage();
+    const { activeButton, setActiveButton } = useProductActivePage();
+    console.log(activeButton);
 
 
 
@@ -627,10 +628,11 @@ const [productData, setProductData] = useState([]); // 初始化為一個帶有 
                                                     if (v.category_id === category.category_id) {
                                                         return (
                                                             <button
-                                                                className={`button-subcategory size-7 p-2 `}
+                                                                className={`button-subcategory size-7 p-2 ${activeButton === v.subcategory_id ? "active" : ""} `}
                                                                 type="button"
                                                                 key={i}
                                                                 onClick={() => {
+                                                                    setActiveButton(v.subcategory_id);
                                                                     router.push(`/product/${category.category_id}/${v.subcategory_id}`);
                                                                     // handlesubCategoryChange(subcategory.trim());
                                                                     // console.log(`Button for subcategory ${subcategory.trim()} clicked.`);
