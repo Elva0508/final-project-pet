@@ -3,7 +3,7 @@
   position: relative;
   // margin: auto;
   overflow: hidden;
-  width: 600px;
+  width: 100%;
   height: 300px;
 
   p {
@@ -13,7 +13,8 @@
     color: $text-main;
 
     .couponCode{
-      font-size: 1.2em;
+      font-size: 1.5em;
+      font-weight: 500;
     }
   }
 }
@@ -26,6 +27,7 @@ h1 {
   color: $text-main;
   padding-bottom: 2px;
 }
+
 
 
 
@@ -47,7 +49,7 @@ button, .dot-coupon {
 
 #success-box {
   //position: absolute;
-  width: 35%;
+  width: 100%;
   height: 100%;
   left: 12%;
   background: linear-gradient(to bottom right, #ecb885 40%, #c78964 100%);

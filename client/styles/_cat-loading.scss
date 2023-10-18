@@ -1,3 +1,19 @@
+.cat-run-wrapper {
+  position: absolute;
+  width: 100vw;
+  // height: 100vh;
+  background-color: rgba(221, 221, 221, 0.507);
+  z-index: 100;
+  #cat-run-lottie {
+    width: 300px;
+    height: 300px;
+    position: absolute;
+    top: 20vh;
+    left: 50vw;
+    transform: translate(-50%, 0%);
+    z-index: 200;
+  }
+}
 .disableFlow {
   overflow: hidden;
 }
