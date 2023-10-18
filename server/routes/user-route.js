@@ -27,6 +27,24 @@ router.get("/user-coupon", (req,res)=>{
 })
 
 
+router.get('/user-avatar/:user_id', (req, res) => {
+  const userId = req.params.user_id;
+  
+  // 查詢 MySQL 數據庫以獲取會員資料
+  connection.query(`SELECT name, cover_photo
+  FROM userinfo
+  WHERE user_id = ?;`, [userId ], (err, results) => {
+    if (err) {
+      console.error('查詢數據庫時出錯:', err);
+      return res.status(500).json({ error: '內部伺服器錯誤' });
+    }else{
+      if(results.length>0){
+        res.status(200).json({message:'success',code:'200',results:results})
+      }
+    }
+    
+  });
+});
 router.get('/user-profile/:user_id', (req, res) => {
   const userId = req.params.user_id;
   

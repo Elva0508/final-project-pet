@@ -144,6 +144,7 @@ const ProfilePage = () => {
       address: detailAddress,
       pet_number: petCount,
     };
+
     fetch(`http://localhost:3005/api/user/user-profile-change/${userId}`, {
       method: "PUT",
       headers: {
@@ -153,6 +154,7 @@ const ProfilePage = () => {
     })
       .then((res) => res.json())
       .then((data) => {
+       
         console.log(data);
         setUserData(data.results[0]);
 
@@ -166,6 +168,9 @@ const ProfilePage = () => {
         setDetailAddress(data.results[0].address);
         setPetCount(data.results[0].pet_number);
         alert("會員資料修改完成");
+        return;
+      
+     
       })
       .catch((err) => console.log(err));
   };

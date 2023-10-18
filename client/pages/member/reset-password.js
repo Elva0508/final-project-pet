@@ -6,6 +6,7 @@ import useRWD from "@/hooks/useRWD";
 import jwt_decode from "jwt-decode";
 import showPwdImg from "@/assets/showPwd.svg";
 import hidePwdImg from "@/assets/hidePwd.svg";
+import Link from "next/link";
 
 const ResetUserPassword = () => {
   //eye icon
@@ -101,7 +102,7 @@ const ResetUserPassword = () => {
                 </label>
                 <input
                   className="form-input  "
-                  type="password"
+                  type={viewPwd ? "text" : "password"}
                   placeholder="請輸入密碼"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -126,7 +127,7 @@ const ResetUserPassword = () => {
                 </label>
                 <input
                   className="form-input "
-                  type="password"
+                  type={viewPwdConf ? "text" : "password"}
                   placeholder="請輸入新密碼"
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
@@ -154,9 +155,11 @@ const ResetUserPassword = () => {
            
               </div>
               <div className="d-flex justify-content-center gap-5 mt-5">
+              <Link href="/member/profile">
                 <button className="btn-outline-confirm" onClick={handleCancel}>
                   取消
                 </button>
+                </Link>
                 <button className="btn-confirm" onClick={handleSubmit}>
                   儲存
                 </button>
