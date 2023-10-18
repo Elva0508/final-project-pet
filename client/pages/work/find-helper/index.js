@@ -783,7 +783,8 @@ const MissionHelperList = () => {
   const [search, setSearch] = useState(null);
   const [currentSearch, setCurrentSearch] = useState(null);
   const [currentPage, setPage] = useState(1);
-  const [totalRows, setTotalRows] = useState(18);
+  const [totalRows, setTotalRows] = useState(0);
+  const [tempTotalRows, setTempTotalRows] = useState(0); //用來佔存回到handleback時要恢復成所有筆數
   const { collection, setCollection } = useHelper();
   const { isAuthenticated, userId } = useAuth();
   const helperControl = useAnimationControls();
@@ -799,7 +800,7 @@ const MissionHelperList = () => {
       y: 80,
     },
     // 卡片單張單張移動
-    singleMove: (i) => ({
+    move: (i) => ({
       opacity: 1,
       x: 0,
       y: 0,
@@ -838,11 +839,13 @@ const MissionHelperList = () => {
       // 使用一個promise先等待exit動畫完成再做後續的更新資料跟move動畫
       await new Promise((resolve, reject) => {
         setIsActive("exit");
+        setHelperActive("exit");
         setTimeout(() => {
           resolve();
         }, 600);
       });
       setIsActive("initial");
+      setHelperActive("initial");
       if (!currentSearch) {
         setPage(1);
         if (order) {
@@ -856,22 +859,28 @@ const MissionHelperList = () => {
               console.log(response);
               setAllHelpers(response?.data?.data);
               setTotalRows(response?.data?.totalRows);
+              setHelperActive("move");
             })
             .catch((e) => {
               console.log(e);
             });
         } else {
-          WorkService.getAllHelpers(filterType, 1)
-            .then((response) => {
-              setAllHelpers(response?.data?.data);
-              setTotalRows(response?.data?.totalRows);
-
-              // setIsLoading(false);
-            })
-            .catch((e) => {
-              console.log(e);
-            });
+          if (firstLoad) {
+            // 第一次加載所有資訊時先存所有的資料筆數tempTotalRows
+            WorkService.getAllHelpers(filterType, 1)
+              .then((response) => {
+                setAllHelpers(response?.data?.data);
+                setTotalRows(response?.data?.totalRows);
+                setTempTotalRows(response?.data?.totalRows);
+                setHelperActive("move");
+                // setIsLoading(false);
+              })
+              .catch((e) => {
+                console.log(e);
+              });
+          }
         }
+
         WorkService.getFamousHelper(filterType)
           .then((response) => {
             // console.log(response?.data.famous);
@@ -893,33 +902,44 @@ const MissionHelperList = () => {
   // }, [filterType]);
 
   useEffect(() => {
-    if (order) {
-      WorkService.getOrderHelper(
-        filterType,
-        order.parentValue,
-        order.value,
-        currentPage
-      )
-        .then((response) => {
-          console.log(response);
-          // setTimeout(() => {}, [200]);
-          setAllHelpers(response?.data?.data);
-          setTotalRows(response?.data?.totalRows);
-        })
-        .catch((e) => {
-          console.log(e);
-        });
-    } else {
-      WorkService.getAllHelpers(filterType, currentPage)
-        .then((response) => {
-          // setTimeout(() => {}, [200]);
-          setAllHelpers(response?.data?.data);
-          setTotalRows(response?.data?.totalRows);
-        })
-        .catch((e) => {
-          console.log(e);
-        });
-    }
+    (async () => {
+      await new Promise((resolve, reject) => {
+        setHelperActive("exit");
+        setTimeout(() => {
+          resolve();
+        }, 600);
+      });
+      setHelperActive("initial");
+      if (order) {
+        WorkService.getOrderHelper(
+          filterType,
+          order.parentValue,
+          order.value,
+          currentPage
+        )
+          .then((response) => {
+            console.log(response);
+            // setTimeout(() => {}, [200]);
+            setAllHelpers(response?.data?.data);
+            setTotalRows(response?.data?.totalRows);
+            setHelperActive("move");
+          })
+          .catch((e) => {
+            console.log(e);
+          });
+      } else {
+        WorkService.getAllHelpers(filterType, currentPage)
+          .then((response) => {
+            // setTimeout(() => {}, [200]);
+            setAllHelpers(response?.data?.data);
+            setTotalRows(response?.data?.totalRows);
+            setHelperActive("move");
+          })
+          .catch((e) => {
+            console.log(e);
+          });
+      }
+    })();
   }, [currentPage]);
 
   useEffect(() => {
@@ -935,6 +955,7 @@ const MissionHelperList = () => {
     setPage(1);
     setOrder(null);
     setCurrentSearch(null);
+    setTotalRows(tempTotalRows);
     WorkService.getAllHelpers(filterType, currentPage)
       .then((response) => {
         // setTimeout(() => {}, [200]);
@@ -1164,14 +1185,21 @@ const MissionHelperList = () => {
                 className="card-wrapper"
                 // layout
                 // ref={ref}
+                initial={"initial"}
+                animate={
+                  helpActive === "move"
+                    ? "move"
+                    : helpActive === "exit"
+                    ? "exit"
+                    : "initial"
+                }
                 variants={helperVariant}
                 // (index + 1) % 3 == 1 ? 0 : (index + 1) % 3 == 2 ? 1 : 2 整排移動參數
                 custom={index}
-                animate={helperControl}
-                // whileInView="singleMove"
-                // viewport={{
-                // once: true,
-                // }}
+                whileInView="singleMove"
+                viewport={{
+                  once: true,
+                }}
               >
                 <SingleHelperCard
                   // key={helper.user_id}
