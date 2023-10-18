@@ -5,11 +5,12 @@ import Link from "next/link";
 import { RecordDetailTemplate } from "@/components/member/Record-template";
 import { BsCalendarDateFill } from "react-icons/bs";
 import memberService from "@/services/member-service";
-import { Modal, Button, Rating } from "@douyinfe/semi-ui";
+import { Modal, Button, Rating, Notification } from "@douyinfe/semi-ui";
 // import Rating from "@mui/material/Rating";
 import StarIcon from "@mui/icons-material/Star";
 import { useAuth } from "@/context/fakeAuthContext";
 import { useRouter } from "next/router";
+import Swal from "sweetalert2";
 
 const CreateReview = ({ user_id, detail, oid, setIsReviewed }) => {
   // const user = 1;
@@ -41,9 +42,11 @@ const CreateReview = ({ user_id, detail, oid, setIsReviewed }) => {
         if (response.data.status === 200) {
           setIsReviewed(true);
           await setVisible(false);
-          setTimeout(() => {
-            alert("感謝您的評價!");
-          }, [300]);
+          Notification.success({
+            duration: 3,
+            position: "top",
+            title: "感謝您的評價",
+          });
         }
       })
       .catch((e) => {
@@ -252,20 +255,78 @@ const ReserveDetailPage = () => {
     }
   }, [status, isReviewed]);
   const handleReject = () => {
-    alert("是否確定取消預約?");
-    memberService
-      .setReserveStatus(oid, 4)
-      .then((response) => {
-        const result = response.data;
-        console.log(response.data);
-        if (result.status === 200 && result.affectedRows === 1) {
-          router.push("/member/reserve");
-        }
-      })
-      .catch((e) => {
-        console.log(e);
-      });
+    // alert("是否確定取消預約?");
+    Swal.fire({
+      title: "是否確定取消預約?",
+      // text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "確定",
+      cancelButtonText: "返回",
+      reverseButtons: true,
+      buttonsStyling: false,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        memberService
+          .setReserveStatus(oid, 4)
+          .then((response) => {
+            const result = response.data;
+            console.log(response.data);
+            if (result.status === 200 && result.affectedRows === 1) {
+              Swal.fire("取消預約成功!", "您已取消本次預約服務", "success");
+              setTimeout(() => {
+                router.push("/member/reserve");
+              }, 500);
+            }
+          })
+          .catch((e) => {
+            console.log(e);
+            Swal.fire("取消失敗", "請稍後重試一次", "error");
+            setTimeout(() => {
+              router.push("/member/reserve");
+            }, 500);
+          });
+      }
+    });
+
+    Swal.mixin({
+      customClass: {
+        confirmButton: "btn btn-success",
+        cancelButton: "btn btn-danger",
+      },
+      buttonsStyling: false,
+    });
+
+    // Swal.fire({
+    //   title: "確定是否取消預約?",
+    //   // text: "You won't be able to revert this!",
+    //   icon: "warning",
+    //   showCancelButton: true,
+    //   confirmButtonText: "確定",
+    //   cancelButtonText: "返回",
+    //   reverseButtons: true,
+    // }).then((result) => {
+    //   if (result.isConfirmed) {
+    //     swalWithBootstrapButtons.fire(
+    //       "Deleted!",
+    //       "Your file has been deleted.",
+    //       "success"
+    //     );
+    //   } else if (
+    //     /* Read more about handling dismissals below */
+    //     result.dismiss === Swal.DismissReason.cancel
+    //   ) {
+    //     swalWithBootstrapButtons.fire(
+    //       "Cancelled",
+    //       "Your imaginary file is safe :)",
+    //       "error"
+    //     );
+    //   }
+    // });
   };
+
   return (
     <>
       {isAuthenticated && (
@@ -284,6 +345,7 @@ const ReserveDetailPage = () => {
                 detail={detail}
                 setDetail={setDetail}
               />
+
               {status && status !== 3 && status !== 4 && (
                 <div className="d-flex justify-content-end mb-5">
                   <button

@@ -299,10 +299,7 @@ const FamousHelperCard = ({
             : "active-fav-in-fam-card"
         }`}
         onClick={() => {
-          setIsLoading(true);
-          setTimeout(() => {
-            router.push(`/work/find-helper/${helper.user_id}`);
-          }, [1000]);
+          router.push(`/work/find-helper/${helper.user_id}`);
         }}
       >
         <div className="img-wrapper">
@@ -560,10 +557,7 @@ const SingleHelperCard = ({
             : "active-fav-in-card"
         }`}
         onClick={() => {
-          setIsLoading(true);
-          setTimeout(() => {
-            router.push(`/work/find-helper/${helper.user_id}`);
-          }, [1000]);
+          router.push(`/work/find-helper/${helper.user_id}`);
         }}
       >
         <img
@@ -677,7 +671,10 @@ const Collection = ({ collection, setCollection }) => {
 
   return (
     <>
-      <Button onClick={change}>幫手收藏匣</Button>
+      <div className="favHelperBox">
+        <Button onClick={change}>幫手收藏</Button>
+      </div>
+
       <SideSheet
         className="favorite-helper-sidesheet"
         title={
@@ -846,6 +843,10 @@ const MissionHelperList = () => {
 
   // }, [isActive]);
   console.log(isActive, helpActive);
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [currentPage]);
+
   useEffect(() => {
     (async () => {
       // 使用一個promise先等待exit動畫完成再做後續的更新資料跟move動畫
@@ -1056,13 +1057,6 @@ const MissionHelperList = () => {
 
   return (
     <div className="mission-helper-list container">
-      <motion.button
-        onTap={async () => {
-          handleExit();
-        }}
-      >
-        測試
-      </motion.button>
       <nav className="breadcrumb-wrapper my-4 " aria-label="breadcrumb">
         <ol class="breadcrumb">
           <li class="breadcrumb-item">
@@ -1071,10 +1065,7 @@ const MissionHelperList = () => {
               className="active-hover"
               onClick={(e) => {
                 e.preventDefault();
-                setIsLoading(true);
-                setTimeout(() => {
-                  router.push("/");
-                }, 1000);
+                router.push("/");
               }}
             >
               首頁
@@ -1087,10 +1078,7 @@ const MissionHelperList = () => {
               onClick={(e) => {
                 e.preventDefault();
                 handleBack();
-                setIsLoading(true);
-                setTimeout(() => {
-                  router.push("/work/find-helper");
-                }, 900);
+                router.push("/work/find-helper");
               }}
             >
               小貓上工(找幫手)

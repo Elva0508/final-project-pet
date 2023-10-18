@@ -1,6 +1,43 @@
 .mission-helper-list {
   position: relative;
   // margin: auto;
+  .favHelperBox {
+    margin-left: auto;
+    margin-top: -6rem;
+    width: 200px;
+    height: 185px;
+    background: url("/job-icon/boxCat.png") left bottom no-repeat;
+    background-size: 100%;
+    position: relative;
+    // top: 60px;
+    // right: 0px;
+    // &::after {
+    //   content: "幫手收藏盒";
+    //   position: absolute;
+    //   width: 100%;
+    //   font-size: 18px;
+    //   top: 50%;
+    //   left: 50%;
+    // }
+    button {
+      color: rgba(235, 236, 237, 0.51);
+      position: absolute;
+      padding: 0px 8px;
+      font-size: 16px;
+      font-weight: normal;
+      top: 69%;
+      left: 15%;
+      color: $cos-white;
+      background-color: $hover;
+      box-shadow: 1px 1px 5px gray;
+      // transform: scaleX();
+      transform: rotateY(18deg) skew(361deg, 2deg);
+      &:hover {
+        // background-color: transparent;
+        background-color: opacify(lighten($hover, 5%), 0.6);
+      }
+    }
+  }
   .breadcrumb-wrapper {
     margin: 10px 0 20px 0;
     .breadcrumb {
@@ -23,8 +60,8 @@
   }
   .order-text {
     position: absolute;
-    top: 280px;
-    right: 13px;
+    top: 283px;
+    right: 665px;
   }
   .famous-helper {
     a,
@@ -545,7 +582,7 @@
       // width: 100%;
       justify-content: start;
       .single-card {
-        width: calc((100% - 50px) / 3);
+        // width: calc((100% - 50px) / 3);
         & > *:not(.single-card-footer, img) {
           padding: 0.4rem 0.4rem;
         }
@@ -582,7 +619,7 @@
 @media screen and (max-width: 576px) {
   .mission-helper-list {
     .order-text {
-      top: 661px;
+      top: 610px;
     }
     .famous-helper {
       min-width: 320px;
@@ -607,7 +644,7 @@
       width: 100%;
       gap: 15px;
       margin-top: 2.5rem;
-      .single-card {
+      .card-wrapper {
         // min-width: 300px;
         width: calc((100% - 15px) / 2);
         // height: 360px;

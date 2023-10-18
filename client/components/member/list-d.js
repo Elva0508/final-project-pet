@@ -19,7 +19,6 @@ import jwt_decode from "jwt-decode";
 import { useHelper } from "@/context/helperContext";
 
 export default function ListD() {
-  
   const { activeButton, setActiveButton } = useActivePage();
   console.log(activeButton);
   const router = useRouter();
@@ -165,10 +164,7 @@ export default function ListD() {
                 }`}
                 onClick={() => {
                   setActiveButton(5);
-                  setIsLoading(true);
-                  setTimeout(() => {
-                    router.push("/member/helper");
-                  }, 700);
+                  router.push("/member/helper");
                 }}
               >
                 <div className="my-3">
@@ -185,9 +181,7 @@ export default function ListD() {
                 onClick={() => {
                   setActiveButton(8);
                   setIsLoading(true);
-                  setTimeout(() => {
-                    router.push("/member/selling");
-                  }, 700);
+                  router.push("/member/selling");
                 }}
               >
                 <div className="my-3">
@@ -236,10 +230,8 @@ export default function ListD() {
                 }`}
                 onClick={() => {
                   setActiveButton(9);
-                  setIsLoading(true);
-                  setTimeout(() => {
-                    router.push("/member/reserve");
-                  }, 700);
+
+                  router.push("/member/reserve");
                 }}
               >
                 <div className="mt-3 pb-3">
