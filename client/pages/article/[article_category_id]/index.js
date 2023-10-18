@@ -12,7 +12,7 @@ export default function ArticleList() {
     // 使用useRouter監聽路由變化
     const handleRouteChange = () => {
       // 當路由發生變化時手動重新載入頁面
-      location.reload();
+      // location.reload();
     };
 
     // 加入路由變化監聽器
@@ -21,7 +21,7 @@ export default function ArticleList() {
     return () => {
       router.events.off("routeChangeComplete", handleRouteChange);
     };
-  }, []);
+  }, [router]);
 
   return (
     <>

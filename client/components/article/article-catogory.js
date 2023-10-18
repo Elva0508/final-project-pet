@@ -68,21 +68,19 @@ export default function ArticleCatogory() {
       {/* <div className="article-catogory"></div> */}
       {articlecatogory.map((v, i) => {
         return (
-          <Link
+          <button
+            type="button"
             key={v.article_category_id}
-            href={`/article/${v.article_category_id}`}
+            className={`mx-1 ${
+              activeButtons[i] ? "btn-brown active" : "btn-outline-confirm"
+            }`}
+            onClick={() => {
+              handleButtonClick(v.article_category_id, i);
+              router.push(`/article/${v.article_category_id}`);
+            }}
           >
-            <button
-              type="button"
-              key={v.article_category_id}
-              className={`mx-1 ${
-                activeButtons[i] ? "btn-brown active" : "btn-outline-confirm"
-              }`}
-              onClick={() => handleButtonClick(v.article_category_id, i)}
-            >
-              {v.name}
-            </button>
-          </Link>
+            {v.name}
+          </button>
         );
       })}
     </>

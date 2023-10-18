@@ -135,13 +135,15 @@ router.post("/sendchat", (req, res) => {
     return res.status(400).json({ error: "請提供有效的聊天訊息" });
   }
 
+  const isRead = 1; // 發送的當下寫進資料庫時第一時間表示為未讀
+
   connection.execute(
-    `INSERT INTO chat_content(chatlist_id, talk_userId, chat_content, timestamp)
-    VALUES (?, ?, ?, ?);`,
-    [chatlistIdAsInt, talk_userId, chat_content, timestamp],
+    `INSERT INTO chat_content(chatlist_id, talk_userId, chat_content, timestamp, is_read)
+    VALUES (?, ?, ?, ?, ?);`,
+    [chatlistIdAsInt, talk_userId, chat_content, timestamp, isRead],
     (error, result) => {
       if (error) {
-        console.error("傳送訊息時出錯", error);
+        console.error("傳送訊息时出錯", error);
         return res.status(500).json({ error: "伺服器錯誤" });
       }
 
@@ -152,6 +154,22 @@ router.post("/sendchat", (req, res) => {
   );
 });
 
+// 確認聊天是否已讀未讀
+router.post("/markAsRead/:chatlist_id", (req, res) => {
+  const { chatlist_id } = req.body;
+  connection.execute(
+    "UPDATE chat_content SET is_read = 2 WHERE chatlist_id = ?",
+    [chatlist_id],
+    (error, result) => {
+      if (error) {
+        console.error("標記訊息錯誤", error);
+        return res.status(500).json({ error: "伺服器錯誤" });
+      }
+
+      res.status(200).json({ message: "消息已標示已讀" });
+    }
+  );
+});
 
 router.post("/sendchat2", (req, res) => {
   console.log("接收到消息請求");
@@ -202,7 +220,6 @@ router.post("/sendchat2", (req, res) => {
       res.status(500).json({ error: "伺服器錯誤" });
     });
 });
-
 
 router.get("/", (req, res) => {
   res.send("測試");

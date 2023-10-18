@@ -10,28 +10,31 @@ export default function ArticleListCard() {
 
   // // 向伺服器要求資料，設定到狀態中
   const getArticleListCard = async (article_category_id) => {
+    console.log("article_category_id" + article_category_id);
     const res = await fetch(
       "http://localhost:3005/api/article/" + article_category_id
     );
 
     const data = await res.json();
 
-    // console.log(data);
+    console.log(data);
     // 設定到狀態中 -> 會觸發重新渲染(re-render)
     if (Array.isArray(data)) setArticleListCard(data);
   };
 
   // // didMount 初次渲染"後", 向伺服器要求資料，設定到狀態中
   useEffect(() => {
-    if (router.isReady) {
+    if (router) {
       // 確保能得到router.query有值
+      console.log(router.query);
       const { article_category_id } = router.query;
       // console.log(article_category_id);
       // 有article_category_id後，向伺服器要求資料，設定到狀態中
+
       getArticleListCard(article_category_id);
     }
     // eslint-disable-next-line
-  }, [router.isReady]);
+  }, [router]);
 
   const itemsPerPage = 9;
   const startIndex = (activePage - 1) * itemsPerPage;

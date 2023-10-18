@@ -46,6 +46,7 @@ export default function Chatroom() {
     }
     if (userId) {
       getUserInfo(userId);
+      markMessageAsRead();
     }
   }, [router.isReady, chatlist_id, userId]);
 
@@ -154,6 +155,32 @@ export default function Chatroom() {
       }
     } catch (error) {
       console.error("發送消息時出錯", error);
+    }
+  };
+
+  //訊息已讀事件
+  const markMessageAsRead = async (talk_userId) => {
+    if (userId !== talk_userId) {
+      try {
+        const response = await fetch(
+          `http://localhost:3005/api/chatroom/markAsRead/${chatlist_id}`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        if (response.ok) {
+          console.log("消息已標示已讀");
+          // 更新前端界面以反映已读状态
+        } else {
+          console.error("消息標示錯誤");
+        }
+      } catch (error) {
+        console.error("訊息標示錯誤", error);
+      }
     }
   };
 
