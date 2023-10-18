@@ -524,14 +524,16 @@ export default function MissionDetail() {
                     const chatUrl = response.data.chatUrl;
                     console.log("chatUrl" + chatUrl);
                     // 在這裡導向到 chatUrl
-                    window.location.href = chatUrl;
+                    // window.location.href = chatUrl;
+                    router.push(chatUrl);
                 } else if (response.status === 200) {
                     // 消息已存在
                     // setMessage("消息已存在");
                     const chatUrl = response.data.chatUrl;
                     console.log("已存在chatUrl" + chatUrl);
                     // 在這裡導向到 chatUrl
-                    window.location.href = chatUrl;
+                    // window.location.href = chatUrl;
+                    router.push(chatUrl);
                 } else {
                     // 請求失敗
                     // setMessage("請求失敗: " + response.data.error);
@@ -685,7 +687,8 @@ export default function MissionDetail() {
                 setMsgInputValue("");
                 const chatUrl = `/chatlist/${chatlistId}`;
                 // 在這裡導向到 chatUrl
-                window.location.href = chatUrl;
+                // window.location.href = chatUrl;
+                router.push(chatUrl);
             } else {
                 console.error("發送消息時出錯");
             }
