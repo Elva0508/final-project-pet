@@ -36,23 +36,23 @@ export default function BlockThreeMobile() {
                   </div>
                 </div>
               </div>
-              <div className="m-5 d-flex justify-content-center">
+              <div className="m-1 d-flex justify-content-around align-items-center">
+                <div className="col-5 col-md-5 d-flex align-items-end">
+                  <div className="row">
+                    <div className="col-8 ">
+                      <img
+                        src="/home/homecat1.jpeg"
+                        className="img-fluid"
+                        alt="..."
+                      ></img>
+                    </div>
+                  </div>
+                </div>
                 <Link href="/member/login">
                   <button type="reset" className="btn-brown mx-1">
                     立即註冊
                   </button>
                 </Link>
-              </div>
-            </div>
-            <div className="col-5 col-md-5 d-flex align-items-end">
-              <div className="row">
-                <div className="col-8 ">
-                  <img
-                    src="/home/homecat1.jpeg"
-                    className="img-fluid"
-                    alt="..."
-                  ></img>
-                </div>
               </div>
             </div>
           </div>
