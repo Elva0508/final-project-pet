@@ -6,7 +6,7 @@ router.get("/:id", (req, res) => {
   const userid=req.params.id
   console.log(userid);
     connection.execute(
-      `SELECT pc.*, p.product_name AS product_name,pt.type_name AS type_name,p.images_one AS images,p.specialoffer AS price
+      `SELECT pc.*, p.product_name AS product_name,pt.type_name AS type_name,p.images_one AS images,p.specialoffer AS price,p.category_id AS category_id,p.subcategory_id AS subcategory_id
       FROM product_collections AS pc 
       JOIN userinfo AS u ON pc.user_id=u.user_id 
       JOIN products AS p ON pc.product_id = p.product_id 

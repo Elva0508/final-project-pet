@@ -5,6 +5,7 @@ import { useCart } from "@/hooks/useCart";
 import axios from "axios";
 import Pagination from "@/components/pagination";
 import { useRouter } from "next/router";
+import Link from "next/link";
 
 export default function Purchast() {
   const [product, setProduct] = useState([]);
@@ -173,7 +174,7 @@ export default function Purchast() {
                             <img className="picture me-4" src={v.image}></img>
 
                             <div className="">
-                              <p className="size-6">{v.product_name}</p>
+                              <Link href={`/product/${v.category_id}/${v.subcategory_id}/${v.product_id}`} className="size-6">{v.product_name}</Link>
                               <p className="size-6 type">{v.type}</p>
                               <p className="size-6 price">NT${v.price}</p>
                             </div>
