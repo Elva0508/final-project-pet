@@ -473,7 +473,6 @@ const [productData, setProductData] = useState([]); // 初始化為一個帶有 
                                 <h5 className="offcanvas-title" id="offcanvasRightLabel">篩選</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                             </div>
-
                             <div className="offcanvas-body ">
                                 {/* category及subcategory篩選 */}
                                 <div className="accordion" id={`accordionPanelsStayOpenExample`}>
@@ -501,31 +500,31 @@ const [productData, setProductData] = useState([]); // 初始化為一個帶有 
                                             <div id={`panelsStayOpen-collapseCategory-${index}`} className={`accordion-collapse collapse ${activeKey === index ? 'show' : ''}`}>
                                                 <div className="accordion-body row">
                                                     {subcategoryDataOne.map((v, i) => {
-                                                    if (v.category_id === category.category_id) {
-                                                        return (
-                                                            <button
-                                                                className="button-subcategory size-7"
-                                                                type="button"
-                                                                key={i}
-                                                                onClick={() => {
-                                                                    router.push(`/product/${category.category_id}/${v.subcategory_id}`);
-                                                                    // handlesubCategoryChange(subcategory.trim());
-                                                                    // console.log(`Button for subcategory ${subcategory.trim()} clicked.`);
-                                                                }}
-                                                            >
-                                                                {v.subcategory_name}
-                                                            </button>
-                                                        );
-                                                    }
-                                                    return null; // 或者直接不返回任何内容
+                                                        if (v.category_id === category.category_id) {
+                                                            return (
+                                                                <button
+                                                                    className={`button-subcategory size-7 p-2 ${activeButton === v.subcategory_id ? "active" : ""} `}
+                                                                    type="button"
+                                                                    key={i}
+                                                                    onClick={() => {
+                                                                        setActiveButton(v.subcategory_id);
+                                                                        router.push(`/product/${category.category_id}/${v.subcategory_id}`);
+                                                                        // handlesubCategoryChange(subcategory.trim());
+                                                                        // console.log(`Button for subcategory ${subcategory.trim()} clicked.`);
+                                                                    }}
+                                                                >
+                                                                    {v.subcategory_name}
+                                                                </button>
+                                                            );
+                                                        }
+                                                        return null;// 或者直接不返回任何内容
                                                 })}
                                                 </div>
                                             </div>
                                         </div>
                                     ))}
                                 </div>
-                                <LoadingOverlay isLoading={isLoading} />
-
+                            
                                 <div className='filter mt-3 '>
                                     <div className="card filter-card">
                                         {/* <div className="card-header">

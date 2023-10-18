@@ -11,6 +11,7 @@ import { FaPaw } from 'react-icons/fa';
 import ProductSlick from '@/components/product/product-slick';
 import { FaHeart, FaRegHeart } from 'react-icons/fa';
 import dayjs from "dayjs";
+import { color } from 'framer-motion';
 
 
 
@@ -513,7 +514,7 @@ export default function ProductDetail() {
                                                             <div className="">
                                                                 <p className="size-7">{v.product_name}</p>
                                                                 <p className="size-7 type">{v.type}</p>
-                                                                <p className="size-7 price">NT${v.newprice}</p>
+                                                                <p className="size-7 price" style={{ color: '#ca526f' }}>NT${v.newprice}</p>
                                                                 <p className="size-7">數量：{v.quantity}</p>
                                                             </div>
                                                         </div>
@@ -523,14 +524,20 @@ export default function ProductDetail() {
                                             <div className="d-flex justify-content-around mb-3">
                                                 <button
                                                     type="button"
-                                                    className="btn btn-confirm"
+                                                    className="btn btn-outline-confirm"
                                                     data-bs-dismiss="offcanvas"
                                                     aria-label="Close"
                                                 >
                                                     繼續購物
                                                 </button>
-                                                <button type="button" className="btn btn-confirm">
-                                                    前往購物車
+                                                <button
+                                                    type="button"
+                                                    className="btn btn-confirm  ms-5"
+                                                    onClick={() => {
+                                                        window.location.href = "/product/cart";
+                                                    }}
+                                                >
+                                                    前往結帳
                                                 </button>
                                             </div>
 
@@ -667,7 +674,7 @@ export default function ProductDetail() {
                                 <span className="visually-hidden">Next</span>
                             </button>
                         </div> */}
-                        <ProductSlick />
+                        <ProductSlick  />
                     </section>
                 </div>
             </div>

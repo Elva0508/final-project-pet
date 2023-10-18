@@ -1,3 +1,4 @@
+//商品首頁輪播圖
 import React from 'react'
 import Slider from 'react-slick'
 import 'slick-carousel/slick/slick.css';
