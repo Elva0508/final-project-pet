@@ -32,7 +32,7 @@ const router=useRouter()
         <div className="login-box d-flex align-items-center flex-column justify-content-center mx-auto ">
           <div className="login-header d-flex ">
 
-            <div className="size-5 mx-3 my-2">
+            <div className="size-4 mx-4 my-2">
               <Link
                 className={ `login-lg mx-3 ${isLogin ? "active" : ""}`}
                 href="http://localhost:3000/member/login"
@@ -41,7 +41,7 @@ const router=useRouter()
                 登入
               </Link>
             </div>
-            <div className="size-5 mx-3 my-2">
+            <div className="size-4 mx-4 my-2">
               <Link
                 className={ `login-lg mx-3 ${!isLogin ? "active" : ""}`}
                 href="http://localhost:3000/member/login"
@@ -59,9 +59,9 @@ const router=useRouter()
           
           
           <div className="u-form-group">
-            {/* <a href="#" className="forgot-password">
+            <a href="http://localhost:3000/member/forget-password" className="forgot-password">
               忘記密碼
-            </a> */}
+            </a>
           </div>
 
           <hr className="hr-divider" />

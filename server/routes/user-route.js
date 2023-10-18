@@ -12,6 +12,7 @@ router.get("/user-coupon", (req,res)=>{
     FROM users_coupon
     LEFT JOIN coupon ON users_coupon.coupon_id = coupon.coupon_id
     WHERE users_coupon.user_id = 1
+    AND users_coupon.valid = 1
     LIMIT 0, 100;`
   ,(err,results)=>{
     if(err){

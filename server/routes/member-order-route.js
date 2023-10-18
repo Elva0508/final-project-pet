@@ -23,7 +23,7 @@ router.get("/:userId", (req, res) => {
      JOIN order_status AS os ON o.status_id = os.status_id 
      JOIN order_payment AS op ON o.order_payment = op.id 
      JOIN order_shipment AS oship ON o.order_shipment = oship.id 
-     WHERE o.user_id = 1
+     WHERE o.user_id = ?
      ORDER BY o.order_id DESC;`,[userId]
           ,(error,result)=>{
           res.json({result})

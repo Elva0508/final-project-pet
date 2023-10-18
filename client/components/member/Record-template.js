@@ -106,17 +106,17 @@ export const RecordTemplate = ({
       animationData: animation, // the animation data
     });
 
-    return () => {
-      lottie.destroy();
-    };
+    // return () => {
+    //   lottie.destroy();
+    // };
   }, [status]);
   console.log(info);
   return (
     <>
-      <h5 className="main-title size-5 d-flex align-items-start fw-bold">
-        {/* {icon || <MdHomeRepairService className="icon me-1" />} */}
-        {title || ""}
-      </h5>
+      <p className="size-4 big mb-2 fw-bold">
+        <span className="my">▍</span>
+        {title}
+      </p>
 
       <nav className="tab-nav" onClick={handleStatus}>
         <button
@@ -194,7 +194,7 @@ export const RecordTemplate = ({
                   <div className="d-flex flex-column justify-content-center align-items-center">
                     <p className="mb-1 size-6 price">NT$ {item.total_price}</p>
                     <button className="animate-button-one">
-                      {title === "銷售紀錄" && (
+                      {title === "幫手訂單" && (
                         <Link href={`/member/selling/${item.oid}`}>
                           查看詳細
                         </Link>
@@ -283,11 +283,10 @@ export const RecordDetailTemplate = ({ icon, title, detail, setDetail }) => {
 
   return (
     <>
-      <h5 className="main-title size-5 d-flex align-items-start fw-bold">
-        {/* {icon || <MdHomeRepairService className="icon me-1" />} */}
-
-        {title || "銷售服務"}
-      </h5>
+      <p className="size-4 big mb-2 fw-bold">
+        <span className="my">▍</span>
+        {title}
+      </p>
       <p className="date my-4 size-7 p-1">{detail?.created_at}</p>
       <span className="status size-6">狀態 :</span>
       <span className="status-text ms-2 size-6">{detail.status}</span>

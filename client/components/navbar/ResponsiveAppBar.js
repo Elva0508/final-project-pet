@@ -95,8 +95,13 @@ function ResponsiveAppBar() {
     setAnchorElNav(event.currentTarget);
   };
   const handleOpenUserMenu = (event) => {
-    setAnchorElUser(event.currentTarget);
+    if(anchorElUser !== event.currentTarget){
+      setAnchorElUser(event.currentTarget);
+    }
   };
+  // const handleOpenUserMenu = (event) => {
+  //   setAnchorElUser(event.currentTarget);
+  // };
 
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
@@ -217,7 +222,13 @@ function ResponsiveAppBar() {
             {/* 會員＆購物車icon */}
             <Box sx={{ flexShrink: 0 }}>
               <Tooltip title="Open settings">
-                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+              {/* userMenu */}
+                <IconButton 
+                aria-owns={anchorElUser ? 'menu-appbar' : undefined}  
+                aria-haspopup="true"
+                onClick={handleOpenUserMenu}
+                onMouseOver={handleOpenUserMenu}
+                 sx={{ p: 0 }}>
                   <AccountCircleIcon
                     color="tertiary"
                     style={{ fontSize: 40 }}
@@ -249,6 +260,8 @@ function ResponsiveAppBar() {
                 }}
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
+                MenuListProps={{onMouseLeave: handleCloseUserMenu}}
+
               >
                 {isAuthenticated ? (
                   <>

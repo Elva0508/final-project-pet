@@ -23,7 +23,7 @@ export default function ArticleListCard() {
 
   // // didMount 初次渲染"後", 向伺服器要求資料，設定到狀態中
   useEffect(() => {
-    if (router.isReady) {
+    if (router) {
       // 確保能得到router.query有值
       const { article_category_id } = router.query;
       // console.log(article_category_id);
@@ -31,7 +31,7 @@ export default function ArticleListCard() {
       getArticleListCard(article_category_id);
     }
     // eslint-disable-next-line
-  }, [router.isReady]);
+  }, [router]);
 
   const itemsPerPage = 9;
   const startIndex = (activePage - 1) * itemsPerPage;
