@@ -6,7 +6,7 @@ export default function BlockOne() {
       <div className="block-one">
         <video
           className="block-one-vedio"
-          src="/home-vedio/catcut.mp4"
+          src="/home-vedio/550.mp4"
           autoPlay
           muted
           loop

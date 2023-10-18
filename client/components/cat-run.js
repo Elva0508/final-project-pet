@@ -31,24 +31,24 @@ const CatRun = () => {
 
     const element = catRunRef.current;
     if (element) {
-      console.log("ELEMENT存在");
+      // scroll捲動距離 + ( window視窗高度 / 2 ) 代表螢幕正中央的高度 - 元素本身的高度 = 正中間
       const viewportHeight = window.innerHeight; //整個瀏覽器窗口的高度
+      console.log(window.innerHeight, element.clientHeight, window.scrollY); //元素的高度
       const elementHeight = element.clientHeight;
-      const elementOffsetTop = element.getBoundingClientRect().top;
-      const centerOffset = (viewportHeight - elementHeight) / 2;
-      const newOffset = centerOffset - elementOffsetTop;
-      setOffset(newOffset);
+      const scrollY = window.scrollY;
+      const elementOffsetTop = scrollY + viewportHeight / 2 - elementHeight;
+      setOffset(elementOffsetTop);
     }
   };
   useEffect(() => {
-    handleScroll(); // 初始化时调用一次以确保元素在适当位置
+    handleScroll(); // 初始化時先執行一次保證位置
     window.addEventListener("scroll", handleScroll);
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, [router]);
   useLayoutEffect(() => {
-    // 获取 DOM 元素的高度
+    // 用來設定wrapper的總高度要等於整個文本的高度
     const newHeight = document.body.scrollHeight;
     setContentHeight(newHeight);
   }, [router]);
@@ -61,8 +61,8 @@ const CatRun = () => {
       <div
         id="cat-run-lottie"
         ref={catRunRef}
-        className="animate__animated animate__fadeInDownBig"
-        style={{ transform: `translateY(${offset}px)` }}
+        // className="animate__animated animate__fadeInDownBig"
+        style={{ top: `${offset}px` }}
       ></div>
     </div>
   );

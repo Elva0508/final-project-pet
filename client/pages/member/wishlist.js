@@ -5,6 +5,7 @@ import { useCart } from "@/hooks/useCart";
 import axios from "axios";
 import Pagination from "@/components/pagination";
 import { useRouter } from "next/router";
+import Link from "next/link";
 
 export default function Wishlist() {
   const [wishlist, setWishlist] = useState([]);
@@ -152,7 +153,7 @@ export default function Wishlist() {
                   <div className="nowhislist">
                     <div className=" d-flex justify-content-center mt-5">
                       <p className="size-3">
-                        尚無追蹤紀錄，快去小貓商城逛逛吧!
+                        尚無追蹤紀錄，快去小貓商城逛逛吧！
                       </p>
                     </div>
                     <div className="d-flex justify-content-center mt-5">
@@ -179,9 +180,9 @@ export default function Wishlist() {
                           <div className="d-flex col-7 col-md-9">
                             <img src={v.images} alt={v.product_name} />
                             <div className="ms-3">
-                              <p className="size-6 m-size-7">
+                              <Link href={`/product/${v.category_id}/${v.subcategory_id}/${v.product_id}`} className="size-6 m-size-7">
                                 {v.product_name}
-                              </p>
+                              </Link>
                               <p className="size-6 m-size-7 price">
                                 NT${v.price}
                               </p>
@@ -314,10 +315,10 @@ export default function Wishlist() {
                     </>
                   );
                 })}
-                <div className="d-flex justify-content-center my-3">
+                <div className="d-flex justify-content-center my-3 mx-3 mx-md-0">
                   <button
                     type="button"
-                    className="btn btn-outline-confirm"
+                    className="btn btn-outline-confirm me-2"
                     data-bs-dismiss="offcanvas"
                     aria-label="Close"
                   >
@@ -325,7 +326,7 @@ export default function Wishlist() {
                   </button>
                   <button
                     type="button"
-                    className="btn btn-confirm  ms-5"
+                    className="btn btn-confirm ms-md-5 ms-2"
                     onClick={() => {
                       window.location.href = "/product/cart";
                     }}

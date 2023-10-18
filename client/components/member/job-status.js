@@ -80,7 +80,7 @@ export default function JobStatusTwo({
           <>
             <div className="nojoblist">
               <div className=" d-flex justify-content-center mt-5">
-                <p className="size-3">尚無收藏紀錄，快去小貓上工逛逛吧!</p>
+                <p className="size-3">尚無收藏紀錄，快去小貓上工逛逛吧！</p>
               </div>
               <div className="d-flex justify-content-center mt-5">
                 <button
@@ -99,7 +99,7 @@ export default function JobStatusTwo({
             {currentData.map((v, i) => {
               return (
                 <>
-                  <div className="d-md-none d-flex pt-3 ps-3 ">
+                  <div className="d-md-none d-flex pt-3 ps-3 " key={i}>
                     <p className="size-6 title">
                       <span>任務主題：</span>
                       {v.title}

@@ -114,6 +114,11 @@
             color: $text-main;
             display: inline-block;
             padding: 26px;
+
+            .animation-paw{
+                bottom: -65px;
+                right: 0;
+            }
         }
 
         .mission-list {

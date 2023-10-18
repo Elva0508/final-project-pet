@@ -62,7 +62,7 @@ export default function ProductList() {
     // 手風琴剛開始只有第一格打開
     const [activeKey, setActiveKey] = useState(0); // 初始值为0，表示第一个格子展开
 
-    
+
     // useEffect(() => {    
     //     if (router.isReady) {
     //       // 確保能得到router.query有值
@@ -82,39 +82,39 @@ export default function ProductList() {
     //     }
     //     // eslint-disable-next-line
     //   }, [router.query]);
-// 讀取資料庫資料
-const [productDataOrigin, setProductDataOrigin] = useState([]);
-const [productData, setProductData] = useState([]); // 初始化為一個帶有 result 屬性的物件
+    // 讀取資料庫資料
+    const [productDataOrigin, setProductDataOrigin] = useState([]);
+    const [productData, setProductData] = useState([]); // 初始化為一個帶有 result 屬性的物件
 
-    useEffect(() => {    
+    useEffect(() => {
         if (router.isReady) {
-          // 确保能得到 router.query 有值
-          const fetchData = async () => {
-            const { category_id, subcategory_id } = router.query;
-            console.log(subcategory_id);
-            // console.log(category_id);
-            setActiveKey(parseInt(category_id) - 1);
-      
-            try {
-              const response = await axios.get(`http://localhost:3005/api/product/product/subcategory/${subcategory_id}`);
-              const data = response.data.result;
-              console.log(data);
-              setProductData(data); 
-              setProductDataOrigin(data)
-              // 将服务器端的 result 放入物件中
-              // setMainPic(data[0].images_one)
-              // console.log(response.data.result[0].images_one)
-            } catch (error) {
-              console.error("Error:", error);
-            }
-          };
-      
-          fetchData();
+            // 确保能得到 router.query 有值
+            const fetchData = async () => {
+                const { category_id, subcategory_id } = router.query;
+                console.log(subcategory_id);
+                // console.log(category_id);
+                setActiveKey(parseInt(category_id) - 1);
+
+                try {
+                    const response = await axios.get(`http://localhost:3005/api/product/product/subcategory/${subcategory_id}`);
+                    const data = response.data.result;
+                    console.log(data);
+                    setProductData(data);
+                    setProductDataOrigin(data)
+                    // 将服务器端的 result 放入物件中
+                    // setMainPic(data[0].images_one)
+                    // console.log(response.data.result[0].images_one)
+                } catch (error) {
+                    console.error("Error:", error);
+                }
+            };
+
+            fetchData();
         }
         // eslint-disable-next-lineuserIdcategory
-      }, [router.query]);
+    }, [router.query]);
 
-    
+
     // 用於儲存解析後的userID
     const [userId, setUserId] = useState(null);
     console.log(userId);
@@ -136,7 +136,7 @@ const [productData, setProductData] = useState([]); // 初始化為一個帶有 
         }
     }, []);
 
-    
+
     //圖片抽換
     const [mainPic, setMainPic] = useState(''); // 初始化為 v.images_one
     // 讀取all product 資料庫資料
@@ -163,7 +163,7 @@ const [productData, setProductData] = useState([]); // 初始化為一個帶有 
     const [isUpIconVisible, setIsUpIconVisible] = useState(false);
     const [isPriceIconVisible, setIsPriceIconVisible] = useState(false);
 
-    
+
 
     //排序按鈕切換
     const toggleUpIcon = () => {
@@ -191,7 +191,7 @@ const [productData, setProductData] = useState([]); // 初始化為一個帶有 
     //     });
     // }, [])
 
-    
+
     //讀出大類
     const [subcategoryData, setSubcategoryData] = useState({ result: [] });
     useEffect(() => {
@@ -199,15 +199,15 @@ const [productData, setProductData] = useState([]); // 初始化為一個帶有 
             setSubcategoryData({ result: response.data.result });
         });
     }, [])
-        //讀出小類
-        const [subcategoryDataOne, setSubcategoryDataOne] = useState([]);
-        useEffect(() => {
-            axios.get("http://localhost:3005/api/product/subcategory").then((response) => {
-                setSubcategoryDataOne(response.data.result );
-                console.log(subcategoryDataOne);
-            });
-            
-        }, [])
+    //讀出小類
+    const [subcategoryDataOne, setSubcategoryDataOne] = useState([]);
+    useEffect(() => {
+        axios.get("http://localhost:3005/api/product/subcategory").then((response) => {
+            setSubcategoryDataOne(response.data.result);
+            console.log(subcategoryDataOne);
+        });
+
+    }, [])
 
     //篩選＋排序+關鍵字
     // 狀態變數，用於存儲商品數據、加載狀態和其他篩選選項
@@ -236,7 +236,7 @@ const [productData, setProductData] = useState([]); // 初始化為一個帶有 
     //             // 请求完成后隐藏加载蒙层
     //             setIsLoading(false);
     //             setProductData(response.data.result);
-                
+
     //         })
     //         .catch(error => {
     //             console.error('Error:', error);
@@ -279,15 +279,15 @@ const [productData, setProductData] = useState([]); // 初始化為一個帶有 
     // 處理排序選擇的變化
     const handleSortChange = (event) => {
         const selectedValue = event.target.value;
-        if(selectedValue=="price_desc"){
-            const newProduct=productData.sort((a, b) => b.specialoffer - a.specialoffer);
+        if (selectedValue == "price_desc") {
+            const newProduct = productData.sort((a, b) => b.specialoffer - a.specialoffer);
             setProductData(newProduct)
-        }else if(selectedValue=="price_asc"){
-            const newProduct=productData.sort((a, b) => a.specialoffer - b.specialoffer);
+        } else if (selectedValue == "price_asc") {
+            const newProduct = productData.sort((a, b) => a.specialoffer - b.specialoffer);
             setProductData(newProduct)
 
-        }else{
-            const newProduct=productData.sort((a, b) => a.product_id - b.product_id);
+        } else {
+            const newProduct = productData.sort((a, b) => a.product_id - b.product_id);
             setProductData(newProduct)
         }
         setSelectedSort(selectedValue); // 更新選擇的排序方式
@@ -328,14 +328,14 @@ const [productData, setProductData] = useState([]); // 初始化為一個帶有 
     useEffect(() => {
         let newvendor = [];
         for (let i = 0; i < productData.length; i++) {
-            let currentVendor = productData[i].vendor;   
+            let currentVendor = productData[i].vendor;
             if (newvendor.indexOf(currentVendor) === -1) {
                 newvendor.push(currentVendor);
             }
         }
-        setVendorData(newvendor)        
-}, [productDataOrigin]);
-    
+        setVendorData(newvendor)
+    }, [productDataOrigin]);
+
     //傳送search的到後端
     const handleSearch = (search) => {
         console.log("handleSearch 函数被使用，search結果:", search);
@@ -382,33 +382,33 @@ const [productData, setProductData] = useState([]); // 初始化為一個帶有 
 
     const handlePriceVendorfilter = (vendor, minPrice, maxPrice) => {
         console.log("handlePriceVendorfilter 函数被使用，search結果:", vendor, minPrice, maxPrice);
-        let lowPrice,highPrice,finalData
+        let lowPrice, highPrice, finalData
 
-        if(minPrice===""||minPrice==null){
-            lowPrice=productDataOrigin    
-        }else{
-            lowPrice=productDataOrigin.filter((v)=>v.specialoffer>=minPrice) 
+        if (minPrice === "" || minPrice == null) {
+            lowPrice = productDataOrigin
+        } else {
+            lowPrice = productDataOrigin.filter((v) => v.specialoffer >= minPrice)
         }
-        if(maxPrice===""||maxPrice==null){
-            highPrice=lowPrice
-        }else{
-            highPrice=lowPrice.filter((v)=>v.specialoffer<=maxPrice)
+        if (maxPrice === "" || maxPrice == null) {
+            highPrice = lowPrice
+        } else {
+            highPrice = lowPrice.filter((v) => v.specialoffer <= maxPrice)
         }
-        if(vendor==="" ||vendor==null){
-            finalData=highPrice          
-        }else{
-            finalData=highPrice.filter((v)=>v.vendor==vendor)
+        if (vendor === "" || vendor == null) {
+            finalData = highPrice
+        } else {
+            finalData = highPrice.filter((v) => v.vendor == vendor)
         }
-        if(selectedSort==="" ||selectedSort==null){
+        if (selectedSort === "" || selectedSort == null) {
             setProductData(finalData)
-        }else if(selectedSort=="price_desc"){
-            const newProduct=finalData.sort((a, b) => b.specialoffer - a.specialoffer);
+        } else if (selectedSort == "price_desc") {
+            const newProduct = finalData.sort((a, b) => b.specialoffer - a.specialoffer);
             setProductData(newProduct)
-        }else if(selectedSort=="price_asc"){
-            const newProduct=finalData.sort((a, b) => a.specialoffer - b.specialoffer);
+        } else if (selectedSort == "price_asc") {
+            const newProduct = finalData.sort((a, b) => a.specialoffer - b.specialoffer);
             setProductData(newProduct)
         }
-        
+
     };
 
     //sidebar
@@ -518,13 +518,13 @@ const [productData, setProductData] = useState([]); // 初始化為一個帶有 
                                                             );
                                                         }
                                                         return null;// 或者直接不返回任何内容
-                                                })}
+                                                    })}
                                                 </div>
                                             </div>
                                         </div>
                                     ))}
                                 </div>
-                            
+
                                 <div className='filter mt-3 '>
                                     <div className="card filter-card">
                                         {/* <div className="card-header">

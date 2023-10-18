@@ -3,6 +3,7 @@ import BlockOne from "@/components/home/block-one";
 import BlockTwo from "@/components/home/block-two";
 import BlockTwoMobile from "@/components/home/block-two-mobile";
 import BlockThree from "@/components/home/block-three";
+import BlockThreeMobile from "@/components/home/block-three-mobile";
 import BlockFourMobile from "@/components/home/block-four-mobile";
 import BlockFive from "@/components/home/block-five";
 import BlockFiveMobile from "@/components/home/block-five-mobile";
@@ -219,6 +220,10 @@ export default function Index() {
 
           <div className="block-three my-5">
             <BlockThree className="my-5" />
+          </div>
+
+          <div className="block-three-mobile my-5">
+            <BlockThreeMobile className="my-5" />
           </div>
 
           <div className="block-four my-5">

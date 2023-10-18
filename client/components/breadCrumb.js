@@ -5,12 +5,12 @@ import axios from "axios";
 // 中文路徑對照陣列，移出到config/index.js中設定
 import { pathnameLocale } from '@/config/index'
 import Link from 'next/link'
-import { QueueRounded } from '@mui/icons-material';
 
 function BreadCrumb(props) {
     const { pathname,query } = useRouter();
     // console.log(pathname);
     console.log(query);
+    
     const [product, setProduct] = useState([])
     const [article, setArticle] = useState([])
     const [mission, setMission] = useState([])
@@ -107,6 +107,15 @@ const getSubcategory =  () => {
           >
             {v}
           </li>
+        )
+      }
+      if (i !== array.length - 1 && v=="會員中心") {
+        return (
+          <li key={i} className="breadcrumb-item">
+          <Link href="/member/profile" >
+            {v}
+          </Link>
+        </li>
         )
       }
 
@@ -212,7 +221,7 @@ const getSubcategory =  () => {
   }
   return (
     <>
-        {pathname=="/" ||pathname=="/product/cart/checkout" ||pathname=="/chatlist/[id]"  ||pathname=="/chatlist"|| pathname=="/product/cart/checkout/pay" || pathname=="/pay-confirm" || pathname=="/product/cart/checkout/cash-on-delivery" || pathname=="/work/find-mission" ||pathname=="/product/cart/checkout/creditCard" ||pathname=="/member/login" || pathname == "/work/find-mission/[mission_id]"?
+        {pathname=="/" ||pathname=="/product/cart/checkout" ||pathname=="/chatlist/[id]"  ||pathname=="/chatlist"|| pathname=="/product/cart/checkout/pay" || pathname=="/pay-confirm" || pathname=="/product/cart/checkout/cash-on-delivery" || pathname=="/work/find-mission" ||pathname=="/product/cart/checkout/creditCard" ||pathname=="/member/login" || pathname == "/work/find-mission/[mission_id]" || pathname=="/work/create-mission"?
           ("")
           :
           (<><nav aria-label="breadcrumb " className='my-4 container'>

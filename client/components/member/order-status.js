@@ -40,7 +40,7 @@ export default function OrderStatus({
           <>
             <div className="noorder">
               <div className=" d-flex justify-content-center mt-5">
-                <p className="size-3">尚無訂單紀錄，快去小貓商城逛逛吧!</p>
+                <p className="size-3">尚無訂單紀錄，快去小貓商城逛逛吧！</p>
               </div>
               <div className="d-flex justify-content-center mt-5">
                 <button
@@ -88,7 +88,7 @@ export default function OrderStatus({
                         </p>
                       </div>
                     </div>
-                    <div className="d-flex align-items-center me-3 me-md-0">
+                    <div className="d-flex align-items-center px-3 px-md-0 me-3 me-md-0">
                       <Link
                         className="btn btn-outline-confirm  size-6"
                         href={`/member/order/${v.oid}`}
