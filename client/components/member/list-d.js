@@ -29,36 +29,25 @@ export default function ListD() {
   const [currentName, setCurrentName] = useState(null);
   const { setIsLoading } = useHelper();
 
-    useEffect(() => {
-      const token = localStorage.getItem("token");
-      if (token) {
-        try {
-          const decodeToken = jwt_decode(token);
-          const currentUserId = decodeToken.id;
-          // const currentAvatar = decodeToken.avatar;
-          // const currentName = decodeToken.name;
-          //console.log(userId);
-  
-          //更新userId狀態
-          setUserId(currentUserId);
-          // setCurrentAvatar(currentAvatar);
-          // setCurrentName(currentName);
-        } catch (error) {
-          console.error("token解析錯誤", error);
-        }
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      try {
+        const decodeToken = jwt_decode(token);
+        const currentUserId = decodeToken.id;
+        const currentAvatar = decodeToken.avatar;
+        const currentName = decodeToken.name;
+        //console.log(userId);
+
+        //更新userId狀態
+        setUserId(currentUserId);
+        setCurrentAvatar(currentAvatar);
+        setCurrentName(currentName);
+      } catch (error) {
+        console.error("token解析錯誤", error);
       }
-      const apiURL = `http://localhost:3005/api/user/user-profile/${userId}`;
-      fetch(apiURL)
-        .then((res) => {
-          return res.json();
-        })
-        .then((data) => {
-          const user = data.results[0];
-          setCurrentAvatar(user.cover_photo);
-          setCurrentName(user.name);
-        })
-    
-    }, [userId]);
+    }
+  }, [userId]);
 
   return (
     <>
