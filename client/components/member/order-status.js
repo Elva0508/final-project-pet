@@ -88,7 +88,7 @@ export default function OrderStatus({
                         </p>
                       </div>
                     </div>
-                    <div className="d-flex align-items-center me-3 me-md-0">
+                    <div className="d-flex align-items-center px-3 px-md-0 me-3 me-md-0">
                       <Link
                         className="btn btn-outline-confirm  size-6"
                         href={`/member/order/${v.oid}`}
