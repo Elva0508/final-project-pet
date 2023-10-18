@@ -1,4 +1,5 @@
 import React from "react";
+import Link from "next/link";
 
 export default function BlockFive() {
   return (
@@ -30,9 +31,11 @@ export default function BlockFive() {
                 </div>
               </div>
               <div className="m-5 d-flex justify-content-start">
-                <button type="reset" className="btn-brown mx-1">
-                  立即前往
-                </button>
+                <Link href="/work/find-mission">
+                  <button type="reset" className="btn-brown mx-1">
+                    立即前往
+                  </button>
+                </Link>
               </div>
               <div className="m-3 bg-light">
                 <div className="text-center">

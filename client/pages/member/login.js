@@ -59,9 +59,9 @@ const router=useRouter()
           
           
           <div className="u-form-group">
-            {/* <a href="#" className="forgot-password">
+            <a href="http://localhost:3000/member/forget-password" className="forgot-password">
               忘記密碼
-            </a> */}
+            </a>
           </div>
 
           <hr className="hr-divider" />

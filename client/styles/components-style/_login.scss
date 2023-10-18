@@ -117,3 +117,61 @@
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E %3Cpath d='M15.88 8.29L10 14.17l-1.88-1.88a.996.996 0 1 0-1.41 1.41l2.59 2.59c.39.39 1.02.39 1.41 0L17.3 9.7a.996.996 0 0 0 0-1.41c-.39-.39-1.03-.39-1.42 0z' fill='%23fff'/%3E %3C/svg%3E");
   }
 }
+
+// forgot password
+.forgotPwd-box{
+  max-width: 37.5rem;
+  background: #f4ece4;
+  padding: 5rem 0;
+  .title{
+    font-weight: 600;
+  }
+}
+.forgotPassword-form{
+  width:70%;
+  .input-font-size{
+    font-size: 1.1rem;
+    color: $text-main;
+  }
+  .w20{
+    width:100%;
+    overflow:auto;
+    
+  }
+  .f3{
+    float: left;
+    width: calc(15% - 10px);
+    margin-right:5px;
+    margin-right:5px;
+  }
+  .f5{
+    float: left;
+    width: calc(25% - 10px);
+    margin-right:5px;
+    margin-right:5px;
+  }
+  .f8{
+    float:left;
+    margin-left:5px;
+    margin-right:5px;
+    width: calc(25% - 10px)
+  }
+  .f8{
+    float:left;
+    margin-left:5px;
+    margin-right:5px;
+    width: calc(40% - 10px)
+  }
+  .f16{
+    float:left;
+    margin-left:5px;
+    margin-right:5px;
+    width: calc(80% - 10px)
+  }
+  .f20{
+    float:left;
+    margin-left:5px;
+    margin-right:5px;
+    width:calc(100% - 10px)
+  }
+}

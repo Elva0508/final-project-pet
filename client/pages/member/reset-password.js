@@ -81,21 +81,20 @@ const ResetUserPassword = () => {
 
   return (
     <div className="my-3">
+     <ListUserM />
       <div className="d-flex justify-content-around pt-2">
-        {/* mobile版的左側tab */}
-        <ListUserM />
+        
         <ListD />
-
-        <div className="reset-password  col-lg-8 col-md-8 col-12">
-          <div className="title">
+        <div className="reset-password  d-flex flex-column col-md-8 col-12 ">
+          <div className="title my-1">
             <p className=" size-4">
-    
+            <span className="my">▍</span>
               重新設定密碼
             </p>
           </div>
 
-          <div className="d-flex justify-content-center">
-            <div className="reset-form">
+          <div className="reset-form d-flex justify-content-center ">
+            <div className="reset-form-width">
               <div className="reset-group"   style={{position: 'relative'}}>
                 <label htmlFor="" className={userRfs}>
                   原密碼
