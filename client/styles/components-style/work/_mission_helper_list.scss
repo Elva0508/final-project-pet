@@ -38,6 +38,7 @@
     padding: 1rem 1.3rem;
     border-radius: 2px;
     position: relative;
+    overflow: hidden;
     // &-title {
     //   font-weight: bold;
     //   margin-bottom: 2rem;
@@ -626,5 +627,20 @@
         }
       }
     }
+  }
+}
+.slide_left {
+  position: relative;
+  animation: slideLeft 1s ease;
+}
+@keyframes slideLeft {
+  from {
+    top: 0;
+    left: 0;
+    opacity: 1;
+  }
+  to {
+    left: -150;
+    opacity: 0;
   }
 }

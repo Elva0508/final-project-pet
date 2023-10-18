@@ -1,4 +1,5 @@
 import React from "react";
+import Link from "next/link";
 
 export default function BlockFiveMobile() {
   return (
@@ -27,9 +28,11 @@ export default function BlockFiveMobile() {
                     </div>
                   </div>
                   <div className="d-flex my-2 justify-content-end pe-2 z-3">
-                    <button type="reset" className="btn-brown mx-1">
-                      立即前往
-                    </button>
+                    <Link href="/work/find-mission">
+                      <button type="reset" className="btn-brown mx-1">
+                        立即前往
+                      </button>
+                    </Link>
                   </div>
                 </div>
               </div>
