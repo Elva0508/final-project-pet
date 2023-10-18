@@ -1,12 +1,8 @@
 import React, { useState } from 'react';
-import Counter from '@/components/product/quantity-counter';
 import { AiFillStar } from 'react-icons/ai';
-import { FaChevronRight, FaChevronLeft } from 'react-icons/fa';
 import axios from 'axios';
 import { useEffect } from "react";
 import { useRouter } from "next/router";
-import Link from 'next/link';
-import ProductCard3 from '@/components/product/product-card3';
 import { useCart } from "@/hooks/useCart"
 import { FiPlus } from 'react-icons/fi';
 import { FiMinus } from 'react-icons/fi';
@@ -14,7 +10,8 @@ import jwt_decode from "jwt-decode";
 import { FaPaw } from 'react-icons/fa';
 import ProductSlick from '@/components/product/product-slick';
 import { FaHeart, FaRegHeart } from 'react-icons/fa';
-// import HeartButton from '@/components/product/product-heartbutton';
+import dayjs from "dayjs";
+
 
 
 //next裡innerhtml語法
@@ -107,6 +104,7 @@ export default function ProductDetail() {
     // 從 response.data.result 中獲取星級的數據
     const starRatings = reviewData.map((review) => review.star_rating);
 
+
     // 計算星星平均數
     const calculateAverageRating = (starRatings) => {
         if (starRatings.length === 0) {
@@ -137,6 +135,12 @@ export default function ProductDetail() {
 
     // 獲取星星評分的百分比長度數組
     const percentageLengths = calculatePercentageLengths(starRatingLengths, starRatings);
+    // 渲染<p>元素，根據平均分數來渲染不同內容
+    const ratingText = averageRating === 0 ? "尚無評價" : `${averageRating} 顆星`;
+    const transferDate = (date) => {
+        const newDay = dayjs(date).format("YYYY年MM月DD日");
+        return newDay;
+    };
 
     //推薦隨機8筆
     const [randomProducts, setRandomProducts] = useState([]);
@@ -183,7 +187,9 @@ export default function ProductDetail() {
         console.log(have);
 
         // 如果購物車中沒有相同的商品
-        if (have === undefined) {
+        if (userId === null) {
+            alert('請先登入會員');
+        } else if (have === undefined) {
             console.log(cart);
 
             try {
@@ -585,7 +591,7 @@ export default function ProductDetail() {
                                 <div className="Overall-rating-detail">
                                     <div className="evaluation-bar">
                                         <div className="evaluation-bar-left d-flex flex-column justify-content-center">
-                                            <p className="size-4 text-center">{averageRating} 顆星</p>
+                                            <p className="size-4 text-center">{ratingText}</p>
                                             <div className="ranking mb-2 mx-auto">
                                                 {/* 渲染平均星級 */}
                                                 {Array.from({ length: Math.floor(averageRating) }, (_, index) => (
@@ -597,7 +603,7 @@ export default function ProductDetail() {
                                         <div className="evaluation-bar-right d-flex flex-column justify-content-evenly">
                                             {starRatingLengths.map((rating, index) => (
                                                 <div className="bar-group" key={index}>
-                                                    <p className="number size-6">{rating}</p>
+                                                    <p className="number size-6">{rating}</p> 
                                                     <div className="percentage">
                                                         <div className="have" style={{ width: `${percentageLengths[index]}%` }}></div>
                                                         <div className="no-have" style={{ width: `${100 - percentageLengths[index]}%` }}></div>
@@ -610,9 +616,13 @@ export default function ProductDetail() {
                             </div>
                             {reviewData.map((v, i) => {
                                 return (
-
                                     <div className="customer" key={i}>
-                                        <div className="customer-name">{v.name}</div>
+                                        <div className='d-flex flex-row justify-content-between'>
+                                            <div className="customer-name">{v.name}</div>
+                                            <div className="customer-content">
+                                                {transferDate(v.review_date)}</div>
+                                        </div>
+                                        
                                         <div className="customer-star">
                                             {/* _佔位符，要再了解 */}
                                             {Array.from({ length: v.star_rating }, (_, index) => (
@@ -622,6 +632,7 @@ export default function ProductDetail() {
                                         <div className="customer-content">
                                             {v.review_content}
                                         </div>
+                                       
                                     </div>
                                 );
                             })}
