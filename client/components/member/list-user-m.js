@@ -12,6 +12,7 @@ import { FaChartLine } from "react-icons/fa";
 import { FaIdBadge } from "react-icons/fa";
 import { FaRegCalendarCheck } from "react-icons/fa";
 import { useRouter } from "next/router";
+import Membership from "@/components/user/membership";
 
 export default function ListUserM() {
   const [memberData, setMemberData] = useState(null);
@@ -56,12 +57,13 @@ export default function ListUserM() {
             </div>
             <div>
               <div>
-                <Link className="size-7 mt-3 ms-3" href="">
+                {/* <Link className="size-7 mt-3 ms-3" href="">
                   查看會員等級優惠
-                </Link>
+                </Link> */}
+                <Membership />
               </div>
               <div>
-                <Link className="size-7 mt-3 ms-3" href="">
+                <Link className="size-7 mt-3 ms-3" href="http://localhost:3000/member/coupon">
                   查看我的優惠券
                 </Link>
               </div>
