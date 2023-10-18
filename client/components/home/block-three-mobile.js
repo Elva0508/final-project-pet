@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 
-export default function BlockThree() {
+export default function BlockThreeMobile() {
   return (
     <>
       <div className="mb-5">
