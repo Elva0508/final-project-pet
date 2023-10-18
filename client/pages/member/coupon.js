@@ -5,7 +5,7 @@ import ListUserM from "@/components/member/list-user-m";
 import SingleCoupon from "@/components/user/SingleCoupon";
 import SingleCouponFree from "@/components/user/singleCouponFree";
 import Image from "next/image";
-import myProfile from "@/assets/myProfile.svg";
+
 
 import Cat2 from "@/assets/cat-02.png";
 
@@ -67,31 +67,23 @@ const UserCouponPage = () => {
   };
 
   return (
-    <div className=" my-3">
+    <div className=" my-3 coupon-style">
       <div className="d-flex justify-content-around pt-2">
-        <div className="d-flex justify-content-end">
-          {/* mobile版的左側tab */}
-        </div>
+       
         <ListUserM />
         <ListD />
 
-        <div className="user-coupon row col-lg-8 col-md-8 col-12 ">
+        <div className="user-coupon  col-lg-8 col-md-8 col-12 ">
           <div className="title">
             <p className=" size-4">
-              <Image src={myProfile} alt="myProfile-logo" />
               我的優惠券
             </p>
           </div>
-          <ListUserM />
-          <ListD />
+     
+    
 
-          <div className="user-coupon row col-lg-8 col-md-8 col-12 ">
-            <div className="title">
-              <p className=" size-4">
-                <Image src={myProfile} alt="myProfile-logo" />
-                我的優惠券
-              </p>
-            </div>
+          <div className="user-coupon  ">
+            
 
             <div className="couponSearch d-flex gap-3 ">
               <input
@@ -163,24 +155,29 @@ const UserCouponPage = () => {
                         className="cat2"
                       />
                     </div>
-                    <div className="coupon-shadow scale" />
+                    <div className="shadow scale" />
                     <div className="message-coupon">
-                      <h1 className="priceCode">${v.discount_amount}</h1>
+                      <h1 className="priceCode coupon-h1">${v.discount_amount}</h1>
                       <p>
-                        序號：{v.coupon_code}
+                      <p className="couponCode py-1">
+                      - {v.coupon_code} -
+                      </p>
+                       
+                    
+                        低消 ${v.usage_min}
                         <br />
-                        最低消費：{v.usage_min}
+                        效期 {v.end_date}
                         <br />
-                        使用期限：{v.end_date}
-                        <br />
-                        <a href="#"> -前往購物-</a>
+                        {/* <a href="#"> -前往購物-</a> */}
                       </p>
                     </div>
                   </div>
                 </div>
               ))}
-              {/* <SingleCoupon />
-        <SingleCoupon /> */}
+
+
+              <SingleCoupon />
+        {/* <SingleCoupon /> */}
             </div>
           </div>
         </div>

@@ -1,7 +1,6 @@
 @import "@/styles/variable";
 .wishlist{
-    border-radius: 10px 10px 10px 10px;
-    background: #fff;
+    
     color:$text-main;
     @media screen and (max-width: 768px) {
         background: $main-bg;
@@ -15,6 +14,10 @@
             width: 80px;
             height: 80px;
         }
+    }
+    .bg{
+        border-radius: 10px 10px 10px 10px;
+    background: #fff;
     }
     .price{
        color: $price;
