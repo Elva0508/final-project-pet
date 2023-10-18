@@ -11,7 +11,9 @@ import { BiSearchAlt } from "react-icons/bi";
 import jwt_decode from 'jwt-decode';
 import { useCart } from "@/hooks/useCart"
 import { useRouter } from "next/router";
-import { string } from 'yup';
+import ProductSlick2 from '@/components/product/product-slick2';
+import { FaPaw } from 'react-icons/fa';
+import { useProductActivePage } from "@/hooks/useProductActivePage";
 
 
 const Search = ({ handleSearch, placeholder, color, onClick, search, setSearch }) => {
@@ -409,6 +411,10 @@ const [productData, setProductData] = useState([]); // 初始化為一個帶有 
         
     };
 
+    //sidebar
+    const { activeButton, setActiveButton } = useProductActivePage();
+    console.log(activeButton);
+
 
 
     return (
@@ -428,33 +434,35 @@ const [productData, setProductData] = useState([]); // 初始化為一個帶有 
                             </li>
                         </ol>
                     </nav> */}
+                    {/* <div className='banner mb-5 '>
+                        <ProductSlick2 />
+                    </div> */}
                     <div className="search-sort d-flex flex-md-row flex-column justify-content-between align-items-center ms-3 me-3">
                         <Search placeholder={"請輸入商品或品牌關鍵字"} search={search} setSearch={setSearch} handleSearch={handleSearch} />
                         {/* created_at和specialoffer排序 */}
-                        <div className='sort ' >
-                            <div className='sort-btn d-flex   justify-content-center text-align-center'>
-                                {/* <button className={`size-7 m-1 p-1 ${isUpIconVisible ? 'active' : ''}`} onClick={toggleUpIcon}>
+                        <div className='sort d-flex flex-row align-items-center' >
+                            {/* <button className={`size-7 m-1 p-1 ${isUpIconVisible ? 'active' : ''}`} onClick={toggleUpIcon}>
                                     上架時間 {isUpIconVisible ? <FaCaretUp /> : <FaCaretDown />}
                                 </button>
                                 <button className={`size-7 m-1 p-1 ${isPriceIconVisible ? 'active' : ''}`} onClick={togglePriceIcon}>
                                     價格 {isPriceIconVisible ? <FaCaretUp /> : <FaCaretDown />}
                                 </button> */}
-                                <div className="col-12 mt-2 d-flex">
-                                    <label htmlFor="specialoffer-sort" className="form-label">排序依據</label>
-                                    <select
-                                        id="specialoffer-sort"
-                                        className="form-select"
-                                        onChange={handleSortChange} // 選項改變時觸發事件處理程序
-                                        value={selectedSort} // 設定選擇的值
-                                    >
-                                        <option value="">請選擇</option>
-                                        <option value="price_desc">價格由高到低</option>
-                                        <option value="price_asc">價格由低到高</option>
-                                        {/* <option value="created_at_desc">上架由新到舊</option>
+                            <div className="specialoffer-sort px-1" >排序依據</div>
+                            <div>
+                                <select
+                                    id="specialoffer-sort"
+                                    className="form-select"
+                                    onChange={handleSortChange} // 選項改變時觸發事件處理程序
+                                    value={selectedSort} // 設定選擇的值
+                                >
+                                    <option value="">請選擇</option>
+                                    <option value="price_desc">價格由高到低</option>
+                                    <option value="price_asc">價格由低到高</option>
+                                    {/* <option value="created_at_desc">上架由新到舊</option>
                                         <option value="created_at_asc">上架由舊到新</option> */}
-                                    </select>
-                                </div>
+                                </select>
                             </div>
+
                         </div>
                     </div>
                     {/* 手機版篩選 */}
@@ -620,10 +628,11 @@ const [productData, setProductData] = useState([]); // 初始化為一個帶有 
                                                     if (v.category_id === category.category_id) {
                                                         return (
                                                             <button
-                                                                className="button-subcategory size-7"
+                                                                className={`button-subcategory size-7 p-2 ${activeButton === v.subcategory_id ? "active" : ""} `}
                                                                 type="button"
                                                                 key={i}
                                                                 onClick={() => {
+                                                                    setActiveButton(v.subcategory_id);
                                                                     router.push(`/product/${category.category_id}/${v.subcategory_id}`);
                                                                     // handlesubCategoryChange(subcategory.trim());
                                                                     // console.log(`Button for subcategory ${subcategory.trim()} clicked.`);
@@ -633,7 +642,7 @@ const [productData, setProductData] = useState([]); // 初始化為一個帶有 
                                                             </button>
                                                         );
                                                     }
-                                                    return null; // 或者直接不返回任何内容
+                                                    return null;// 或者直接不返回任何内容
                                                 })}
                                             </div>
                                         </div>
@@ -717,9 +726,9 @@ const [productData, setProductData] = useState([]); // 初始化為一個帶有 
                                     <ProductCard />
                                 </div> */}
                             </div>
-                            <Pagination itemsPerPage={itemsPerPage} total={total} activePage={activePage} setActivePage={setActivePage} />
                         </div>
                     </section>
+                    <Pagination itemsPerPage={itemsPerPage} total={total} activePage={activePage} setActivePage={setActivePage} />
 
                 </div>
             </div>

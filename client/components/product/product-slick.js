@@ -153,16 +153,16 @@ export default function ProductSlick() {
     }
     const settings = {
         dots: true,
-        infinite: false,
         speed: 500,
         slidesToShow: 4, //一次顯示幾張圖片
         slidesToScroll: 4, //一次要滾動幾張圖片
-        initialSlide: 0,
+        initialSlide: 0, //顯示第一個slide
         autoplay: true,
         autoplayspeed: 500,
         cssEase: "linear",
+        infinite: true, //是否可以循環
 
-        responsive: [
+        responsive: [  //RWD
             {
                 breakpoint: 1024,
                 settings: {
@@ -196,10 +196,12 @@ export default function ProductSlick() {
                     return (
                         <div className="product-card2" key={v.product_id}>
                             <div className="card" >
-                                <Link href={`/product/${v.product_id}`} >
-                                    <img src={v.images_one} className="card-img-top" alt="..." />
-                                </Link>
-                                <div className="card-body p-3" >
+                                <div className='card-img'>
+                                    <Link href={`/product/${v.category_id}/${v.subcategory_id}/${v.product_id}`} >
+                                        <img src={v.images_one} className="card-img-top" alt="..." />
+                                    </Link>
+                                </div>
+                                <div className="card-body p-2" >
                                     <div className="d-flex justify-content-between align-items-center">
 
                                         {/* 類別按鈕顏色已建好 btn-color-1 一直到btn-color-7 再依需求調整className即可 */}
@@ -209,11 +211,11 @@ export default function ProductSlick() {
                                             {collection.some((item) => item.product_id === v.product_id) ? <FaHeart color="#ca526f" size={20} /> : <FaRegHeart color="#d7965b" size={20} />}
                                         </button>
                                     </div>
-                                    <Link href={`/product/${v.product_id}`} >
+                                    <Link href={`/product/${v.category_id}/${v.subcategory_id}/${v.product_id}`} >
                                         <div className="card-text-vendor size-7 m-size-7">{v.vendor}</div>
                                         <div className="card-text size-6 m-size-7">{v.product_name}</div>
                                         <div className="product-sale-price d-flex align-items-center" href="#">
-                                            <div className="price fs-4  size-6 m-size-7 me-3">NT${v.specialoffer}</div>
+                                            <div className="price fs-4  size-6 m-size-7 me-2">NT${v.specialoffer}</div>
                                             <del>NT${v.price}</del>
                                         </div>
                                     </Link>
