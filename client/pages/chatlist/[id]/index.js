@@ -157,6 +157,21 @@ export default function Chatroom() {
     }
   };
 
+
+  function CustomHTMLRenderer({ htmlContent }) {
+    const containsSpecialText = htmlContent.includes('小幫手履歷');
+
+    // 根據包含不同文字的情況，設置不同的CSS名
+    const className = containsSpecialText
+      ? 'size-7 m-size-7 px-3 helper-info' // 含「小幫手履歷」時的樣式
+      : 'size-7 m-size-7 rounded-pill content py-1 px-2';
+
+    return (
+      <div className={className} dangerouslySetInnerHTML={{ __html: htmlContent }}></div>
+    );
+  }
+
+
   return (
     <>
       <div className="chatroom">
@@ -187,9 +202,10 @@ export default function Chatroom() {
                 <div className="user p-3" key={i}>
                   {v.talk_userId === decodedToken.id ? ( // 自己的消息
                     <div className="d-flex align-items-center justify-content-end my-1 chat-box">
-                      <div className="size-7 m-size-7 rounded-pill content py-1 px-2">
+                      {/* <div className="size-7 m-size-7 rounded-pill content py-1 px-2">
                         {v.chat_content}
-                      </div>
+                      </div> */}
+                      <CustomHTMLRenderer htmlContent={v.chat_content} />
                       <div className="avatar rounded-circle mr-3 overflow-hidden rounded-circle ms-2">
                         <img
                           src={v.cover_photo}
