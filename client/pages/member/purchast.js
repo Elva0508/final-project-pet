@@ -143,68 +143,95 @@ export default function Purchast() {
               <span className="my">▍</span>購買紀錄
             </p>
             <div className="bg">
-              {currentData.map((v, i) => {
-                return (
-                  <>
-                    <div className="d-flex border-bottom pt-4 pb-2 justify-content-between mx-md-5">
-                      <div className="d-flex  col-8 col-md-9" key={i}>
-                        <img className="picture me-4" src={v.image}></img>
-
-                        <div className="">
-                          <p className="size-6">{v.product_name}</p>
-                          <p className="size-6 type">{v.type}</p>
-                          <p className="size-6 price">NT${v.price}</p>
-                        </div>
-                      </div>
-
-                      <div className="col-4 col-md-3 d-flex flex-column align-items-center">
-                        <button
-                          className="btn btn-confirm m-2 size-6 m-size-7"
-                          data-bs-toggle="offcanvas"
-                          data-bs-target="#offcanvasRight"
-                          aria-controls="offcanvasRight"
-                          onClick={() =>
-                            addCart(v.user_id, v.product_id, v.type_id)
-                          }
-                        >
-                          再次購買
-                        </button>
-
-                        {wishlist.find((w) => w.product_id === v.product_id) ===
-                        undefined ? (
-                          <button
-                            className="btn btn-outline-confirm m-2 size-6 m-size-7"
-                            data-bs-toggle="modal"
-                            data-bs-target="#exampleModal"
-                            onClick={() => addWishlist(v.user_id, v.product_id)}
-                          >
-                            加入追蹤
-                          </button>
-                        ) : (
-                          <button
-                            className="btn btn-outline-confirm m-2 size-6 m-size-7"
-                            data-bs-toggle="modal"
-                            data-bs-target="#exampleModal1"
-                            onClick={() => {
-                              deleteWishlist(v.user_id, v.product_id);
-                            }}
-                          >
-                            取消追蹤
-                          </button>
-                        )}
-                      </div>
+              {product.length == 0 ? (
+                <>
+                  <div className="nopurchast">
+                    <div className=" d-flex justify-content-center mt-5">
+                      <p className="size-3">
+                        尚無購買紀錄，快去小貓商城逛逛吧！
+                      </p>
                     </div>
-                  </>
-                );
-              })}
-              <div className="mt-4">
-              <Pagination
-                itemsPerPage={itemsPerPage}
-                total={product}
-                activePage={activePage}
-                setActivePage={setActivePage}
-              />
-            </div>
+                    <div className="d-flex justify-content-center mt-5">
+                      <button
+                        className="btn-confirm size-4"
+                        onClick={() => {
+                          router.push("/product");
+                        }}
+                      >
+                        前往小貓商城
+                      </button>
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <>
+                  {currentData.map((v, i) => {
+                    return (
+                      <>
+                        <div className="d-flex border-bottom pt-4 pb-2 justify-content-between mx-md-5">
+                          <div className="d-flex  col-8 col-md-9" key={i}>
+                            <img className="picture me-4" src={v.image}></img>
+
+                            <div className="">
+                              <p className="size-6">{v.product_name}</p>
+                              <p className="size-6 type">{v.type}</p>
+                              <p className="size-6 price">NT${v.price}</p>
+                            </div>
+                          </div>
+
+                          <div className="col-4 col-md-3 d-flex flex-column align-items-center">
+                            <button
+                              className="btn btn-confirm m-2 size-6 m-size-7"
+                              data-bs-toggle="offcanvas"
+                              data-bs-target="#offcanvasRight"
+                              aria-controls="offcanvasRight"
+                              onClick={() =>
+                                addCart(v.user_id, v.product_id, v.type_id)
+                              }
+                            >
+                              再次購買
+                            </button>
+
+                            {wishlist.find(
+                              (w) => w.product_id === v.product_id
+                            ) === undefined ? (
+                              <button
+                                className="btn btn-outline-confirm m-2 size-6 m-size-7"
+                                data-bs-toggle="modal"
+                                data-bs-target="#exampleModal"
+                                onClick={() =>
+                                  addWishlist(v.user_id, v.product_id)
+                                }
+                              >
+                                加入追蹤
+                              </button>
+                            ) : (
+                              <button
+                                className="btn btn-outline-confirm m-2 size-6 m-size-7"
+                                data-bs-toggle="modal"
+                                data-bs-target="#exampleModal1"
+                                onClick={() => {
+                                  deleteWishlist(v.user_id, v.product_id);
+                                }}
+                              >
+                                取消追蹤
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      </>
+                    );
+                  })}
+                  <div className="mt-4">
+                    <Pagination
+                      itemsPerPage={itemsPerPage}
+                      total={product}
+                      activePage={activePage}
+                      setActivePage={setActivePage}
+                    />
+                  </div>
+                </>
+              )}
             </div>
 
             <div
@@ -331,7 +358,6 @@ export default function Purchast() {
                 </div>
               </div>
             </div>
-
           </div>
         </div>
       </div>

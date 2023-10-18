@@ -5,7 +5,7 @@ import { LuCalendarClock } from "react-icons/lu";
 import { BiMessageRounded } from "react-icons/bi";
 import { PiPawPrintFill } from "react-icons/pi";
 import { FaRegHeart, FaHeart } from "react-icons/fa";
-import { CiCircleChevLeft, CiCircleChevRight } from "react-icons/Ci";
+import { CiCircleChevLeft, CiCircleChevRight } from "react-icons/ci";
 import Footer from "@/components/footer";
 import { Swiper, SwiperSlide, useSwiper } from "swiper/react";
 import { Scrollbar, Navigation } from "swiper/modules";
@@ -61,17 +61,18 @@ const ImageSwiper = ({ images }) => {
             border-radius: 50%;
             color: #F8CB9F;
             box-shadow: 0 0 9px rgba(0, 0, 0, 0.5);
-            background-position: center;
             background-size: 22px;
             background-repeat: no-repeat;
           }
 
           .swiper-button-prev {
-            background-image: url("/caret-left.svg");
+            background-image: url("/job-icon/angle-left-solid.svg");
+            background-position: 10px 5px;
 
           }
           .swiper-button-next {
-            background-image: url("/caret-right.svg");    
+            background-image: url("/job-icon/angle-right-solid.svg"); 
+            background-position: 12px 4px;  
           }
           .swiper-button-next svg,
           .swiper-button-prev svg {
@@ -118,9 +119,14 @@ const Quotation = () => {
   const [serviceList, setServiceList] = useState([]);
   const [formClear, setFormClear] = useState(false);
   // const [petsName, setPetsName] = useState(null);
-  const { userId } = useAuth();
+  const { userId, isAuthenticated } = useAuth();
   const showDialog = () => {
-    setVisible(true);
+    if (isAuthenticated) {
+      setVisible(true);
+    } else {
+      alert("請先登入會員");
+      router.push("/member/login");
+    }
   };
 
   const handleSubmit = () => {
@@ -521,149 +527,6 @@ const Quotation = () => {
   );
 };
 
-const PetInfo = ({ petsValue, setPetsValue, petsName, setPetsName }) => {
-  const { isAuthenticated } = useAuth();
-  const router = useRouter();
-  const { uid } = router.query;
-
-  const [isCreate, setIsCreate] = useState(false);
-  let tempValue, tempName;
-
-  const [visible, setVisible] = useState(false);
-  const showDialog = () => {
-    setVisible(true);
-  };
-  const handleOk = () => {
-    setVisible(false);
-    setPetsValue(tempValue);
-    setPetsName(tempName);
-  };
-  const handleCancel = () => {
-    setVisible(false);
-    setPetsValue(null);
-    setPetsName(null);
-  };
-  const handleAfterClose = () => {
-    console.log("After Close callback executed");
-  };
-
-  return (
-    <>
-      <label
-        onClick={() => {
-          if (isAuthenticated) {
-            showDialog();
-          } else {
-            alert("請先登入會員");
-            router.push("/member/login");
-          }
-        }}
-      >
-        {petsName || "選擇寵物"}
-      </label>
-
-      <Modal
-        // title="基本对话框"
-        visible={visible}
-        centered={true}
-        closable={false}
-        afterClose={handleAfterClose} //>=1.16.0
-        onOk={handleOk}
-        onCancel={handleCancel}
-        closeOnEsc={true}
-        className="pet-info-modal"
-        footer={
-          <div className="pet-info-modal-footer">
-            <Button type="tertiary" onClick={handleCancel}>
-              清除
-            </Button>
-            <button className="btn-confirm" onClick={handleOk}>
-              選擇
-            </button>
-            {/* <button
-              className="btn btn-info"
-              onClick={() => {
-                setIsCreate(true);
-              }}
-            >
-              新增寵物
-            </button> */}
-          </div>
-        }
-      >
-        {isCreate ? (
-          <>
-            <div className="d-flex flex-column">
-              <p>毛小孩名字</p>
-              <input type="text" />
-            </div>
-            <div className="d-flex flex-column">
-              <p>健康狀況描述</p>
-              <input type="text" />
-            </div>
-            <div className="d-flex flex-column">
-              <p>出生年</p>
-              <input type="number" />
-            </div>
-            <div className="d-flex flex-column">
-              <p>性別</p>
-              <input type="radio" />
-            </div>
-            <div className="d-flex flex-column">
-              <p>是否結紮</p>
-              <input type="radio" />
-            </div>
-            <div className="d-flex flex-column">
-              <p>是否規律施打疫苗</p>
-              <input type="radio" />
-            </div>
-          </>
-        ) : (
-          <>
-            {pets.length === 0 ? (
-              <Empty
-                image={
-                  <IllustrationConstruction
-                    style={{ width: 150, height: 150 }}
-                  />
-                }
-                darkModeImage={
-                  <IllustrationConstructionDark
-                    style={{ width: 150, height: 150 }}
-                  />
-                }
-                title={"暫無內容"}
-                description="請添加您的寵物資訊。"
-              />
-            ) : (
-              <RadioGroup
-                type="pureCard"
-                direction="horizontal"
-                aria-label="選擇寵物"
-                defaultValue={petsValue}
-                onChange={(e) => {
-                  console.log(e.target);
-                  tempValue = e.target.value;
-                  tempName = e.target.children[1].props.children;
-                }}
-              >
-                {pets.map((pet) => (
-                  <Radio
-                    value={pet.pet_id}
-                    // extra="Semi Design 是由互娱社区前端团队与 UED 团队共同设计开发并维护的设计系统"
-                  >
-                    <img className="pet-photo" src={pet.image}></img>
-                    <p className="size-6">{pet.name}</p>
-                  </Radio>
-                ))}
-              </RadioGroup>
-            )}
-          </>
-        )}
-      </Modal>
-    </>
-  );
-};
 const HelperDetail = () => {
   const router = useRouter();
   const uid = parseInt(router.query.uid);
@@ -730,7 +593,7 @@ const HelperDetail = () => {
         // console.log(leftBlock);
         if (distanceToBottom < 145) {
           leftBlock.style.position = "relative";
-          leftBlock.style.top = `${scrollY - 325}px`;
+          leftBlock.style.top = `${scrollY - 200}px`;
         } else {
           leftBlock.style.position = "sticky";
           leftBlock.style.top = "10px";
@@ -905,7 +768,7 @@ const HelperDetail = () => {
             </div>
             <div className="profile row justify-content-center justify-content-md-start">
               <div className="size-5 m-size-5 username col-12 text-center my-2">
-                {profile.name}
+                {profile.name || "loading...."}
               </div>
               <hr className="profile-divider" />
               <div className="profile-info">
@@ -986,7 +849,11 @@ const HelperDetail = () => {
             <div className="item">
               <div className="item-title size-6">小幫手服務介紹</div>
               <hr className="item-divider" />
-              <di className="item-content size-7" ref={contentRef}></di>
+              <di
+                className="item-content size-7 d-block"
+                ref={contentRef}
+                style={{ minHeight: "700px" }}
+              ></di>
             </div>
             <div className="item">
               <div className="item-title size-6">服務價格說明</div>

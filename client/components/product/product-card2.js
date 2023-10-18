@@ -1,10 +1,8 @@
-import { Fragment, useState } from "react";
-import { BiSolidCart } from "react-icons/bi";
 import axios from 'axios';
-import { useEffect } from "react";
+import { useEffect , useState} from "react";
 import Link from "next/link";
-import Counter from '@/components/product/quantity-counter';
 import { FaHeart, FaRegHeart } from 'react-icons/fa';
+import jwt_decode from "jwt-decode";
 
 
 export default function ProductCard2({ productData, mainPic, setMainPic }) {
@@ -102,7 +100,7 @@ export default function ProductCard2({ productData, mainPic, setMainPic }) {
     const have = collection.find((v) => v.product_id === product_id);
     console.log(have);
 
-    // 如果購物車中沒有相同的商品
+    // 如果收藏中沒有相同的商品
     if (have) {
       try {
         // 發送HTTP請求將商品添加到購物車，product_id 放在 URL 中
@@ -115,7 +113,7 @@ export default function ProductCard2({ productData, mainPic, setMainPic }) {
       }
 
       getCollection(userId);
-    } else { // 如果購物車中已經沒有存在相同的商品
+    } else { // 如果收藏中已經沒有存在相同的商品
       try {
         getCollection(userId);
         //顯示警告
@@ -141,6 +139,10 @@ export default function ProductCard2({ productData, mainPic, setMainPic }) {
     getCollection(userId);
   }, [userId]);
 
+  
+
+  
+
   return (
     <>
       {productData.map((v, i) => {
@@ -148,10 +150,12 @@ export default function ProductCard2({ productData, mainPic, setMainPic }) {
           <div className="col-6 col-md-4 col-lg-6 col-xl-4">
             <div className="product-card2" key={v.product_id}>
               <div className="card" >
+                <div className='card-img'> 
                 <Link href={`/product/${v.category_id}/${v.subcategory_id}/${v.product_id}`} >
                   <img src={v.images_one} className="card-img-top" alt="..." />
                 </Link>
-                <div className="card-body p-3" >
+                </div>
+                <div className="card-body p-2" >
                   <div className="d-flex justify-content-between align-items-center">
                     {/* 類別按鈕顏色已建好 btn-color-1 一直到btn-color-7 再依需求調整className即可 */}
                     {/* 顏色設定如果需要再調整，可以到以下檔案調整 \final-project-pet\client\styles\components-style\_product-card.scss */}
@@ -161,9 +165,10 @@ export default function ProductCard2({ productData, mainPic, setMainPic }) {
                     </button>
                   </div>
                   <Link href={`/product/${v.category_id}/${v.subcategory_id}/${v.product_id}`} >
+                    <div className="card-text-vendor size-7 m-size-7">{v.vendor}</div>
                     <div className="card-text size-6 m-size-7">{v.product_name}</div>
                     <div className="product-sale-price d-flex align-items-center" href="#">
-                      <div className="price fs-4  size-6 m-size-7 me-3">NT${v.specialoffer}</div>
+                      <div className="price fs-4  size-6 m-size-7 me-2">NT${v.specialoffer}</div>
                       <del>NT${v.price}</del>
                     </div>
                   </Link>

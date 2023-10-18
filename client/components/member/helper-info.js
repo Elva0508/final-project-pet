@@ -10,6 +10,9 @@ import { IconPlus } from "@douyinfe/semi-icons";
 import { CheckboxGroup, Checkbox, TextArea } from "@douyinfe/semi-ui";
 import { useAuth } from "@/context/fakeAuthContext";
 import { useRouter } from "next/router";
+import lottie from "lottie-web";
+import animationClose from "@/data/Animation-close.json";
+import animationClick from "@/data/Animation-click.json";
 const countyOption = [
   "台北市",
   "新北市",
@@ -137,6 +140,7 @@ const Close = ({ open, setOpen, user_id }) => {
         .then((response) => {
           console.log(response.data);
           if (response?.data?.status === 200) {
+            alert("開啟小幫手功能成功");
             setOpen(true);
           }
         })
@@ -145,12 +149,30 @@ const Close = ({ open, setOpen, user_id }) => {
         });
     }
   };
+  useEffect(() => {
+    console.log(open);
+    const container = document.getElementById("close");
+    if (container) {
+      lottie.loadAnimation({
+        container: document.getElementById("close"), // the dom element
+        renderer: "svg",
+        loop: true,
+        autoplay: true,
+        animationData: animationClose, // the animation data
+      });
+    }
+
+    // return () => {
+    //   lottie.destroy();
+    // };
+  }, [open]);
   return (
-    <>
-      <button className="open-helper btn-brown" onClick={handleOpen}>
+    <div className="close-mask">
+      {/* <button className="open-helper btn-brown" onClick={handleOpen}>
         開啟小幫手功能
-      </button>
-    </>
+      </button> */}
+      <div id="close" onClick={handleOpen}></div>
+    </div>
   );
 };
 
@@ -171,6 +193,19 @@ const Open = ({ open, setOpen, info, setInfo, images, setImages, user_id }) => {
   const [messageApi, contextHolder] = message.useMessage();
 
   let action = "https://api.semi.design/upload";
+  useEffect(() => {
+    lottie.loadAnimation({
+      container: document.getElementById("click"), // the dom element
+      renderer: "svg",
+      loop: true,
+      autoplay: true,
+      animationData: animationClick, // the animation data
+    });
+
+    return () => {
+      lottie.destroy();
+    };
+  }, [open]);
 
   useEffect(() => {
     // info清除時重置回預設值
@@ -220,6 +255,7 @@ const Open = ({ open, setOpen, info, setInfo, images, setImages, user_id }) => {
         .then((response) => {
           console.log(response?.data);
           if (response?.data?.status === 200) {
+            alert("關閉成功");
             setOpen(false);
           }
         })
@@ -480,19 +516,20 @@ const Open = ({ open, setOpen, info, setInfo, images, setImages, user_id }) => {
             送出
           </button>
         </div>
-        <button
-          type="button"
-          className="close-helper btn-brown ms-auto"
-          onClick={handleOpen}
-        >
-          關閉小幫手功能
-        </button>
+        {open && (
+          <>
+            <div className="close-helper ms-auto" onClick={handleOpen}>
+              關閉小幫手
+            </div>
+            <div id="click"></div>
+          </>
+        )}
       </form>
     </>
   );
 };
 const HelperInfo = ({ user_id }) => {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
   const [info, setInfo] = useState({});
   const [images, setImages] = useState([]);
   // const { isAuthenticated, userId } = useAuth();
@@ -507,8 +544,8 @@ const HelperInfo = ({ user_id }) => {
           const profile = response?.data?.profile[0];
           setInfo(profile);
           defaultInfo = profile;
-          if (profile.cat_helper) {
-            setOpen(true);
+          if (!profile.cat_helper) {
+            setOpen(false);
           }
           const tempImages = response?.data?.images;
           setImages(() => {
@@ -526,12 +563,13 @@ const HelperInfo = ({ user_id }) => {
   if (process.client) {
     console.log("運行在客戶端");
   }
+
   return (
     <>
       <div className="col-12 col-sm-8 helper-info ">
         <div className="title">
-          <p className="size-4 m-size-5">
-            <img src="/member-icon/helper-info.svg" />
+          <p className="size-4 m-size-5 mb-2">
+            <span className="my">▍</span>
             小幫手資料
             {open && (
               <Link
@@ -555,7 +593,18 @@ const HelperInfo = ({ user_id }) => {
             user_id={user_id}
           />
         ) : (
-          <Close open={open} setOpen={setOpen} user_id={user_id} />
+          <>
+            <Open
+              open={open}
+              setOpen={setOpen}
+              info={info}
+              setInfo={setInfo}
+              images={images}
+              setImages={setImages}
+              user_id={user_id}
+            />
+            <Close open={open} setOpen={setOpen} user_id={user_id} />
+          </>
         )}
       </div>
     </>

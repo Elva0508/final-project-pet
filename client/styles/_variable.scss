@@ -43,15 +43,17 @@ $mobile-font: 3rem, 2.625rem, 2.125rem, 1.5rem, 1.25rem, 1rem, 0.875rem;
   }
 }
 
-.form-input {
+.form-input,
+.form-select {
   height: 2.5rem;
   border: 1px solid rgba(0, 0, 0, 0.1);
   text-indent: 5px;
   border-radius: 2px;
+  background-color: #f8f8f8;
   &:focus {
-    border: 1px solid rgba(0, 0, 0, 0.1);
+    border: 1px solid $hover;
     outline: none; /* 去掉預設input聚焦時的黑框線 */
-    box-shadow: 0 1px 4px rgb(0, 0, 0, 0.25);
+    // box-shadow: 0 1px 4px rgb(0, 0, 0, 0.25);
   }
 }
 .m-form-input {
@@ -62,10 +64,10 @@ $mobile-font: 3rem, 2.625rem, 2.125rem, 1.5rem, 1.25rem, 1rem, 0.875rem;
   border: 1px solid rgba(0, 0, 0, 0.1);
   text-indent: 5px;
   border-radius: 2px;
+  background-color: #f8f8f8;
   &:focus {
-    border: 1px solid rgba(0, 0, 0, 0.1);
+    border: 1px solid $hover;
     outline: none; /* 去掉預設input聚焦時的黑框線 */
-    box-shadow: 0 1px 4px rgb(0, 0, 0, 0.25);
   }
 }
 @media screen and (max-width: 768px) {

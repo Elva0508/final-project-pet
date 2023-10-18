@@ -11,6 +11,10 @@
     a{
         border-bottom: 0;
     }
+.banner img{
+        width: 100%;
+    }
+    
 .accordion{
     border: none;
 }
@@ -36,11 +40,11 @@
         margin-top: 5px;
         padding: 0;
     }
-     .button-subcategory:hover{
-        border-bottom: 2px solid $light-gray;
+    .active{
+        color: $price;
+        font-weight: 800;
     }
    }
-}
 
 .filter{
     border: none;
@@ -106,6 +110,9 @@
     }
    
 }
+
+}
+
 
 
     
