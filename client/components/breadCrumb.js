@@ -221,7 +221,7 @@ const getSubcategory =  () => {
   }
   return (
     <>
-        {pathname=="/" ||pathname=="/product/cart/checkout" ||pathname=="/chatlist/[id]"  ||pathname=="/chatlist"|| pathname=="/product/cart/checkout/pay" || pathname=="/pay-confirm" || pathname=="/product/cart/checkout/cash-on-delivery" || pathname=="/work/find-mission" ||pathname=="/product/cart/checkout/creditCard" ||pathname=="/member/login" || pathname == "/work/find-mission/[mission_id]"?
+        {pathname=="/" ||pathname=="/product/cart/checkout" ||pathname=="/chatlist/[id]"  ||pathname=="/chatlist"|| pathname=="/product/cart/checkout/pay" || pathname=="/pay-confirm" || pathname=="/product/cart/checkout/cash-on-delivery" || pathname=="/work/find-mission" ||pathname=="/product/cart/checkout/creditCard" ||pathname=="/member/login" || pathname == "/work/find-mission/[mission_id]" || pathname=="/work/create-mission"?
           ("")
           :
           (<><nav aria-label="breadcrumb " className='my-4 container'>
