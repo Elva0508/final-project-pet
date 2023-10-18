@@ -34,10 +34,10 @@ router.get("/", (req, res) => {
         LEFT JOIN product_type ON product_type.product_id = products.product_id
         GROUP BY products.product_id;
         `,
-        (error, result) => {
-            res.json({ result });
-        }
-    );
+    (error, result) => {
+      res.json({ result });
+    }
+  );
 });
 
 // //category&subcategory類別
@@ -59,30 +59,30 @@ router.get("/", (req, res) => {
 
 //找大類
 router.get("/category", (req, res) => {
-    connection.execute(
-        `SELECT * FROM category`,
-        (error, result) => {
-            res.json({ result });
-        }
-    );
+  connection.execute(
+    `SELECT * FROM category`,
+    (error, result) => {
+      res.json({ result });
+    }
+  );
 });
 
 //找小類
 router.get("/subcategory", (req, res) => {
-    connection.execute(
-        `SELECT * FROM subcategory`,
-        (error, result) => {
-            res.json({ result });
-        }
-    );
+  connection.execute(
+    `SELECT * FROM subcategory`,
+    (error, result) => {
+      res.json({ result });
+    }
+  );
 });
 
 
 //商品細節頁
 router.get("/product-detail/:product_id", (req, res) => {
-    const productId = req.params.product_id; // 取得從路由參數中傳入的 product_id
-    connection.execute(
-        `SELECT
+  const productId = req.params.product_id; // 取得從路由參數中傳入的 product_id
+  connection.execute(
+    `SELECT
         products.*,
         category.category_name AS category_name,
         subcategory.subcategory_name AS subcategory_name,
@@ -94,16 +94,16 @@ router.get("/product-detail/:product_id", (req, res) => {
         LEFT JOIN product_type ON product_type.product_id = products.product_id
         WHERE products.product_id = ?
         GROUP BY products.product_id`,
-        [productId],
-        (error, result) => {
-            if (error) {
-                console.error("Database error:", error);
-                res.status(500).json({ error: "Internal server error" });
-            } else {
-                res.json({ result });
-            }
-        }
-    );
+    [productId],
+    (error, result) => {
+      if (error) {
+        console.error("Database error:", error);
+        res.status(500).json({ error: "Internal server error" });
+      } else {
+        res.json({ result });
+      }
+    }
+  );
 });
 
 //商品細節頁-reviews
@@ -112,6 +112,7 @@ router.get("/product-detail/:product_id/reviews", (req, res) => {
   connection.execute(
     `SELECT
          product_reviews.review_content AS review_content,
+         product_reviews.review_date AS review_date,
          userinfo.name AS name,
          product_reviews.star_rating AS star_rating
 
@@ -251,58 +252,58 @@ router.get("/cart/:userId", (req, res) => {
 
 //新增購物車
 router.put("/cart1/:user_id", (req, res) => {
-    const userid = req.params.user_id
-    console.log(userid);
-    const { product_id, product_type_id, quantity } = req.body
-    connection.execute(
-        `INSERT INTO cart(user_id, product_id,  product_type_id,quantity) VALUES (?,?,?,?);`,
-        [userid, product_id, product_type_id, quantity]
-        , (error, result) => {
-            res.json({ result })
-        }
-    )
+  const userid = req.params.user_id
+  console.log(userid);
+  const { product_id, product_type_id, quantity } = req.body
+  connection.execute(
+    `INSERT INTO cart(user_id, product_id,  product_type_id,quantity) VALUES (?,?,?,?);`,
+    [userid, product_id, product_type_id, quantity]
+    , (error, result) => {
+      res.json({ result })
+    }
+  )
 })
 
 //用來修改購物車裡已經有的商品數量
 router.put("/cart2/:user_id", (req, res) => {
-    console.log(req);
-    const userid = req.params.user_id
-    console.log(userid);
-    const { product_id, newQuantity, product_type_id } = req.body
-    console.log(product_id);
-    connection.execute(
-        `UPDATE cart SET quantity=? WHERE user_id=? AND product_id=? AND product_type_id=?`,
-        [newQuantity, userid, product_id, product_type_id]
-        , (error, result) => {
-            res.json({ result })
-        }
-    )
+  console.log(req);
+  const userid = req.params.user_id
+  console.log(userid);
+  const { product_id, newQuantity, product_type_id } = req.body
+  console.log(product_id);
+  connection.execute(
+    `UPDATE cart SET quantity=? WHERE user_id=? AND product_id=? AND product_type_id=?`,
+    [newQuantity, userid, product_id, product_type_id]
+    , (error, result) => {
+      res.json({ result })
+    }
+  )
 })
 
 
 
 //大類重新更新productdata //麵包屑連結
 router.get("/product/category/:category_id", (req, res) => {
-    const category_id = req.params.category_id;
-    connection.execute(
-      `SELECT products.*, category.category_name AS category_name, subcategory.subcategory_name AS subcategory_name FROM products JOIN category ON category.category_id = products.category_id JOIN subcategory ON subcategory.subcategory_id = products.subcategory_id WHERE category.category_id=?;`,
-      [category_id],
-      (error, result) => {
-        res.json({ result });
-      }
-    );
-  });
+  const category_id = req.params.category_id;
+  connection.execute(
+    `SELECT products.*, category.category_name AS category_name, subcategory.subcategory_name AS subcategory_name FROM products JOIN category ON category.category_id = products.category_id JOIN subcategory ON subcategory.subcategory_id = products.subcategory_id WHERE category.category_id=?;`,
+    [category_id],
+    (error, result) => {
+      res.json({ result });
+    }
+  );
+});
 //小類重新更新productdata //麵包屑連結
-  router.get("/product/subcategory/:subcategory_id", (req, res) => {
-    const subcategory_id = req.params.subcategory_id;
-    connection.execute(
-      `SELECT products.*, category.category_name AS category_name, subcategory.subcategory_name AS subcategory_name FROM products JOIN category ON category.category_id = products.category_id JOIN subcategory ON subcategory.subcategory_id = products.subcategory_id WHERE subcategory.subcategory_id=?;`,
-      [subcategory_id],
-      (error, result) => {
-        res.json({ result });
-      }
-    );
-  });
+router.get("/product/subcategory/:subcategory_id", (req, res) => {
+  const subcategory_id = req.params.subcategory_id;
+  connection.execute(
+    `SELECT products.*, category.category_name AS category_name, subcategory.subcategory_name AS subcategory_name FROM products JOIN category ON category.category_id = products.category_id JOIN subcategory ON subcategory.subcategory_id = products.subcategory_id WHERE subcategory.subcategory_id=?;`,
+    [subcategory_id],
+    (error, result) => {
+      res.json({ result });
+    }
+  );
+});
 
 
 //產品列表頁大類小類篩選＋價格篩選＋上架時間與價格排序
@@ -312,8 +313,8 @@ router.get("/filter_sort", (req, res) => {
   console.log(req.query);
 
 
-    // 創建查詢參數數組，將參數添加到數組中
-    const queryParams = [];
+  // 創建查詢參數數組，將參數添加到數組中
+  const queryParams = [];
 
   // 初始化 SQL 查詢字符串
   let sqlQuery = `
@@ -396,61 +397,61 @@ router.get("/vendor", (req, res) => {
 //加入收藏
 //查看收藏內有甚麼商品
 router.get("/collections/:user_id", (req, res) => {
-    const userid = req.params.user_id
-    console.log("收藏的id" + userid)
-    connection.execute(
-        `SELECT product_collections.*
+  const userid = req.params.user_id
+  console.log("收藏的id" + userid)
+  connection.execute(
+    `SELECT product_collections.*
         FROM product_collections
         WHERE user_id=?;`,
-        [userid],
-        (error, result) => {
-            res.json({ result });
-        }
-    );
+    [userid],
+    (error, result) => {
+      res.json({ result });
+    }
+  );
 });
 
 //用來新增收藏裡沒有的商品
 router.put("/collections/:user_id", (req, res) => {
-    const userid = req.params.user_id
-    console.log("收藏的id" + userid)
-    const { product_id } = req.body;
-    console.log(product_id);
-    const product_type = 1; // 如果 product_type 需要使用先設定
+  const userid = req.params.user_id
+  console.log("收藏的id" + userid)
+  const { product_id } = req.body;
+  console.log(product_id);
+  const product_type = 1; // 如果 product_type 需要使用先設定
 
-    connection.execute(
-        `INSERT INTO product_collections(user_id, product_id, product_type) VALUES (?, ?, ?);`,
-        [userid, product_id, product_type],
-        (error, result) => {
-            if (error) {
-                console.error("Error inserting into cart:", error);
-                res.status(500).json({ error: "Internal Server Error" });
-            } else {
-                res.json({ result });
-            }
-        }
-    );
+  connection.execute(
+    `INSERT INTO product_collections(user_id, product_id, product_type) VALUES (?, ?, ?);`,
+    [userid, product_id, product_type],
+    (error, result) => {
+      if (error) {
+        console.error("Error inserting into cart:", error);
+        res.status(500).json({ error: "Internal Server Error" });
+      } else {
+        res.json({ result });
+      }
+    }
+  );
 });
 
 //取消收藏
 router.delete("/collections/:user_id/:product_id", (req, res) => {
-    const userid = req.params.user_id;
-    console.log("取消收藏的id:" + userid);
-    const product_id = req.params.product_id; // 從路由參數中取得 product_id
-    console.log("取消收藏的product_id:" + product_id);
-    const product_type = 1; // product_type 需要使用先設定
+  const userid = req.params.user_id;
+  console.log("取消收藏的id:" + userid);
+  const product_id = req.params.product_id; // 從路由參數中取得 product_id
+  console.log("取消收藏的product_id:" + product_id);
+  const product_type = 1; // product_type 需要使用先設定
 
-    connection.execute(
-        `DELETE FROM product_collections WHERE user_id = ? AND product_id = ? AND product_type = ?;`,
-        [userid, product_id, product_type],
-        (error, result) => {
-            if (error) {
-                console.error("Error inserting into cart:", error);
-                res.status(500).json({ error: "Internal Server Error" });
-            } else {
-                res.json({ result });
-            }
-        }
-    );
+  connection.execute(
+    `DELETE FROM product_collections WHERE user_id = ? AND product_id = ? AND product_type = ?;`,
+    [userid, product_id, product_type],
+    (error, result) => {
+      if (error) {
+        console.error("Error inserting into cart:", error);
+        res.status(500).json({ error: "Internal Server Error" });
+      } else {
+        res.json({ result });
+      }
+    }
+  );
 });
 
 // 首頁用商品資料新品 nono

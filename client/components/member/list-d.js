@@ -25,6 +25,7 @@ export default function ListD() {
 
   //const [memberData, setMemberData] = useState(null);
   const { activeButton, setActiveButton } = useActivePage();
+  console.log(activeButton);
   const router = useRouter();
   //設置id狀態 解token
   const [userId, setUserId] = useState(null);

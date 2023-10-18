@@ -31,6 +31,7 @@ export function ActivePageProvider ({ children }) {
     page=0
   }
 
+  console.log(page);
   const [activeButton, setActiveButton] = useState(page)
 
 
