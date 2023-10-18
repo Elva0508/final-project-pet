@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import ListD from "@/components/member/list-d";
 import ListUserM from "@/components/member/list-user-m";
 import Image from "next/image";
-import myProfile from "@/assets/myProfile.svg";
 import useRWD from "@/hooks/useRWD";
 import jwt_decode from "jwt-decode";
 import showPwdImg from "@/assets/showPwd.svg";
@@ -90,7 +89,7 @@ const ResetUserPassword = () => {
         <div className="reset-password  col-lg-8 col-md-8 col-12">
           <div className="title">
             <p className=" size-4">
-              <Image src={myProfile} alt="myProfile-logo" />
+    
               重新設定密碼
             </p>
           </div>

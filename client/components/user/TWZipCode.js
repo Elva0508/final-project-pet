@@ -51,7 +51,9 @@ export default function TWZipCode({
 
   return (
     <>
+    <div className='fs11'>
       <select
+      className='form-select fs5'
         value={countryIndex}
         onChange={(e) => {
           // 將字串轉成數字
@@ -70,6 +72,7 @@ export default function TWZipCode({
         ))}
       </select>
       <select
+      className='form-select fs5'
         value={townshipIndex}
         onChange={(e) => {
           // 將字串轉成數字
@@ -84,7 +87,8 @@ export default function TWZipCode({
             </option>
           ))}
       </select>
-       <h3>郵遞區號:{postcode}</h3> 
+       {/* <h3>郵遞區號:{postcode}</h3>  */}
+       </div>
     </>
   )
 }

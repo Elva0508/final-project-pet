@@ -30,11 +30,11 @@ export default function OrderStatus({order ,currentScreen,activePage,setActivePa
     
     return (
         <>
-      
+      <div className='bg'>
         {currentData.map((v,i)=>{
                     return(
-                      <div key={i} className='bg px-md-5 border-bottom'>
-                        <div className='d-flex justify-content-between'>
+                      <div key={i} className=' mx-md-5 border-bottom '>
+                        <div className='d-flex justify-content-between '>
                         <div className='d-flex align-items-center white'>
                             <img src={v.image} className='' alt='產品圖片'></img>
                             <div className='ms-md-4 ms-1'>
@@ -56,8 +56,9 @@ export default function OrderStatus({order ,currentScreen,activePage,setActivePa
                       
                     )
                   })}
-
-            <Pagination  itemsPerPage={itemsPerPage} total={type} activePage={activePage} setActivePage={setActivePage}/>
+                  <Pagination  itemsPerPage={itemsPerPage} total={type} activePage={activePage} setActivePage={setActivePage}/>
+        </div>
+            
         </>
     )
 }
