@@ -19,11 +19,7 @@ import jwt_decode from "jwt-decode";
 import { useHelper } from "@/context/helperContext";
 
 export default function ListD() {
-  //無法從localStorage取得資料 所以使用特定使用者api
-  // const userData = localStorage.getItem("data");
-  // const parseData = JSON.parse(userData);
-
-  //const [memberData, setMemberData] = useState(null);
+  
   const { activeButton, setActiveButton } = useActivePage();
   console.log(activeButton);
   const router = useRouter();
