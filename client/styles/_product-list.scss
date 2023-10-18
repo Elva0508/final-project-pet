@@ -64,7 +64,8 @@
         text-align: center ; 
     }
 }
-
+ 
+//
 .sort-btn{
     // border: 3px solid;
     // border-radius: 20px;
@@ -81,19 +82,7 @@
         font-size: 1rem;
         color: $text-mark;
     }
-     button:hover{
-        border: none;
-        background-color: $cos-white;
-        font-size: 1rem ;
-        font-weight:bold;
-        color: $text-main;
-    }
-    button.active {
-    color: $text-main; /* 在按钮被点击时改变文字颜色 */
-    font-weight:bold;
 }
-    }
-
     .sidebar-product{
        width: 100%;
     }
@@ -111,7 +100,62 @@
    
 }
 
+
+
+.product-offcanvas-m{
+    .accordion{
+    border: none;
 }
+.accordion-item{
+         border: none;
+    }
+    .accordion-button{
+        background-color: $content-bg;
+        color: $text-main;
+        text-align: center ; 
+        border-bottom: 1px dashed $text-mark;
+        display: block;
+        padding: 10px 0;
+    }
+    .button-subcategory{
+        background-color:var(--bs-body-bg);
+        color: $text-main;
+        border: none;
+        margin-top: 5px;
+        padding: 0;
+    }
+    .active{
+        color:  #ca526f;
+        font-weight: 800;
+    }
+
+}
+
+.slick-next{
+    right: 0;
+}
+.slick-prev{
+    left: 0;
+ 
+}
+.slick-next:before{
+    font-size: 0px;
+}
+
+.offcanvas-body {
+    padding: 0;
+}
+
+// .accordion-button:not(.collapsed){
+ 
+// }
+
+
+}
+    
+
+
+
 
 
 
