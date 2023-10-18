@@ -106,6 +106,7 @@ const MobileFilter = ({
   setTotalRows,
   setCurrentSearch,
   helperControl,
+  setHelperActive,
 }) => {
   const [titleContent, setTitleContent] = useState("服務類型");
   const handleType = (value) => {
@@ -114,14 +115,22 @@ const MobileFilter = ({
     setCurrentSearch(null);
     setFilterType(value);
   };
-  const handleOrder = (value, parentValue) => {
+  const handleOrder = async (value, parentValue) => {
     setPage(1);
     setOrder({ value, parentValue });
+    await new Promise((resolve, reject) => {
+      setHelperActive("exit");
+      setTimeout(() => {
+        resolve();
+      }, 600);
+    });
+    setHelperActive("initial");
     WorkService.getOrderHelper(filterType, parentValue, value, 1)
       .then((response) => {
         console.log(response);
         setAllHelpers(response?.data.data);
         setTotalRows(response?.data?.totalRows);
+        setHelperActive("move");
       })
       .catch((e) => {
         console.log(e);
@@ -293,7 +302,7 @@ const FamousHelperCard = ({
           setIsLoading(true);
           setTimeout(() => {
             router.push(`/work/find-helper/${helper.user_id}`);
-          }, [1500]);
+          }, [1000]);
         }}
       >
         <div className="img-wrapper">
@@ -460,6 +469,7 @@ const SingleHelperCard = ({
 }) => {
   const [isFavHovered, setIsFavHovered] = useState(false);
   const { isAuthenticated } = useAuth();
+  const { setIsLoading } = useHelper();
   const router = useRouter();
   const imgRef = useRef(null);
   const ref = useRef(null);
@@ -550,7 +560,10 @@ const SingleHelperCard = ({
             : "active-fav-in-card"
         }`}
         onClick={() => {
-          router.push(`/work/find-helper/${helper.user_id}`);
+          setIsLoading(true);
+          setTimeout(() => {
+            router.push(`/work/find-helper/${helper.user_id}`);
+          }, [1000]);
         }}
       >
         <img
@@ -618,9 +631,6 @@ const SingleHelperCard = ({
           </div>
 
           <div className="d-flex justify-content-start align-items-end ">
-            {/* <button className="size-6 animate-button-one">
-              <Link href={`/work/find-helper/${helper.user_id}`}>洽詢</Link>
-            </button> */}
             <Rating
               name="half-rating-read"
               value={parseFloat(helper.average_star)}
@@ -776,6 +786,7 @@ const FavCard = ({ helper, collection, setCollection }) => {
 };
 const MissionHelperList = () => {
   const arr = Array.from({ length: 12 });
+  const router = useRouter();
   const [allHelpers, setAllHelpers] = useState(null);
   const [famous, setFamous] = useState([]);
   const [filterType, setFilterType] = useState("all");
@@ -789,7 +800,7 @@ const MissionHelperList = () => {
   const { isAuthenticated, userId } = useAuth();
   const helperControl = useAnimationControls();
   const famousControl = useAnimationControls();
-  const { isLoading } = useHelper();
+  const { isLoading, setIsLoading } = useHelper();
   const [isActive, setIsActive] = useState("move");
   const [helpActive, setHelperActive] = useState("move");
   const [firstLoad, setFirstLoad] = useState(true); //用來判斷是否初次加載，式的話就不進行famousCard的篩選動畫
@@ -797,7 +808,8 @@ const MissionHelperList = () => {
     // 一開始消失，畫面從下側往上移入出現
     initial: {
       opacity: 0,
-      y: 80,
+      y: 20,
+      transition: { duration: 0 },
     },
     // 卡片單張單張移動
     move: (i) => ({
@@ -808,7 +820,7 @@ const MissionHelperList = () => {
     }),
     exit: (i) => ({
       opacity: 0,
-      y: 15,
+      y: 20,
       transition: { duration: 0.4 },
     }),
   };
@@ -833,20 +845,23 @@ const MissionHelperList = () => {
   // useEffect(() => {
 
   // }, [isActive]);
-
+  console.log(isActive, helpActive);
   useEffect(() => {
     (async () => {
       // 使用一個promise先等待exit動畫完成再做後續的更新資料跟move動畫
-      await new Promise((resolve, reject) => {
-        setIsActive("exit");
-        setHelperActive("exit");
-        setTimeout(() => {
-          resolve();
-        }, 600);
-      });
-      setIsActive("initial");
-      setHelperActive("initial");
+
       if (!currentSearch) {
+        if (!firstLoad) {
+          await new Promise((resolve, reject) => {
+            setIsActive("exit");
+            setHelperActive("exit");
+            setTimeout(() => {
+              resolve();
+            }, 600);
+          });
+          setIsActive("initial");
+          setHelperActive("initial");
+        }
         setPage(1);
         if (order) {
           WorkService.getOrderHelper(
@@ -859,7 +874,6 @@ const MissionHelperList = () => {
               console.log(response);
               setAllHelpers(response?.data?.data);
               setTotalRows(response?.data?.totalRows);
-              setHelperActive("move");
             })
             .catch((e) => {
               console.log(e);
@@ -872,27 +886,37 @@ const MissionHelperList = () => {
                 setAllHelpers(response?.data?.data);
                 setTotalRows(response?.data?.totalRows);
                 setTempTotalRows(response?.data?.totalRows);
-                setHelperActive("move");
+                setFirstLoad(false);
                 // setIsLoading(false);
               })
               .catch((e) => {
                 console.log(e);
               });
+          } else {
+            WorkService.getAllHelpers(filterType, 1)
+              .then((response) => {
+                setAllHelpers(response?.data?.data);
+                setTotalRows(response?.data?.totalRows);
+              })
+              .catch((e) => {
+                console.log(e);
+              });
           }
+          WorkService.getFamousHelper(filterType)
+            .then((response) => {
+              // console.log(response?.data.famous);
+              setFamous(response?.data.famous);
+            })
+            .catch((e) => {
+              console.log(e);
+            });
         }
-
-        WorkService.getFamousHelper(filterType)
-          .then((response) => {
-            // console.log(response?.data.famous);
-            setFamous(response?.data.famous);
-            setIsActive("move");
-          })
-          .catch((e) => {
-            console.log(e);
-          });
+        setHelperActive("move");
+        setIsActive("move");
       }
     })();
   }, [filterType]);
+
   // useEffect(() => {
   //   (async () => {
   //     await famousControl.start("exit");
@@ -903,12 +927,12 @@ const MissionHelperList = () => {
 
   useEffect(() => {
     (async () => {
-      await new Promise((resolve, reject) => {
-        setHelperActive("exit");
-        setTimeout(() => {
-          resolve();
-        }, 600);
-      });
+      // await new Promise((resolve, reject) => {
+      //   setHelperActive("exit");
+      //   setTimeout(() => {
+      //     resolve();
+      //   }, 600);
+      // });
       setHelperActive("initial");
       if (order) {
         WorkService.getOrderHelper(
@@ -958,7 +982,6 @@ const MissionHelperList = () => {
     setTotalRows(tempTotalRows);
     WorkService.getAllHelpers(filterType, currentPage)
       .then((response) => {
-        // setTimeout(() => {}, [200]);
         setAllHelpers(response?.data?.data);
       })
       .catch((e) => {
@@ -969,7 +992,7 @@ const MissionHelperList = () => {
     console.log("Page: ", page);
     setPage(page);
   };
-  const handleSearch = () => {
+  const handleSearch = async () => {
     WorkService.getSearchHelper(search)
       .then((response) => {
         // 查詢時，清除各種state設定值
@@ -1024,6 +1047,12 @@ const MissionHelperList = () => {
   //     return;
   //   }
   // }, [filterType]);
+  // useEffect(() => {
+  //   setIsActive("move");
+  // }, [search]);
+
+  // setHelperActive("move");
+  // setIsActive("move");
 
   return (
     <div className="mission-helper-list container">
@@ -1037,15 +1066,32 @@ const MissionHelperList = () => {
       <nav className="breadcrumb-wrapper my-4 " aria-label="breadcrumb">
         <ol class="breadcrumb">
           <li class="breadcrumb-item">
-            <Link href="/" className="active-hover">
+            <Link
+              href="/"
+              className="active-hover"
+              onClick={(e) => {
+                e.preventDefault();
+                setIsLoading(true);
+                setTimeout(() => {
+                  router.push("/");
+                }, 1000);
+              }}
+            >
               首頁
             </Link>
           </li>
           <li class="breadcrumb-item" aria-current="page">
             <Link
               href="/work/find-helper"
-              onClick={handleBack}
               className="active-hover"
+              onClick={(e) => {
+                e.preventDefault();
+                handleBack();
+                setIsLoading(true);
+                setTimeout(() => {
+                  router.push("/work/find-helper");
+                }, 900);
+              }}
             >
               小貓上工(找幫手)
             </Link>
@@ -1096,6 +1142,7 @@ const MissionHelperList = () => {
           setTotalRows={setTotalRows}
           setCurrentSearch={setCurrentSearch}
           helperControl={helperControl}
+          setHelperActive={setHelperActive}
           // handleHelperAnimate={handleHelperAnimate}
         />
       </div>
