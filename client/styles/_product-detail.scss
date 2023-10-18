@@ -188,9 +188,11 @@ a{
   }
 
   .ranking{
-    color: $star;
-    font-size: 2rem;
-
+    color: #faaf00;
+    svg{
+      height: 1.6rem;
+      width: 1.6rem;
+    }
   }
 
 .customer-message{
@@ -200,7 +202,7 @@ a{
     margin-top: 20px;
     padding: 15px;
   }.customer-star{
-  color: $star;
+  color: #faaf00;
   font-size: 1.5rem;
 
   }
@@ -305,8 +307,6 @@ a{
       }
     }
 }
-  
-
    .evaluation-bar {
     $block-width: calc(100% - 3px);
     width: calc(100% - 80px);
@@ -321,7 +321,7 @@ a{
       }
     }
     &-divider {
-      width: 2px;
+      width: 1px;
       height: 200px;
       background-color: darken($light-gray, 30%);
     }
