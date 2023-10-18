@@ -529,7 +529,7 @@ const Open = ({ open, setOpen, info, setInfo, images, setImages, user_id }) => {
   );
 };
 const HelperInfo = ({ user_id }) => {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
   const [info, setInfo] = useState({});
   const [images, setImages] = useState([]);
   // const { isAuthenticated, userId } = useAuth();
@@ -544,8 +544,8 @@ const HelperInfo = ({ user_id }) => {
           const profile = response?.data?.profile[0];
           setInfo(profile);
           defaultInfo = profile;
-          if (profile.cat_helper) {
-            setOpen(true);
+          if (!profile.cat_helper) {
+            setOpen(false);
           }
           const tempImages = response?.data?.images;
           setImages(() => {
