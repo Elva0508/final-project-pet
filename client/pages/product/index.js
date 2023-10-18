@@ -423,6 +423,7 @@ export default function ProductList() {
                                                 >
                                                     {category.category_name}
                                                 </button>
+
                                             </h2>
                                             <div id={`panelsStayOpen-collapseCategory-${index}`} className={`accordion-collapse collapse ${activeKey === index ? 'show' : ''}`}>
                                                 <div className="accordion-body row">
@@ -430,7 +431,7 @@ export default function ProductList() {
                                                         if (v.category_id === category.category_id) {
                                                             return (
                                                                 <button
-                                                                    className="button-subcategory size-7"
+                                                                    className={`button-subcategory size-7 p-2 `}
                                                                     type="button"
                                                                     key={i}
                                                                     onClick={() => {
@@ -443,12 +444,14 @@ export default function ProductList() {
                                                                 </button>
                                                             );
                                                         }
-                                                        return null; // 或者直接不返回任何内容
+                                                        return null;// 或者直接不返回任何内容
                                                     })}
+
                                                 </div>
                                             </div>
                                         </div>
                                     ))}
+                               
                                 </div>
                                
 

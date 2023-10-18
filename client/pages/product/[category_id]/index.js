@@ -490,7 +490,7 @@ export default function ProductList() {
                                         </div>
                                     ))}
                                 </div>
-                                <LoadingOverlay isLoading={isLoading} />
+                             
 
                                 <div className='filter mt-3 '>
                                     <div className="card filter-card">
