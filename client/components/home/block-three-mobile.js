@@ -48,7 +48,7 @@ export default function BlockThreeMobile() {
               <div className="row">
                 <div className="col-8 ">
                   <img
-                    src="https://hips.hearstapps.com/hmg-prod/images/cat-quotes-ginger-cat-on-bed-64e3990220b36.jpeg?crop=0.668xw:1.00xh;0.125xw,0&resize=1200:*"
+                    src="/home/homecat1.jpeg"
                     className="img-fluid"
                     alt="..."
                   ></img>
