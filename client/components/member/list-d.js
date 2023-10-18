@@ -16,15 +16,18 @@ import { useActivePage } from "@/hooks/useActivePage";
 import { useRouter } from "next/router";
 import Membership from "@/components/user/membership";
 import jwt_decode from "jwt-decode";
+import { useHelper } from "@/context/helperContext";
 
 export default function ListD() {
   
   const { activeButton, setActiveButton } = useActivePage();
+  console.log(activeButton);
   const router = useRouter();
-    //設置id狀態 解token
-    const [userId, setUserId] = useState(null);
-    const [currentAvatar, setCurrentAvatar] = useState(null);
-    const [currentName, setCurrentName] = useState(null);
+  //設置id狀態 解token
+  const [userId, setUserId] = useState(null);
+  const [currentAvatar, setCurrentAvatar] = useState(null);
+  const [currentName, setCurrentName] = useState(null);
+  const { setIsLoading } = useHelper();
 
     useEffect(() => {
       const token = localStorage.getItem("token");
@@ -74,7 +77,6 @@ export default function ListD() {
                 </div>
                 <p className="size-5 my-3 text-center title">
                   Hi,{currentName}
-                  
                 </p>
                 <Link className="size-7" href="/member/profile">
                   <span className="me-2">管理個人資料</span>
@@ -174,7 +176,10 @@ export default function ListD() {
                 }`}
                 onClick={() => {
                   setActiveButton(5);
-                  router.push("/member/helper");
+                  setIsLoading(true);
+                  setTimeout(() => {
+                    router.push("/member/helper");
+                  }, 700);
                 }}
               >
                 <div className="my-3">
@@ -190,7 +195,10 @@ export default function ListD() {
                 }`}
                 onClick={() => {
                   setActiveButton(8);
-                  router.push("/member/selling");
+                  setIsLoading(true);
+                  setTimeout(() => {
+                    router.push("/member/selling");
+                  }, 700);
                 }}
               >
                 <div className="my-3">
@@ -239,7 +247,10 @@ export default function ListD() {
                 }`}
                 onClick={() => {
                   setActiveButton(9);
-                  router.push("/member/reserve");
+                  setIsLoading(true);
+                  setTimeout(() => {
+                    router.push("/member/reserve");
+                  }, 700);
                 }}
               >
                 <div className="mt-3 pb-3">

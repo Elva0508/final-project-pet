@@ -224,7 +224,6 @@ router.put("/helper", upload.array("newImages"), async (req, res) => {
       Introduction,
       email,
       phone,
-      job_description,
       feed_price,
       house_price,
       beauty_price,
@@ -234,18 +233,17 @@ router.put("/helper", upload.array("newImages"), async (req, res) => {
       beauty_service,
       oldImages,
     } = req.body;
-    // console.log(req.body);
+    console.log(req.body);
 
     // 更新小幫手資料
     const updateResult = await new Promise((resolve, reject) => {
       conn.execute(
-        "UPDATE `mission_helper_info` SET `name` = ?, `Introduction` = ?, `email` = ?, `phone` = ?, `job_description` = ?, `service_county` = ?, `feed_service` = ?, `house_service` = ?, `beauty_service` = ?, `feed_price` = ?, `house_price` = ?, `beauty_price` = ? WHERE `mission_helper_info`.`user_id` = ?",
+        "UPDATE `mission_helper_info` SET `name` = ?, `Introduction` = ?, `email` = ?, `phone` = ?, `service_county` = ?, `feed_service` = ?, `house_service` = ?, `beauty_service` = ?, `feed_price` = ?, `house_price` = ?, `beauty_price` = ? WHERE `mission_helper_info`.`user_id` = ?",
         [
           name,
           Introduction,
           email,
           phone,
-          job_description,
           service_county,
           parseBoolean(feed_service),
           parseBoolean(house_service),
