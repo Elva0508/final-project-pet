@@ -39,6 +39,7 @@
     "react-icons": "^4.11.0",
     "react-loading": "^2.0.3",
     "react-router-dom": "^6.16.0",
+    "react-scroll-motion": "^0.3.2",
     "react-slick": "^0.29.0",
     "react-slider": "^2.0.6",
     "sass": "^1.67.0",

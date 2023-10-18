@@ -15,26 +15,39 @@ import Link from "next/link";
 import { useActivePage } from "@/hooks/useActivePage";
 import { useRouter } from "next/router";
 import Membership from "@/components/user/membership";
+import jwt_decode from "jwt-decode";
 
 export default function ListD() {
   //無法從localStorage取得資料 所以使用特定使用者api
   // const userData = localStorage.getItem("data");
   // const parseData = JSON.parse(userData);
 
-  const [memberData, setMemberData] = useState(null);
+  //const [memberData, setMemberData] = useState(null);
   const { activeButton, setActiveButton } = useActivePage();
   const router = useRouter();
+    //設置id狀態 解token
+    const [userId, setUserId] = useState(null);
+    const [currentAvatar, setCurrentAvatar] = useState(null);
+    const [currentName, setCurrentName] = useState(null);
 
-  useEffect(() => {
-    fetch("http://localhost:3005/api/user/user-info")
-      .then((response) => response.json())
-      .then((data) => {
-        setMemberData(data.results[0]);
-      })
-      .catch((error) => {
-        console.error("API請求失敗", error);
-      });
-  }, []);
+    useEffect(() => {
+      const token = localStorage.getItem("token");
+      if (token) {
+        try {
+          const decodeToken = jwt_decode(token);
+          const currentUserId = decodeToken.id;
+          const currentAvatar = decodeToken.avatar;
+          const currentName = decodeToken.name;
+          //console.log(userId);
+  
+          //更新userId狀態
+          setUserId(currentUserId);
+          setCurrentAvatar(currentAvatar);
+          setCurrentName(currentName);
+        } catch (error) {
+          console.error("token解析錯誤", error);
+        }
+      }}, [userId]);
 
   return (
     <>
@@ -46,12 +59,14 @@ export default function ListD() {
                 <div className="text-center">
                   <img
                     //src="https://cdn-front.mao-select.com.tw//upload_files/fonlego-rwd/prodpic/D_A1VK080502.jpg"
-                    src={memberData ? memberData.cover_photo : "loading..."}
+                    //src={memberData ? memberData.cover_photo : "loading..."}
+                    src={currentAvatar}
                     className="mt-5"
                   ></img>
                 </div>
                 <p className="size-5 my-3 text-center title">
-                  Hi,{memberData ? memberData.name : "loading..."}
+                  Hi,{currentName}
+                  
                 </p>
                 <Link className="size-7" href="/member/profile">
                   <span className="me-2">管理個人資料</span>

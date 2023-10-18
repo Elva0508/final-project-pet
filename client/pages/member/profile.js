@@ -4,7 +4,6 @@ import ListD from "@/components/member/list-d";
 import ListUserM from "@/components/member/list-user-m";
 import useRWD from "@/hooks/useRWD";
 import Image from "next/image";
-import myProfile from "@/assets/myProfile.svg";
 import data from "@/data/taiwan.json";
 import TWZipCode from "@/components/user/TWZipCode";
 
@@ -124,11 +123,11 @@ const ProfilePage = () => {
     //   alert("請輸入正確的手機號碼格式");
     //   return;
     // }
-    // 驗證地址不為空
-    // if (!detailAddress) {
-    //   alert("請輸入完整的地址");
-    //   return;
-    // }
+    //驗證地址不為空
+    if (!detailAddress) {
+      alert("請輸入完整的地址");
+      return;
+    }
     const updatedUserData = {
       email,
       name,
@@ -173,20 +172,19 @@ const ProfilePage = () => {
 
   return (
     <div className=" my-3">
+       <ListUserM />
       <div className="d-flex justify-content-around pt-2">
-        {/* mobile版的左側tab */}
-        <ListUserM />
         <ListD />
-        {/* <UserForm /> */}
-        <div className="user-profile row col-lg-8 col-md-8 col-12 ">
-          <div className="title">
+        <div className="user-profile d-flex flex-column col-md-8 col-12  ">
+   
+          <div className="title my-1">
             <p className=" size-4">
-              <Image src={myProfile} alt="myProfile-logo" />
-              我的資料
+            <span className="my">▍</span> 個人資料
             </p>
           </div>
-          <div className="user-form">
-            <div></div>
+
+          <div className="user-form ">
+          
             <div className="user-form-item">
               <div className="ws20 mb-5 d-flex justify-content-center">
                 <label className={`fs3 ${userRfs}`}>Email</label>
@@ -194,6 +192,7 @@ const ProfilePage = () => {
                   className="form-input fs11"
                   type="text"
                   value={email}
+                  disabled="true"
                   onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
@@ -222,7 +221,7 @@ const ProfilePage = () => {
               <label className={`fs3 ${userRfs}`}>性別</label>
               <div className="fs11 d-flex align-items-center">
                 <div className="radio-box">
-                  <label className="gender-btn round">
+                  <label >
                     <input
                       type="radio"
                       name="label"
@@ -233,11 +232,11 @@ const ProfilePage = () => {
                       onChange={() => setGender("男")}
                       aria-label="..."
                     />
-                    <span>男</span>
+                    <span className="gender-btn round" >男</span>
                   </label>
                 </div>
                 <div className="radio-box">
-                <label className="gender-btn round">
+                <label >
                   <input
                     type="radio"
                     name="label"
@@ -248,7 +247,7 @@ const ProfilePage = () => {
                     onChange={() => setGender("女")}
                     aria-label="..."
                   />
-                  <span>女</span>
+                  <span  className="gender-btn round">女</span>
                   </label>
                   {/* <label>
                     <input type="radio" name="label" value="古裝劇" />
@@ -278,7 +277,10 @@ const ProfilePage = () => {
               />
             </div>
 
-            <TWZipCode
+          
+            <div className="ws20   d-flex justify-content-center">
+              <label className={`fs3 py-2 ${userRfs}`}>地址</label>
+              <TWZipCode
               initPostcode={address.postcode}
               onPostcodeChange={(country, township, postcode) => {
                 setAddress({
@@ -288,8 +290,6 @@ const ProfilePage = () => {
                 });
               }}
             />
-            <div className="ws20   d-flex justify-content-center">
-              <label className={`fs3 py-2 ${userRfs}`}>地址</label>
               {/* <div className="fs11 ">
                 <select
                   className="form-select fs5"

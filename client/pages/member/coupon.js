@@ -5,7 +5,6 @@ import ListUserM from "@/components/member/list-user-m";
 import SingleCoupon from "@/components/user/SingleCoupon";
 import SingleCouponFree from "@/components/user/singleCouponFree";
 import Image from "next/image";
-import myProfile from "@/assets/myProfile.svg";
 
 import Cat2 from "@/assets/cat-02.png";
 
@@ -36,6 +35,7 @@ const UserCouponPage = () => {
     if (filter === "all") {
       setFilteredCoupons(coupons);
       setShowAll(true);
+      setActiveFilter("all");
     } else if (filter === "expiring") {
       const expiringCoupons = coupons.filter((coupon) => {
         const endDate = new Date(coupon.end_date);
@@ -67,33 +67,20 @@ const UserCouponPage = () => {
   };
 
   return (
-    <div className=" my-3">
+    <div className=" my-3 coupon-style">
+      <ListUserM />
       <div className="d-flex justify-content-around pt-2">
-        <div className="d-flex justify-content-end">
-          {/* mobile版的左側tab */}
-        </div>
-        <ListUserM />
         <ListD />
-
-        <div className="user-coupon row col-lg-8 col-md-8 col-12 ">
-          <div className="title">
+        <div className="user-coupon  d-flex flex-column col-md-8 col-12 ">
+          <div className="title my-1">
             <p className=" size-4">
-              <Image src={myProfile} alt="myProfile-logo" />
+              <span className="my">▍</span>
               我的優惠券
             </p>
           </div>
-          <ListUserM />
-          <ListD />
 
-          <div className="user-coupon row col-lg-8 col-md-8 col-12 ">
-            <div className="title">
-              <p className=" size-4">
-                <Image src={myProfile} alt="myProfile-logo" />
-                我的優惠券
-              </p>
-            </div>
-
-            <div className="couponSearch d-flex gap-3 ">
+          <div className="coupon-form">
+            <div className="couponSearch d-flex gap-3 mx-auto">
               <input
                 className="form-input flex-grow-1"
                 type="text"
@@ -105,53 +92,31 @@ const UserCouponPage = () => {
               </button>
             </div>
 
-            <div className="border-bottom my-3 py-1">
-              <a
-                className={`px-2 ${activeFilter === "all" ? "active" : ""}`}
-                value="all"
-                onClick={() => handleFilter("all")}
-              >
-                全部({coupons.length})
-              </a>
+            <div className="border-bottom coupon-filter mb-3 ">
+    
+                <button
+                  className={`px-2 coupon-listBtn ${activeFilter === "all" ? "active " : ""}`}
+                  value="all"
+                  onClick={() => handleFilter("all")}
+                >
+                  全部
+                  {/* ({coupons.length}) */}
+                </button>
+         
               {/* <a className='px-2' value='valid' onClick={handleFilter}>有效期內</a> */}
-              <a
-                className={`px-2 ${
+              <button
+                className={`px-2 coupon-listBtn ${
                   activeFilter === "expiring" ? "active" : ""
                 }`}
                 value="expiring"
                 onClick={() => handleFilter("expiring")}
               >
-                即將到期({filteredCoupons.length})
-              </a>
+                即將到期
+                {/* ({filteredCoupons.length}) */}
+              </button>
             </div>
 
-            {/* <table className='userTable'>
-          <thead>
-            <tr>
-              <th>名稱</th>
-              <th>面額</th>
-              <th>生效日</th>
-              <th>到期日</th>
-              <th>說明</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredCoupons.map(v => (
-              <tr key={v.coupon_id}>
-                <td data-label="名稱:">{v.title}</td>
-                <td data-label="面額:">${v.discount_amount}</td>
-                <td data-label="生效日:">{v.start_date}</td>
-                <td data-label="到期日:">{v.end_date}</td>
-                <td data-label="說明:" className='pl-3'>
-                  最低消費金額：{v.usage_min}<br />
-                  序號：{v.coupon_code}<br />
-                  適用商品：<a href='#'>查看</a>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table> */}
-            <div className="coupon-wrapper">
+            <div className="coupon-wrapper mx-auto">
               {filteredCoupons.map((v) => (
                 <div id="container-coupon">
                   <div id="success-box">
@@ -163,24 +128,25 @@ const UserCouponPage = () => {
                         className="cat2"
                       />
                     </div>
-                    <div className="coupon-shadow scale" />
+                    <div className="shadow scale" />
                     <div className="message-coupon">
-                      <h1 className="priceCode">${v.discount_amount}</h1>
+                      <h1 className="priceCode coupon-h1">
+                        ${v.discount_amount}
+                      </h1>
                       <p>
-                        序號：{v.coupon_code}
+                        <p className="couponCode py-1">- {v.coupon_code} -</p>
+                        低消 ${v.usage_min}
                         <br />
-                        最低消費：{v.usage_min}
+                        效期 {v.end_date}
                         <br />
-                        使用期限：{v.end_date}
-                        <br />
-                        <a href="#"> -前往購物-</a>
+                        {/* <a href="#"> -前往購物-</a> */}
                       </p>
                     </div>
                   </div>
                 </div>
               ))}
-              {/* <SingleCoupon />
-        <SingleCoupon /> */}
+
+              {/* <SingleCoupon /> */}
             </div>
           </div>
         </div>

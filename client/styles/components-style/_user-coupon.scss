@@ -1,19 +1,27 @@
 .user-coupon{
     //width: 60%;
-    margin: 0 auto 0 ; //到時候要去掉
-    background-color: $content-bg;
-    padding: 10px 30px;
+    //margin: 0 auto 0 ; //到時候要去掉
+    //background-color: #fff;
+    //padding: 10px 30px;
     .title{
         margin-bottom: 40px;
-        img {
-            margin-right: 0.8rem;
-            height: 28px;
-          }  
+        font-weight: 600;
+        .my{
+            color: #d7965b;
+          }
+        
     }
 }
+.coupon-form{
+    background-color: #fff;
+    border-radius: 10px 10px 0 0;
+    padding-top: 50px;
+    min-height: 913px;
+}
 .coupon-wrapper{
+    width: 90%;
     display: grid;
-    grid-gap: 20px;
+    grid-gap: 30px;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
 }
 
@@ -45,10 +53,27 @@
  
     }
 }
+.coupon-filter{
+    padding: 10px 50px;
+    .active{
+        background: #f8f8f8;
+    }
+}
 .couponSearch{
-width: 100%;
+width: 85%;
 margin-bottom: 30px;  
 }
+.coupon-listBtn{
+    width: 25%;
+    height: 40px;
+    border: 0px; //去掉button樣式
+    border-radius: 10px 10px 0px 0px;
+    border-top: 1px solid #d9d9d9;
+    border-right: 1px solid #d9d9d9;
+    border-left: 1px solid #d9d9d9;
+    background: #fff;
+    }
+    
 
 @media (max-width: 768px){
     .user-coupon{

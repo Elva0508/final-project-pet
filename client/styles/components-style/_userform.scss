@@ -3,14 +3,18 @@
   // min-height: 913px;
   //width: 100%;
   //margin: 0 auto 0; 
-  background-color: $content-bg;
+  //background-color: #fff;
   $form-height: 80px;
   padding: 0 auto;
   position: relative;
   .title {
-    margin: 50px 150px; //手機要調整
+    //margin: 50px 150px; //手機要調整
+ 
+    .my{
+      color: #d7965b;
+    }
     & > p {
-      font-weight: bold;
+      font-weight: 600;
       display: flex;
       align-items: center;
       img {
@@ -21,6 +25,9 @@
   }
   }
   .user-form{
+    background-color: #fff;
+    border-radius: 10px 10px 0 0;
+    padding-top: 100px;
     .fs-btn{
       width: 100%;
     }
@@ -37,7 +44,7 @@ margin: 4.5rem 0;
       float: left;
       margin-left: 5px;
       margin-right: 5px;
-      width: calc(15% - 10px);
+      width: calc(14% - 10px);
     }
     .fs11{
       float: left;
@@ -77,12 +84,12 @@ margin: 4.5rem 0;
 
   }
 /* 隱藏 radio 輸入框 */
-// .radio-box input[type="radio"] {
-//   display: none; 
-// }
+.radio-box input[type="radio"] {
+  display: none; 
+}
 
 /* 當 radio 被選擇時，改變相鄰按鈕的樣式 */
-.radio-box input:checked + button {
+.radio-box input:checked + .gender-btn  {
   background-color: #d7965b; /* 背景顏色設為 #d7965b */
   color: #fff; /* 文字顏色設為 #fff */
 }

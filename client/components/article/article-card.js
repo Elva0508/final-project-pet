@@ -59,8 +59,9 @@ export default function ArticleCard() {
             </p>
           </div>
         </div>
-        <div className="my-5 p-3 article size-7">
-          <span>{articles.content}</span>
+        <div className="my-3 p-3 article size-7">
+          {/* 使用dangerouslySetInnerHTML渲染带有HTML标签的内容 */}
+          <div dangerouslySetInnerHTML={{ __html: articles.content }} />
         </div>
       </div>
     </>

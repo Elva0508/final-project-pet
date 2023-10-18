@@ -18,6 +18,8 @@ import Link from "next/link";
 import { useActivePage } from "@/hooks/useActivePage";
 import { useAuth } from "@/context/fakeAuthContext";
 
+
+
 //logo-icon
 import catLogo from "@/assets/catLogo.svg";
 import McatLogo from "@/assets/McatLogo.svg";
@@ -79,10 +81,7 @@ const pages = [
   { path: "http://localhost:3000/article", name: "小貓兩三知", id: 4 },
   { path: "http://localhost:3000/support", name: "常見問題", id: 5 },
 ];
-// const settings = [
-//   { path: "/register", name: "註冊", id: 1 },
-//   { path: "/login", name: "登入", id: 2 },
-// ];
+
 
 function ResponsiveAppBar() {
   //會員狀態
@@ -90,13 +89,19 @@ function ResponsiveAppBar() {
 
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+  
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
   const handleOpenUserMenu = (event) => {
-    setAnchorElUser(event.currentTarget);
+    if(anchorElUser !== event.currentTarget){
+      setAnchorElUser(event.currentTarget);
+    }
   };
+  // const handleOpenUserMenu = (event) => {
+  //   setAnchorElUser(event.currentTarget);
+  // };
 
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
@@ -120,7 +125,7 @@ function ResponsiveAppBar() {
     localStorage.removeItem("data");
     localStorage.removeItem("token");
     localStorage.removeItem("id");
-    setActiveButton(0)
+    setActiveButton()
 
     localStorage.clear();
     setCart([])
@@ -182,7 +187,7 @@ function ResponsiveAppBar() {
                   </Link>
                 ))}
               </Menu>
-              <Button>
+              <Button href="/">
                 <Image src={McatLogo} alt="logo" />
               </Button>
             </Box>
@@ -190,7 +195,7 @@ function ResponsiveAppBar() {
             {/* Desktop 裝置*/}
             {/* logo */}
             <Box sx={{ flexShrink: 0, display: { xs: "none", md: "flex" } }}>
-              <Button>
+              <Button href="/">
                 <Image src={catLogo} alt="logo" />
               </Button>
             </Box>
@@ -217,7 +222,13 @@ function ResponsiveAppBar() {
             {/* 會員＆購物車icon */}
             <Box sx={{ flexShrink: 0 }}>
               <Tooltip title="Open settings">
-                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+              {/* userMenu */}
+                <IconButton 
+                aria-owns={anchorElUser ? 'menu-appbar' : undefined}  
+                aria-haspopup="true"
+                onClick={handleOpenUserMenu}
+                onMouseOver={handleOpenUserMenu}
+                 sx={{ p: 0 }}>
                   <AccountCircleIcon
                     color="tertiary"
                     style={{ fontSize: 40 }}
@@ -249,6 +260,8 @@ function ResponsiveAppBar() {
                 }}
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
+                MenuListProps={{onMouseLeave: handleCloseUserMenu}}
+
               >
                 {isAuthenticated ? (
                   <>
@@ -256,11 +269,13 @@ function ResponsiveAppBar() {
                       <Typography textAlign="center">登出</Typography>
                     </MenuItem>
                     <Link href="http://localhost:3000/member/profile">
-                      <MenuItem>
+                      <MenuItem onClick={()=>{
+                          setActiveButton()
+                      }}>
                         <Typography textAlign="center">會員中心</Typography>
                       </MenuItem>
                     </Link>
-                    <Link href="/article">
+                    <Link href="/chatlist">
                       <MenuItem>
                         <Typography textAlign="center">來聊聊</Typography>
                       </MenuItem>

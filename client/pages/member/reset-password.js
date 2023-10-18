@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import ListD from "@/components/member/list-d";
 import ListUserM from "@/components/member/list-user-m";
 import Image from "next/image";
-import myProfile from "@/assets/myProfile.svg";
 import useRWD from "@/hooks/useRWD";
 import jwt_decode from "jwt-decode";
 import showPwdImg from "@/assets/showPwd.svg";
@@ -82,21 +81,20 @@ const ResetUserPassword = () => {
 
   return (
     <div className="my-3">
+     <ListUserM />
       <div className="d-flex justify-content-around pt-2">
-        {/* mobile版的左側tab */}
-        <ListUserM />
+        
         <ListD />
-
-        <div className="reset-password  col-lg-8 col-md-8 col-12">
-          <div className="title">
+        <div className="reset-password  d-flex flex-column col-md-8 col-12 ">
+          <div className="title my-1">
             <p className=" size-4">
-              <Image src={myProfile} alt="myProfile-logo" />
+            <span className="my">▍</span>
               重新設定密碼
             </p>
           </div>
 
-          <div className="d-flex justify-content-center">
-            <div className="reset-form">
+          <div className="reset-form d-flex justify-content-center ">
+            <div className="reset-form-width">
               <div className="reset-group"   style={{position: 'relative'}}>
                 <label htmlFor="" className={userRfs}>
                   原密碼
