@@ -610,8 +610,20 @@ export default function MissionDetail() {
     const handleSendClick = async () => {
 
         // 先檢查消息是否為空
+        // if (!msgInputValue) {
+        //     alert('請輸入自我推薦');
+        //     return;
+        // }
         if (!msgInputValue) {
-            alert('請輸入自我推薦');
+            Swal.fire({
+                // title: '警告',
+                text: '請輸入自我推薦',
+                icon: 'warning',
+                confirmButtonText: '我知道了',
+                scrollbarPadding: false, // 禁用滚动条自动隐藏
+            }).then(() => {
+                setAutoSend(false); // 清除勾勾
+            });
             return;
         }
 
@@ -619,9 +631,28 @@ export default function MissionDetail() {
         const chatContentArray = [msgInputValue];
         if (autoSend) {
             if (helperInfo.cat_helper === 0) {
-                alert('您尚未開啟小幫手資料 請先至會員中心開啟 才可自動發送履歷唷');
-                setAutoSend(false); // 清除勾勾
-                router.push('/member/helper');
+                // alert('您尚未開啟小幫手資料 請先至會員中心開啟 才可自動發送履歷唷');
+                // setAutoSend(false); // 清除勾勾
+                // router.push('/member/helper');
+                // return;
+                Swal.fire({
+                    title: '您尚未開啟小幫手資料',
+                    text: '請先至會員中心開啟，才可自動發送履歷唷',
+                    icon: 'warning',
+                    showCancelButton: true, // 顯示取消按扭
+                    confirmButtonText: '前往',
+                    cancelButtonText: '取消',
+                    reverseButtons: true, // 兩顆按鈕位置對調
+                    scrollbarPadding: false, // 禁用滚动条自动隐藏
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // 當點擊確認按鈕
+                        router.push('/member/helper');
+                    } else {
+                        // 當點擊取消按鈕
+                        setAutoSend(false); // 清除勾勾
+                    }
+                });
                 return;
             }
             chatContentArray.push(helperInfo.introduction);
@@ -982,8 +1013,9 @@ export default function MissionDetail() {
                                 </header>
                                 <section className='description my-4 py-1 '>
                                     <div className="item d-flex flex-column ">
-                                        <div className="item-title size-6">
+                                        <div className="item-title size-6 ">
                                             <GiMoneyStack className='me-1' />預算金額
+                                            {/* <img src='/job-icon/animation2.gif' className='position-absolute animation-cat' /> */}
                                         </div>
                                         <hr class="item-divider" />
                                         <p className="size-7 d-flex align-items-center salary">NT$ {v.price} / 次</p>
@@ -996,8 +1028,9 @@ export default function MissionDetail() {
                                         <p className="size-7 d-flex align-items-center  item-content">{v.start_date === v.end_date ? formatDate(v.start_date) : `${formatDate(v.start_date)}～${formatDate(v.end_date)}`}</p>
                                     </div>
                                     <div className="item d-flex flex-column mission-place">
-                                        <div className="item-title size-6">
+                                        <div className="item-title size-6 position-relative">
                                             <CiLocationOn className='me-1' />任務地點
+                                            <img src='/job-icon/animation2.gif' className='position-absolute animation-cat' />
                                         </div>
                                         <hr class="item-divider" />
                                         <p className="size-7 d-flex align-items-center  item-content">{v.city}{v.area}{v.location_detail}</p>

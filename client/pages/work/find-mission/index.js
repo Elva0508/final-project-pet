@@ -1543,9 +1543,10 @@ export default function MissionList() {
 
         <section className="d-flex all-mission flex-column flex-lg-row mt-2 mt-lg-3">
           {/* 最新任務桌機 */}
-          <div className="latest-mission latest-mission-pc d-none d-lg-flex flex-column mb-3">
+          <div className="latest-mission latest-mission-pc d-none d-lg-flex flex-column mb-3 position-relative">
             <h3 className="size-5  ">最新任務</h3>
             <LatestMission userId={userId} />
+            <img src='/job-icon/animation4.gif' className='position-absolute animation-paw' />
           </div>
           {/* 最新任務手機 */}
           <div className="latest-mission latest-mission-mobile d-lg-none mb-3 mt-1">
