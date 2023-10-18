@@ -6,7 +6,6 @@ import SingleCoupon from "@/components/user/SingleCoupon";
 import SingleCouponFree from "@/components/user/singleCouponFree";
 import Image from "next/image";
 
-
 import Cat2 from "@/assets/cat-02.png";
 
 const UserCouponPage = () => {
@@ -36,6 +35,7 @@ const UserCouponPage = () => {
     if (filter === "all") {
       setFilteredCoupons(coupons);
       setShowAll(true);
+      setActiveFilter("all");
     } else if (filter === "expiring") {
       const expiringCoupons = coupons.filter((coupon) => {
         const endDate = new Date(coupon.end_date);
@@ -68,22 +68,18 @@ const UserCouponPage = () => {
 
   return (
     <div className=" my-3 coupon-style">
-         <ListUserM />
+      <ListUserM />
       <div className="d-flex justify-content-around pt-2">
         <ListD />
         <div className="user-coupon  d-flex flex-column col-md-8 col-12 ">
           <div className="title my-1">
             <p className=" size-4">
-            <span className="my">▍</span>
+              <span className="my">▍</span>
               我的優惠券
             </p>
           </div>
-     
-    
 
-         
-            
-            <div className="coupon-form">
+          <div className="coupon-form">
             <div className="couponSearch d-flex gap-3 mx-auto">
               <input
                 className="form-input flex-grow-1"
@@ -96,27 +92,30 @@ const UserCouponPage = () => {
               </button>
             </div>
 
-            <div className="border-bottom coupon-filter my-3 ">
-              <a
-                className={`px-2 ${activeFilter === "all" ? "active" : ""}`}
-                value="all"
-                onClick={() => handleFilter("all")}
-              >
-                全部({coupons.length})
-              </a>
+            <div className="border-bottom coupon-filter mb-3 ">
+    
+                <button
+                  className={`px-2 coupon-listBtn ${activeFilter === "all" ? "active " : ""}`}
+                  value="all"
+                  onClick={() => handleFilter("all")}
+                >
+                  全部
+                  {/* ({coupons.length}) */}
+                </button>
+         
               {/* <a className='px-2' value='valid' onClick={handleFilter}>有效期內</a> */}
-              <a
-                className={`px-2 ${
+              <button
+                className={`px-2 coupon-listBtn ${
                   activeFilter === "expiring" ? "active" : ""
                 }`}
                 value="expiring"
                 onClick={() => handleFilter("expiring")}
               >
-                即將到期({filteredCoupons.length})
-              </a>
+                即將到期
+                {/* ({filteredCoupons.length}) */}
+              </button>
             </div>
 
-        
             <div className="coupon-wrapper mx-auto">
               {filteredCoupons.map((v) => (
                 <div id="container-coupon">
@@ -131,13 +130,11 @@ const UserCouponPage = () => {
                     </div>
                     <div className="shadow scale" />
                     <div className="message-coupon">
-                      <h1 className="priceCode coupon-h1">${v.discount_amount}</h1>
+                      <h1 className="priceCode coupon-h1">
+                        ${v.discount_amount}
+                      </h1>
                       <p>
-                      <p className="couponCode py-1">
-                      - {v.coupon_code} -
-                      </p>
-                       
-                    
+                        <p className="couponCode py-1">- {v.coupon_code} -</p>
                         低消 ${v.usage_min}
                         <br />
                         效期 {v.end_date}
@@ -149,12 +146,9 @@ const UserCouponPage = () => {
                 </div>
               ))}
 
-
-              <SingleCoupon />
-        {/* <SingleCoupon /> */}
-         
+              {/* <SingleCoupon /> */}
+            </div>
           </div>
-        </div>
         </div>
       </div>
     </div>
