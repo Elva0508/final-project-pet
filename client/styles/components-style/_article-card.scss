@@ -8,6 +8,11 @@
         width: 100%;
       }
     }
+    @media (max-width: 375px) {
+      .card-img {
+        height: auto; /* 取消高度 */
+      }
+    }
     .card-title {
       font-weight: bold;
     }
