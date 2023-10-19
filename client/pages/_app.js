@@ -8,6 +8,7 @@ import BreadCrumb from "@/components/breadCrumb";
 import { useRouter } from "next/router";
 import { ActivePageProvider } from "@/hooks/useActivePage";
 import { ProductActivePageProvider } from "@/hooks/useProductActivePage";
+import { LoaderProvider } from "@/hooks/use-loader";
 
 export default function App({ Component, pageProps }) {
   const router = useRouter();
@@ -44,19 +45,21 @@ export default function App({ Component, pageProps }) {
   //   };
   // }, [router]);
   return (
+    // <LoaderProvider>
     <AuthProvider>
       <CartProvider>
         <HelperProvider>
           <ActivePageProvider>
             <ProductActivePageProvider>
-            <Layout>
-              {pathname === "/work/find-helper" ? "" : <BreadCrumb />}
-              <Component {...pageProps} />
-            </Layout>
+              <Layout>
+                {pathname === "/work/find-helper" ? "" : <BreadCrumb />}
+                <Component {...pageProps} />
+              </Layout>
             </ProductActivePageProvider>
           </ActivePageProvider>
         </HelperProvider>
       </CartProvider>
     </AuthProvider>
+    // </LoaderProvider>
   );
 }

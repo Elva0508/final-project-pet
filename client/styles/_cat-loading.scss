@@ -30,7 +30,7 @@
   z-index: 999;
   overflow-y: hidden;
 }
-.cat-loading-opacity {
+.cat-loading-wrapper-opacity {
   opacity: 0;
   z-index: -999;
 }
@@ -43,7 +43,8 @@
   bottom: 0;
   margin: auto;
 }
-
+.cat-loading-opacity {
+}
 #circle {
   text-align: center;
   transform-origin: center 30%;

@@ -1,26 +1,36 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
+import React, {
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  useContext,
+  createContext,
+} from "react";
 import { useRouter } from "next/router";
 import lottie from "lottie-web";
 import animation from "@/data/catRun.json";
+const LoaderContext = createContext(null);
 
-export function Loader({
-  backgroundColor = "rgba(235, 236, 237, 0.51)",
-  show,
-}) {
+export function Loader({ backgroundColor = "rgb(167 167 167 / 68%)", show }) {
   const router = useRouter();
-  const lottieRef = useRef(false); //偵測lottie dom是否存在，存在就不要再加
+  let lottieRef = useRef(false); //偵測lottie dom是否存在，存在就不要再加
   const catRunRef = useRef(null);
   useEffect(() => {
-    if (!lottieRef.current) {
-      lottie.loadAnimation({
-        container: document.getElementById("cat-run-lottie"), // the dom element
-        renderer: "svg",
-        loop: true,
-        autoplay: true,
-        animationData: animation, // the animation data
-      });
-    }
-    lottieRef.current = true;
+    // let catRunLottie;
+
+    let catRunLottie = lottie.loadAnimation({
+      container: document.getElementById("cat-run-lottie"), // the dom element
+      renderer: "svg",
+      loop: true,
+      autoplay: true,
+      animationData: animation, // the animation data
+    });
+    lottieRef = true;
+
+    return () => {
+      catRunLottie.destroy();
+      lottieRef = false;
+    };
   }, [router]);
 
   return (
@@ -145,3 +155,35 @@ export default function useLoader(autoClose = 2) {
     loadingText: (text) => <LoadingText text={text} />,
   };
 }
+
+// export const LoaderProvider = ({ children }) => {
+//   const [show, setShow] = useState(false);
+//   const [autoClose, setAutoClose] = useState(0); // 幾秒後關閉
+
+//   return (
+//     <LoaderContext.Provider
+//       value={{
+//         setAutoClose,
+//         showLoader: () => {
+//           setShow(true);
+
+//           // auto close
+//           if (autoClose) {
+//             setTimeout(() => {
+//               setShow(false);
+//             }, autoClose * 1000);
+//           }
+//         },
+//         hideLoader: () => setShow(false),
+//         loading: show,
+//         delay,
+//         loader: (color) => <Loader show={show} backgroundColor={color} />,
+//         loadingText: (text) => <LoadingText text={text} />,
+//       }}
+//     >
+//       {children}
+//     </LoaderContext.Provider>
+//   );
+// };
+
+// export const useLoaderContext = () => useContext(LoaderContext);

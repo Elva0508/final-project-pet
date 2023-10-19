@@ -23,6 +23,7 @@ import { useHelper } from "@/context/helperContext";
 import { Pagination } from "antd";
 // import { Button, Modal } from "antd";
 import axios from "axios";
+import Swal from "sweetalert2";
 import {
   DatePicker,
   Modal,
@@ -159,7 +160,14 @@ const Quotation = () => {
           setServiceType({});
           setNote("");
           setLocation("");
-          alert("預約成功!");
+          // alert("預約成功!");
+          Swal.fire({
+            position: "center",
+            icon: "success",
+            title: "預約成功!",
+            showConfirmButton: false,
+            timer: 1500,
+          });
         }
       })
       .catch((e) => {
@@ -546,6 +554,8 @@ const HelperDetail = () => {
   const [threeStar, setThreeStar] = useState(0);
   const [twoStar, setTwoStar] = useState(0);
   const [oneStar, setOneStar] = useState(0);
+  const PaginationRef = useRef();
+  const [firstLoad, setFirstLoad] = useState(true);
   const handleFav = (e) => {
     if (isAuthenticated) {
       if (!collection.find((item) => item === uid)) {
@@ -580,20 +590,47 @@ const HelperDetail = () => {
     setPage(page);
   };
   useEffect(() => {
+    console.log(firstLoad);
+    if (firstLoad) {
+      setFirstLoad(false);
+      return;
+    }
+    // // pag y + reviewy = scrollto的距離
+    const paginationDom = document.querySelector(".cos-pagination");
+    const reviewDom = document.querySelector(".evaluation-bar");
+
+    // scrollY - (review bottom到視口top的距離) = scrollTo高度
+
+    const reviewRect = reviewDom.getBoundingClientRect();
+    console.log("window.scrollY", window.scrollY);
+    console.log("reviewRect.top", reviewRect.top);
+    console.log("window.innerHeight", window.innerHeight);
+    const scrollTo = window.scrollY - reviewRect.top * -1 - 100;
+    console.log("scrollTo", scrollTo);
+
+    window.scrollTo({
+      top: scrollTo,
+      behavior: "smooth", // 如果需要平滑滚动效果
+    });
+  }, [currentPage]);
+
+  useEffect(() => {
     const handleScroll = () => {
       const width = window.innerWidth;
       // console.log(width);
       const leftBlock = document.querySelector(".left-block");
       if (width > 992) {
         const scrollY = window.scrollY;
+        const dScrollY = document.scrollY;
         const windowHeight = window.innerHeight;
         const documentHeight = document.documentElement.scrollHeight;
         const distanceToBottom = documentHeight - (scrollY + windowHeight);
         // console.log(scrollY, windowHeight, documentHeight);
         // console.log(leftBlock);
-        if (distanceToBottom < 145) {
+        // console.log(scrollY, dScrollY);
+        if (distanceToBottom < 130) {
           leftBlock.style.position = "relative";
-          leftBlock.style.top = `${scrollY - 200}px`;
+          leftBlock.style.top = `${scrollY - 20 - 130}px `;
         } else {
           leftBlock.style.position = "sticky";
           leftBlock.style.top = "10px";
@@ -761,6 +798,30 @@ const HelperDetail = () => {
   return (
     <>
       <div className="helper-detail container">
+        <nav className="breadcrumb-wrapper my-4 " aria-label="breadcrumb">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+              <Link
+                href="/"
+                className="active-hover"
+                onClick={(e) => {
+                  e.preventDefault();
+                  router.push("/");
+                }}
+              >
+                首頁
+              </Link>
+            </li>
+            <li class="breadcrumb-item" aria-current="page">
+              <Link href="/work/find-helper" className="active-hover">
+                小貓上工(找幫手)
+              </Link>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">
+              {uid}
+            </li>
+          </ol>
+        </nav>
         <div className="d-flex row align-items-start">
           <section className="left-block col-12 col-lg-3 flex-column justify-content-center align-items-center">
             <div className="avatar">

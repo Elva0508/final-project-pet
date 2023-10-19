@@ -19,11 +19,10 @@ export const RecordTemplate = ({
   setInfo,
   status,
   setStatus,
+  allRequest,
 }) => {
   const router = useRouter();
   const handleStatus = (e) => {
-    console.log(e.target.id);
-    console.log(e.currentTarget);
     if (status == e.target.id) {
       return;
     }
@@ -105,10 +104,6 @@ export const RecordTemplate = ({
       autoplay: true,
       animationData: animation, // the animation data
     });
-
-    // return () => {
-    //   lottie.destroy();
-    // };
   }, [status]);
   console.log(info);
   return (
@@ -165,7 +160,7 @@ export const RecordTemplate = ({
           <p>預約日期</p>
           <p>服務總價</p>
         </div>
-        {info.length === 0 ? (
+        {allRequest?.length === 0 ? (
           <Empty
             image={
               <IllustrationNoContent style={{ width: 300, height: 300 }} />
@@ -175,7 +170,7 @@ export const RecordTemplate = ({
         ) : (
           <>
             {info &&
-              info.map((item) => (
+              info?.map((item) => (
                 <div
                   className="info-content d-flex align-items-center justify-content-around"
                   onMouseEnter={(e) => {

@@ -639,11 +639,11 @@ const CatLoading = forwardRef((props, ref) => {
   //   }, [3000]);
   // }, []);
   return (
-    <div className="cat-loading-wrapper" ref={loadingRef}>
-      <div className="catloading">
+    <motion.div className="cat-loading-wrapper" ref={loadingRef}>
+      <motion.div className="catloading">
         <Icon />
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 });
 

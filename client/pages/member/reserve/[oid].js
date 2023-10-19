@@ -275,18 +275,27 @@ const ReserveDetailPage = () => {
             const result = response.data;
             console.log(response.data);
             if (result.status === 200 && result.affectedRows === 1) {
-              Swal.fire("取消預約成功!", "您已取消本次預約服務", "success");
+              Swal.fire({
+                timer: 1500,
+                icon: "success",
+                title: "取消預約成功!",
+                text: "您已取消本次預約服務",
+                showConfirmButton: false,
+              });
               setTimeout(() => {
                 router.push("/member/reserve");
-              }, 500);
+              }, 1800);
             }
           })
           .catch((e) => {
             console.log(e);
-            Swal.fire("取消失敗", "請稍後重試一次", "error");
-            setTimeout(() => {
-              router.push("/member/reserve");
-            }, 500);
+            Swal.fire({
+              timer: 1500,
+              icon: "error",
+              title: "取消失敗",
+              text: "請稍後重試一次",
+              showConfirmButton: false,
+            });
           });
       }
     });
