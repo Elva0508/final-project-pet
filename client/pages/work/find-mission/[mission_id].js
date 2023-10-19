@@ -524,14 +524,16 @@ export default function MissionDetail() {
                     const chatUrl = response.data.chatUrl;
                     console.log("chatUrl" + chatUrl);
                     // 在這裡導向到 chatUrl
-                    window.location.href = chatUrl;
+                    // window.location.href = chatUrl;
+                    router.push(chatUrl);
                 } else if (response.status === 200) {
                     // 消息已存在
                     // setMessage("消息已存在");
                     const chatUrl = response.data.chatUrl;
                     console.log("已存在chatUrl" + chatUrl);
                     // 在這裡導向到 chatUrl
-                    window.location.href = chatUrl;
+                    // window.location.href = chatUrl;
+                    router.push(chatUrl);
                 } else {
                     // 請求失敗
                     // setMessage("請求失敗: " + response.data.error);
@@ -655,7 +657,7 @@ export default function MissionDetail() {
                 });
                 return;
             }
-            chatContentArray.push(`<p className='helper-info'>✅我的小幫手履歷：</p>`+helperInfo.introduction);
+            chatContentArray.push(`<p><h5><strong>✅ 我的小幫手簡歷：</strong></h5></p><p><strong>名字：</strong>`+helperInfo.name+`</p><p><strong>電話：</strong>`+helperInfo.phone+`</p><p><strong>Email：</strong>`+helperInfo.email+`</p><p><strong>個人簡述：</strong>`+helperInfo.introduction+`</p>`);
             // chatContentArray.push(
             //     <div style={{ backgroundColor: 'yellow', padding: '10px' }}>
             //         我的小幫手履歷：<br />{helperInfo.introduction}
@@ -685,7 +687,8 @@ export default function MissionDetail() {
                 setMsgInputValue("");
                 const chatUrl = `/chatlist/${chatlistId}`;
                 // 在這裡導向到 chatUrl
-                window.location.href = chatUrl;
+                // window.location.href = chatUrl;
+                router.push(chatUrl);
             } else {
                 console.error("發送消息時出錯");
             }

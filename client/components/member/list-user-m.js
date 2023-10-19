@@ -26,22 +26,22 @@ export default function ListUserM() {
   const [currentName, setCurrentName] = useState(null);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      try {
-        const decodeToken = jwt_decode(token);
-        const currentUserId = decodeToken.id;
-        const currentAvatar = decodeToken.avatar;
-        const currentName = decodeToken.name;
+   const token = localStorage.getItem("token");
+   if(token) {
+    try {
+      const decodeToken = jwt_decode(token);
+      const currentUserId = decodeToken.id;
+      const currentAvatar = decodeToken.avatar;
+      const currentName = decodeToken.name;
 
-        //更新狀態
-        setUserId(currentUserId);
-        setCurrentAvatar(currentAvatar);
-        setCurrentName(currentName);
-      } catch (error) {
-        console.error("token解析錯誤", error);
-      }
+      //更新狀態
+      setUserId(currentUserId);
+      setCurrentAvatar(currentAvatar);
+      setCurrentName(currentName);
+    } catch (error){
+      console.error("token解析錯誤", error);
     }
+   }
   }, [userId]);
 
   return (
