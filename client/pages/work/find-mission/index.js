@@ -1112,7 +1112,7 @@ function ImageWithEqualDimensions({ file_path }) {
 }
 
 // 任務卡片（這邊的參數如果忘記設定會讓卡片出不來）
-const MissionCard = ({ missionType, missionCity, missionArea, setMissionType, updateDate, setUpdateDate, sortOrder, setSortOrder, sortBy, setSortBy, allMissions, currentData, userId, setUserId }) => {
+const MissionCard = ({ missionType, missionCity, missionArea, setMissionType, updateDate, setUpdateDate, sortOrder, setSortOrder, sortBy, setSortBy, allMissions, currentData, userId, setUserId, missionActive, missionVariant }) => {
 
   // 格式化日期
   function formatDate(dateString) {
@@ -1220,7 +1220,21 @@ const MissionCard = ({ missionType, missionCity, missionArea, setMissionType, up
     <>
       {currentData.map((v, i) => {
         return (
-          <div className="col-6 col-md-4 col-lg-6 col-xl-4" key={v.mission_id}>
+          <motion.div className="col-6 col-md-4 col-lg-6 col-xl-4" key={v.mission_id} initial={"initial"}
+          animate={
+            missionActive === "move"
+              ? "move"
+              : missionActive === "exit"
+              ? "exit"
+              : "initial"
+          }
+          variants={missionVariant}
+          // (index + 1) % 3 == 1 ? 0 : (index + 1) % 3 == 2 ? 1 : 2 整排移動參數
+          custom={i}
+          whileInView="singleMove"
+          viewport={{
+            once: true,
+          }}>
             <div className="mission-list-card ">
               <Link href={`/work/find-mission/${v.mission_id}`}>
                 <ImageWithEqualDimensions file_path={v.file_path} />
@@ -1289,7 +1303,7 @@ const MissionCard = ({ missionType, missionCity, missionArea, setMissionType, up
                 </div>
               </div>
             </div>
-          </div>
+          </motion.div>
         );
       })}
     </>
@@ -1478,6 +1492,37 @@ export default function MissionList() {
     }, 0);
   };
 
+  // 右側卡片動畫
+  // const [isActive, setIsActive] = useState("move");
+  const [missionActive, setMissionActive] = useState("move");
+
+  const missionVariant = {
+    // 一開始消失，畫面從下側往上移入出現
+    initial: {
+      opacity: 0,
+      y: 20,
+      transition: { duration: 0 },
+    },
+    // 卡片單張單張移動
+    move: (i) => ({
+      opacity: 1,
+      x: 0,
+      y: 0,
+      // 動畫持續1秒（開始到結束）每張卡片延遲0.2秒（逐張出現）
+      transition: { duration: 1, delay: i * 0.2 },
+    }),
+    exit: (i) => ({
+      opacity: 0,
+      y: 20,
+      transition: { duration: 0.4 },
+    }),
+  };
+
+  // 換頁時回到上方
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [activePage]);
+
 
 
 
@@ -1559,7 +1604,7 @@ export default function MissionList() {
             <div className="row d-flex mb-3 g-3 g-md-4">
               {/* 使用g-3 不用justify-content-between 預設是start 卡片就會照順序排列 */}
               <MissionCard sortOrder={sortOrder} sortBy={sortBy} missionType={missionType} setMissionType={setMissionType} missionCity={missionCity} setMissionCity={setMissionCity} missionArea={missionArea} setMissionArea={setMissionArea}
-                updateDate={updateDate} setUpdateDate={setUpdateDate} allMissions={allMissions} currentData={currentData} userId={userId} setUserId={setUserId} />
+                updateDate={updateDate} setUpdateDate={setUpdateDate} allMissions={allMissions} currentData={currentData} userId={userId} setUserId={setUserId} missionActive={missionActive} missionVariant={missionVariant} />
             </div>
           </div>
         </section>
