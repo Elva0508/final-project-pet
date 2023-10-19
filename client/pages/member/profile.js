@@ -5,7 +5,7 @@ import ListD from "@/components/member/list-d";
 import ListUserM from "@/components/member/list-user-m";
 import useRWD from "@/hooks/useRWD";
 import TWZipCode from "@/components/user/TWZipCode";
-// import ProtectedRoute from "@/components/ProtectedRoute";
+ import ProtectedRoute from "@/components/protectedRoute";
 // import { useAuth } from "@/context/fakeAuthContext";
 
 
@@ -155,6 +155,7 @@ const ProfilePage = () => {
   };
 
   return (
+    <ProtectedRoute>
     <div className=" my-3">
        <ListUserM />
       <div className="d-flex justify-content-around pt-2">
@@ -307,6 +308,7 @@ const ProfilePage = () => {
         </div>
       </div>
     </div>
+    </ProtectedRoute>
   );
 };
 
