@@ -657,7 +657,7 @@ export default function MissionDetail() {
                 });
                 return;
             }
-            chatContentArray.push(`<p className='helper-info'>✅我的小幫手履歷：</p>`+helperInfo.introduction);
+            chatContentArray.push(`<p><h5><strong>✅ 我的小幫手簡歷：</strong></h5></p><p><strong>名字：</strong>`+helperInfo.name+`</p><p><strong>電話：</strong>`+helperInfo.phone+`</p><p><strong>Email：</strong>`+helperInfo.email+`</p><p><strong>個人簡述：</strong>`+helperInfo.introduction+`</p>`);
             // chatContentArray.push(
             //     <div style={{ backgroundColor: 'yellow', padding: '10px' }}>
             //         我的小幫手履歷：<br />{helperInfo.introduction}
