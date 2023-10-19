@@ -4,6 +4,7 @@ import Link from "next/link";
 import jwt_decode from "jwt-decode";
 // components
 import RoleSelection from "@/components/job/role-selection";
+// import { ScrollMotionContainer, ScrollMotionItem, } from "@/components/ScrollMotion";
 // 用 {} 導入的內容是命名導出的，而不加{}導入的內容是默認導出的。
 // import LatestMission, {
 //   MobileLatestMission,
@@ -31,6 +32,14 @@ import MenuItem from "@mui/material/MenuItem";
 // import { Cascader } from '@douyinfe/semi-ui';
 import { Cascader } from "antd";
 import cityData from "@/data/CityCountyData.json";
+import {
+  motion,
+  useAnimationControls,
+  AnimatePresence,
+  useInView,
+} from "framer-motion";
+import ScrollMotionItem from 'react-scroll-motion';
+import 'animate.css'; // 導入動畫庫
 
 // 搜尋
 const Search = ({ placeholder, color, onClick, search, setSearch, inputValue, setInputValue, setActivePage, setMissionType, setUpdateDate, setMissionCity, setMissionArea, setSortOrder, setSortBy, setButtonText1, setButtonText2, setSelectedCity, setSelectedArea }) => {
@@ -39,9 +48,9 @@ const Search = ({ placeholder, color, onClick, search, setSearch, inputValue, se
   const handleRipple = () => {
     const btn = rippleBtnRef.current;
     btn.classList.add("ripple");
-    // setTimeout(() => {
-    //   btn.classList.remove("ripple");
-    // }, 500); //動畫持續時間結束後移除動畫效果，讓動畫可以重複使用
+    setTimeout(() => {
+      btn.classList.remove("ripple");
+    }, 500); //動畫持續時間結束後移除動畫效果，讓動畫可以重複使用
   };
 
   const handleSearch = () => {
@@ -229,11 +238,11 @@ const MyFilter = ({ missionType, setMissionType, missionCity, setMissionCity, mi
       }
     }
 
-    // document.addEventListener('click', handleClickOutside);
+    document.addEventListener('click', handleClickOutside);
 
     // 組件卸載時移除事件監聽器（組件卸載時會自動執行return語句)
     return () => {
-      // document.removeEventListener('click', handleClickOutside);
+      document.removeEventListener('click', handleClickOutside);
     };
   }, []);
 
@@ -744,77 +753,95 @@ const LatestMission = ({ userId }) => {
     }
   };
 
+  // 動畫
+  const LatestState = {
+    initial: { y: 50, opacity: 0 },
+    move: (i) => ({
+      y: 0,
+      opacity: 1,
+      transition: { layout: { duration: 1 }, duration: 1, delay: i * 0.2 },
+    }),
+    exit: { x: 20, y: 15, opacity: 0 },
+  };
+
   return (
     <>
       {latestMissions.map((v, i) => {
         return (
-          <div className='latest-mission-card d-flex align-items-center'>
-            <Link href={`/work/find-mission/${v.mission_id}`} >
-              <div className='mission-img'>
-                <img src={v.file_path} alt="任務" />
-              </div>
-            </Link>
-            <div className='mission-content ms-2'>
+          <AnimatePresence>
+            <motion.div custom={i}
+              variants={LatestState}
+              animate="move"
+              initial="initial"
+              exit="exit"
+              className='latest-mission-card d-flex align-items-center'>
               <Link href={`/work/find-mission/${v.mission_id}`} >
-                <div className='title size-6'>{v.title}</div>
-
-                <div className='d-flex justify-content-between mt-1 '>
-                  <div className='size-7'>
-                    <div className="d-flex align-items-center mb-1">
-                      <span className="tag-btn mb-1">{(() => {
-                        switch (v.mission_type) {
-                          case 1:
-                            return '到府照顧';
-                          case 2:
-                            return '安親寄宿';
-                          case 3:
-                            return '到府美容';
-                          case 4:
-                            return '行為訓練';
-                          case 5:
-                            return '醫療護理';
-                          default:
-                            return '其他';
-                        }
-                      })()}</span>
-                    </div>
-                    <div className="d-flex align-items-center mb-1">
-                      <FaLocationDot className="me-1" />
-                      {v.city}
-                      {v.area}
-                    </div>
-                    <div className="d-flex align-items-center mb-1">
-                      <FaRegCalendarCheck className="me-1" />
-                      {formatDate(v.update_date)}<span className="update-title" >（最後更新）</span>
-                    </div>
-                  </div>
-                  {/* <img src={isFavorites[i] ? "/heart-clicked.svg" : "/heart.svg"} alt={isFavorites[i] ? "已收藏" : "未收藏"} onClick={() => toggleFavorite(i)} /> */}
+                <div className='mission-img'>
+                  <img src={v.file_path} alt="任務" />
                 </div>
               </Link>
-              <div className='d-flex justify-content-between align-items-center price'>
-                <div >單次<span className='size-6'> NT${v.price}</span></div>
-                {/* <Link href={`/work/find-mission/${v.mission_id}`} >
+              <div className='mission-content ms-3'>
+                <Link href={`/work/find-mission/${v.mission_id}`} >
+                  <div className='title size-6'>{v.title}</div>
+
+                  <div className='d-flex justify-content-between mt-1 '>
+                    <div className='size-7'>
+                      <div className="d-flex align-items-center mb-1">
+                        <span className="tag-btn mb-1">{(() => {
+                          switch (v.mission_type) {
+                            case 1:
+                              return '到府照顧';
+                            case 2:
+                              return '安親寄宿';
+                            case 3:
+                              return '到府美容';
+                            case 4:
+                              return '行為訓練';
+                            case 5:
+                              return '醫療護理';
+                            default:
+                              return '其他';
+                          }
+                        })()}</span>
+                      </div>
+                      <div className="d-flex align-items-center mb-1">
+                        <FaLocationDot className="me-1" />
+                        {v.city}
+                        {v.area}
+                      </div>
+                      <div className="d-flex align-items-center mb-1">
+                        <FaRegCalendarCheck className="me-1" />
+                        {formatDate(v.update_date)}<span className="update-title" >（最後更新）</span>
+                      </div>
+                    </div>
+                    {/* <img src={isFavorites[i] ? "/heart-clicked.svg" : "/heart.svg"} alt={isFavorites[i] ? "已收藏" : "未收藏"} onClick={() => toggleFavorite(i)} /> */}
+                  </div>
+                </Link>
+                <div className='d-flex justify-content-between align-items-center price'>
+                  <div >單次<span className='size-6'> NT${v.price}</span></div>
+                  {/* <Link href={`/work/find-mission/${v.mission_id}`} >
                   <button className='btn-confirm size-6'>應徵</button>
                 </Link> */}
-                <button className=" heart-btn" onClick={() => toggleFavorite(i)} onMouseEnter={() => handleLatestMouseEnter(i)}
-                  onMouseLeave={() => handleLatestMouseLeave(i)}>
-                  {isFavorites[i] ? (
-                    <>
-                      <FaHeart className="fill-icon" />
-                    </>
-                  ) : (
-                    <>
-                      {latestIsHovered[i] ? (
-                        <FaHeart className="empty-icon-hover" />
-                      ) : (
-                        <FaRegHeart className="empty-icon" />
-                      )}
-                    </>
-                  )}
-                </button>
+                  <button className=" heart-btn" onClick={() => toggleFavorite(i)} onMouseEnter={() => handleLatestMouseEnter(i)}
+                    onMouseLeave={() => handleLatestMouseLeave(i)}>
+                    {isFavorites[i] ? (
+                      <>
+                        <FaHeart className="fill-icon" />
+                      </>
+                    ) : (
+                      <>
+                        {latestIsHovered[i] ? (
+                          <FaHeart className="empty-icon-hover" />
+                        ) : (
+                          <FaRegHeart className="empty-icon" />
+                        )}
+                      </>
+                    )}
+                  </button>
+                </div>
               </div>
-            </div>
-          </div>
+            </motion.div>
+          </AnimatePresence>
         )
       })
       }
@@ -879,11 +906,11 @@ const MobileLatestMission = ({ userId }) => {
     };
 
     const carousel = document.querySelector('.carousel-inner');
-    // carousel.addEventListener('transitionend', transitionEndHandler);
+    carousel.addEventListener('transitionend', transitionEndHandler);
 
     // 組件卸載（或下一次 useEffect 執行時）時，移除之前附加的事件處理程序
     return () => {
-      // carousel.removeEventListener('transitionend', transitionEndHandler);
+      carousel.removeEventListener('transitionend', transitionEndHandler);
     };
   }, []);
 
@@ -945,7 +972,7 @@ const MobileLatestMission = ({ userId }) => {
   };
 
   return (
-    <div id="carouselExampleIndicators" className="carousel slide pb-3" data-bs-ride="carousel">
+    <div id="carouselExampleIndicators" className="carousel slide pb-4" data-bs-ride="carousel">
       <div className="carousel-indicators mt-5">
         {latestMissions.map((_, index) => (
           <button
@@ -966,21 +993,64 @@ const MobileLatestMission = ({ userId }) => {
       <div className="carousel-inner">
         {latestMissions.map((v, index) => (
           <div key={v.id} className={`carousel-item ${index === activeIndex ? "active" : ""}`}>
-            <div className='latest-mission-card d-flex'>
-              <div className='mission-img'>
-                <img src={v.file_path} alt="任務" />
-              </div>
-              <div className='mission-content ms-2'>
-                <div className='title size-6'>{v.title}</div>
-                <div className='d-flex justify-content-between mt-1 mt-sm-2'>
-                  <div className='size-7'>{v.city}{v.area}<br />{formatDate(v.post_date)}</div>
-                  <img src={isFavorites[index] ? "/heart-clicked.svg" : "/heart.svg"} alt={isFavorites[index] ? "已收藏" : "未收藏"} onClick={() => toggleFavorite(index)} />
+            <div className='latest-mission-card d-flex align-items-center'>
+              <Link href={`/work/find-mission/${v.mission_id}`} >
+                <div className='mission-img'>
+                  <img src={v.file_path} alt="任務" />
                 </div>
+              </Link>
+              <div className='mission-content ms-2'>
+                <Link href={`/work/find-mission/${v.mission_id}`} >
+                  <div className='title size-6'>{v.title}</div>
+                  <div className='d-flex justify-content-between mt-1 mt-sm-2'>
+                    <div className='size-7'>
+                      <div className="d-flex align-items-center mb-1">
+                        <span className="tag-btn mb-1">{(() => {
+                          switch (v.mission_type) {
+                            case 1:
+                              return '到府照顧';
+                            case 2:
+                              return '安親寄宿';
+                            case 3:
+                              return '到府美容';
+                            case 4:
+                              return '行為訓練';
+                            case 5:
+                              return '醫療護理';
+                            default:
+                              return '其他';
+                          }
+                        })()}</span>
+                      </div>
+                      <div className="d-flex align-items-center mb-1">
+                        <FaLocationDot className="me-1" />
+                        {v.city}
+                        {v.area}
+                      </div>
+                      <div className="d-flex align-items-center mb-1">
+                        <FaRegCalendarCheck className="me-1" />
+                        {formatDate(v.update_date)}
+                      </div>
+                    </div>
+                    {/* <img src={isFavorites[index] ? "/heart-clicked.svg" : "/heart.svg"} alt={isFavorites[index] ? "已收藏" : "未收藏"} onClick={() => toggleFavorite(index)} /> */}
+                  </div>
+                </Link>
                 <div className='d-flex justify-content-between align-items-end price'>
                   <div >單次<span className='size-6'> NT${v.price}</span></div>
-                  <Link href={`/work/find-mission/${v.mission_id}`} >
+                  {/* <Link href={`/work/find-mission/${v.mission_id}`} >
                     <button className='btn-confirm size-6'>應徵</button>
-                  </Link>
+                  </Link> */}
+                  <button className=" heart-btn" onClick={() => toggleFavorite(index)}>
+                    {isFavorites[index] ? (
+                      <>
+                        <FaHeart className="fill-icon" />
+                      </>
+                    ) : (
+                      <>
+                        <FaRegHeart className="empty-icon" />
+                      </>
+                    )}
+                  </button>
                 </div>
               </div>
             </div>
@@ -1011,10 +1081,12 @@ function ImageWithEqualDimensions({ file_path }) {
   const handleResize = () => {
     // 獲取圖片元素的引用
     const image = imgRef.current;
-    // 獲取圖片的寬度
-    const imageWidth = image.offsetWidth;
-    // 將寬度值分配给高度
-    image.style.height = imageWidth + "px";
+    if (image) {   // 異步操作: 可能需要時間下載圖片，導致handleResize在圖片載入之前被調用，圖片高度仍不等於寬度。增加判斷確保 handleResize 僅在 image 有值時才執行。
+      // 獲取圖片的寬度
+      const imageWidth = image.offsetWidth;
+      // 將寬度值分配给高度
+      image.style.height = imageWidth + "px";
+    }
   };
 
   // // 立即在組件加載時調整照片的高度
@@ -1026,10 +1098,10 @@ function ImageWithEqualDimensions({ file_path }) {
     // 立即在組件加載時調整照片的高度
     handleResize();
     // 添加螢幕大小變化事件監聽器
-    // window.addEventListener("resize", handleResize);
+    window.addEventListener("resize", handleResize);
     // 在組件卸載時移除事件監聽器
     return () => {
-      // window.removeEventListener("resize", handleResize);
+      window.removeEventListener("resize", handleResize);
     };
   }, []);
   return (
@@ -1040,7 +1112,7 @@ function ImageWithEqualDimensions({ file_path }) {
 }
 
 // 任務卡片（這邊的參數如果忘記設定會讓卡片出不來）
-const MissionCard = ({ missionType, missionCity, missionArea, setMissionType, updateDate, setUpdateDate, sortOrder, setSortOrder, sortBy, setSortBy, allMissions, currentData, userId, setUserId, isFavorites, toggleFavorite, handleMouseEnter, handleMouseLeave, isHovered }) => {
+const MissionCard = ({ missionType, missionCity, missionArea, setMissionType, updateDate, setUpdateDate, sortOrder, setSortOrder, sortBy, setSortBy, allMissions, currentData, userId, setUserId }) => {
 
   // 格式化日期
   function formatDate(dateString) {
@@ -1050,6 +1122,98 @@ const MissionCard = ({ missionType, missionCity, missionArea, setMissionType, up
     const day = String(date.getDate()).padStart(2, "0");
     return `${year}/${month}/${day}`;
   }
+
+  // 收藏
+  const [collection, setCollection] = useState([]); //用來儲存收藏
+  const getCollection = () => {
+    axios.get(`http://localhost:3005/api/mission/collections/${userId}`)
+      .then((response) => {
+        setCollection(response.data.result);
+        console.log(response.data.result);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  }
+  useEffect(() => {
+    if (userId) {   // userId存在時才調用getCollection 避免依賴項userId在組件加載前還沒被設置 觸發無效請求
+      getCollection(userId);
+    }
+  }, [userId]);
+
+  const addCollection = async (mission_id) => {
+    // 檢查收藏中是否已經存在具有相同 id 的任務
+    const have = collection.find((v) => v.mission_id === mission_id);
+    console.log(have);
+    // 如果收藏中沒有相同的任務
+    if (have === undefined) {
+      try {
+        // 發送HTTP請求將商品添加到購物車
+        const response = await axios.put(
+          `http://localhost:3005/api/mission/collections/${userId}`,
+          { mission_id }
+        );
+      } catch (error) {
+        console.error("錯誤：", error);
+      }
+      getCollection(userId)
+    }
+  };
+
+  const deleteCollection = async (mission_id) => {
+    // 檢查收藏中是否已經存在具有相同 id 的商品
+    const have = collection.find((v) => v.mission_id === mission_id);
+    console.log(have);
+    // 如果收藏中有相同的任務
+    if (have) {
+      try {
+        // 發送HTTP請求將任務移除收藏，mission_id 放在 URL 中
+        const response = await axios.delete(
+          `http://localhost:3005/api/mission/collections/${userId}/${mission_id}`
+        );
+      } catch (error) {
+        console.error("錯誤：", error);
+      }
+      getCollection(userId);
+    }
+  };
+
+  const toggleCollection = async (mission_id) => {
+    const isMissionInCollection = collection.some((item) => item.mission_id === mission_id);
+    // 檢查用戶是否已登入
+    if (!userId) {
+      alert('請先登入會員');
+      return;
+    }
+    if (isMissionInCollection) {
+      await deleteCollection(mission_id);
+    } else {
+      await addCollection(mission_id);
+    }
+    getCollection(userId);
+  };
+
+  // 初始化每個按鈕的初始hover狀態（空心愛心hover時要替換成實心）
+  // 設一個陣列，包含了與 currentData 中任務數量相同數量的布林值false，用來表示每個按鈕的初始 hover 狀態。
+  const initialHoverStates = Array(currentData.length).fill(false);
+  console.log("initialHoverStates是" + initialHoverStates);
+  const [isHovered, setIsHovered] = useState(initialHoverStates);
+  console.log("isHovered是" + isHovered)
+
+  // 設置 onMouseEnter 處理程序來處理hover狀態
+  const handleMouseEnter = (index) => {
+    // 複製原陣列，創建新陣列來表示更新後的狀態
+    const newHoverStates = [...isHovered];
+    newHoverStates[index] = true;
+    setIsHovered(newHoverStates);
+  };
+
+  // 設置 onMouseLeave 處理程序來處理取消hover狀態
+  const handleMouseLeave = (index) => {
+    const newHoverStates = [...isHovered];
+    newHoverStates[index] = false;
+    setIsHovered(newHoverStates);
+  };
 
 
   return (
@@ -1091,7 +1255,7 @@ const MissionCard = ({ missionType, missionCity, missionArea, setMissionType, up
                       </div>
                       <div className="d-flex align-items-center">
                         <FaRegCalendarCheck className="me-1" />
-                        {formatDate(v.update_date)}<span className="update-title" >（最後更新）</span>
+                        {formatDate(v.update_date)}<span className="update-title d-none d-sm-inline" >（最後更新）</span>
                       </div>
                     </div>
                     {/* <img
@@ -1106,9 +1270,9 @@ const MissionCard = ({ missionType, missionCity, missionArea, setMissionType, up
                   {/* <Link href={`/work/find-mission/${v.mission_id}`} >
                     <button className='btn-confirm size-6'>應徵</button>
                   </Link> */}
-                  <button className=" heart-btn" onClick={() => toggleFavorite(i)} onMouseEnter={() => handleMouseEnter(i)}
+                  <button className=" heart-btn" onClick={() => toggleCollection(v.mission_id)} onMouseEnter={() => handleMouseEnter(i)}
                     onMouseLeave={() => handleMouseLeave(i)}>
-                    {isFavorites[i] ? (
+                    {collection.some((item) => item.mission_id === v.mission_id) ? (
                       <>
                         <FaHeart className="fill-icon" />
                       </>
@@ -1221,74 +1385,58 @@ export default function MissionList() {
     // console.log("currentData這頁的資料是", currentData);
   }, [currentData]);
 
-  // 收藏
-  const [isFavorites, setIsFavorites] = useState([]);
-  // 初始化每個按鈕的初始懸停狀態（空心愛心hover時要替換成實心）
-  const initialHoverStates = Array(currentData.length).fill(false);
-  const [isHovered, setIsHovered] = useState(initialHoverStates);
-  // 設置 onMouseEnter 處理程序來處理懸停狀態
-  const handleMouseEnter = (index) => {
-    const newHoverStates = [...isHovered];
-    newHoverStates[index] = true;
-    setIsHovered(newHoverStates);
-  };
+  // // 收藏（不用此方法，因為currentData作為依賴數組導致頁面一直重複渲染，但原因待釐清，程式碼先留著）
+  // const [isFavorites, setIsFavorites] = useState([]);
 
-  // 設置 onMouseLeave 處理程序來處理取消懸停狀態
-  const handleMouseLeave = (index) => {
-    const newHoverStates = [...isHovered];
-    newHoverStates[index] = false;
-    setIsHovered(newHoverStates);
-  };
+  // useEffect(() => {
+  //   // 在組件加載時從後端獲取已收藏的任務
+  //   const fetchFavoriteMissions = async () => {
+  //     try {
+  //       const response = await axios.get(`http://localhost:3005/api/mission/fav?userId=${userId}`);
+  //       const favoriteMissionIds = response.data.result.map((fav) => fav.mission_id);
 
-  useEffect(() => {
-    // 在組件加載時從後端獲取已收藏的任務
-    const fetchFavoriteMissions = async () => {
-      try {
-        const response = await axios.get(`http://localhost:3005/api/mission/fav?userId=${userId}`);
-        const favoriteMissionIds = response.data.result.map((fav) => fav.mission_id);
+  //       // 根據已收藏的任務和當前任務列表來初始化 isFavorites 數組
+  //       const initialFavorites = currentData.map((mission) =>
+  //         favoriteMissionIds.includes(mission.mission_id)
+  //       );
+  //       setIsFavorites(initialFavorites);
+  //     } catch (error) {
+  //       console.error('前端請求錯誤：', error);
+  //     }
+  //   };
 
-        // 根據已收藏的任務和當前任務列表來初始化 isFavorites 數組
-        const initialFavorites = currentData.map((mission) =>
-          favoriteMissionIds.includes(mission.mission_id)
-        );
-        setIsFavorites(initialFavorites);
-      } catch (error) {
-        console.error('前端請求錯誤：', error);
-      }
-    };
+  //   fetchFavoriteMissions();
+  // }, [currentData]);
 
-    fetchFavoriteMissions();
-  }, [currentData]);
+  // const toggleFavorite = async (index) => {
+  //   // 檢查用戶是否已登入
+  //   if (!userId) {
+  //     alert('請先登入會員');
+  //     return;
+  //   }
 
-  const toggleFavorite = async (index) => {
-    // 檢查用戶是否已登入
-    if (!userId) {
-      alert('請先登入會員');
-      return;
-    }
+  //   try {
+  //     const newFavorites = [...isFavorites];
+  //     newFavorites[index] = !newFavorites[index];
+  //     setIsFavorites(newFavorites); // 立即更新圖標狀態
 
-    try {
-      const newFavorites = [...isFavorites];
-      newFavorites[index] = !newFavorites[index];
-      setIsFavorites(newFavorites); // 立即更新圖標狀態
+  //     const missionId = currentData[index].mission_id;
+  //     console.log(missionId)
 
-      const missionId = currentData[index].mission_id;
-      console.log(missionId)
+  //     if (!isFavorites[index]) {
+  //       // 如果任務未被收藏，發送加入收藏的請求
+  //       await axios.put(`http://localhost:3005/api/mission/add-fav?userId=${userId}`, { missionId });
+  //       console.log('已加入收藏');
+  //     } else {
+  //       // 如果任務已被收藏，發送取消收藏的請求
+  //       await axios.delete(`http://localhost:3005/api/mission/delete-fav?userId=${userId}`, { data: { missionId } });
+  //       console.log('已取消收藏');
+  //     }
 
-      if (!isFavorites[index]) {
-        // 如果任務未被收藏，發送加入收藏的請求
-        await axios.put(`http://localhost:3005/api/mission/add-fav?userId=${userId}`, { missionId });
-        console.log('已加入收藏');
-      } else {
-        // 如果任務已被收藏，發送取消收藏的請求
-        await axios.delete(`http://localhost:3005/api/mission/delete-fav?userId=${userId}`, { data: { missionId } });
-        console.log('已取消收藏');
-      }
-
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
 
   // 在組件加載時重置篩選條件為默認值
   useEffect(() => {
@@ -1323,18 +1471,15 @@ export default function MissionList() {
     getAllMissions()
     console.log("狀態變數已重置為預設值");
   };
-  // const handleClearSettings = () => {
-  //   // 使用 setTimeout 延遲執行 clearSettings 本來沒有寫 但clearSettings要點2次才反應
-  //   // setTimeout(() => {
-  //   //   clearSettings();
-  //   // }, [3000]);
-  // };
+  const handleClearSettings = () => {
+    // 使用 setTimeout 延遲執行 clearSettings 本來沒有寫 但clearSettings要點2次才反應
+    setTimeout(() => {
+      clearSettings();
+    }, 0);
+  };
 
 
-console.log(allMissions)
-;
-console.log(itemsPerPage);
-console.log("我愛台灣")
+
 
   return (
     <>
@@ -1345,7 +1490,7 @@ console.log("我愛台灣")
               <Link href="/">首頁</Link>
             </li>
             <li className="breadcrumb-item" aria-current="page">
-              <Link href="/work/find-mission" >小貓上工(找任務)</Link>
+              <Link href="/work/find-mission" onClick={handleClearSettings}>小貓上工(找任務)</Link>
             </li>
             {search ? (
               <>
@@ -1380,8 +1525,8 @@ console.log("我愛台灣")
           </div>
           <Link href="/work/create-mission" className="position-absolute add-mission-btn-pc-link">
             <button className="add-mission-btn-pc  d-none d-lg-block btn-confirm ">
-              <img src="/add-mission.svg" className="me-2" />
-              新增任務
+              <img src="/add-mission.svg" className="me-1 mb-1" />
+              新增
             </button>
           </Link>
           <Link href="/work/create-mission">
@@ -1391,16 +1536,17 @@ console.log("我愛台灣")
           </Link>
         </div>
 
-        <div className='d-flex my-2'>
+        <div className='d-flex my-lg-2'>
           <Sort missionType={missionType} setMissionType={setMissionType} missionCity={missionCity} setMissionCity={setMissionCity} missionArea={missionArea} setMissionArea={setMissionArea}
             updateDate={updateDate} setUpdateDate={setUpdateDate} sortOrder={sortOrder} setSortOrder={setSortOrder} sortBy={sortBy} setSortBy={setSortBy} />
         </div>
 
-        <section className="d-flex all-mission flex-column flex-lg-row mt-3">
+        <section className="d-flex all-mission flex-column flex-lg-row mt-2 mt-lg-3">
           {/* 最新任務桌機 */}
-          <div className="latest-mission latest-mission-pc d-none d-lg-flex flex-column mb-3">
+          <div className="latest-mission latest-mission-pc d-none d-lg-flex flex-column mb-3 position-relative">
             <h3 className="size-5  ">最新任務</h3>
             <LatestMission userId={userId} />
+            <img src='/job-icon/animation4.gif' className='position-absolute animation-paw' />
           </div>
           {/* 最新任務手機 */}
           <div className="latest-mission latest-mission-mobile d-lg-none mb-3 mt-1">
@@ -1413,7 +1559,7 @@ console.log("我愛台灣")
             <div className="row d-flex mb-3 g-3 g-md-4">
               {/* 使用g-3 不用justify-content-between 預設是start 卡片就會照順序排列 */}
               <MissionCard sortOrder={sortOrder} sortBy={sortBy} missionType={missionType} setMissionType={setMissionType} missionCity={missionCity} setMissionCity={setMissionCity} missionArea={missionArea} setMissionArea={setMissionArea}
-                updateDate={updateDate} setUpdateDate={setUpdateDate} allMissions={allMissions} currentData={currentData} userId={userId} setUserId={setUserId} isFavorites={isFavorites} toggleFavorite={toggleFavorite} handleMouseEnter={handleMouseEnter} handleMouseLeave={handleMouseLeave} isHovered={isHovered} />
+                updateDate={updateDate} setUpdateDate={setUpdateDate} allMissions={allMissions} currentData={currentData} userId={userId} setUserId={setUserId} />
             </div>
           </div>
         </section>

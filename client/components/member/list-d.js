@@ -23,6 +23,7 @@ export default function ListD() {
   const {contextName, setContextName} = useName();
   
   const { activeButton, setActiveButton } = useActivePage();
+  console.log(activeButton);
   const router = useRouter();
     //設置id狀態 解token
     const [userId, setUserId] = useState(null);
@@ -46,7 +47,19 @@ export default function ListD() {
         } catch (error) {
           console.error("token解析錯誤", error);
         }
-      }}, [userId]);
+      }
+      const apiURL = `http://localhost:3005/api/user/user-profile/${userId}`;
+      fetch(apiURL)
+        .then((res) => {
+          return res.json();
+        })
+        .then((data) => {
+          const user = data.results[0];
+          setCurrentAvatar(user.cover_photo);
+          setCurrentName(user.name);
+        })
+    
+    }, [userId]);
 
   return (
     <>
@@ -166,7 +179,10 @@ export default function ListD() {
                 }`}
                 onClick={() => {
                   setActiveButton(5);
-                  router.push("/member/helper");
+                  //setIsLoading(true);
+                  setTimeout(() => {
+                    router.push("/member/helper");
+                  }, 700);
                 }}
               >
                 <div className="my-3">
@@ -182,7 +198,10 @@ export default function ListD() {
                 }`}
                 onClick={() => {
                   setActiveButton(8);
-                  router.push("/member/selling");
+                  setIsLoading(true);
+                  setTimeout(() => {
+                    router.push("/member/selling");
+                  }, 700);
                 }}
               >
                 <div className="my-3">
@@ -231,7 +250,10 @@ export default function ListD() {
                 }`}
                 onClick={() => {
                   setActiveButton(9);
-                  router.push("/member/reserve");
+                 // setIsLoading(true);
+                  setTimeout(() => {
+                    router.push("/member/reserve");
+                  }, 700);
                 }}
               >
                 <div className="mt-3 pb-3">

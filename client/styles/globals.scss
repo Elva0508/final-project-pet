@@ -19,12 +19,23 @@ $dropdown-link-active-bg: #f8cb9f;
 $dropdown-bg: #fffdfb;
 $dropdown-border-width: 0;
 
+.animate__animated.animate__fadeInDownBig {
+  --animate-duration: 0.3s;
+}
+
 // ↑↑↑  變數覆蓋(Variable overrides) 要寫在這行"上面"  ↑↑↑
 // 導入所有 bootstrap 樣式
 @import "~bootstrap/scss/bootstrap";
 // ↓↓↓  其它客製樣式要寫在這行的"下面" ↓↓↓
 // 客製化變數樣式
 @import "@/styles/_variable.scss";
+
+@font-face {
+  font-family: "Microsoft YaHei"; /* 字体名称 */
+  src: url("../data/微软雅黑.ttf") format("truetype"); /* 字体文件的路径 */
+  font-weight: normal;
+  font-style: normal;
+}
 
 // google Noto Sans TC 中文字體
 @import "https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400&display=swap";
@@ -188,9 +199,12 @@ ul {
 @import "@/styles/_home.scss";
 @import "@/styles/components-style/home/_block-one.scss";
 @import "@/styles/components-style/home/_block-two.scss";
+@import "@/styles/components-style/home/_block-two-mobile.scss";
 @import "@/styles/components-style/home/_block-three.scss";
+@import "@/styles/components-style/home/_block-four-mobile.scss";
 @import "@/styles/components-style/home/_block-five.scss";
 @import "@/styles/components-style/home/_block-six.scss";
+@import "@/styles/components-style/home/_block-six-mobile.scss";
 
 //文章
 @import "@/styles/components-style/_article-list-card.scss";

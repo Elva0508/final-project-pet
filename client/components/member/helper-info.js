@@ -10,6 +10,9 @@ import { IconPlus } from "@douyinfe/semi-icons";
 import { CheckboxGroup, Checkbox, TextArea } from "@douyinfe/semi-ui";
 import { useAuth } from "@/context/fakeAuthContext";
 import { useRouter } from "next/router";
+import lottie from "lottie-web";
+import animationClose from "@/data/Animation-close.json";
+import animationClick from "@/data/Animation-click.json";
 const countyOption = [
   "台北市",
   "新北市",
@@ -137,6 +140,7 @@ const Close = ({ open, setOpen, user_id }) => {
         .then((response) => {
           console.log(response.data);
           if (response?.data?.status === 200) {
+            alert("開啟小幫手功能成功");
             setOpen(true);
           }
         })
@@ -145,16 +149,35 @@ const Close = ({ open, setOpen, user_id }) => {
         });
     }
   };
+  useEffect(() => {
+    console.log(open);
+    const container = document.getElementById("close");
+    if (container) {
+      lottie.loadAnimation({
+        container: document.getElementById("close"), // the dom element
+        renderer: "svg",
+        loop: true,
+        autoplay: true,
+        animationData: animationClose, // the animation data
+      });
+    }
+
+    // return () => {
+    //   lottie.destroy();
+    // };
+  }, [open]);
   return (
-    <>
-      <button className="open-helper btn-brown" onClick={handleOpen}>
+    <div className="close-mask">
+      {/* <button className="open-helper btn-brown" onClick={handleOpen}>
         開啟小幫手功能
-      </button>
-    </>
+      </button> */}
+      <div id="close" onClick={handleOpen}></div>
+    </div>
   );
 };
 
 const Open = ({ open, setOpen, info, setInfo, images, setImages, user_id }) => {
+  console.log(info);
   const [feedStatus, setFeedStatus] = useState({
     service: info?.feed_service,
     price: info?.feed_price,
@@ -169,23 +192,54 @@ const Open = ({ open, setOpen, info, setInfo, images, setImages, user_id }) => {
   });
   const [checked, setChecked] = useState([]);
   const [messageApi, contextHolder] = message.useMessage();
-
+  const [firstLoad, setFirstLoad] = useState(true);
   let action = "https://api.semi.design/upload";
+  useEffect(() => {
+    lottie.loadAnimation({
+      container: document.getElementById("click"), // the dom element
+      renderer: "svg",
+      loop: true,
+      autoplay: true,
+      animationData: animationClick, // the animation data
+    });
+
+    return () => {
+      lottie.destroy();
+    };
+  }, [open]);
 
   useEffect(() => {
-    // info清除時重置回預設值
-    setChecked([]);
-    if (feedStatus.service) {
-      setChecked((prevChecked) => [...prevChecked, "到府代餵"]);
+    if (info) {
+      if (firstLoad) {
+        console.log("info", info);
+        console.log(checked);
+        console.log(feedStatus);
+        setFeedStatus({
+          service: Boolean(info.feed_service),
+          price: info.feed_price,
+        });
+        setHouseStatus({
+          service: info.house_service,
+          price: info.house_price,
+        });
+        setBeautyStatus({
+          service: info.beauty_service,
+          price: info.beauty_price,
+        });
+        setChecked([]);
+        if (info.feed_service) {
+          setChecked((prevChecked) => [...prevChecked, "到府代餵"]);
+        }
+        if (info.house_service) {
+          setChecked((prevChecked) => [...prevChecked, "安親寄宿"]);
+        }
+        if (info.beauty_service) {
+          setChecked((prevChecked) => [...prevChecked, "到府美容"]);
+        }
+        setFirstLoad(false);
+      }
     }
-    if (houseStatus.service) {
-      setChecked((prevChecked) => [...prevChecked, "安親寄宿"]);
-    }
-    if (beautyStatus.service) {
-      setChecked((prevChecked) => [...prevChecked, "到府美容"]);
-    }
-  }, [feedStatus]);
-
+  }, [info]);
   const handleImage = ({ fileList, currentFile, event }) => {
     console.log("onChange");
     console.log(fileList);
@@ -220,6 +274,7 @@ const Open = ({ open, setOpen, info, setInfo, images, setImages, user_id }) => {
         .then((response) => {
           console.log(response?.data);
           if (response?.data?.status === 200) {
+            alert("關閉成功");
             setOpen(false);
           }
         })
@@ -232,11 +287,27 @@ const Open = ({ open, setOpen, info, setInfo, images, setImages, user_id }) => {
     e.preventDefault();
     // console.log(feedStatus, houseStatus, beautyStatus);
     const formData = new FormData();
+    let feed_service, house_service, beauty_service;
+    if (checked.some((item) => item === "到府代餵")) {
+      feed_service = true;
+    } else {
+      feed_service = false;
+    }
+    if (checked.some((item) => item === "安親寄宿")) {
+      house_service = true;
+    } else {
+      house_service = false;
+    }
+    if (checked.some((item) => item === "到府美容")) {
+      beauty_service = true;
+    } else {
+      beauty_service = false;
+    }
     const result = {
       ...info,
-      feed_service: feedStatus.service,
-      house_service: houseStatus.service,
-      beauty_service: beautyStatus.service,
+      feed_service,
+      house_service,
+      beauty_service,
       feed_price: feedStatus.price,
       house_price: houseStatus.price,
       beauty_price: beautyStatus.price,
@@ -275,6 +346,7 @@ const Open = ({ open, setOpen, info, setInfo, images, setImages, user_id }) => {
     memberService
       .getHelperInfo(user_id)
       .then((response) => {
+        console.log(response?.data);
         if (response?.data?.status === 200) {
           const profile = response?.data?.profile[0];
           setInfo(profile);
@@ -290,7 +362,16 @@ const Open = ({ open, setOpen, info, setInfo, images, setImages, user_id }) => {
             service: profile.beauty_service,
             price: profile.beauty_price,
           });
-
+          setChecked([]);
+          if (profile.feed_service) {
+            setChecked((prevChecked) => [...prevChecked, "到府代餵"]);
+          }
+          if (profile.house_service) {
+            setChecked((prevChecked) => [...prevChecked, "安親寄宿"]);
+          }
+          if (profile.beauty_service) {
+            setChecked((prevChecked) => [...prevChecked, "到府美容"]);
+          }
           const tempImages = response?.data?.images;
           setImages(() => {
             return tempImages.map((image) => {
@@ -313,7 +394,7 @@ const Open = ({ open, setOpen, info, setInfo, images, setImages, user_id }) => {
         onSubmit={handleEdit}
       >
         <div className="form-item">
-          <label className="size-6 m-size-7">姓名：</label>
+          <label className="size-6 m-size-7">姓名</label>
           <input
             className="form-input m-form-input"
             type="text"
@@ -326,7 +407,7 @@ const Open = ({ open, setOpen, info, setInfo, images, setImages, user_id }) => {
           />
         </div>
         <div className="form-item">
-          <label className="size-6 m-size-7">個人簡述：</label>
+          <label className="size-6 m-size-7">個人簡述</label>
           <textarea
             autosize
             rows={3}
@@ -342,7 +423,7 @@ const Open = ({ open, setOpen, info, setInfo, images, setImages, user_id }) => {
         </div>
 
         <div className="form-item">
-          <label className="size-6 m-size-7">Email：</label>
+          <label className="size-6 m-size-7">Email</label>
           <input
             className="form-input m-form-input"
             type="text"
@@ -355,7 +436,7 @@ const Open = ({ open, setOpen, info, setInfo, images, setImages, user_id }) => {
           />
         </div>
         <div className="form-item">
-          <label className="size-6 m-size-7">聯絡電話：</label>
+          <label className="size-6 m-size-7">聯絡電話</label>
           <input
             className="form-input m-form-input"
             type="text"
@@ -368,7 +449,7 @@ const Open = ({ open, setOpen, info, setInfo, images, setImages, user_id }) => {
           />
         </div>
         <div className="form-item image-item">
-          <label className="size-6 m-size-7">相片/影片：</label>
+          <label className="size-6 m-size-7">相片/影片</label>
           <Upload
             action={action}
             listType="picture"
@@ -381,21 +462,60 @@ const Open = ({ open, setOpen, info, setInfo, images, setImages, user_id }) => {
           </Upload>
         </div>
         <div className="service-intro-item form-item">
-          <label className="size-6 m-size-7">服務介紹：</label>
+          <label className="size-6 m-size-7">服務介紹</label>
           <textarea
             className="form-input m-form-input h-auto"
             type="text"
-            rows={8}
+            rows={25}
+            cols={40}
             placeholder="請輸入服務介紹"
-            value={info?.job_description}
-            onChange={(e) => {
-              const value = e.target.value;
-              setInfo({ ...info, job_description: value });
-            }}
+            value={`📍 住宿部分預約須知：
+
+              1.需有按時吃驅蟲藥以及心絲蟲
+              
+              2.需自備碗、飼料（鮮食）、牽繩、自家小被被（可有可無）
+              
+              3.需誠實告知狗狗習性，如：護食、不喜歡公狗、比較敏感、有嚴重區域，不喜歡被摸屁屁、耳朵等等
+              
+              4.信任彼此 ⚠️毛孩如有任何過敏體質或是食物請告知
+              
+              📍 家中環境介紹：
+              
+              家裡有廣大的空地（有安排防護）以及24小時過濾水提供（不是自來水或地下水）陽光充足
+              
+              住宿不關籠（如有關籠需求提前告知）、睡覺睡室內玩耍再室外，環境不是最乾淨但絕對不無聊，安排多項供貓咪玩耍的玩具及高空環境
+              
+              老寶貝也可來住宿，有獨立空間感不受打擾，清幽住宿，安心養老。
+              
+              ✅全職的保姆，寶貝24小時陪伴照顧
+              
+              ✅有照顧奶貓7年以上經驗
+              
+              ✅曾在中途之家擔任志工多年
+              
+              📍 到府照顧服務說明：
+              
+              🕍毛孩活動環境整潔（大小便狀況皆會說明）
+              
+              🍖餵食、換水補水（寶貝的罐罐需要秤重可以提前告知我喔～）
+              
+              💡毛孩狀況照實回報，主人安心出門
+              
+              🤹🏼‍♀️陪伴娛樂玩耍🎢
+              
+              📸隨時側拍毛孩給家長看，讓家長身歷其中🥰
+              
+              ✅✅進門前皆會消毒雙手並且告訴家長已抵達家中服務
+              
+              ⭐️⭐️第一次預約可找時間安排一個免費家訪，與毛孩彼此互相了解、熟悉。也讓家長更認識我，在出遊期間能更安心❤️❤️如果服務日期接近，家訪時間碰不上，會詳細詢問毛孩狀況以及在家中習慣…等等🐶🐱`}
+            // onChange={(e) => {
+            //   const value = e.target.value;
+            //   setInfo({ ...info, job_description: value });
+            // }}
           />
         </div>
         <div className="form-item">
-          <label className="size-6 m-size-7">可服務時間：</label>
+          <label className="size-6 m-size-7">可服務時間</label>
           <input
             className="form-input m-form-input"
             type="text"
@@ -404,7 +524,7 @@ const Open = ({ open, setOpen, info, setInfo, images, setImages, user_id }) => {
           />
         </div>
         <div className="form-item">
-          <label className="size-6 m-size-7 service-type">可服務類型：</label>
+          <label className="size-6 m-size-7 service-type">可服務類型</label>
           <div className="service-check-group">
             <CheckboxGroup
               type="pureCard"
@@ -412,6 +532,7 @@ const Open = ({ open, setOpen, info, setInfo, images, setImages, user_id }) => {
               direction="vertical"
               aria-label="CheckboxGroup 示例"
               onChange={(checkedValue) => {
+                console.log(checkedValue);
                 setChecked(checkedValue);
               }}
             >
@@ -443,7 +564,7 @@ const Open = ({ open, setOpen, info, setInfo, images, setImages, user_id }) => {
           </div>
         </div>
         <div className="form-item">
-          <label className="size-6 m-size-7">可服務地區：</label>
+          <label className="size-6 m-size-7">可服務地區</label>
           <div>
             <select
               className="form-select"
@@ -454,7 +575,7 @@ const Open = ({ open, setOpen, info, setInfo, images, setImages, user_id }) => {
               }}
             >
               {countyOption.map((county) => {
-                if (info.service_county === county) {
+                if (info?.service_county === county) {
                   return (
                     <option selected value={county}>
                       {county}
@@ -480,20 +601,21 @@ const Open = ({ open, setOpen, info, setInfo, images, setImages, user_id }) => {
             送出
           </button>
         </div>
-        <button
-          type="button"
-          className="close-helper btn-brown ms-auto"
-          onClick={handleOpen}
-        >
-          關閉小幫手功能
-        </button>
+        {open && (
+          <>
+            <div className="close-helper ms-auto" onClick={handleOpen}>
+              關閉小幫手
+            </div>
+            <div id="click"></div>
+          </>
+        )}
       </form>
     </>
   );
 };
 const HelperInfo = ({ user_id }) => {
-  const [open, setOpen] = useState(false);
-  const [info, setInfo] = useState({});
+  const [open, setOpen] = useState(true);
+  const [info, setInfo] = useState(null);
   const [images, setImages] = useState([]);
   // const { isAuthenticated, userId } = useAuth();
   let defaultInfo, defaultImages;
@@ -505,10 +627,11 @@ const HelperInfo = ({ user_id }) => {
         .then((response) => {
           console.log(response);
           const profile = response?.data?.profile[0];
+          console.log(profile);
           setInfo(profile);
           defaultInfo = profile;
-          if (profile.cat_helper) {
-            setOpen(true);
+          if (!profile.cat_helper) {
+            setOpen(false);
           }
           const tempImages = response?.data?.images;
           setImages(() => {
@@ -523,15 +646,17 @@ const HelperInfo = ({ user_id }) => {
         });
     }
   }, [user_id]);
-  if (process.client) {
-    console.log("運行在客戶端");
-  }
+  console.log(info);
+  // if (process.client) {
+  //   console.log("運行在客戶端");
+  // }
+
   return (
     <>
       <div className="col-12 col-sm-8 helper-info ">
         <div className="title">
-          <p className="size-4 m-size-5">
-            <img src="/member-icon/helper-info.svg" />
+          <p className="size-4 m-size-5 mb-2">
+            <span className="my">▍</span>
             小幫手資料
             {open && (
               <Link
@@ -555,7 +680,18 @@ const HelperInfo = ({ user_id }) => {
             user_id={user_id}
           />
         ) : (
-          <Close open={open} setOpen={setOpen} user_id={user_id} />
+          <>
+            <Open
+              open={open}
+              setOpen={setOpen}
+              info={info}
+              setInfo={setInfo}
+              images={images}
+              setImages={setImages}
+              user_id={user_id}
+            />
+            <Close open={open} setOpen={setOpen} user_id={user_id} />
+          </>
         )}
       </div>
     </>

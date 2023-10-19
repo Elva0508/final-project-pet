@@ -87,7 +87,7 @@ const CreateReview = ({ user_id, detail, oid, setIsReviewed }) => {
           </div>
         }
       >
-        <div>滿意度</div>
+        <div className="size-6 mb-2">滿意度</div>
         <Rating
           value={starValue}
           onHoverChange={(value) => {
@@ -102,6 +102,9 @@ const CreateReview = ({ user_id, detail, oid, setIsReviewed }) => {
         )}
         <div>
           <textarea
+            className="form-area mt-2 size-7"
+            rows={6}
+            cols={50}
             type="text"
             onChange={(e) => {
               setReview(e.target.value);
@@ -178,7 +181,9 @@ const CheckReview = ({ review }) => {
             <div className="date size-7">{review?.review_date}</div>
           </div>
         </div>
-        <div className="review-card-body mt-3">{review?.review_content}</div>
+        <div className="review-card-body mt-3 size-7">
+          {review?.review_content}
+        </div>
       </Modal>
     </>
   );

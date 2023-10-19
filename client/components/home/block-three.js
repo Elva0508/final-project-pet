@@ -1,4 +1,5 @@
 import React from "react";
+import Link from "next/link";
 
 export default function BlockThree() {
   return (
@@ -9,7 +10,9 @@ export default function BlockThree() {
             <div className="col-md-7">
               <div className="mt-5 ms-5">
                 <div className="desktop-title">
-                  <span className="title size-2 m-size-3 d-flex justify-content-start">開幕慶</span>
+                  <span className="title size-2 m-size-3 d-flex justify-content-start">
+                    開幕慶
+                  </span>
                 </div>
                 <div className="d-flex justify-content-start">
                   <span>限時特賣活動，現在加入會員最划算</span>
@@ -19,11 +22,11 @@ export default function BlockThree() {
                 <div className="text-center">
                   <div className="row align-items-start mt-5 py-3 px-1">
                     <div className="col price size-6">
-                      $99
+                      $1000
                       <div className="size-7 content">全館滿額免運</div>
                     </div>
                     <div className="col price size-6">
-                      9折券
+                      95折券
                       <div className="size-7 content">會員免費領取</div>
                     </div>
                     <div className="col price size-6">
@@ -34,9 +37,11 @@ export default function BlockThree() {
                 </div>
               </div>
               <div className="m-5 d-flex justify-content-center">
-                <button type="reset" className="btn-brown mx-1">
-                  立即註冊
-                </button>
+                <Link href="/member/login">
+                  <button type="reset" className="btn-brown mx-1">
+                    立即註冊
+                  </button>
+                </Link>
               </div>
             </div>
             <div className="col-5 col-md-5 d-flex align-items-end">

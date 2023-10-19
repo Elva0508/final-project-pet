@@ -128,14 +128,14 @@
 }
 
 .pay-confirm{
-    height: calc(100vh - 404px);
+    height: calc(100vh - 379px);
     color: $text-main;
     // overflow: auto;
 
 }    
 @media screen and (max-width: 895px) {
        .pay-confirm{
-        height:  auto;
+        height: calc(100vh - 407px);
             img{
             width: 200px;
             height: 200px;
@@ -152,7 +152,7 @@
 }
 @media screen and (max-width: 895px) {
     .credit-card{
-     height: auto
+        height: calc(100vh - 358px); 
     };
 }
 

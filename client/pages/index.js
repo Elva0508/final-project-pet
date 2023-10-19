@@ -3,6 +3,7 @@ import BlockOne from "@/components/home/block-one";
 import BlockTwo from "@/components/home/block-two";
 import BlockTwoMobile from "@/components/home/block-two-mobile";
 import BlockThree from "@/components/home/block-three";
+import BlockThreeMobile from "@/components/home/block-three-mobile";
 import BlockFourMobile from "@/components/home/block-four-mobile";
 import BlockFive from "@/components/home/block-five";
 import BlockFiveMobile from "@/components/home/block-five-mobile";
@@ -49,7 +50,84 @@ export function HomeVedio() {
                   repeatCount="indefinite"
                   fill="#ffffff"
                   attributeName="d"
-                  dur="15s"
+                  dur="10s"
+                  attributeType="XML"
+                  values="
+                M0 77 
+                C 473,283
+                  822,-40
+                  1920,116 
+                
+                V 359 
+                H 0 
+                V 67 
+                Z; 
+    
+                M0 77 
+                C 473,-40
+                  1222,283
+                  1920,136 
+                
+                V 359 
+                H 0 
+                V 67 
+                Z; 
+    
+                M0 77 
+                C 973,260
+                  1722,-53
+                  1920,120 
+                
+                V 359 
+                H 0 
+                V 67 
+                Z; 
+    
+                M0 77 
+                C 473,283
+                  822,-40
+                  1920,116 
+                
+                V 359 
+                H 0 
+                V 67 
+                Z
+                "
+                ></animate>
+              </path>
+            </svg>
+          </div>
+          <div className="waves-mobile">
+            <svg
+              width="100%"
+              height="100px"
+              fill="none"
+              version="1.1"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stopColor="#00B4DB" />
+                <stop offset="50%" stopColor="#224488" />
+                <stop offset="100%" stopColor="#0083B0" />
+              </linearGradient>
+              <path
+                fill="#fbf5ef"
+                d="
+              M0 67
+              C 273,183
+                822,-40
+                1920.00,106 
+              
+              V 359 
+              H 0 
+              V 67
+              Z"
+              >
+                <animate
+                  repeatCount="indefinite"
+                  fill="#ffffff"
+                  attributeName="d"
+                  dur="5s"
                   attributeType="XML"
                   values="
                 M0 77 
@@ -120,10 +198,10 @@ export default function Index() {
       <div className="home">
         <div className="container my-5">
           <div className="block-two my-5">
-            <div className="size-3 home-tilte d-flex justify-content-center mb-3 border-bottom">
-              <div className="animephoto">
+            <div className="size-3 home-tilte d-flex justify-content-center mb-3">
+              {/* <div className="animephoto">
                 <img src={imageSrc} className="img-fluid" />
-              </div>
+              </div> */}
               新品推薦
             </div>
             <div className="home-product-card row gy-5">
@@ -142,6 +220,10 @@ export default function Index() {
 
           <div className="block-three my-5">
             <BlockThree className="my-5" />
+          </div>
+
+          <div className="block-three-mobile my-5">
+            <BlockThreeMobile className="my-5" />
           </div>
 
           <div className="block-four my-5">

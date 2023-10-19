@@ -13,7 +13,7 @@ export default function ArticleListCard() {
 
     const data = await res.json();
 
-    // console.log(data);
+    console.log("我愛文章");
     // 設定到狀態中 -> 會觸發重新渲染(re-render)
     if (Array.isArray(data)) setArticleListCard(data);
   };
@@ -21,7 +21,7 @@ export default function ArticleListCard() {
   // // didMount 初次渲染"後", 向伺服器要求資料，設定到狀態中
   useEffect(() => {
     getArticleListCard();
-  });
+  }, []);
 
   // 只要前三篇文章
   const firstThreeArticles = articleListCard.slice(0, 3);
