@@ -19,7 +19,7 @@ import jwt_decode from "jwt-decode";
 import { useHelper } from "@/context/helperContext";
 
 export default function ListD() {
-  
+
   const { activeButton, setActiveButton } = useActivePage();
   console.log(activeButton);
   const router = useRouter();
@@ -29,36 +29,25 @@ export default function ListD() {
   const [currentName, setCurrentName] = useState(null);
   const { setIsLoading } = useHelper();
 
-    useEffect(() => {
-      const token = localStorage.getItem("token");
-      if (token) {
-        try {
-          const decodeToken = jwt_decode(token);
-          const currentUserId = decodeToken.id;
-          // const currentAvatar = decodeToken.avatar;
-          // const currentName = decodeToken.name;
-          //console.log(userId);
-  
-          //更新userId狀態
-          setUserId(currentUserId);
-          // setCurrentAvatar(currentAvatar);
-          // setCurrentName(currentName);
-        } catch (error) {
-          console.error("token解析錯誤", error);
-        }
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      try {
+        const decodeToken = jwt_decode(token);
+        const currentUserId = decodeToken.id;
+        const currentAvatar = decodeToken.avatar;
+        const currentName = decodeToken.name;
+        //console.log(userId);
+
+        //更新userId狀態
+        setUserId(currentUserId);
+        setCurrentAvatar(currentAvatar);
+        setCurrentName(currentName);
+      } catch (error) {
+        console.error("token解析錯誤", error);
       }
-      const apiURL = `http://localhost:3005/api/user/user-profile/${userId}`;
-      fetch(apiURL)
-        .then((res) => {
-          return res.json();
-        })
-        .then((data) => {
-          const user = data.results[0];
-          setCurrentAvatar(user.cover_photo);
-          setCurrentName(user.name);
-        })
-    
-    }, [userId]);
+    }
+  }, [userId]);
 
   return (
     <>
@@ -102,9 +91,8 @@ export default function ListD() {
             </li>
             <li className="">
               <button
-                className={`size-6 col-12  ${
-                  activeButton === 1 ? "active" : ""
-                }`}
+                className={`size-6 col-12  ${activeButton === 1 ? "active" : ""
+                  }`}
                 onClick={() => {
                   setActiveButton(1);
                   router.push("/member/order");
@@ -118,9 +106,8 @@ export default function ListD() {
             </li>
             <li>
               <button
-                className={`size-6 col-12 ${
-                  activeButton === 2 ? "active" : ""
-                }`}
+                className={`size-6 col-12 ${activeButton === 2 ? "active" : ""
+                  }`}
                 onClick={() => {
                   setActiveButton(2);
                   router.push("/member/purchast");
@@ -134,9 +121,8 @@ export default function ListD() {
             </li>
             <li>
               <button
-                className={`size-6 col-12 ${
-                  activeButton === 3 ? "active" : ""
-                }`}
+                className={`size-6 col-12 ${activeButton === 3 ? "active" : ""
+                  }`}
                 onClick={() => {
                   setActiveButton(3);
                   router.push("/member/wishlist");
@@ -150,9 +136,8 @@ export default function ListD() {
             </li>
             <li>
               <button
-                className={`size-6 col-12 ${
-                  activeButton === 4 ? "active" : ""
-                }`}
+                className={`size-6 col-12 ${activeButton === 4 ? "active" : ""
+                  }`}
                 onClick={() => {
                   setActiveButton(4);
                   router.push("/member/coupon");
@@ -171,9 +156,8 @@ export default function ListD() {
             </li>
             <li>
               <button
-                className={`size-6 col-12 ${
-                  activeButton === 5 ? "active" : ""
-                }`}
+                className={`size-6 col-12 ${activeButton === 5 ? "active" : ""
+                  }`}
                 onClick={() => {
                   setActiveButton(5);
                   setIsLoading(true);
@@ -190,9 +174,8 @@ export default function ListD() {
             </li>
             <li>
               <button
-                className={`size-6 col-12 ${
-                  activeButton === 8 ? "active" : ""
-                }`}
+                className={`size-6 col-12 ${activeButton === 8 ? "active" : ""
+                  }`}
                 onClick={() => {
                   setActiveButton(8);
                   setIsLoading(true);
@@ -209,9 +192,8 @@ export default function ListD() {
             </li>
             <li>
               <button
-                className={`size-6 col-12 ${
-                  activeButton === 6 ? "active" : ""
-                }`}
+                className={`size-6 col-12 ${activeButton === 6 ? "active" : ""
+                  }`}
                 onClick={() => {
                   setActiveButton(6);
                   router.push("/member/joblist");
@@ -225,9 +207,8 @@ export default function ListD() {
             </li>
             <li>
               <button
-                className={`size-6 col-12 ${
-                  activeButton === 7 ? "active" : ""
-                }`}
+                className={`size-6 col-12 ${activeButton === 7 ? "active" : ""
+                  }`}
                 onClick={() => {
                   setActiveButton(7);
                   router.push("/member/history");
@@ -242,9 +223,8 @@ export default function ListD() {
 
             <li>
               <button
-                className={`size-6 col-12 ${
-                  activeButton === 9 ? "active" : ""
-                }`}
+                className={`size-6 col-12 ${activeButton === 9 ? "active" : ""
+                  }`}
                 onClick={() => {
                   setActiveButton(9);
                   setIsLoading(true);
