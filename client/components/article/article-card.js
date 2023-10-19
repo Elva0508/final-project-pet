@@ -48,7 +48,11 @@ export default function ArticleCard() {
       <div className="article-card">
         <div className="card mb-3">
           <div className="card-img">
-            <img src={articles.img} className="card-img-top" alt="..." />
+            <img
+              src={articles.img}
+              className="card-img-top  img-fluid"
+              alt="..."
+            />
           </div>
           <div className="card-body">
             <span className="card-title size-3 m-size-4">{articles.title}</span>
