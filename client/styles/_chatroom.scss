@@ -25,7 +25,8 @@
   .img-fluid {
     height: 100%;
   }
-  .helper-info{
-    background-color: $star;
+  .helper-information{
+    background-color: #fff2a9;
+    width: calc(100% - 50px); // 扣掉大頭照的寬度
   }
 }

@@ -655,3 +655,16 @@
   font-size: 1rem;
   color: $text-mark;
 }
+
+body.swal2-shown:not(.swal2-no-backdrop):not(.swal2-toast-shown) {
+  overflow: hidden;
+  padding-right: 9px;
+}
+// .swal2-shown{
+//   padding-right: 9px;
+//   overflow: hidden;
+// }
+.swal2-shown {
+  // overflow: unset !important;
+  padding-right: 8.5px !important;
+}
