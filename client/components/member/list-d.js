@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useContext } from "react";
+import {useName} from "@/context/nameContext";
 import { HiClipboardList } from "react-icons/hi";
 import { LiaListAltSolid } from "react-icons/lia";
 import { FaPencilAlt } from "react-icons/fa";
@@ -18,13 +19,15 @@ import Membership from "@/components/user/membership";
 import jwt_decode from "jwt-decode";
 
 export default function ListD() {
+  //context
+  const {contextName, setContextName} = useName();
   
   const { activeButton, setActiveButton } = useActivePage();
   const router = useRouter();
     //設置id狀態 解token
     const [userId, setUserId] = useState(null);
     const [currentAvatar, setCurrentAvatar] = useState(null);
-    const [currentName, setCurrentName] = useState(null);
+    //const [currentName, setCurrentName] = useState(null);
 
     useEffect(() => {
       const token = localStorage.getItem("token");
@@ -33,13 +36,13 @@ export default function ListD() {
           const decodeToken = jwt_decode(token);
           const currentUserId = decodeToken.id;
           const currentAvatar = decodeToken.avatar;
-          const currentName = decodeToken.name;
+          //const currentName = decodeToken.name;
           //console.log(userId);
   
           //更新userId狀態
           setUserId(currentUserId);
           setCurrentAvatar(currentAvatar);
-          setCurrentName(currentName);
+          //setCurrentName(currentName);
         } catch (error) {
           console.error("token解析錯誤", error);
         }
@@ -61,7 +64,8 @@ export default function ListD() {
                   ></img>
                 </div>
                 <p className="size-5 my-3 text-center title">
-                  Hi,{currentName}
+
+                  Hi,{contextName}
                   
                 </p>
                 <Link className="size-7" href="/member/profile">
