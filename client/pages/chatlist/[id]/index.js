@@ -163,7 +163,7 @@ export default function Chatroom() {
 
     // 根據包含不同文字的情況，設置不同的CSS名
     const className = containsSpecialText
-      ? 'size-7 m-size-7 px-3 helper-info' // 含「小幫手履歷」時的樣式
+      ? 'size-7 m-size-7 px-3 py-3 helper-information' // 含「小幫手履歷」時的樣式
       : 'size-7 m-size-7 rounded-pill content py-1 px-2';
 
     return (
