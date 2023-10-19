@@ -1038,7 +1038,7 @@ export default function MissionDetail() {
                                     <div className="item d-flex flex-column mission-place">
                                         <div className="item-title size-6 position-relative">
                                             <CiLocationOn className='me-1' />任務地點
-                                            <img src='/job-icon/animation2.gif' className='position-absolute animation-cat' />
+                                            <img src='/job-icon/animation2.gif' className='position-absolute running-cat' />
                                         </div>
                                         <hr class="item-divider" />
                                         <p className="size-7 d-flex align-items-center  item-content">{v.city}{v.area}{v.location_detail}</p>
