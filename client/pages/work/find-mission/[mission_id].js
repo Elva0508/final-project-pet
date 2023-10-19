@@ -620,7 +620,7 @@ export default function MissionDetail() {
                 text: '請輸入自我推薦',
                 icon: 'warning',
                 confirmButtonText: '我知道了',
-                scrollbarPadding: false, // 禁用滚动条自动隐藏
+                scrollbarPadding: false, // 禁用滾動條自動隱藏
             }).then(() => {
                 setAutoSend(false); // 清除勾勾
             });
@@ -643,7 +643,7 @@ export default function MissionDetail() {
                     confirmButtonText: '前往',
                     cancelButtonText: '取消',
                     reverseButtons: true, // 兩顆按鈕位置對調
-                    scrollbarPadding: false, // 禁用滚动条自动隐藏
+                    scrollbarPadding: false, // 禁用滾動條自動隱藏
                 }).then((result) => {
                     if (result.isConfirmed) {
                         // 當點擊確認按鈕
@@ -655,7 +655,12 @@ export default function MissionDetail() {
                 });
                 return;
             }
-            chatContentArray.push(helperInfo.introduction);
+            chatContentArray.push(`<p className='helper-info'>✅我的小幫手履歷：</p>`+helperInfo.introduction);
+            // chatContentArray.push(
+            //     <div style={{ backgroundColor: 'yellow', padding: '10px' }}>
+            //         我的小幫手履歷：<br />{helperInfo.introduction}
+            //     </div>
+            // );
         }
         setIsLoading(true);
         try {

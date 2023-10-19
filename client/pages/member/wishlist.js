@@ -5,6 +5,7 @@ import { useCart } from "@/hooks/useCart";
 import axios from "axios";
 import Pagination from "@/components/pagination";
 import { useRouter } from "next/router";
+import Link from "next/link";
 
 export default function Wishlist() {
   const [wishlist, setWishlist] = useState([]);
@@ -179,9 +180,9 @@ export default function Wishlist() {
                           <div className="d-flex col-7 col-md-9">
                             <img src={v.images} alt={v.product_name} />
                             <div className="ms-3">
-                              <p className="size-6 m-size-7">
+                              <Link href={`/product/${v.category_id}/${v.subcategory_id}/${v.product_id}`} className="size-6 m-size-7">
                                 {v.product_name}
-                              </p>
+                              </Link>
                               <p className="size-6 m-size-7 price">
                                 NT${v.price}
                               </p>

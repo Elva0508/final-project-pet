@@ -56,7 +56,7 @@ export default function HistoryStatusOne({
     return newDay;
   };
 
-  const removetype = async (id) => {
+  const removetype = async (userid,id) => {
     console.log(id);
     try {
       const response = await axios.put(
@@ -66,9 +66,9 @@ export default function HistoryStatusOne({
     } catch (error) {
       console.error("Error:", error);
     }
-    getHistory();
+    getHistory(userid);
   };
-
+console.log(history.length);
   return (
     <>
       <div className="bg">
@@ -160,7 +160,7 @@ export default function HistoryStatusOne({
                         <button
                           className=" btn-confirm m-2 size-6"
                           onClick={() => {
-                            removetype(v.mission_id);
+                            removetype(v.post_user_id,v.mission_id);
                           }}
                         >
                           下架任務
