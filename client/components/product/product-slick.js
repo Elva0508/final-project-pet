@@ -8,6 +8,7 @@ import { useEffect } from "react";
 import Link from "next/link";
 import { useState } from "react";
 import { FaHeart, FaRegHeart } from 'react-icons/fa';
+import jwt_decode from "jwt-decode";
 
 export default function ProductSlick() {
     // 用於儲存解析後的userID

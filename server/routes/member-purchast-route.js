@@ -5,7 +5,7 @@ const connection=require("../db");
 router.get("/:id", (req, res) => {
   const userId=req.params.id
     connection.execute(
-      `SELECT o.*,p.product_name AS product_name,pt.type_name AS type ,p.specialoffer AS price,p.images_one AS image,p.product_id AS product_id,pt.type_id AS type_id
+      `SELECT o.*,p.product_name AS product_name,pt.type_name AS type ,p.specialoffer AS price,p.images_one AS image,p.product_id AS product_id,pt.type_id AS type_id,p.category_id AS category_id,p.subcategory_id AS subcategory_id
       FROM orders AS o 
       JOIN order_details AS od ON o.oid=od.order_id
       JOIN products AS p ON p.product_id=od.product_id

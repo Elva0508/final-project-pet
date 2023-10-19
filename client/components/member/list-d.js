@@ -48,18 +48,8 @@ export default function ListD() {
           console.error("token解析錯誤", error);
         }
       }
-      const apiURL = `http://localhost:3005/api/user/user-profile/${userId}`;
-      fetch(apiURL)
-        .then((res) => {
-          return res.json();
-        })
-        .then((data) => {
-          const user = data.results[0];
-          setCurrentAvatar(user.cover_photo);
-          setCurrentName(user.name);
-        })
-    
-    }, [userId]);
+    }
+  , [userId]);
 
   return (
     <>

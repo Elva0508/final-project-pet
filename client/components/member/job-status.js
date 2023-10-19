@@ -99,7 +99,7 @@ export default function JobStatusTwo({
             {currentData.map((v, i) => {
               return (
                 <>
-                  <div className="d-md-none d-flex pt-3 ps-3 ">
+                  <div className="d-md-none d-flex pt-3 ps-3 " key={i}>
                     <p className="size-6 title">
                       <span>任務主題：</span>
                       {v.title}
