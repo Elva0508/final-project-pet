@@ -438,7 +438,7 @@ router.get("/login-user", (req, res) => {
 router.get("/helper-info", (req, res) => {
   const userId = req.query.userId; // 從請求的 URL 中獲取用戶 token
   conn.execute(
-    `SELECT u.cat_helper, h.introduction
+    `SELECT u.cat_helper, h.introduction, h.name, h.email, h.phone
     FROM userinfo AS u
     JOIN mission_helper_info AS h ON u.user_id = h.user_id 
     WHERE u.user_id = ? ;`,
