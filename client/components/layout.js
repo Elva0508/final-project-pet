@@ -18,26 +18,27 @@ export default function Layout({ children }) {
     useLoader(50);
   const { userId } = useAuth();
   const { pathname, query } = router;
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const loadingRef = useRef();
-  useEffect(() => {
-    // 讓頁面可以滾動，原本禁止有overflow-y軸
-    setTimeout(() => {
-      setIsLoading(false);
-    }, [4500]);
-    setTimeout(() => {
-      const loading = document.querySelector(".cat-loading-wrapper");
-      console.log(loading);
-      loading.classList.add("cat-loading-wrapper-opacity");
-    }, [4000]);
-  }, []);
-  useEffect(() => {
-    if (isLoading) {
-      document.body.classList.add("disableFlow");
-    } else {
-      document.body.classList.remove("disableFlow");
-    }
-  }, [isLoading]);
+
+  // useEffect(() => {
+  //   // 讓頁面可以滾動，原本禁止有overflow-y軸
+  //   setTimeout(() => {
+  //     setIsLoading(false);
+  //   }, [4500]);
+  //   setTimeout(() => {
+  //     const loading = document.querySelector(".cat-loading-wrapper");
+  //     console.log(loading);
+  //     loading.classList.add("cat-loading-wrapper-opacity");
+  //   }, [4000]);
+  // }, []);
+  // useEffect(() => {
+  //   if (isLoading) {
+  //     document.body.classList.add("disableFlow");
+  //   } else {
+  //     document.body.classList.remove("disableFlow");
+  //   }
+  // }, [isLoading]);
   const uniqueKey = Date.now();
   useEffect(() => {
     const handleChangeStart = (url, { shallow }) => {
@@ -66,7 +67,7 @@ export default function Layout({ children }) {
   return (
     <>
       <CatLoading ref={loadingRef} />
-      <>{loader()}</>
+      {/* <>{loader()}</> */}
       <>
         <ResponsiveAppBar />
         {pathname && pathname == "/" ? <HomeVedio /> : null}
