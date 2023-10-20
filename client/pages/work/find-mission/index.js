@@ -1221,20 +1221,20 @@ const MissionCard = ({ missionType, missionCity, missionArea, setMissionType, up
       {currentData.map((v, i) => {
         return (
           <motion.div className="col-6 col-md-4 col-lg-6 col-xl-4" key={v.mission_id} initial={"initial"}
-          animate={
-            missionActive === "move"
-              ? "move"
-              : missionActive === "exit"
-              ? "exit"
-              : "initial"
-          }
-          variants={missionVariant}
-          // (index + 1) % 3 == 1 ? 0 : (index + 1) % 3 == 2 ? 1 : 2 整排移動參數
-          custom={i}
-          whileInView="singleMove"
-          viewport={{
-            once: true,
-          }}>
+            animate={
+              missionActive === "move"
+                ? "move"
+                : missionActive === "exit"
+                  ? "exit"
+                  : "initial"
+            }
+            variants={missionVariant}
+            // (index + 1) % 3 == 1 ? 0 : (index + 1) % 3 == 2 ? 1 : 2 整排移動參數
+            custom={i}
+            whileInView="singleMove"
+            viewport={{
+              once: true,
+            }}>
             <div className="mission-list-card ">
               <Link href={`/work/find-mission/${v.mission_id}`}>
                 <ImageWithEqualDimensions file_path={v.file_path} />
@@ -1399,58 +1399,7 @@ export default function MissionList() {
     // console.log("currentData這頁的資料是", currentData);
   }, [currentData]);
 
-  // // 收藏（不用此方法，因為currentData作為依賴數組導致頁面一直重複渲染，但原因待釐清，程式碼先留著）
-  // const [isFavorites, setIsFavorites] = useState([]);
 
-  // useEffect(() => {
-  //   // 在組件加載時從後端獲取已收藏的任務
-  //   const fetchFavoriteMissions = async () => {
-  //     try {
-  //       const response = await axios.get(`http://localhost:3005/api/mission/fav?userId=${userId}`);
-  //       const favoriteMissionIds = response.data.result.map((fav) => fav.mission_id);
-
-  //       // 根據已收藏的任務和當前任務列表來初始化 isFavorites 數組
-  //       const initialFavorites = currentData.map((mission) =>
-  //         favoriteMissionIds.includes(mission.mission_id)
-  //       );
-  //       setIsFavorites(initialFavorites);
-  //     } catch (error) {
-  //       console.error('前端請求錯誤：', error);
-  //     }
-  //   };
-
-  //   fetchFavoriteMissions();
-  // }, [currentData]);
-
-  // const toggleFavorite = async (index) => {
-  //   // 檢查用戶是否已登入
-  //   if (!userId) {
-  //     alert('請先登入會員');
-  //     return;
-  //   }
-
-  //   try {
-  //     const newFavorites = [...isFavorites];
-  //     newFavorites[index] = !newFavorites[index];
-  //     setIsFavorites(newFavorites); // 立即更新圖標狀態
-
-  //     const missionId = currentData[index].mission_id;
-  //     console.log(missionId)
-
-  //     if (!isFavorites[index]) {
-  //       // 如果任務未被收藏，發送加入收藏的請求
-  //       await axios.put(`http://localhost:3005/api/mission/add-fav?userId=${userId}`, { missionId });
-  //       console.log('已加入收藏');
-  //     } else {
-  //       // 如果任務已被收藏，發送取消收藏的請求
-  //       await axios.delete(`http://localhost:3005/api/mission/delete-fav?userId=${userId}`, { data: { missionId } });
-  //       console.log('已取消收藏');
-  //     }
-
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
 
   // 在組件加載時重置篩選條件為默認值
   useEffect(() => {
@@ -1508,8 +1457,8 @@ export default function MissionList() {
       opacity: 1,
       x: 0,
       y: 0,
-      // 動畫持續1秒（開始到結束）每張卡片延遲0.2秒（逐張出現）
-      transition: { duration: 1, delay: i * 0.2 },
+      // 動畫持續1秒（開始到結束）每張卡片延遲0.1秒（逐張出現）
+      transition: { duration: 1, delay: i * 0.1 },
     }),
     exit: (i) => ({
       opacity: 0,
@@ -1523,6 +1472,29 @@ export default function MissionList() {
     window.scrollTo(0, 0);
   }, [activePage]);
 
+  useEffect(() => {
+    (async () => {
+      // 當篩選及搜尋時
+      if (missionType || missionCity || missionArea || updateDate || search || sortOrder || sortBy) {
+
+        // 使用 Promise 等待一段時間
+        await new Promise((resolve) => {
+          // 先退出動畫
+          setMissionActive("exit");
+          setTimeout(resolve, 600);
+        });
+
+        // 切換到初始狀態
+        setMissionActive("initial");
+
+        // 執行後端資料獲取
+        getAllMissions();
+
+        // 執行進入動畫
+        setMissionActive("move");
+      }
+    })();
+  }, [missionType, missionCity, missionArea, updateDate, search, sortOrder, sortBy]);
 
 
 
