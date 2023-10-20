@@ -230,9 +230,9 @@ export default function BlockFourMobile() {
                             <del>NT${v.price}</del>
                           </div>
                         </Link>
-                        <button type="submit" className="btn-confirm">
+                        {/* <button type="submit" className="btn-confirm">
                           <BiSolidCart />
-                        </button>
+                        </button> */}
                         <div></div>
                       </div>
                     </div>
