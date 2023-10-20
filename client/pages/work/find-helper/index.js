@@ -671,7 +671,7 @@ const Collection = ({ collection, setCollection }) => {
   }, [collection]);
 
   return (
-    <>
+    <div className="d-none d-lg-flex">
       <div className="favHelperBox">
         <Button onClick={change}>幫手收藏</Button>
       </div>
@@ -699,7 +699,7 @@ const Collection = ({ collection, setCollection }) => {
           />
         ))}
       </SideSheet>
-    </>
+    </div>
   );
 };
 const FavCard = ({ helper, collection, setCollection }) => {
