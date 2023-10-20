@@ -556,6 +556,7 @@ const HelperDetail = () => {
   const [oneStar, setOneStar] = useState(0);
   const PaginationRef = useRef();
   const [firstLoad, setFirstLoad] = useState(true);
+  const [allService, setAllService] = useState([]);
   const handleFav = (e) => {
     if (isAuthenticated) {
       if (!collection.find((item) => item === uid)) {
@@ -657,11 +658,26 @@ const HelperDetail = () => {
         .then((response) => {
           const data = response?.data?.data;
           // console.log(response);
+          console.log("data.allReviews?.totalRows", data.allReviews?.totalRows);
           setTotalRows(data.allReviews?.totalRows);
           setProfile(data.profile[0]);
-          // setReviews(data.reviews);
           setImages(data.images);
-
+          setAllService(() => {
+            let arr = [];
+            if (data.profile[0].feed_service == 1) {
+              arr.push("到府代餵");
+            }
+            if (data.profile[0].house_service == 1) {
+              arr.push("安親寄宿");
+            }
+            if (data.profile[0].beauty_service == 1) {
+              arr.push("到府美容");
+            }
+            if (arr.length > 1) {
+              arr = arr.join("、");
+            }
+            return arr;
+          });
           // 先清除重渲染可能造成的值再計算每個星數的評論數
           setFiveStar(0);
           setFourStar(0);
@@ -711,7 +727,7 @@ const HelperDetail = () => {
       contentRef.current.innerHTML = profile.job_description;
     }
   }, [profile]);
-
+  console.log(profile, reviews);
   useEffect(() => {
     if (uid) {
       // 切換星數篩選時，重新回到第一頁
@@ -838,7 +854,7 @@ const HelperDetail = () => {
               </div>
               <div className="profile-info">
                 <p className="intro size-6">我的服務內容</p>
-                <p className="intro size-7">到府代餵、安親寄宿(要連資料庫)</p>
+                <p className="intro size-7">{allService}</p>
               </div>
               <div className="profile-info">
                 <p className="intro size-6">我的服務時間</p>
@@ -931,48 +947,54 @@ const HelperDetail = () => {
                 </div>
 
                 <div className="d-flex gap-2 gap-md-4 mt-3">
-                  <div className="price-intro-card">
-                    <img src="/job-icon/cat-tree.svg" className="card-bg" />
-                    <div className="card-title">
-                      <PiPawPrintFill className="card-icon" />
-                      到府代餵
-                    </div>
-                    <div className="card-content">
-                      <div className="d-flex align-items-center">
-                        <p className="">NT$</p>
-                        <span className="price">400</span>
+                  {profile?.feed_service == 1 && (
+                    <div className="price-intro-card">
+                      <img src="/job-icon/cat-tree.svg" className="card-bg" />
+                      <div className="card-title">
+                        <PiPawPrintFill className="card-icon" />
+                        到府代餵
                       </div>
-                      <p className="mt-1">/ 半小時</p>
-                    </div>
-                  </div>
-                  <div className="price-intro-card">
-                    <img src="/job-icon/cat-tree.svg" className="card-bg" />
-                    <div className="card-title">
-                      <PiPawPrintFill className="card-icon" />
-                      安親寄宿
-                    </div>
-                    <div className="card-content">
-                      <div className="d-flex align-items-center">
-                        <p className="">NT$</p>
-                        <span className="price">400</span>
+                      <div className="card-content">
+                        <div className="d-flex align-items-center">
+                          <p className="">NT$</p>
+                          <span className="price">{profile.feed_price}</span>
+                        </div>
+                        <p className="mt-1">/ 半小時</p>
                       </div>
-                      <p className="mt-1">/ 天</p>
                     </div>
-                  </div>
-                  <div className="price-intro-card">
-                    <img src="/job-icon/cat-tree.svg" className="card-bg" />
-                    <div className="card-title">
-                      <PiPawPrintFill className="card-icon" />
-                      到府美容
-                    </div>
-                    <div className="card-content">
-                      <div className="d-flex align-items-center">
-                        <p className="">NT$</p>
-                        <span className="price">400</span>
+                  )}
+                  {profile?.house_service == 1 && (
+                    <div className="price-intro-card">
+                      <img src="/job-icon/cat-tree.svg" className="card-bg" />
+                      <div className="card-title">
+                        <PiPawPrintFill className="card-icon" />
+                        安親寄宿
                       </div>
-                      <p className="mt-1">/ 次</p>
+                      <div className="card-content">
+                        <div className="d-flex align-items-center">
+                          <p className="">NT$</p>
+                          <span className="price">{profile?.house_price}</span>
+                        </div>
+                        <p className="mt-1">/ 天</p>
+                      </div>
                     </div>
-                  </div>
+                  )}
+                  {profile?.beauty_service == 1 && (
+                    <div className="price-intro-card">
+                      <img src="/job-icon/cat-tree.svg" className="card-bg" />
+                      <div className="card-title">
+                        <PiPawPrintFill className="card-icon" />
+                        到府美容
+                      </div>
+                      <div className="card-content">
+                        <div className="d-flex align-items-center">
+                          <p className="">NT$</p>
+                          <span className="price">{profile?.beauty_price}</span>
+                        </div>
+                        <p className="mt-1">/ 次</p>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -1006,7 +1028,7 @@ const HelperDetail = () => {
                       value={
                         profile.average_star === null
                           ? 0
-                          : parseFloat(profile.average_star)
+                          : parseFloat(profile.average_star).toFixed(2)
                       }
                       size="large"
                       readOnly

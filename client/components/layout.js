@@ -40,7 +40,9 @@ export default function Layout({ children }) {
   //   }
   // }, [isLoading]);
   const uniqueKey = Date.now();
+
   useEffect(() => {
+    // 過場動畫設定
     const handleChangeStart = (url, { shallow }) => {
       showLoader();
     };
@@ -66,8 +68,8 @@ export default function Layout({ children }) {
 
   return (
     <>
-      <CatLoading ref={loadingRef} />
-      {/* <>{loader()}</> */}
+      {/* <CatLoading ref={loadingRef} /> */}
+      <>{loader()}</>
       <>
         <ResponsiveAppBar />
         {pathname && pathname == "/" ? <HomeVedio /> : null}

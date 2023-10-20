@@ -160,7 +160,7 @@ export const RecordTemplate = ({
           <p>預約日期</p>
           <p>服務總價</p>
         </div>
-        {allRequest?.length === 0 ? (
+        {info?.length === 0 ? (
           <Empty
             image={
               <IllustrationNoContent style={{ width: 300, height: 300 }} />

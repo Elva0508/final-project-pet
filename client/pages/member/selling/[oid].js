@@ -8,6 +8,7 @@ import memberService from "@/services/member-service";
 import { MdHomeRepairService } from "react-icons/md";
 import { RecordDetailTemplate } from "@/components/member/Record-template";
 import { useAuth } from "@/context/fakeAuthContext";
+import Swal from "sweetalert2";
 const SellingDetailPage = () => {
   const router = useRouter();
   const [status, setStatus] = useState(1);
@@ -105,7 +106,17 @@ const SellingDetailPage = () => {
         const result = response.data;
         // console.log(response.data);
         if (result.status === 200 && result.affectedRows === 1) {
-          router.push("/member/selling");
+          Swal.fire({
+            timer: 1800,
+            icon: "success",
+
+            title: status === 1 ? "接取成功!" : "您已完成此次服務!",
+            text: status === 1 ? "您已接受此次預約" : "感謝您對貓貓的幫助!",
+            showConfirmButton: false,
+          });
+          setTimeout(() => {
+            router.push("/member/selling");
+          }, 2000);
         }
       })
       .catch((e) => {

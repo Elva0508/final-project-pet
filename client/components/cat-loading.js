@@ -46,7 +46,7 @@ const CatLoading = forwardRef((props, ref) => {
         .to(".cat-text", 0.4, { y: "-1000px", opacity: 0 })
         // .to(".catloading", 2.5, { width: "100%", height: "100%" }, "-=2.5")
         .to(".cat-face", 1, { transform: "scale(15)" }, "-=0.4")
-        .to(loadingRef.current, 0.5, { bottom: "100vh", top: "0px" })
+        // .to(loadingRef.current, 0.5, { bottom: "100vh", top: "0px" })
         .to(".sawtooth-block", 0.5, {
           bottom: "10px",
           stagger: { each: 0.2, repeat: -1 },

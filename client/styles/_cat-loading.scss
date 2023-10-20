@@ -94,6 +94,12 @@
     }
   }
 }
+.sawtooth-block {
+  width: 10px;
+  height: 100vh;
+  background-color: $content-bg;
+  z-index: 10;
+}
 .cat-loading-opacity {
 }
 #circle {
