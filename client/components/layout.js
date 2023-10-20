@@ -71,7 +71,6 @@ export default function Layout({ children }) {
           style={{
             maxWidth: "1320px",
             margin: "auto",
-            minHeight: "100vh",
           }}
         >
           {children}
