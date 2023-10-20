@@ -286,11 +286,11 @@ export default function Checkout() {
                     <div className='row row-cols-1 justify-content-center justify-content-sm-start '>
                         <div className='d-flex mb-3 col-sm-12 col-11 flex-wrap name'>
                             <div className='col-lg-3 col-5 me-3'>
-                                <label  className="form-label ">姓名</label>
+                                <label  className="form-label "><span>* </span>姓名<span >(必填)</span></label>
                                 <input type="text" className="form-control " value={name} onChange={(e)=>{setName(e.target.value)}}></input>
                             </div>
                             <div className='col-lg-3 col-6 '>
-                                <label  className="form-label ">連絡電話</label>
+                                <label  className="form-label "><span>* </span>連絡電話<span >(必填)</span></label>
                                 <input type="text" className="form-control " value={phone} onChange={(e)=>{setPhone(e.target.value)}}></input>
                             </div>
                         </div>
