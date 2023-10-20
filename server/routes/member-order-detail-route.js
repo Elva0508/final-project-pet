@@ -17,7 +17,9 @@ const connection=require("../db");
         pt.type_name AS type,
         od.product_id AS product_id,
         pr.review_content AS review_content,
-        pr.star_rating AS star_rating
+        pr.star_rating AS star_rating,
+        p.category_id AS category_id,
+        p.subcategory_id AS subcategory_id
  FROM orders AS o 
  JOIN userinfo AS u ON o.user_id = u.user_id 
  JOIN order_details AS od ON o.oid=od.order_id
@@ -38,10 +40,10 @@ const connection=require("../db");
 
 //商品評論
 router.post("/comment",(req,res)=>{
-    const {comment,star,productid,orderid,user_id} =req.body
+    const {comment,star,productid,orderid,user_id,createtTime} =req.body
     connection.execute(
-        `INSERT INTO product_reviews(user_id, product_id, review_content,star_rating,order_id) VALUES (?,?,?,?,?);`,
-        [user_id,productid,comment,star,orderid]
+        `INSERT INTO product_reviews(user_id, product_id, review_content,star_rating,order_id ,review_date) VALUES (?,?,?,?,?,?);`,
+        [user_id,productid,comment,star,orderid,createtTime]
         ,(error,result)=>{
             res.json({result})
         }    

@@ -13,16 +13,16 @@ const CatRun = () => {
   const catRunRef = useRef(null);
 
   useEffect(() => {
-    if (!lottieRef.current) {
-      lottie.loadAnimation({
-        container: document.getElementById("cat-run-lottie"), // the dom element
-        renderer: "svg",
-        loop: true,
-        autoplay: true,
-        animationData: animation, // the animation data
-      });
-    }
-    lottieRef.current = true;
+    const catRunLottie = lottie.loadAnimation({
+      container: document.getElementById("cat-run-lottie"), // the dom element
+      renderer: "svg",
+      loop: true,
+      autoplay: true,
+      animationData: animation, // the animation data
+    });
+    return () => {
+      catRunLottie.destroy();
+    };
   }, [router]);
   const handleScroll = () => {
     // 讓背景遮罩與整個文本高度一樣高

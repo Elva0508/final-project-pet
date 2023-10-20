@@ -1,5 +1,5 @@
-import React, { useState, useEffect,useContext } from "react";
-import {useName} from "@/context/nameContext";
+import React, { useState, useEffect, useContext } from "react";
+import { useName } from "@/context/nameContext";
 import { HiClipboardList } from "react-icons/hi";
 import { LiaListAltSolid } from "react-icons/lia";
 import { FaPencilAlt } from "react-icons/fa";
@@ -20,36 +20,35 @@ import jwt_decode from "jwt-decode";
 
 export default function ListD() {
   //context
-  const {contextName, setContextName} = useName();
-  
+  const { contextName, setContextName } = useName();
+
   const { activeButton, setActiveButton } = useActivePage();
   console.log(activeButton);
   const router = useRouter();
-    //設置id狀態 解token
-    const [userId, setUserId] = useState(null);
-    const [currentAvatar, setCurrentAvatar] = useState(null);
-    //const [currentName, setCurrentName] = useState(null);
+  //設置id狀態 解token
+  const [userId, setUserId] = useState(null);
+  const [currentAvatar, setCurrentAvatar] = useState(null);
+  //const [currentName, setCurrentName] = useState(null);
 
-    useEffect(() => {
-      const token = localStorage.getItem("token");
-      if (token) {
-        try {
-          const decodeToken = jwt_decode(token);
-          const currentUserId = decodeToken.id;
-          const currentAvatar = decodeToken.avatar;
-          //const currentName = decodeToken.name;
-          //console.log(userId);
-  
-          //更新userId狀態
-          setUserId(currentUserId);
-          setCurrentAvatar(currentAvatar);
-          //setCurrentName(currentName);
-        } catch (error) {
-          console.error("token解析錯誤", error);
-        }
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      try {
+        const decodeToken = jwt_decode(token);
+        const currentUserId = decodeToken.id;
+        const currentAvatar = decodeToken.avatar;
+        //const currentName = decodeToken.name;
+        //console.log(userId);
+
+        //更新userId狀態
+        setUserId(currentUserId);
+        setCurrentAvatar(currentAvatar);
+        //setCurrentName(currentName);
+      } catch (error) {
+        console.error("token解析錯誤", error);
       }
     }
-  , [userId]);
+  }, [userId]);
 
   return (
     <>
@@ -67,9 +66,7 @@ export default function ListD() {
                   ></img>
                 </div>
                 <p className="size-5 my-3 text-center title">
-
                   Hi,{contextName}
-                  
                 </p>
                 <Link className="size-7" href="/member/profile">
                   <span className="me-2">管理個人資料</span>
@@ -164,10 +161,7 @@ export default function ListD() {
                   }`}
                 onClick={() => {
                   setActiveButton(5);
-                  //setIsLoading(true);
-                  setTimeout(() => {
-                    router.push("/member/helper");
-                  }, 700);
+                  router.push("/member/helper");
                 }}
               >
                 <div className="my-3">
@@ -183,9 +177,7 @@ export default function ListD() {
                 onClick={() => {
                   setActiveButton(8);
                   setIsLoading(true);
-                  setTimeout(() => {
-                    router.push("/member/selling");
-                  }, 700);
+                  router.push("/member/selling");
                 }}
               >
                 <div className="my-3">
@@ -231,10 +223,8 @@ export default function ListD() {
                   }`}
                 onClick={() => {
                   setActiveButton(9);
-                 // setIsLoading(true);
-                  setTimeout(() => {
-                    router.push("/member/reserve");
-                  }, 700);
+
+                  router.push("/member/reserve");
                 }}
               >
                 <div className="mt-3 pb-3">

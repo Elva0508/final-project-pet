@@ -9,12 +9,18 @@ import CatLoading from "./cat-loading";
 import { useAuth } from "@/context/fakeAuthContext";
 import CatRun from "./cat-run";
 import { useHelper } from "@/context/helperContext";
+import useLoader from "@/hooks/use-loader";
+// import { BackTop } from "@douyinfe/semi-ui";
+// import { IconArrowUp } from "@douyinfe/semi-icons";
 export default function Layout({ children }) {
   const router = useRouter();
+  const { showLoader, hideLoader, loader, loading, loadingText } =
+    useLoader(50);
   const { userId } = useAuth();
   const { pathname, query } = router;
-  const { isLoading, setIsLoading } = useHelper();
+  const [isLoading, setIsLoading] = useState(false);
   const loadingRef = useRef();
+
   // useEffect(() => {
   //   // 讓頁面可以滾動，原本禁止有overflow-y軸
   //   setTimeout(() => {
@@ -23,7 +29,7 @@ export default function Layout({ children }) {
   //   setTimeout(() => {
   //     const loading = document.querySelector(".cat-loading-wrapper");
   //     console.log(loading);
-  //     loading.classList.add("cat-loading-opacity");
+  //     loading.classList.add("cat-loading-wrapper-opacity");
   //   }, [4000]);
   // }, []);
   // useEffect(() => {
@@ -34,17 +40,17 @@ export default function Layout({ children }) {
   //   }
   // }, [isLoading]);
   const uniqueKey = Date.now();
+
   useEffect(() => {
+    // 過場動畫設定
     const handleChangeStart = (url, { shallow }) => {
-      setIsLoading(true);
-      // setTimeout(() => {
-      //   // 等待1.5秒后执行路由跳转，這個會錯誤一值造成無限跳轉
-      //   router.push(url);
-      // }, 1500);
+      showLoader();
     };
     const handleChangeComplete = (url) => {
       console.log("路由跳轉成功啦!!!!!!!!!!!!!!!", "loading is " + isLoading);
-      setIsLoading(false);
+      setTimeout(() => {
+        hideLoader();
+      }, 450);
     };
 
     router.events.on("routeChangeStart", handleChangeStart);
@@ -54,7 +60,6 @@ export default function Layout({ children }) {
     });
 
     return function cleanup() {
-      // router.events.off("beforeHistoryChange", handleBeforeHistoryChange);
       router.events.off("routeChangeStart", handleChangeStart);
       router.events.off("routeChangeComplete", handleChangeComplete);
       router.events.off("routeChangeError", handleChangeComplete);
@@ -63,22 +68,23 @@ export default function Layout({ children }) {
 
   return (
     <>
+      {/* <CatLoading ref={loadingRef} /> */}
+      <>{loader()}</>
       <>
         <ResponsiveAppBar />
         {pathname && pathname == "/" ? <HomeVedio /> : null}
-        {isLoading && <CatRun key={uniqueKey} />}
+        {/* {isLoading && <CatRun key={uniqueKey} />} */}
         <main
           style={{
             maxWidth: "1320px",
             margin: "auto",
           }}
         >
+          {/* {loading ? "" : children} */}
+
           {children}
         </main>
         <Footer />
-        {/* {pathname && pathname == "/work/find-helper/[uid]" ? (
-          <HelperDetailSticky />
-        ) : null} */}
       </>
     </>
   );
