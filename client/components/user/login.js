@@ -60,7 +60,8 @@ const [viewPwd,SetViewPwd]=useState(false)
         login(token);
         window.location.href="/"; 
       } else {
-        throw new Error('Login failed');
+        //throw new Error('Login failed');
+        alert('帳號或密碼錯誤');
       }
     } catch (error) {
       console.error(error);

@@ -90,7 +90,7 @@ export default function ForgetPassword() {
           </div>
           <hr className="hr-divider" />
           <div className="forgotPassword-form ">
-            <h5 style={{ color: "#ff6600" }} className="my-4">訊息：{message}</h5>
+            <h5 style={{ color: "#ff6600" }} className="my-4 forgetPassword-msg">{message}</h5>
 
             <div className="w20 d-flex align-items-center justify-content-center my-2">
               <label className="f3 input-font-size">信箱</label>

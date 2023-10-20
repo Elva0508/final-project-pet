@@ -7,6 +7,7 @@ import { HelperProvider } from "@/context/helperContext";
 import BreadCrumb from "@/components/breadCrumb";
 import { useRouter } from "next/router";
 import { ActivePageProvider } from "@/hooks/useActivePage";
+import { NameProvider } from "@/context/nameContext";
 import { ProductActivePageProvider } from "@/hooks/useProductActivePage";
 
 export default function App({ Component, pageProps }) {
@@ -45,6 +46,7 @@ export default function App({ Component, pageProps }) {
   // }, [router]);
   return (
     <AuthProvider>
+    <NameProvider>
       <CartProvider>
         <HelperProvider>
           <ActivePageProvider>
@@ -57,6 +59,7 @@ export default function App({ Component, pageProps }) {
           </ActivePageProvider>
         </HelperProvider>
       </CartProvider>
+      </NameProvider>
     </AuthProvider>
   );
 }
