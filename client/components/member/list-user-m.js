@@ -20,28 +20,28 @@ export default function ListUserM() {
   const { activeButton, setActiveButton } = useActivePage();
   const router = useRouter();
 
-   //設置id狀態 解token
-   const [userId, setUserId] = useState(null);
-   const [currentAvatar, setCurrentAvatar] = useState(null);
-   const [currentName, setCurrentName] = useState(null);
+  //設置id狀態 解token
+  const [userId, setUserId] = useState(null);
+  const [currentAvatar, setCurrentAvatar] = useState(null);
+  const [currentName, setCurrentName] = useState(null);
 
   useEffect(() => {
-   const token = localStorage.getItem("token");
-   if(token) {
-    try {
-      const decodeToken = jwt_decode(token);
-      const currentUserId = decodeToken.id;
-      const currentAvatar = decodeToken.avatar;
-      const currentName = decodeToken.name;
+    const token = localStorage.getItem("token");
+    if (token) {
+      try {
+        const decodeToken = jwt_decode(token);
+        const currentUserId = decodeToken.id;
+        const currentAvatar = decodeToken.avatar;
+        const currentName = decodeToken.name;
 
-      //更新狀態
-      setUserId(currentUserId);
-      setCurrentAvatar(currentAvatar);
-      setCurrentName(currentName);
-    } catch (error){
-      console.error("token解析錯誤", error);
+        //更新狀態
+        setUserId(currentUserId);
+        setCurrentAvatar(currentAvatar);
+        setCurrentName(currentName);
+      } catch (error) {
+        console.error("token解析錯誤", error);
+      }
     }
-   }
   }, [userId]);
 
   return (
@@ -51,14 +51,9 @@ export default function ListUserM() {
           <div className="d-flex justify-content-center">
             <div>
               <div className="text-center">
-                <img
-                  src={currentAvatar}
-                  className="mt-5"
-                ></img>
+                <img src={currentAvatar} className="mt-5"></img>
               </div>
-              <p className="size-5 my-3 text-center">
-                Hi,{currentName}
-              </p>
+              <p className="size-5 my-3 text-center">Hi,{currentName}</p>
               <Link className="size-7" href="">
                 <span className="me-2">管理個人資料</span>
                 <FaPencilAlt />
@@ -77,7 +72,10 @@ export default function ListUserM() {
                 <Membership />
               </div>
               <div>
-                <Link className="size-7 mt-3 ms-3" href="http://localhost:3000/member/coupon">
+                <Link
+                  className="size-7 mt-3 ms-3"
+                  href="http://localhost:3000/member/coupon"
+                >
                   查看我的優惠券
                 </Link>
               </div>

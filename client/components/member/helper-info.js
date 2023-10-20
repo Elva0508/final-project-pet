@@ -7,7 +7,12 @@ import memberService from "@/services/member-service";
 import { useForm } from "react-hook-form";
 import { Upload } from "@douyinfe/semi-ui";
 import { IconPlus } from "@douyinfe/semi-icons";
-import { CheckboxGroup, Checkbox, TextArea } from "@douyinfe/semi-ui";
+import {
+  CheckboxGroup,
+  Checkbox,
+  TextArea,
+  Notification,
+} from "@douyinfe/semi-ui";
 import { useAuth } from "@/context/fakeAuthContext";
 import { useRouter } from "next/router";
 import lottie from "lottie-web";
@@ -131,6 +136,7 @@ const CheckboxInput = ({
 };
 
 const Close = ({ open, setOpen, user_id }) => {
+  const lottieRef = useRef();
   const handleOpen = () => {
     console.log(open);
     if (!open) {
@@ -140,7 +146,14 @@ const Close = ({ open, setOpen, user_id }) => {
         .then((response) => {
           console.log(response.data);
           if (response?.data?.status === 200) {
-            alert("開啟小幫手功能成功");
+            // alert("開啟小幫手功能成功");
+            Notification.success({
+              duration: 3,
+              position: "top",
+              theme: "light",
+              // content: "semi-ui-notification",
+              title: "已開啟小幫手功能",
+            });
             setOpen(true);
           }
         })
@@ -150,34 +163,31 @@ const Close = ({ open, setOpen, user_id }) => {
     }
   };
   useEffect(() => {
-    console.log(open);
-    const container = document.getElementById("close");
-    if (container) {
-      lottie.loadAnimation({
-        container: document.getElementById("close"), // the dom element
-        renderer: "svg",
-        loop: true,
-        autoplay: true,
-        animationData: animationClose, // the animation data
-      });
-    }
+    const closeLottie = lottie.loadAnimation({
+      container: document.getElementById("close"), // the dom element
+      renderer: "svg",
+      loop: true,
+      autoplay: true,
+      animationData: animationClose, // the animation data
+    });
 
-    // return () => {
-    //   lottie.destroy();
-    // };
+    return () => {
+      closeLottie.destroy();
+    };
   }, [open]);
   return (
     <div className="close-mask">
       {/* <button className="open-helper btn-brown" onClick={handleOpen}>
         開啟小幫手功能
       </button> */}
-      <div id="close" onClick={handleOpen}></div>
+      <div id="close" onClick={handleOpen} ref={lottieRef}></div>
     </div>
   );
 };
 
 const Open = ({ open, setOpen, info, setInfo, images, setImages, user_id }) => {
   console.log(info);
+  const lottieRef = useRef(false);
   const [feedStatus, setFeedStatus] = useState({
     service: info?.feed_service,
     price: info?.feed_price,
@@ -195,16 +205,17 @@ const Open = ({ open, setOpen, info, setInfo, images, setImages, user_id }) => {
   const [firstLoad, setFirstLoad] = useState(true);
   let action = "https://api.semi.design/upload";
   useEffect(() => {
-    lottie.loadAnimation({
+    const openLottie = lottie.loadAnimation({
       container: document.getElementById("click"), // the dom element
       renderer: "svg",
       loop: true,
       autoplay: true,
       animationData: animationClick, // the animation data
     });
+    lottieRef.current = true;
 
     return () => {
-      lottie.destroy();
+      openLottie.destroy();
     };
   }, [open]);
 
@@ -247,12 +258,12 @@ const Open = ({ open, setOpen, info, setInfo, images, setImages, user_id }) => {
     let newFileList = [...fileList]; // spread to get new array
     setImages(newFileList);
   };
-  const editSuccess = () => {
-    messageApi.open({
-      type: "success",
-      content: "小幫手資料修改成功。",
-    });
-  };
+  // const editSuccess = () => {
+  //   messageApi.open({
+  //     type: "success",
+  //     content: "小幫手資料修改成功。",
+  //   });
+  // };
   const editError = () => {
     messageApi.open({
       type: "error",
@@ -274,7 +285,13 @@ const Open = ({ open, setOpen, info, setInfo, images, setImages, user_id }) => {
         .then((response) => {
           console.log(response?.data);
           if (response?.data?.status === 200) {
-            alert("關閉成功");
+            Notification.success({
+              duration: 3,
+              position: "top",
+              theme: "light",
+              // content: "semi-ui-notification",
+              title: "已關閉小幫手功能",
+            });
             setOpen(false);
           }
         })
@@ -331,7 +348,13 @@ const Open = ({ open, setOpen, info, setInfo, images, setImages, user_id }) => {
         // console.log(response);
         if (response?.data?.status === 200) {
           setInfo(response?.data?.info);
-          editSuccess();
+          Notification.success({
+            duration: 3,
+            position: "top",
+            theme: "light",
+            // content: "semi-ui-notification",
+            title: "資料修改成功",
+          });
         } else {
           editError();
         }
@@ -606,7 +629,7 @@ const Open = ({ open, setOpen, info, setInfo, images, setImages, user_id }) => {
             <div className="close-helper ms-auto" onClick={handleOpen}>
               關閉小幫手
             </div>
-            <div id="click"></div>
+            <div id="click" ref={lottieRef}></div>
           </>
         )}
       </form>
