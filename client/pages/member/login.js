@@ -28,7 +28,7 @@ const router=useRouter()
   return (
     <>
     
-      <div className="container mt-5 mb-5 logform">
+      <div className="boxing-padding">
         <div className="login-box d-flex align-items-center flex-column justify-content-center mx-auto ">
           <div className="login-header d-flex ">
 
