@@ -657,7 +657,7 @@ export default function MissionDetail() {
                 });
                 return;
             }
-            chatContentArray.push(`<p><h5><strong>✅ 我的小幫手簡歷：</strong></h5></p><p><strong>名字：</strong>`+helperInfo.name+`</p><p><strong>電話：</strong>`+helperInfo.phone+`</p><p><strong>Email：</strong>`+helperInfo.email+`</p><p><strong>個人簡述：</strong>`+helperInfo.introduction+`</p>`);
+            chatContentArray.push(`<p><h5><strong>✅ 我的小幫手簡歷：</strong></h5></p><p><strong>名字：</strong>` + helperInfo.name + `</p><p><strong>電話：</strong>` + helperInfo.phone + `</p><p><strong>Email：</strong>` + helperInfo.email + `</p><p><strong>個人簡述：</strong>` + helperInfo.introduction + `</p>`);
             // chatContentArray.push(
             //     <div style={{ backgroundColor: 'yellow', padding: '10px' }}>
             //         我的小幫手履歷：<br />{helperInfo.introduction}
@@ -1038,7 +1038,7 @@ export default function MissionDetail() {
                                     <div className="item d-flex flex-column mission-place">
                                         <div className="item-title size-6 position-relative">
                                             <CiLocationOn className='me-1' />任務地點
-                                            <img src='/job-icon/animation2.gif' className='position-absolute animation-cat' />
+                                            <img src='/job-icon/animation2.gif' className='position-absolute running-cat' />
                                         </div>
                                         <hr class="item-divider" />
                                         <p className="size-7 d-flex align-items-center  item-content">{v.city}{v.area}{v.location_detail}</p>
