@@ -5,6 +5,7 @@ import dayjs from "dayjs";
 import axios from "axios";
 import Pagination from "@/components/pagination";
 import { useRouter } from "next/router";
+import Link from "next/link";
 
 export default function HistoryStatusOne({
   history,
@@ -101,7 +102,7 @@ console.log(history.length);
                   <div className="d-flex justify-content-between border-bottom py-2 mx-md-5 mx-3">
                     <div className="col-md-8 col-9">
                       <p className="size-6 title d-md-block d-none">
-                        任務主題：{v.title}
+                        任務主題：<Link href={`/work/find-mission/${v.mission_id}`} className="size-6">{v.title}</Link>
                       </p>
                       <p className="size-7" key={i}>
                         <span>刊登日期：</span>
