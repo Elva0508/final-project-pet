@@ -47,6 +47,7 @@ import {
   AnimatePresence,
   useInView,
 } from "framer-motion";
+// import useLoader from "@/hooks/use-loader";
 
 const Search = ({
   handleSearch,
@@ -299,10 +300,7 @@ const FamousHelperCard = ({
             : "active-fav-in-fam-card"
         }`}
         onClick={() => {
-          setIsLoading(true);
-          setTimeout(() => {
-            router.push(`/work/find-helper/${helper.user_id}`);
-          }, [1000]);
+          router.push(`/work/find-helper/${helper.user_id}`);
         }}
       >
         <div className="img-wrapper">
@@ -560,10 +558,7 @@ const SingleHelperCard = ({
             : "active-fav-in-card"
         }`}
         onClick={() => {
-          setIsLoading(true);
-          setTimeout(() => {
-            router.push(`/work/find-helper/${helper.user_id}`);
-          }, [1000]);
+          router.push(`/work/find-helper/${helper.user_id}`);
         }}
       >
         <img
@@ -677,7 +672,10 @@ const Collection = ({ collection, setCollection }) => {
 
   return (
     <>
-      <Button onClick={change}>幫手收藏匣</Button>
+      <div className="favHelperBox">
+        <Button onClick={change}>幫手收藏</Button>
+      </div>
+
       <SideSheet
         className="favorite-helper-sidesheet"
         title={
@@ -804,6 +802,8 @@ const MissionHelperList = () => {
   const [isActive, setIsActive] = useState("move");
   const [helpActive, setHelperActive] = useState("move");
   const [firstLoad, setFirstLoad] = useState(true); //用來判斷是否初次加載，式的話就不進行famousCard的篩選動畫
+  // const { showLoader, hideLoader, loader, loading, loadingText } =
+  //   useLoader(50);
   const helperVariant = {
     // 一開始消失，畫面從下側往上移入出現
     initial: {
@@ -847,9 +847,13 @@ const MissionHelperList = () => {
   // }, [isActive]);
   console.log(isActive, helpActive);
   useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [currentPage]);
+
+  useEffect(() => {
+    // showLoader();
     (async () => {
       // 使用一個promise先等待exit動畫完成再做後續的更新資料跟move動畫
-
       if (!currentSearch) {
         if (!firstLoad) {
           await new Promise((resolve, reject) => {
@@ -914,6 +918,7 @@ const MissionHelperList = () => {
         setHelperActive("move");
         setIsActive("move");
       }
+      // hideLoader();
     })();
   }, [filterType]);
 
@@ -1055,223 +1060,214 @@ const MissionHelperList = () => {
   // setIsActive("move");
 
   return (
-    <div className="mission-helper-list container">
-      <motion.button
-        onTap={async () => {
-          handleExit();
-        }}
-      >
-        測試
-      </motion.button>
-      <nav className="breadcrumb-wrapper my-4 " aria-label="breadcrumb">
-        <ol class="breadcrumb">
-          <li class="breadcrumb-item">
-            <Link
-              href="/"
-              className="active-hover"
-              onClick={(e) => {
-                e.preventDefault();
-                setIsLoading(true);
-                setTimeout(() => {
+    <>
+      {/* {" "}
+      <>{loader()}</> */}
+      <div className="mission-helper-list container">
+        <nav className="breadcrumb-wrapper my-4 " aria-label="breadcrumb">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+              <Link
+                href="/"
+                className="active-hover"
+                onClick={(e) => {
+                  e.preventDefault();
                   router.push("/");
-                }, 1000);
-              }}
-            >
-              首頁
-            </Link>
-          </li>
-          <li class="breadcrumb-item" aria-current="page">
-            <Link
-              href="/work/find-helper"
-              className="active-hover"
-              onClick={(e) => {
-                e.preventDefault();
-                handleBack();
-                setIsLoading(true);
-                setTimeout(() => {
-                  router.push("/work/find-helper");
-                }, 900);
-              }}
-            >
-              小貓上工(找幫手)
-            </Link>
-          </li>
-          {currentSearch ? (
-            <>
-              <li class="breadcrumb-item" aria-current="page">
-                搜尋結果
-              </li>
-              <li class="breadcrumb-item active" aria-current="page">
-                {currentSearch}
-              </li>
-            </>
-          ) : (
-            <>
-              <li class="breadcrumb-item active" aria-current="page">
-                {filterType === "feed"
-                  ? "到府代餵"
-                  : filterType === "house"
-                  ? "安親寄宿"
-                  : filterType === "beauty"
-                  ? "到府美容"
-                  : "所有"}
-              </li>
-            </>
-          )}
-        </ol>
-      </nav>
-
-      <div className="search d-flex flex-md-row flex-column justify-content-between align-items-center ">
-        <RoleSelection defaultActive="helper" />
-        <Search
-          placeholder={"搜尋小幫手"}
-          handleSearch={handleSearch}
-          search={search}
-          setSearch={setSearch}
-        />
-      </div>
-      <div className="filters">
-        <MobileFilter
-          allHelpers={allHelpers}
-          setAllHelpers={setAllHelpers}
-          filterType={filterType}
-          setFilterType={setFilterType}
-          order={order}
-          setOrder={setOrder}
-          setPage={setPage}
-          setTotalRows={setTotalRows}
-          setCurrentSearch={setCurrentSearch}
-          helperControl={helperControl}
-          setHelperActive={setHelperActive}
-          // handleHelperAnimate={handleHelperAnimate}
-        />
-      </div>
-      {isAuthenticated && (
-        <Collection collection={collection} setCollection={setCollection} />
-      )}
-
-      <div className="mb-2 order-text">
-        <p className="size-6 m-size-6 d-flex justify-content-end align-items-center me-2">
-          {order?.parentValue === "price" &&
-            (order?.value === "ASC" ? (
-              <>
-                服務費用 <BsArrowBarRight /> 由低到高
-              </>
-            ) : (
-              <>
-                服務費用 <BsArrowBarRight /> 由高到低
-              </>
-            ))}
-        </p>
-        <p className="size-6 m-size-6 d-flex justify-content-end align-items-center me-2 ">
-          {order &&
-            order?.parentValue === "hot" &&
-            (order?.value === "ASC" ? (
-              <>
-                熱門程度 <BsArrowBarRight /> 由低到高
-              </>
-            ) : (
-              <>
-                熱門程度 <BsArrowBarRight /> 由高到低
-              </>
-            ))}
-        </p>
-        <p className="size-6 m-size-6 d-flex justify-content-end align-items-center me-2 ">
-          {order?.parentValue === "rating" &&
-            (order?.value === "ASC" ? (
-              <>
-                服務評價 <BsArrowBarRight /> 由低到高
-              </>
-            ) : (
-              <>
-                服務評價 <BsArrowBarRight /> 由高到低
-              </>
-            ))}
-        </p>
-      </div>
-
-      <div className="d-flex flex-lg-row flex-column align-items-start justify-content-between gap-lg-5 gap-sm-4 gap-4">
-        <section className="famous-helper">
-          <p className="famous-helper-title size-5">熱門小幫手</p>
-          <div className="famous-helper-pc d-lg-block d-none">
-            <AnimatePresence>
-              {famous.map((helper, index) => (
-                <FamousHelperCard
-                  // key={helper.user_id}
-                  helper={helper}
-                  collection={collection}
-                  setCollection={setCollection}
-                  famousControl={famousControl}
-                  index={index}
-                  famousState={famousState}
-                  isActive={isActive}
-                  famousRef={famousRef}
-                />
-              ))}
-            </AnimatePresence>
-          </div>
-          <div className="famous-helper-mobile d-block d-lg-none">
-            <MobileFamousHelper
-              famous={famous}
-              setFamous={setFamous}
-              collection={collection}
-              setCollection={setCollection}
-            />
-          </div>
-        </section>
-
-        {allHelpers && (
-          <div
-            // element="section"
-            className="helper-list d-flex flex-wrap"
-            // initial="ini"
-          >
-            {/* <AnimatePresence> */}
-            {allHelpers?.map((helper, index) => (
-              <motion.div
-                className="card-wrapper"
-                // layout
-                // ref={ref}
-                initial={"initial"}
-                animate={
-                  helpActive === "move"
-                    ? "move"
-                    : helpActive === "exit"
-                    ? "exit"
-                    : "initial"
-                }
-                variants={helperVariant}
-                // (index + 1) % 3 == 1 ? 0 : (index + 1) % 3 == 2 ? 1 : 2 整排移動參數
-                custom={index}
-                whileInView="singleMove"
-                viewport={{
-                  once: true,
                 }}
               >
-                <SingleHelperCard
-                  // key={helper.user_id}
-                  helper={helper}
-                  collection={collection}
-                  setCollection={setCollection}
-                  helperControl={helperControl}
-                  index={index}
-                  // helperVariant={helperVariant}
-                />
-              </motion.div>
-            ))}
-            {/* </AnimatePresence> */}
-          </div>
+                首頁
+              </Link>
+            </li>
+            <li class="breadcrumb-item" aria-current="page">
+              <Link
+                href="/work/find-helper"
+                className="active-hover"
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleBack();
+                  router.push("/work/find-helper");
+                }}
+              >
+                小貓上工(找幫手)
+              </Link>
+            </li>
+            {currentSearch ? (
+              <>
+                <li class="breadcrumb-item" aria-current="page">
+                  搜尋結果
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">
+                  {currentSearch}
+                </li>
+              </>
+            ) : (
+              <>
+                <li class="breadcrumb-item active" aria-current="page">
+                  {filterType === "feed"
+                    ? "到府代餵"
+                    : filterType === "house"
+                    ? "安親寄宿"
+                    : filterType === "beauty"
+                    ? "到府美容"
+                    : "所有"}
+                </li>
+              </>
+            )}
+          </ol>
+        </nav>
+
+        <div className="search d-flex flex-md-row flex-column justify-content-between align-items-center ">
+          <RoleSelection defaultActive="helper" />
+          <Search
+            placeholder={"搜尋小幫手"}
+            handleSearch={handleSearch}
+            search={search}
+            setSearch={setSearch}
+          />
+        </div>
+        <div className="filters">
+          <MobileFilter
+            allHelpers={allHelpers}
+            setAllHelpers={setAllHelpers}
+            filterType={filterType}
+            setFilterType={setFilterType}
+            order={order}
+            setOrder={setOrder}
+            setPage={setPage}
+            setTotalRows={setTotalRows}
+            setCurrentSearch={setCurrentSearch}
+            helperControl={helperControl}
+            setHelperActive={setHelperActive}
+            // handleHelperAnimate={handleHelperAnimate}
+          />
+        </div>
+        {isAuthenticated && (
+          <Collection collection={collection} setCollection={setCollection} />
         )}
+
+        <div className="mb-2 order-text">
+          <p className="size-6 m-size-6 d-flex justify-content-end align-items-center me-2">
+            {order?.parentValue === "price" &&
+              (order?.value === "ASC" ? (
+                <>
+                  服務費用 <BsArrowBarRight /> 由低到高
+                </>
+              ) : (
+                <>
+                  服務費用 <BsArrowBarRight /> 由高到低
+                </>
+              ))}
+          </p>
+          <p className="size-6 m-size-6 d-flex justify-content-end align-items-center me-2 ">
+            {order &&
+              order?.parentValue === "hot" &&
+              (order?.value === "ASC" ? (
+                <>
+                  熱門程度 <BsArrowBarRight /> 由低到高
+                </>
+              ) : (
+                <>
+                  熱門程度 <BsArrowBarRight /> 由高到低
+                </>
+              ))}
+          </p>
+          <p className="size-6 m-size-6 d-flex justify-content-end align-items-center me-2 ">
+            {order?.parentValue === "rating" &&
+              (order?.value === "ASC" ? (
+                <>
+                  服務評價 <BsArrowBarRight /> 由低到高
+                </>
+              ) : (
+                <>
+                  服務評價 <BsArrowBarRight /> 由高到低
+                </>
+              ))}
+          </p>
+        </div>
+
+        <div className="d-flex flex-lg-row flex-column align-items-start justify-content-between gap-lg-5 gap-sm-4 gap-4">
+          <section className="famous-helper">
+            <p className="famous-helper-title size-5">熱門小幫手</p>
+            <div className="famous-helper-pc d-lg-block d-none">
+              <AnimatePresence>
+                {famous.map((helper, index) => (
+                  <FamousHelperCard
+                    // key={helper.user_id}
+                    helper={helper}
+                    collection={collection}
+                    setCollection={setCollection}
+                    famousControl={famousControl}
+                    index={index}
+                    famousState={famousState}
+                    isActive={isActive}
+                    famousRef={famousRef}
+                  />
+                ))}
+              </AnimatePresence>
+            </div>
+            <div className="famous-helper-mobile d-block d-lg-none">
+              <MobileFamousHelper
+                famous={famous}
+                setFamous={setFamous}
+                collection={collection}
+                setCollection={setCollection}
+              />
+            </div>
+          </section>
+
+          {allHelpers && (
+            <div
+              // element="section"
+              className="helper-list d-flex flex-wrap"
+              // initial="ini"
+            >
+              {/* <AnimatePresence> */}
+              {allHelpers?.map((helper, index) => (
+                <motion.div
+                  className="card-wrapper"
+                  // layout
+                  // ref={ref}
+                  initial={"initial"}
+                  animate={
+                    helpActive === "move"
+                      ? "move"
+                      : helpActive === "exit"
+                      ? "exit"
+                      : "initial"
+                  }
+                  variants={helperVariant}
+                  // (index + 1) % 3 == 1 ? 0 : (index + 1) % 3 == 2 ? 1 : 2 整排移動參數
+                  custom={index}
+                  whileInView="singleMove"
+                  viewport={{
+                    once: true,
+                  }}
+                >
+                  <SingleHelperCard
+                    // key={helper.user_id}
+                    helper={helper}
+                    collection={collection}
+                    setCollection={setCollection}
+                    helperControl={helperControl}
+                    index={index}
+                    // helperVariant={helperVariant}
+                  />
+                </motion.div>
+              ))}
+              {/* </AnimatePresence> */}
+            </div>
+          )}
+        </div>
+        <Pagination
+          current={currentPage}
+          total={totalRows}
+          pageSize="18"
+          showSizeChanger={false}
+          rootClassName="cos-pagination"
+          onChange={changePage}
+        />
       </div>
-      <Pagination
-        current={currentPage}
-        total={totalRows}
-        pageSize="18"
-        showSizeChanger={false}
-        rootClassName="cos-pagination"
-        onChange={changePage}
-      />
-    </div>
+    </>
   );
 };
 

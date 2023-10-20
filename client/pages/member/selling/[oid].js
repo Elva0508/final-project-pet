@@ -8,6 +8,7 @@ import memberService from "@/services/member-service";
 import { MdHomeRepairService } from "react-icons/md";
 import { RecordDetailTemplate } from "@/components/member/Record-template";
 import { useAuth } from "@/context/fakeAuthContext";
+import Swal from "sweetalert2";
 const SellingDetailPage = () => {
   const router = useRouter();
   const [status, setStatus] = useState(1);
@@ -54,18 +55,49 @@ const SellingDetailPage = () => {
   }, [oid]);
 
   const handleReject = () => {
-    memberService
-      .setReserveStatus(oid, 4)
-      .then((response) => {
-        const result = response.data;
-        console.log(response.data);
-        if (result.status === 200 && result.affectedRows === 1) {
-          router.push("/member/selling");
-        }
-      })
-      .catch((e) => {
-        console.log(e);
-      });
+    Swal.fire({
+      title: "是否確定婉拒此筆訂單?",
+      // text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "確定",
+      cancelButtonText: "返回",
+      reverseButtons: true,
+      buttonsStyling: false,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        memberService
+          .setReserveStatus(oid, 4)
+          .then((response) => {
+            const result = response.data;
+            console.log(response.data);
+            if (result.status === 200 && result.affectedRows === 1) {
+              Swal.fire({
+                timer: 1500,
+                icon: "success",
+                title: "取消成功!",
+                text: "您已婉拒此筆收到訂單",
+                showConfirmButton: false,
+              });
+              setTimeout(() => {
+                router.push("/member/selling");
+              }, 1800);
+            }
+          })
+          .catch((e) => {
+            console.log(e);
+            Swal.fire({
+              timer: 1500,
+              icon: "error",
+              title: "取消失敗",
+              text: "請稍後重試一次",
+              showConfirmButton: false,
+            });
+          });
+      }
+    });
   };
   const handleResolve = () => {
     memberService
@@ -74,7 +106,17 @@ const SellingDetailPage = () => {
         const result = response.data;
         // console.log(response.data);
         if (result.status === 200 && result.affectedRows === 1) {
-          router.push("/member/selling");
+          Swal.fire({
+            timer: 1800,
+            icon: "success",
+
+            title: status === 1 ? "接取成功!" : "您已完成此次服務!",
+            text: status === 1 ? "您已接受此次預約" : "感謝您對貓貓的幫助!",
+            showConfirmButton: false,
+          });
+          setTimeout(() => {
+            router.push("/member/selling");
+          }, 2000);
         }
       })
       .catch((e) => {

@@ -18,8 +18,6 @@ import Link from "next/link";
 import { useActivePage } from "@/hooks/useActivePage";
 import { useAuth } from "@/context/fakeAuthContext";
 
-
-
 //logo-icon
 import catLogo from "@/assets/catLogo.svg";
 import McatLogo from "@/assets/McatLogo.svg";
@@ -82,20 +80,18 @@ const pages = [
   { path: "http://localhost:3000/support", name: "常見問題", id: 5 },
 ];
 
-
 function ResponsiveAppBar() {
   //會員狀態
   const { Token, isAuthenticated, login, logout } = useAuth();
 
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
-  
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
   const handleOpenUserMenu = (event) => {
-    if(anchorElUser !== event.currentTarget){
+    if (anchorElUser !== event.currentTarget) {
       setAnchorElUser(event.currentTarget);
     }
   };
@@ -111,7 +107,7 @@ function ResponsiveAppBar() {
     setAnchorElUser(null);
   };
 
-  const {setActiveButton}=useActivePage()
+  const { setActiveButton } = useActivePage();
   const { cart, setCart } = useCart();
   const goCart = () => {
     router.push("/product/cart");
@@ -125,14 +121,12 @@ function ResponsiveAppBar() {
     localStorage.removeItem("data");
     localStorage.removeItem("token");
     localStorage.removeItem("id");
-    setActiveButton()
+    setActiveButton();
 
     localStorage.clear();
-    setCart([])
+    setCart([]);
     router.push("/");
   };
-
-
 
   return (
     <ThemeProvider theme={theme}>
@@ -187,17 +181,17 @@ function ResponsiveAppBar() {
                   </Link>
                 ))}
               </Menu>
-              <Button href="/">
+              <Link href={"/"}>
                 <Image src={McatLogo} alt="logo" />
-              </Button>
+              </Link>
             </Box>
 
             {/* Desktop 裝置*/}
             {/* logo */}
             <Box sx={{ flexShrink: 0, display: { xs: "none", md: "flex" } }}>
-              <Button href="/">
+              <Link href={"/"}>
                 <Image src={catLogo} alt="logo" />
-              </Button>
+              </Link>
             </Box>
             {/* nav-item */}
             <Box sx={{ width: "100%", display: { xs: "none", md: "flex" } }}>
@@ -222,13 +216,14 @@ function ResponsiveAppBar() {
             {/* 會員＆購物車icon */}
             <Box sx={{ flexShrink: 0 }}>
               <Tooltip title="Open settings">
-              {/* userMenu */}
-                <IconButton 
-                aria-owns={anchorElUser ? 'menu-appbar' : undefined}  
-                aria-haspopup="true"
-                onClick={handleOpenUserMenu}
-                onMouseOver={handleOpenUserMenu}
-                 sx={{ p: 0 }}>
+                {/* userMenu */}
+                <IconButton
+                  aria-owns={anchorElUser ? "menu-appbar" : undefined}
+                  aria-haspopup="true"
+                  onClick={handleOpenUserMenu}
+                  onMouseOver={handleOpenUserMenu}
+                  sx={{ p: 0 }}
+                >
                   <AccountCircleIcon
                     color="tertiary"
                     style={{ fontSize: 40 }}
@@ -237,12 +232,13 @@ function ResponsiveAppBar() {
                 </IconButton>
                 <IconButton onClick={goCart} sx={{ p: 0 }} className="cartNum">
                   <Image src={ShoppingCart} alt="shoppingCart" />
-                  {Token && cart.length!==0?(
-                  <div className="cartNumber size-7 ">
-                    <p className="">{cart.length}</p>
-                  </div>
-                  ):("")}
-
+                  {Token && cart.length !== 0 ? (
+                    <div className="cartNumber size-7 ">
+                      <p className="">{cart.length}</p>
+                    </div>
+                  ) : (
+                    ""
+                  )}
                 </IconButton>
               </Tooltip>
               <Menu
@@ -260,8 +256,7 @@ function ResponsiveAppBar() {
                 }}
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
-                MenuListProps={{onMouseLeave: handleCloseUserMenu}}
-
+                MenuListProps={{ onMouseLeave: handleCloseUserMenu }}
               >
                 {isAuthenticated ? (
                   <>
@@ -269,9 +264,11 @@ function ResponsiveAppBar() {
                       <Typography textAlign="center">登出</Typography>
                     </MenuItem>
                     <Link href="http://localhost:3000/member/profile">
-                      <MenuItem onClick={()=>{
-                          setActiveButton()
-                      }}>
+                      <MenuItem
+                        onClick={() => {
+                          setActiveButton();
+                        }}
+                      >
                         <Typography textAlign="center">會員中心</Typography>
                       </MenuItem>
                     </Link>
@@ -288,7 +285,6 @@ function ResponsiveAppBar() {
                     </MenuItem>
                   </Link>
                 )}
-              
               </Menu>
             </Box>
           </Toolbar>
