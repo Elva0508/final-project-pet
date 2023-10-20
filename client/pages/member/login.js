@@ -64,7 +64,7 @@ const router=useRouter()
             </a>
           </div>
 
-          <hr className="hr-divider" />
+          {/* <hr className="hr-divider" />
           <div className="u-form-group">
             <div>使用其他方式登入</div>
             <div className="social-login my-2">
@@ -75,7 +75,7 @@ const router=useRouter()
                 <AiFillGoogleCircle />
               </a>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>  
      

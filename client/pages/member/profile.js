@@ -1,41 +1,28 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import {NameContext} from "@/context/nameContext";
 import Link from "next/link";
 import ListD from "@/components/member/list-d";
 import ListUserM from "@/components/member/list-user-m";
 import useRWD from "@/hooks/useRWD";
-import Image from "next/image";
-import data from "@/data/taiwan.json";
 import TWZipCode from "@/components/user/TWZipCode";
+ import ProtectedRoute from "@/components/protectedRoute";
+// import { useAuth } from "@/context/fakeAuthContext";
 
-import { Padding } from "@mui/icons-material";
+
 import jwt_decode from "jwt-decode";
 
 const ProfilePage = () => {
+  //context
+  const {contextName, setContextName} = useContext(NameContext);
+
   //RWD
   const device = useRWD();
   const userRfs = device == "mobile" ? "m-size-6" : "size-6";
 
-  //地址
-  // const [city, setCity] = useState(-1);
-  // const [area, setArea] = useState([]);
-  // const handleCityChange = (event) => {
-  //   const cityValue = event.target.value;
-  //   setCity(cityValue);
-  //   const cityNumber = parseInt(cityValue);
-  //   for (let i = 0; i < data.length + 1; i++) {
-  //     if (cityNumber == i) {
-  //       const newArea = data[i - 1].districts.map((district) => district.name);
-  //       return setArea(newArea);
-  //     }
-  //   }
-  //   if (cityNumber == -1) {
-  //     setArea([]);
-  //   }
-  // };
-
+ 
   //取得資料
 
-  const [userData, setUserData] = useState({});
+  //const [userData, setUserData] = useState({});
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [gender, setGender] = useState("male");
@@ -64,7 +51,7 @@ const ProfilePage = () => {
       try {
         const decodeToken = jwt_decode(token);
         const currentUserId = decodeToken.id;
-        console.log(userId);
+        //console.log(userId);
 
         //更新userId狀態
         setUserId(currentUserId);
@@ -78,9 +65,10 @@ const ProfilePage = () => {
         return res.json();
       })
       .then((data) => {
-        console.log(data.results[0]);
+        //console.log(data.results[0]);
         //把結果放進user
         const user = data.results[0];
+        setContextName(user.name)
         setEmail(user.email);
         setName(user.name);
         setGender(user.gender);
@@ -88,18 +76,18 @@ const ProfilePage = () => {
         setBirthday(new Date(user.birthday).toISOString().split("T")[0]);
         //console.log(birthday)
         setPhone(user.phone);
-        console.log(phone);
+        //console.log(phone);
         // setAddressCity(user.city);
         // setAddressTown(user.area);
         setDetailAddress(user.address);
-        console.log(detailAddress);
+        //console.log(detailAddress);
         setPetCount(user.pet_number);
         setAddress({
           country: user.city,
           township: user.area,
           postcode: user.postcode,
         })
-        console.log(address)
+        //console.log(address)
       })
       .catch((error) => console.error("api請求錯誤", error));
   }, [userId]);
@@ -118,11 +106,11 @@ const ProfilePage = () => {
       return;
     }
     // 驗證手機格式
-    // const phoneRegex = /^09\d{8}$/;
-    // if (!phoneRegex.test(phone)) {
-    //   alert("請輸入正確的手機號碼格式");
-    //   return;
-    // }
+    const phoneRegex = /^09\d{8}$/;
+    if (!phoneRegex.test(phone)) {
+      alert("請輸入正確的手機號碼格式");
+      return;
+    }
     //驗證地址不為空
     if (!detailAddress) {
       alert("請輸入完整的地址");
@@ -144,6 +132,7 @@ const ProfilePage = () => {
       address: detailAddress,
       pet_number: petCount,
     };
+
     fetch(`http://localhost:3005/api/user/user-profile-change/${userId}`, {
       method: "PUT",
       headers: {
@@ -151,26 +140,22 @@ const ProfilePage = () => {
       },
       body: JSON.stringify(updatedUserData),
     })
-      .then((res) => res.json())
-      .then((data) => {
+      .then((res) => res.json()) .then((data) => {
+       
         console.log(data);
-        setUserData(data.results[0]);
-
-        setName(data.results[0].name);
-        setGender(data.results[0].gender);
-        setBirthday(
-          new Date(data.results[0].birthday).toISOString().split("T")[0]
-        );
-        setPhone(data.results[0].phone);
-
-        setDetailAddress(data.results[0].address);
-        setPetCount(data.results[0].pet_number);
-        alert("會員資料修改完成");
+        
+       //setName(data.results[0].name)
+        //setContextName( data.results[0].name)
+        // setContextName(name)
+       alert("會員資料修改完成");
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.error(err);
+      });
   };
 
   return (
+    <ProtectedRoute>
     <div className=" my-3">
        <ListUserM />
       <div className="d-flex justify-content-around pt-2">
@@ -249,10 +234,6 @@ const ProfilePage = () => {
                   />
                   <span  className="gender-btn round">女</span>
                   </label>
-                  {/* <label>
-                    <input type="radio" name="label" value="古裝劇" />
-                    <span class="round button">123</span>
-                  </label> */}
                 </div>
               </div>
             </div>
@@ -290,37 +271,6 @@ const ProfilePage = () => {
                 });
               }}
             />
-              {/* <div className="fs11 ">
-                <select
-                  className="form-select fs5"
-                  value={addressCity}
-                  // onChange={(e) => setAddressCity(e.target.value)}
-                >
-                  <option value={-1}></option>
-                  {data.map((v) => {
-                    return (
-                      <option key={v.name} value={v.number}>
-                        {v.name}
-                      </option>
-                    );
-                  })}
-                </select>
-
-                <select
-                  className="form-select fs5"
-                  value={addressTown}
-                  //onChange={(e) => setAddressTown(e.target.value)}
-                >
-                  <option value={-1}></option>
-                  {area.map((u, i) => {
-                    return (
-                      <option key={i} value={u}>
-                        {u}
-                      </option>
-                    );
-                  })}
-                </select>
-              </div> */}
             </div>
             <div className="d-flex justify-content-center">
               <div className="address-w20 ">
@@ -358,6 +308,7 @@ const ProfilePage = () => {
         </div>
       </div>
     </div>
+    </ProtectedRoute>
   );
 };
 

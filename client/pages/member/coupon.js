@@ -64,6 +64,7 @@ const UserCouponPage = () => {
       setFilteredCoupons(searchedCoupons);
       setShowAll(false);
     }
+    searchInput.current.value = "";
   };
 
   return (

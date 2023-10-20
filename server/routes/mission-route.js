@@ -160,8 +160,8 @@ router.get("/all-missions", (req, res) => {
 router.get("/latest-missions", (req, res) => {
   conn.execute(
     `${commonQueryTemplate}
-    ORDER BY md.post_date DESC
-    LIMIT 11;`,
+    ORDER BY md.update_date DESC, md.mission_id DESC  
+    LIMIT 11;`,  // 首先按照update_date排序，如果日期相同，則按照mission_id排序
     (err, result) => {
       if (err) {
         console.log(err);
@@ -438,7 +438,7 @@ router.get("/login-user", (req, res) => {
 router.get("/helper-info", (req, res) => {
   const userId = req.query.userId; // 從請求的 URL 中獲取用戶 token
   conn.execute(
-    `SELECT u.cat_helper, h.introduction
+    `SELECT u.cat_helper, h.introduction, h.name, h.email, h.phone
     FROM userinfo AS u
     JOIN mission_helper_info AS h ON u.user_id = h.user_id 
     WHERE u.user_id = ? ;`,

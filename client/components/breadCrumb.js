@@ -217,6 +217,7 @@ function BreadCrumb(props) {
       pathname == "/member/login" ||
       pathname == "/work/find-mission/[mission_id]" ||
       pathname == "/work/create-mission" ||
+      pathname == "/member/forget-password" ||
       pathname == "/work/find-helper/[uid]" ? (
         ""
       ) : (

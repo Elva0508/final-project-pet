@@ -11,7 +11,7 @@ function ProtectedRoute({ children }) {
     useEffect(
       function () {
         if (!isAuthenticated) {
-          router.push("/login"); 
+          router.push("http://localhost:3000/member/login"); 
         }
       },
       [isAuthenticated, router]

@@ -5,6 +5,7 @@ import dayjs from "dayjs";
 import axios from "axios";
 import Pagination from "@/components/pagination";
 import { useRouter } from "next/router";
+import Link from "next/link";
 
 export default function HistoryStatusOne({
   history,
@@ -56,7 +57,7 @@ export default function HistoryStatusOne({
     return newDay;
   };
 
-  const removetype = async (userid,id) => {
+  const removetype = async (userid, id) => {
     console.log(id);
     try {
       const response = await axios.put(
@@ -68,7 +69,7 @@ export default function HistoryStatusOne({
     }
     getHistory(userid);
   };
-console.log(history.length);
+  console.log(history.length);
   return (
     <>
       <div className="bg">
@@ -101,7 +102,13 @@ console.log(history.length);
                   <div className="d-flex justify-content-between border-bottom py-2 mx-md-5 mx-3">
                     <div className="col-md-8 col-9">
                       <p className="size-6 title d-md-block d-none">
-                        任務主題：{v.title}
+                        任務主題：
+                        <Link
+                          href={`/work/find-mission/${v.mission_id}`}
+                          className="size-6"
+                        >
+                          {v.title}
+                        </Link>
                       </p>
                       <p className="size-7" key={i}>
                         <span>刊登日期：</span>
@@ -122,30 +129,27 @@ console.log(history.length);
                       </p>
                       <p className="size-7 content">
                         <span>任務內容：</span>
-                        {showcontent && id == i ? (
-                          <>
-                            <CustomHTMLRenderer htmlContent={v.description} />
-                            <button
-                              className="btn-confirm"
-                              onClick={() => {
-                                toggleContent(i);
-                              }}
-                            >
-                              隱藏內容
-                            </button>
-                          </>
+                        {showcontent && id === i ? (
+                          <CustomHTMLRenderer htmlContent={v.description} />
                         ) : (
-                          <>
-                            <button
-                              className="btn-confirm"
-                              onClick={() => {
-                                toggleContent(i);
-                              }}
-                            >
-                              顯示內容
-                            </button>
-                          </>
+                          ""
                         )}
+
+                        <button
+                          className="btn-confirm"
+                          onClick={() => {
+                            if (!showcontent) {
+                              setShowContent(true);
+                              setId(i);
+                            } else if (showcontent && id !== i) {
+                              setId(i);
+                            } else {
+                              setShowContent(false);
+                            }
+                          }}
+                        >
+                          {showcontent && id === i ? "隱藏內容" : "顯示內容"}
+                        </button>
                       </p>
 
                       <p className="size-7 follow">
@@ -159,8 +163,10 @@ console.log(history.length);
                       {v.mission_status === 1 ? (
                         <button
                           className=" btn-confirm m-2 size-6"
+                          data-bs-toggle="modal"
+                          data-bs-target="#exampleModal1"
                           onClick={() => {
-                            removetype(v.post_user_id,v.mission_id);
+                            removetype(v.post_user_id, v.mission_id);
                           }}
                         >
                           下架任務
@@ -175,6 +181,39 @@ console.log(history.length);
                 </>
               );
             })}
+            <div
+              class="modal fade"
+              id="exampleModal1"
+              tabindex="-1"
+              aria-labelledby="exampleModalLabel"
+              aria-hidden="true"
+            >
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">
+                      通知
+                    </h5>
+                    <button
+                      type="button"
+                      class="btn-close"
+                      data-bs-dismiss="modal"
+                      aria-label="Close"
+                    ></button>
+                  </div>
+                  <div class="modal-body">已將此任務下架</div>
+                  <div class="modal-footer">
+                    <button
+                      type="button"
+                      class="btn btn-confirm"
+                      data-bs-dismiss="modal"
+                    >
+                      關閉
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
             <Pagination
               itemsPerPage={itemsPerPage}
               total={history}
