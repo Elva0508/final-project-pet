@@ -92,9 +92,8 @@ export default function ListD() {
             </li>
             <li className="">
               <button
-                className={`size-6 col-12  ${
-                  activeButton === 1 ? "active" : ""
-                }`}
+                className={`size-6 col-12  ${activeButton === 1 ? "active" : ""
+                  }`}
                 onClick={() => {
                   setActiveButton(1);
                   router.push("/member/order");
@@ -108,9 +107,8 @@ export default function ListD() {
             </li>
             <li>
               <button
-                className={`size-6 col-12 ${
-                  activeButton === 2 ? "active" : ""
-                }`}
+                className={`size-6 col-12 ${activeButton === 2 ? "active" : ""
+                  }`}
                 onClick={() => {
                   setActiveButton(2);
                   router.push("/member/purchast");
@@ -124,9 +122,8 @@ export default function ListD() {
             </li>
             <li>
               <button
-                className={`size-6 col-12 ${
-                  activeButton === 3 ? "active" : ""
-                }`}
+                className={`size-6 col-12 ${activeButton === 3 ? "active" : ""
+                  }`}
                 onClick={() => {
                   setActiveButton(3);
                   router.push("/member/wishlist");
@@ -140,9 +137,8 @@ export default function ListD() {
             </li>
             <li>
               <button
-                className={`size-6 col-12 ${
-                  activeButton === 4 ? "active" : ""
-                }`}
+                className={`size-6 col-12 ${activeButton === 4 ? "active" : ""
+                  }`}
                 onClick={() => {
                   setActiveButton(4);
                   router.push("/member/coupon");
@@ -161,9 +157,8 @@ export default function ListD() {
             </li>
             <li>
               <button
-                className={`size-6 col-12 ${
-                  activeButton === 5 ? "active" : ""
-                }`}
+                className={`size-6 col-12 ${activeButton === 5 ? "active" : ""
+                  }`}
                 onClick={() => {
                   setActiveButton(5);
                   router.push("/member/helper");
@@ -177,9 +172,8 @@ export default function ListD() {
             </li>
             <li>
               <button
-                className={`size-6 col-12 ${
-                  activeButton === 8 ? "active" : ""
-                }`}
+                className={`size-6 col-12 ${activeButton === 8 ? "active" : ""
+                  }`}
                 onClick={() => {
                   setActiveButton(8);
                   setIsLoading(true);
@@ -194,9 +188,8 @@ export default function ListD() {
             </li>
             <li>
               <button
-                className={`size-6 col-12 ${
-                  activeButton === 6 ? "active" : ""
-                }`}
+                className={`size-6 col-12 ${activeButton === 6 ? "active" : ""
+                  }`}
                 onClick={() => {
                   setActiveButton(6);
                   router.push("/member/joblist");
@@ -210,9 +203,8 @@ export default function ListD() {
             </li>
             <li>
               <button
-                className={`size-6 col-12 ${
-                  activeButton === 7 ? "active" : ""
-                }`}
+                className={`size-6 col-12 ${activeButton === 7 ? "active" : ""
+                  }`}
                 onClick={() => {
                   setActiveButton(7);
                   router.push("/member/history");
@@ -227,9 +219,8 @@ export default function ListD() {
 
             <li>
               <button
-                className={`size-6 col-12 ${
-                  activeButton === 9 ? "active" : ""
-                }`}
+                className={`size-6 col-12 ${activeButton === 9 ? "active" : ""
+                  }`}
                 onClick={() => {
                   setActiveButton(9);
 
