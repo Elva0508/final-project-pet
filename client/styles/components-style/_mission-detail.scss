@@ -383,7 +383,7 @@
       opacity: 0.8;
       font-weight: bold;
 
-      .animation-cat {
+      .running-cat {
         right: -45px;
         top: -15px;
         width: 120px;
@@ -445,8 +445,9 @@
         // &::before {
         //   height: 30px;
         // }
-        .animation-cat {
-          top: -30px;
+        .running-cat {
+          top: -20px;
+          right: -30px;
         }
       }
     }
