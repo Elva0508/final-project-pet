@@ -176,7 +176,7 @@ export default function ListD() {
                   }`}
                 onClick={() => {
                   setActiveButton(8);
-                  setIsLoading(true);
+            
                   router.push("/member/selling");
                 }}
               >
