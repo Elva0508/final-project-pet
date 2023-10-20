@@ -5,6 +5,8 @@ import { RiFileList3Fill } from "react-icons/ri";
 import Star from "@/components/member/star";
 import { useRouter } from "next/router";
 import axios from "axios";
+import moment from "moment";
+import Link from "next/link";
 // import moment from "moment"
 
 export default function Orderdetail() {
@@ -17,6 +19,7 @@ export default function Orderdetail() {
   const router = useRouter();
 
   const handleSaveComment = async(user_id,productId,orderId) => {
+    const createtTime=moment().format("YYYY/MM/DD")
         try {
         const response = await axios.post(
           `http://localhost:3005/api/member-order-detail/comment`,
@@ -25,7 +28,8 @@ export default function Orderdetail() {
             star:value,
             productid:productId,
             orderid:orderId,
-            user_id:user_id
+            user_id:user_id,
+            createtTime:createtTime
           }
         );
         const updatedComment = response.data.updatedComment;
@@ -126,8 +130,8 @@ const back =(id)=>{
                         <img src={v.image}></img>
                         <div>
                           <p className="ms-3 size-7">
-                          <span>商品名稱：</span>{v.product_name}
-                          </p>
+                          <span>商品名稱：<Link href={`/product/${v.category_id}/${v.subcategory_id}/${v.product_id}`} className="size-7">{v.product_name}</Link>
+                          </span></p>
                           <p className="ms-3 size-7"><span>商品規格：</span>{v.type}</p>
                           <p className="ms-3 size-7"><span>商品單價：</span>NT${v.price}</p>
                         </div>
@@ -147,7 +151,8 @@ const back =(id)=>{
                         <img src={v.image}></img>
                         <div className="ms-3 d-flex flex-column justify-content-around">
                           <div>
-                            <p className="size-7"><span>商品名稱：</span>{v.product_name}</p>
+                            <p className="size-7"><span>商品名稱：<Link href={`/product/${v.category_id}/${v.subcategory_id}/${v.product_id}`} className="size-7">{v.product_name}</Link>
+                          </span></p>
                           </div>
                           <div>
                             <p className="size-7"><span>數量：</span>{v.quantity}</p>
