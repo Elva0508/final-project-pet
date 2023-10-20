@@ -161,7 +161,24 @@ export default function JobStatusTwo({
                         </p>
                         <p className="size-7">
                           <span>任務內容：</span>
-                          {showcontent && id == i ? (
+                          {showcontent && id === i ?(<CustomHTMLRenderer htmlContent={v.description} />):("")}
+                        
+                        <button
+                              className="btn-confirm"
+                              onClick={() => {
+                                if(!showcontent){
+                                  setShowContent(true)
+                                  setId(i)
+                                }else if(showcontent && id !== i){
+                                  setId(i)
+                                }else{
+                                  setShowContent(false)
+                                }
+                              }}
+                            >
+                               {showcontent && id === i ?("隱藏內容"):("顯示內容")}
+                            </button>
+                          {/* {showcontent && id == i ? (
                             <>
                               <CustomHTMLRenderer htmlContent={v.description} />
                               <button
@@ -184,7 +201,7 @@ export default function JobStatusTwo({
                                 顯示內容
                               </button>
                             </>
-                          )}
+                          )} */}
                         </p>
                         <p className="size-7 follow">
                           {idCounts[v.mission_id] == undefined

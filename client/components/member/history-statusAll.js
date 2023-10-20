@@ -122,30 +122,24 @@ console.log(history.length);
                       </p>
                       <p className="size-7 content">
                         <span>任務內容：</span>
-                        {showcontent && id == i ? (
-                          <>
-                            <CustomHTMLRenderer htmlContent={v.description} />
-                            <button
+                        {showcontent && id === i ?(<CustomHTMLRenderer htmlContent={v.description} />):("")}
+                        
+                        <button
                               className="btn-confirm"
                               onClick={() => {
-                                toggleContent(i);
+                                if(!showcontent){
+                                  setShowContent(true)
+                                  setId(i)
+                                }else if(showcontent && id !== i){
+                                  setId(i)
+                                }else{
+                                  setShowContent(false)
+                                }
                               }}
                             >
-                              隱藏內容
+                               {showcontent && id === i ?("隱藏內容"):("顯示內容")}
                             </button>
-                          </>
-                        ) : (
-                          <>
-                            <button
-                              className="btn-confirm"
-                              onClick={() => {
-                                toggleContent(i);
-                              }}
-                            >
-                              顯示內容
-                            </button>
-                          </>
-                        )}
+
                       </p>
 
                       <p className="size-7 follow">

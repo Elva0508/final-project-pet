@@ -5,6 +5,7 @@ import { RiFileList3Fill } from "react-icons/ri";
 import Star from "@/components/member/star";
 import { useRouter } from "next/router";
 import axios from "axios";
+import moment from "moment";
 // import moment from "moment"
 
 export default function Orderdetail() {
@@ -17,6 +18,7 @@ export default function Orderdetail() {
   const router = useRouter();
 
   const handleSaveComment = async(user_id,productId,orderId) => {
+    const createtTime=moment().format("YYYY/MM/DD")
         try {
         const response = await axios.post(
           `http://localhost:3005/api/member-order-detail/comment`,
@@ -25,7 +27,8 @@ export default function Orderdetail() {
             star:value,
             productid:productId,
             orderid:orderId,
-            user_id:user_id
+            user_id:user_id,
+            createtTime:createtTime
           }
         );
         const updatedComment = response.data.updatedComment;
