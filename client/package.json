@@ -26,6 +26,7 @@
     "dayjs": "^1.11.10",
     "formik": "^2.4.5",
     "framer-motion": "^10.16.4",
+    "gsap": "^3.12.2",
     "jwt-decode": "^3.1.2",
     "lottie-web": "^5.12.2",
     "moment": "^2.29.4",

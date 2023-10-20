@@ -23,6 +23,7 @@ import { useHelper } from "@/context/helperContext";
 import { Pagination } from "antd";
 // import { Button, Modal } from "antd";
 import axios from "axios";
+import Swal from "sweetalert2";
 import {
   DatePicker,
   Modal,
@@ -159,7 +160,14 @@ const Quotation = () => {
           setServiceType({});
           setNote("");
           setLocation("");
-          alert("預約成功!");
+          // alert("預約成功!");
+          Swal.fire({
+            position: "center",
+            icon: "success",
+            title: "預約成功!",
+            showConfirmButton: false,
+            timer: 1500,
+          });
         }
       })
       .catch((e) => {
@@ -546,6 +554,9 @@ const HelperDetail = () => {
   const [threeStar, setThreeStar] = useState(0);
   const [twoStar, setTwoStar] = useState(0);
   const [oneStar, setOneStar] = useState(0);
+  const PaginationRef = useRef();
+  const [firstLoad, setFirstLoad] = useState(true);
+  const [allService, setAllService] = useState([]);
   const handleFav = (e) => {
     if (isAuthenticated) {
       if (!collection.find((item) => item === uid)) {
@@ -580,20 +591,47 @@ const HelperDetail = () => {
     setPage(page);
   };
   useEffect(() => {
+    console.log(firstLoad);
+    if (firstLoad) {
+      setFirstLoad(false);
+      return;
+    }
+    // // pag y + reviewy = scrollto的距離
+    const paginationDom = document.querySelector(".cos-pagination");
+    const reviewDom = document.querySelector(".evaluation-bar");
+
+    // scrollY - (review bottom到視口top的距離) = scrollTo高度
+
+    const reviewRect = reviewDom.getBoundingClientRect();
+    console.log("window.scrollY", window.scrollY);
+    console.log("reviewRect.top", reviewRect.top);
+    console.log("window.innerHeight", window.innerHeight);
+    const scrollTo = window.scrollY - reviewRect.top * -1 - 100;
+    console.log("scrollTo", scrollTo);
+
+    window.scrollTo({
+      top: scrollTo,
+      behavior: "smooth", // 如果需要平滑滚动效果
+    });
+  }, [currentPage]);
+
+  useEffect(() => {
     const handleScroll = () => {
       const width = window.innerWidth;
       // console.log(width);
       const leftBlock = document.querySelector(".left-block");
       if (width > 992) {
         const scrollY = window.scrollY;
+        const dScrollY = document.scrollY;
         const windowHeight = window.innerHeight;
         const documentHeight = document.documentElement.scrollHeight;
         const distanceToBottom = documentHeight - (scrollY + windowHeight);
         // console.log(scrollY, windowHeight, documentHeight);
         // console.log(leftBlock);
-        if (distanceToBottom < 145) {
+        // console.log(scrollY, dScrollY);
+        if (distanceToBottom < 130) {
           leftBlock.style.position = "relative";
-          leftBlock.style.top = `${scrollY - 200}px`;
+          leftBlock.style.top = `${scrollY - 20 - 130}px `;
         } else {
           leftBlock.style.position = "sticky";
           leftBlock.style.top = "10px";
@@ -620,11 +658,26 @@ const HelperDetail = () => {
         .then((response) => {
           const data = response?.data?.data;
           // console.log(response);
+          console.log("data.allReviews?.totalRows", data.allReviews?.totalRows);
           setTotalRows(data.allReviews?.totalRows);
           setProfile(data.profile[0]);
-          // setReviews(data.reviews);
           setImages(data.images);
-
+          setAllService(() => {
+            let arr = [];
+            if (data.profile[0].feed_service == 1) {
+              arr.push("到府代餵");
+            }
+            if (data.profile[0].house_service == 1) {
+              arr.push("安親寄宿");
+            }
+            if (data.profile[0].beauty_service == 1) {
+              arr.push("到府美容");
+            }
+            if (arr.length > 1) {
+              arr = arr.join("、");
+            }
+            return arr;
+          });
           // 先清除重渲染可能造成的值再計算每個星數的評論數
           setFiveStar(0);
           setFourStar(0);
@@ -674,7 +727,7 @@ const HelperDetail = () => {
       contentRef.current.innerHTML = profile.job_description;
     }
   }, [profile]);
-
+  console.log(profile, reviews);
   useEffect(() => {
     if (uid) {
       // 切換星數篩選時，重新回到第一頁
@@ -761,6 +814,30 @@ const HelperDetail = () => {
   return (
     <>
       <div className="helper-detail container">
+        <nav className="breadcrumb-wrapper my-4 " aria-label="breadcrumb">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+              <Link
+                href="/"
+                className="active-hover"
+                onClick={(e) => {
+                  e.preventDefault();
+                  router.push("/");
+                }}
+              >
+                首頁
+              </Link>
+            </li>
+            <li class="breadcrumb-item" aria-current="page">
+              <Link href="/work/find-helper" className="active-hover">
+                小貓上工(找幫手)
+              </Link>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">
+              {uid}
+            </li>
+          </ol>
+        </nav>
         <div className="d-flex row align-items-start">
           <section className="left-block col-12 col-lg-3 flex-column justify-content-center align-items-center">
             <div className="avatar">
@@ -777,7 +854,7 @@ const HelperDetail = () => {
               </div>
               <div className="profile-info">
                 <p className="intro size-6">我的服務內容</p>
-                <p className="intro size-7">到府代餵、安親寄宿(要連資料庫)</p>
+                <p className="intro size-7">{allService}</p>
               </div>
               <div className="profile-info">
                 <p className="intro size-6">我的服務時間</p>
@@ -870,48 +947,54 @@ const HelperDetail = () => {
                 </div>
 
                 <div className="d-flex gap-2 gap-md-4 mt-3">
-                  <div className="price-intro-card">
-                    <img src="/job-icon/cat-tree.svg" className="card-bg" />
-                    <div className="card-title">
-                      <PiPawPrintFill className="card-icon" />
-                      到府代餵
-                    </div>
-                    <div className="card-content">
-                      <div className="d-flex align-items-center">
-                        <p className="">NT$</p>
-                        <span className="price">400</span>
+                  {profile?.feed_service == 1 && (
+                    <div className="price-intro-card">
+                      <img src="/job-icon/cat-tree.svg" className="card-bg" />
+                      <div className="card-title">
+                        <PiPawPrintFill className="card-icon" />
+                        到府代餵
                       </div>
-                      <p className="mt-1">/ 半小時</p>
-                    </div>
-                  </div>
-                  <div className="price-intro-card">
-                    <img src="/job-icon/cat-tree.svg" className="card-bg" />
-                    <div className="card-title">
-                      <PiPawPrintFill className="card-icon" />
-                      安親寄宿
-                    </div>
-                    <div className="card-content">
-                      <div className="d-flex align-items-center">
-                        <p className="">NT$</p>
-                        <span className="price">400</span>
+                      <div className="card-content">
+                        <div className="d-flex align-items-center">
+                          <p className="">NT$</p>
+                          <span className="price">{profile.feed_price}</span>
+                        </div>
+                        <p className="mt-1">/ 半小時</p>
                       </div>
-                      <p className="mt-1">/ 天</p>
                     </div>
-                  </div>
-                  <div className="price-intro-card">
-                    <img src="/job-icon/cat-tree.svg" className="card-bg" />
-                    <div className="card-title">
-                      <PiPawPrintFill className="card-icon" />
-                      到府美容
-                    </div>
-                    <div className="card-content">
-                      <div className="d-flex align-items-center">
-                        <p className="">NT$</p>
-                        <span className="price">400</span>
+                  )}
+                  {profile?.house_service == 1 && (
+                    <div className="price-intro-card">
+                      <img src="/job-icon/cat-tree.svg" className="card-bg" />
+                      <div className="card-title">
+                        <PiPawPrintFill className="card-icon" />
+                        安親寄宿
                       </div>
-                      <p className="mt-1">/ 次</p>
+                      <div className="card-content">
+                        <div className="d-flex align-items-center">
+                          <p className="">NT$</p>
+                          <span className="price">{profile?.house_price}</span>
+                        </div>
+                        <p className="mt-1">/ 天</p>
+                      </div>
                     </div>
-                  </div>
+                  )}
+                  {profile?.beauty_service == 1 && (
+                    <div className="price-intro-card">
+                      <img src="/job-icon/cat-tree.svg" className="card-bg" />
+                      <div className="card-title">
+                        <PiPawPrintFill className="card-icon" />
+                        到府美容
+                      </div>
+                      <div className="card-content">
+                        <div className="d-flex align-items-center">
+                          <p className="">NT$</p>
+                          <span className="price">{profile?.beauty_price}</span>
+                        </div>
+                        <p className="mt-1">/ 次</p>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -945,7 +1028,7 @@ const HelperDetail = () => {
                       value={
                         profile.average_star === null
                           ? 0
-                          : parseFloat(profile.average_star)
+                          : parseFloat(profile.average_star).toFixed(2)
                       }
                       size="large"
                       readOnly

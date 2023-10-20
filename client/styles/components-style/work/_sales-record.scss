@@ -1,4 +1,5 @@
 .sales-and-request {
+  min-height: 100vh;
   .my {
     color: $hover;
   }
@@ -200,6 +201,7 @@
 }
 
 .sales-record-detail {
+  min-height: 100vh;
   background: white;
   padding: 1rem;
   .my {
@@ -238,6 +240,7 @@
     &-img {
       width: 180px;
       height: 180px;
+      object-fit: cover;
     }
     &-info {
       span {

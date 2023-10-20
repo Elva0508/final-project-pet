@@ -10,8 +10,8 @@ export default function BlockFiveMobile() {
             <div className="col-12 photo-block">
               <div className="position-relative">
                 <img
-                  src="https://images.unsplash.com/photo-1533738363-b7f9aef128ce?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1635&q=80"
-                  className="img-fluid photo position-absolute top-0 start-0"
+                  src="/home/homecat2.png"
+                  className="img-fluid photo position-absolute top-0 start-0 opacity-50"
                 />
                 <div className="position-absolute top-0 end-0">
                   <div className="mt-5 ms-5 z-3">

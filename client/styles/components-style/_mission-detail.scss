@@ -383,7 +383,7 @@
       opacity: 0.8;
       font-weight: bold;
 
-      .animation-cat {
+      .running-cat {
         right: -45px;
         top: -15px;
         width: 120px;
@@ -445,8 +445,9 @@
         // &::before {
         //   height: 30px;
         // }
-        .animation-cat {
-          top: -30px;
+        .running-cat {
+          top: -20px;
+          right: -30px;
         }
       }
     }
@@ -654,4 +655,17 @@
 .swal2-content {
   font-size: 1rem;
   color: $text-mark;
+}
+
+body.swal2-shown:not(.swal2-no-backdrop):not(.swal2-toast-shown) {
+  overflow: hidden;
+  padding-right: 9px;
+}
+// .swal2-shown{
+//   padding-right: 9px;
+//   overflow: hidden;
+// }
+.swal2-shown {
+  // overflow: unset !important;
+  padding-right: 8.5px !important;
 }

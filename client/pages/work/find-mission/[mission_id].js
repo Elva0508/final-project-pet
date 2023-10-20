@@ -524,14 +524,16 @@ export default function MissionDetail() {
                     const chatUrl = response.data.chatUrl;
                     console.log("chatUrl" + chatUrl);
                     // 在這裡導向到 chatUrl
-                    window.location.href = chatUrl;
+                    // window.location.href = chatUrl;
+                    router.push(chatUrl);
                 } else if (response.status === 200) {
                     // 消息已存在
                     // setMessage("消息已存在");
                     const chatUrl = response.data.chatUrl;
                     console.log("已存在chatUrl" + chatUrl);
                     // 在這裡導向到 chatUrl
-                    window.location.href = chatUrl;
+                    // window.location.href = chatUrl;
+                    router.push(chatUrl);
                 } else {
                     // 請求失敗
                     // setMessage("請求失敗: " + response.data.error);
@@ -620,7 +622,7 @@ export default function MissionDetail() {
                 text: '請輸入自我推薦',
                 icon: 'warning',
                 confirmButtonText: '我知道了',
-                scrollbarPadding: false, // 禁用滚动条自动隐藏
+                scrollbarPadding: false, // 禁用滾動條自動隱藏
             }).then(() => {
                 setAutoSend(false); // 清除勾勾
             });
@@ -643,7 +645,7 @@ export default function MissionDetail() {
                     confirmButtonText: '前往',
                     cancelButtonText: '取消',
                     reverseButtons: true, // 兩顆按鈕位置對調
-                    scrollbarPadding: false, // 禁用滚动条自动隐藏
+                    scrollbarPadding: false, // 禁用滾動條自動隱藏
                 }).then((result) => {
                     if (result.isConfirmed) {
                         // 當點擊確認按鈕
@@ -655,7 +657,12 @@ export default function MissionDetail() {
                 });
                 return;
             }
-            chatContentArray.push(helperInfo.introduction);
+            chatContentArray.push(`<p><h5><strong>✅ 我的小幫手簡歷：</strong></h5></p><p><strong>名字：</strong>` + helperInfo.name + `</p><p><strong>電話：</strong>` + helperInfo.phone + `</p><p><strong>Email：</strong>` + helperInfo.email + `</p><p><strong>個人簡述：</strong>` + helperInfo.introduction + `</p>`);
+            // chatContentArray.push(
+            //     <div style={{ backgroundColor: 'yellow', padding: '10px' }}>
+            //         我的小幫手履歷：<br />{helperInfo.introduction}
+            //     </div>
+            // );
         }
         setIsLoading(true);
         try {
@@ -680,7 +687,8 @@ export default function MissionDetail() {
                 setMsgInputValue("");
                 const chatUrl = `/chatlist/${chatlistId}`;
                 // 在這裡導向到 chatUrl
-                window.location.href = chatUrl;
+                // window.location.href = chatUrl;
+                router.push(chatUrl);
             } else {
                 console.error("發送消息時出錯");
             }
@@ -1030,7 +1038,7 @@ export default function MissionDetail() {
                                     <div className="item d-flex flex-column mission-place">
                                         <div className="item-title size-6 position-relative">
                                             <CiLocationOn className='me-1' />任務地點
-                                            <img src='/job-icon/animation2.gif' className='position-absolute animation-cat' />
+                                            <img src='/job-icon/animation2.gif' className='position-absolute running-cat' />
                                         </div>
                                         <hr class="item-divider" />
                                         <p className="size-7 d-flex align-items-center  item-content">{v.city}{v.area}{v.location_detail}</p>
