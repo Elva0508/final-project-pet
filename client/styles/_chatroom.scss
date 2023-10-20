@@ -31,3 +31,11 @@
     width: 350px;
   }
 }
+
+@media screen and (max-width: 575px) {
+  .chatroom {
+    .helper-information, .rounded-pill{
+      width: 280px;
+    }
+  }
+}
