@@ -39,7 +39,7 @@ router.put("/updatetype",(req,res)=>{
 
 router.get("/count/count", (req, res) => {
       connection.execute(
-        `SELECT * FROM mission_record;`,
+        `SELECT * FROM mission_fav;`,
         (error, result) => {
           res.json({ result });
         }

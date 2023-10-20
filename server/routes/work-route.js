@@ -45,7 +45,7 @@ router.get("/helpers/famous", (req, res) => {
     // 依類型篩選
     conn.execute(
       `SELECT h.*, u.cover_photo,u.cat_helper, r.review_count,r.average_star FROM mission_helper_info h LEFT JOIN(SELECT helper_id, SUM(star_rating) /  COUNT(*) AS average_star , COUNT(*) AS review_count FROM mission_helper_reviews GROUP BY helper_id) r ON h.user_id = r.helper_id LEFT JOIN userinfo u ON h.user_id = u.user_id WHERE u.cat_helper = ? AND h.${type}_service = ? AND r.average_star > 4.5 ORDER BY review_count DESC  LIMIT ?`,
-      [1, true, 8],
+      [1, true, 10],
       (err, result) => {
         if (err) {
           console.log(err);
@@ -342,7 +342,7 @@ router.get("/helpers", (req, res) => {
         totalRows = results[0].totalRows;
 
         conn.execute(
-          `SELECT * FROM mission_helper_info h LEFT JOIN userinfo u ON h.user_id = u.user_id LEFT JOIN (SELECT helper_id ,COUNT(*) AS review_count , SUM(star_rating) /  COUNT(*) AS average_star FROM mission_helper_reviews GROUP BY helper_id) r ON h.user_id = r.helper_id WHERE h.${type}_service= ? AND u.cat_helper = ? LIMIT ?,?`,
+          `SELECT  h.*,u.cover_photo, u.cat_helper, r.review_count,r.average_star FROM mission_helper_info h LEFT JOIN userinfo u ON h.user_id = u.user_id LEFT JOIN (SELECT helper_id ,COUNT(*) AS review_count , SUM(star_rating) /  COUNT(*) AS average_star FROM mission_helper_reviews GROUP BY helper_id) r ON h.user_id = r.helper_id WHERE h.${type}_service= ? AND u.cat_helper = ? LIMIT ?,?`,
           [1, 1, limitRows, pageSize],
           (err, result) => {
             if (err) {

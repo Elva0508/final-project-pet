@@ -349,33 +349,36 @@ export default function ProductList() {
 
     const handlePriceVendorfilter = (vendor, minPrice, maxPrice) => {
         console.log("handlePriceVendorfilter 函数被使用，search結果:", vendor, minPrice, maxPrice);
-        let lowPrice,highPrice,finalData
+        let lowPrice, highPrice, finalData
 
-        if(minPrice===""||minPrice==null){
-            lowPrice=productDataOrigin    
-        }else{
-            lowPrice=productDataOrigin.filter((v)=>v.specialoffer>=minPrice) 
+        if (minPrice === "" || minPrice == null) {
+            lowPrice = productDataOrigin
+        } else {
+            lowPrice = productDataOrigin.filter((v) => v.specialoffer >= minPrice)
         }
-        if(maxPrice===""||maxPrice==null){
-            highPrice=lowPrice
-        }else{
-            highPrice=lowPrice.filter((v)=>v.specialoffer<=maxPrice)
+        if (maxPrice === "" || maxPrice == null) {
+            highPrice = lowPrice
+        } else {
+            highPrice = lowPrice.filter((v) => v.specialoffer <= maxPrice)
         }
-        if(vendor==="" ||vendor==null){
-            finalData=highPrice          
-        }else{
-            finalData=highPrice.filter((v)=>v.vendor==vendor)
+        if (vendor === "" || vendor == null) {
+            finalData = highPrice
+        } else {
+            finalData = highPrice.filter((v) => v.vendor == vendor)
         }
-        if(selectedSort==="" ||selectedSort==null){
-            setProductData(finalData)
-        }else if(selectedSort=="price_desc"){
-            const newProduct=finalData.sort((a, b) => b.specialoffer - a.specialoffer);
-            setProductData(newProduct)
-        }else if(selectedSort=="price_asc"){
-            const newProduct=finalData.sort((a, b) => a.specialoffer - b.specialoffer);
-            setProductData(newProduct)
+        if (finalData.length === 0) {
+            alert("沒有符合篩選的結果");
+        } else {
+            if (selectedSort === "" || selectedSort === null) {
+                setProductData(finalData);
+            } else if (selectedSort === "price_desc") {
+                const newProduct = finalData.sort((a, b) => b.specialoffer - a.specialoffer);
+                setProductData(newProduct);
+            } else if (selectedSort === "price_asc") {
+                const newProduct = finalData.sort((a, b) => a.specialoffer - b.specialoffer);
+                setProductData(newProduct);
+            }
         }
-        
     };
 
     //sidebar

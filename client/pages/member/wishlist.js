@@ -180,7 +180,10 @@ export default function Wishlist() {
                           <div className="d-flex col-7 col-md-9">
                             <img src={v.images} alt={v.product_name} />
                             <div className="ms-3">
-                              <Link href={`/product/${v.category_id}/${v.subcategory_id}/${v.product_id}`} className="size-6 m-size-7">
+                              <Link
+                                href={`/product/${v.category_id}/${v.subcategory_id}/${v.product_id}`}
+                                className="size-6 m-size-7"
+                              >
                                 {v.product_name}
                               </Link>
                               <p className="size-6 m-size-7 price">
@@ -225,6 +228,8 @@ export default function Wishlist() {
                             </button>
                             <button
                               className="btn btn-outline-confirm size-6 m-size-7 my-2"
+                              data-bs-toggle="modal"
+                              data-bs-target="#exampleModal1"
                               onClick={() => {
                                 // 這裡作刪除的動作
                                 deleteWishlist(v.user_id, v.collection_id);
@@ -232,6 +237,43 @@ export default function Wishlist() {
                             >
                               取消追蹤
                             </button>
+                          </div>
+
+                          <div
+                            class="modal fade"
+                            id="exampleModal1"
+                            tabindex="-1"
+                            aria-labelledby="exampleModalLabel"
+                            aria-hidden="true"
+                          >
+                            <div class="modal-dialog">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <h5
+                                    class="modal-title"
+                                    id="exampleModalLabel"
+                                  >
+                                    通知
+                                  </h5>
+                                  <button
+                                    type="button"
+                                    class="btn-close"
+                                    data-bs-dismiss="modal"
+                                    aria-label="Close"
+                                  ></button>
+                                </div>
+                                <div class="modal-body">已取消收藏此商品</div>
+                                <div class="modal-footer">
+                                  <button
+                                    type="button"
+                                    class="btn btn-confirm"
+                                    data-bs-dismiss="modal"
+                                  >
+                                    關閉
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
                           </div>
 
                           <div className="col-4 d-md-none d-flex flex-column justify-content-between align-items-end">
@@ -255,6 +297,8 @@ export default function Wishlist() {
                             <div className="d-flex justify-content-center">
                               <button
                                 className="delete btn btn-outline-confirm size-6 m-size-7 m-2"
+                                data-bs-toggle="modal"
+                              data-bs-target="#exampleModal1"
                                 onClick={() => {
                                   // 這裡作刪除的動作
                                   deleteWishlist(v.user_id, v.collection_id);

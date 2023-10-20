@@ -12,7 +12,8 @@ router.get("/:id", (req, res) => {
       JOIN products AS p ON pc.product_id = p.product_id 
       JOIN product_type AS pt ON pc.product_id=pt.product_id
       WHERE pc.user_id = ?
-      GROUP BY pc.product_id;`,
+      GROUP BY pc.product_id
+      ORDER BY pc.collection_id  DESC;`,
       [userid],
       (error, result) => {
         res.json({ result });

@@ -15,35 +15,93 @@
   }
 }
 .disableFlow {
+  background-color: white;
+  z-index: 100;
   overflow: hidden;
 }
 .cat-loading-wrapper {
-  background-color: #f5d4a9;
+  background-color: #999897;
   position: absolute;
   width: 100vw;
   height: 100vh;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  margin: auto auto;
   display: flex;
   justify-content: center;
   align-items: center;
-  opacity: 1;
+  // opacity: 0.8;
   transition: opacity 0.5s ease-in-out;
   z-index: 999;
   overflow-y: hidden;
 }
-.cat-loading-opacity {
+.cat-loading-wrapper-opacity {
   opacity: 0;
   z-index: -999;
 }
 .catloading {
-  width: 500px;
-  height: auto;
+  width: 100%;
+  height: 100%;
   top: 10%;
   right: 0;
   left: 0;
   bottom: 0;
   margin: auto;
-}
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  .cat-face {
+    width: 150px;
+    height: 132px;
+    position: relative;
 
+    #face {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+    #beard {
+      position: absolute;
+      top: 65%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+  }
+  .cat-text {
+    margin-top: 5px;
+    display: flex;
+    gap: 5px;
+    & * {
+      opacity: 0;
+      position: relative;
+    }
+    #text1 {
+      // top: 5px;
+    }
+    #text2 {
+    }
+    #text3 {
+    }
+    #text4 {
+    }
+    #text5 {
+    }
+  }
+}
+.sawtooth-block {
+  width: 10px;
+  height: 100vh;
+  background-color: $content-bg;
+  z-index: 10;
+}
+.cat-loading-opacity {
+}
 #circle {
   text-align: center;
   transform-origin: center 30%;

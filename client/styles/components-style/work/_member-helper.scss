@@ -1,4 +1,5 @@
 .helper-info {
+  min-height: 100vh;
   overflow-x: hidden;
   overflow-y: visible;
   min-height: 913px;
@@ -7,6 +8,7 @@
   $form-height: 80px;
   padding: 1rem;
   position: relative;
+  border-radius: 10px;
   .title {
     // margin-bottom: 40px;
     & > p {
@@ -106,6 +108,7 @@
   .semi-checkbox-cardType_checked:hover {
     background-color: $cos-white;
     border: 2px solid $header-bg;
+    object-fit: cover;
   }
   .semi-checkbox-inner-display:hover {
     // 修改checkbox預設藍外框

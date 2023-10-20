@@ -132,7 +132,7 @@ const UserCouponPage = () => {
                     <div className="shadow scale" />
                     <div className="message-coupon">
                       <h1 className="priceCode coupon-h1">
-                        ${v.discount_amount}
+                        {v.title}
                       </h1>
                       <p>
                         <p className="couponCode py-1">- {v.coupon_code} -</p>

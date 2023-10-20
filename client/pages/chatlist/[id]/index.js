@@ -227,9 +227,9 @@ export default function Chatroom() {
                         <div className="mx-3 size-6 m-size-6">
                           <span>{v.name}</span>
                         </div>
-                        <div className="size-7 m-size-7 rounded-pill content py-1 px-2">
-                          {v.chat_content}
-                        </div>
+                        {/* <div className="size-7 m-size-7 rounded-pill content py-1 px-2"> */}
+                        <CustomHTMLRenderer htmlContent={v.chat_content} />
+                        {/* </div> */}
                       </div>
                     </div>
                   )}

@@ -44,6 +44,7 @@
 
 $detail-block-width: 9px; //標題左側直槓槓
 .helper-detail {
+  min-height: 100vh;
   // & * {
   //   padding: 0;
   // }
@@ -104,6 +105,7 @@ $detail-block-width: 9px; //標題左側直槓槓
         position: absolute;
         z-index: 100;
         border-radius: 50%;
+        object-fit: cover;
       }
     }
     .profile-divider {
@@ -338,6 +340,7 @@ $detail-block-width: 9px; //標題左側直槓槓
       img {
         width: $image_size + 50px;
         height: $image_size;
+        object-fit: cover;
       }
     }
   }

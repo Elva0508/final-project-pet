@@ -327,19 +327,22 @@ export default function ProductList() {
         } else {
             finalData = highPrice.filter((v) => v.vendor == vendor)
         }
-        if (selectedSort === "" || selectedSort == null) {
-            setProductData(finalData)
-        } else if (selectedSort == "price_desc") {
-            const newProduct = finalData.sort((a, b) => b.specialoffer - a.specialoffer);
-            setProductData(newProduct)
-        } else if (selectedSort == "price_asc") {
-            const newProduct = finalData.sort((a, b) => a.specialoffer - b.specialoffer);
-            setProductData(newProduct)
+        if (finalData.length === 0) {
+            alert("沒有符合篩選的結果");
+        } else {
+            if (selectedSort === "" || selectedSort === null) {
+                setProductData(finalData);
+            } else if (selectedSort === "price_desc") {
+                const newProduct = finalData.sort((a, b) => b.specialoffer - a.specialoffer);
+                setProductData(newProduct);
+            } else if (selectedSort === "price_asc") {
+                const newProduct = finalData.sort((a, b) => a.specialoffer - b.specialoffer);
+                setProductData(newProduct);
+            }
         }
-
     };
 
-    //sidebar
+    
      
    
 
@@ -380,6 +383,7 @@ export default function ProductList() {
                                     className="form-select"
                                     onChange={handleSortChange} // 選項改變時觸發事件處理程序
                                     value={selectedSort} // 設定選擇的值
+                                   
                                 >
                                     <option value="">請選擇</option>
                                     <option value="price_desc">價格由高到低</option>
