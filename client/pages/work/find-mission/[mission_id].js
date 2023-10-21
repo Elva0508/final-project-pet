@@ -639,7 +639,7 @@ export default function MissionDetail() {
                 // return;
                 Swal.fire({
                     title: '您尚未開啟小幫手資料',
-                    text: '請先至會員中心開啟，才可自動發送履歷唷',
+                    text: '請先至會員中心開啟，才可自動發送簡歷唷',
                     icon: 'warning',
                     showCancelButton: true, // 顯示取消按扭
                     confirmButtonText: '前往',
@@ -853,7 +853,7 @@ export default function MissionDetail() {
 
                                 <div className='auto-send d-flex my-4 align-items-center'>
                                     <input type="checkbox" className='checkbox' checked={autoSend} onChange={() => setAutoSend(!autoSend)} />
-                                    <div className='size-7 ms-2 auto-send-title'>自動發送小幫手履歷<span className='size-7' >（需開啟小幫手資料）</span></div>
+                                    <div className='size-7 ms-2 auto-send-title'>自動發送小幫手簡歷<span className='size-7' >（需開啟小幫手資料）</span></div>
                                 </div>
                             </div>
                         </div>

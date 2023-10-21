@@ -1226,7 +1226,9 @@ const MissionCard = ({ missionType, missionCity, missionArea, setMissionType, up
                 ? "move"
                 : missionActive === "exit"
                   ? "exit"
-                  : "initial"
+                  : missionActive === "all_move"
+                    ? "all_move"
+                    : "initial"
             }
             variants={missionVariant}
             // (index + 1) % 3 == 1 ? 0 : (index + 1) % 3 == 2 ? 1 : 2 整排移動參數
@@ -1330,7 +1332,8 @@ export default function MissionList() {
   const [search, setSearch] = useState("");
   // 用於儲存解析後的userID
   const [userId, setUserId] = useState(null);
-
+  // 右側卡片動畫
+  const [missionActive, setMissionActive] = useState("move");
 
   const [allMissions, setAllMissions] = useState([]);
 
@@ -1362,10 +1365,67 @@ export default function MissionList() {
     }
   };
 
-  useEffect(() => {
-    getAllMissions()
-  }, [missionType, updateDate, missionCity, missionArea, sortOrder, sortBy, search]) // 當篩選方式、排序方式發生變化時重新獲取數據（非常重要要記得！忘記好幾次）
+  const missionVariant = {
+    // 一開始消失，畫面從下側往上移入出現
+    initial: {
+      opacity: 0,
+      y: 20,
+      transition: { duration: 0 },
+    },
+    // 卡片單張單張移動
+    move: (i) => ({
+      opacity: 1,
+      x: 0,
+      y: 0,
+      // 動畫持續1秒（開始到結束）每張卡片延遲0.1秒（逐張出現）
+      transition: { duration: 1, delay: i * 0.1 },
+    }),
+    exit: (i) => ({
+      opacity: 0,
+      y: 20,
+      transition: { duration: 0.2 },
+    }),
+    all_move: {
+      opacity: 1,
+      x: 0,
+      y: 0,
+      // 動畫持續1秒（開始到結束）
+      transition: { duration: 1 },
+    },
+  };
+
+  // useEffect(() => {
+  //   getAllMissions()
+  // }, [missionType, updateDate, missionCity, missionArea, sortOrder, sortBy, search]) // 當篩選方式、排序方式發生變化時重新獲取數據（非常重要要記得！忘記好幾次）
   // 這邊不添加 inputValue 否則在input輸入時就直接即時搜尋
+
+  useEffect(() => {
+    (async () => {
+      if (!missionType && !missionCity && !missionArea && !updateDate && !search) {
+        getAllMissions();
+        setMissionActive("move");
+      }
+      // 當篩選及搜尋時
+      else if (missionType || missionCity || missionArea || updateDate || search || sortOrder || sortBy) {
+
+        // 使用 Promise 等待一段時間
+        await new Promise((resolve) => {
+          // 先退出動畫
+          setMissionActive("exit");
+          setTimeout(resolve, 300);
+        });
+
+        // 切換到初始狀態
+        setMissionActive("initial");
+
+        // 執行後端資料獲取
+        getAllMissions();
+
+        // 執行進入動畫
+        setMissionActive("all_move");
+      }
+    })();
+  }, [missionType, missionCity, missionArea, updateDate, search, sortOrder, sortBy]);
 
   useEffect(() => {
     // 在allMissions狀態更新後輸出內容
@@ -1441,61 +1501,12 @@ export default function MissionList() {
     }, 0);
   };
 
-  // 右側卡片動畫
-  // const [isActive, setIsActive] = useState("move");
-  const [missionActive, setMissionActive] = useState("move");
 
-  const missionVariant = {
-    // 一開始消失，畫面從下側往上移入出現
-    initial: {
-      opacity: 0,
-      y: 20,
-      transition: { duration: 0 },
-    },
-    // 卡片單張單張移動
-    move: (i) => ({
-      opacity: 1,
-      x: 0,
-      y: 0,
-      // 動畫持續1秒（開始到結束）每張卡片延遲0.1秒（逐張出現）
-      transition: { duration: 1, delay: i * 0.1 },
-    }),
-    exit: (i) => ({
-      opacity: 0,
-      y: 20,
-      transition: { duration: 0.4 },
-    }),
-  };
 
   // 換頁時回到上方
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [activePage]);
-
-  useEffect(() => {
-    (async () => {
-      // 當篩選及搜尋時
-      if (missionType || missionCity || missionArea || updateDate || search || sortOrder || sortBy) {
-
-        // 使用 Promise 等待一段時間
-        await new Promise((resolve) => {
-          // 先退出動畫
-          setMissionActive("exit");
-          setTimeout(resolve, 600);
-        });
-
-        // 切換到初始狀態
-        setMissionActive("initial");
-
-        // 執行後端資料獲取
-        getAllMissions();
-
-        // 執行進入動畫
-        setMissionActive("move");
-      }
-    })();
-  }, [missionType, missionCity, missionArea, updateDate, search, sortOrder, sortBy]);
-
 
 
   return (
@@ -1573,11 +1584,19 @@ export default function MissionList() {
           {/* 任務列表 */}
           <div className='mission-list d-lg-flex  justify-content-center align-items-start'>
             {/* 不能使用d-flex d-lg-block block會導致MissionCard垂直排列 */}
-            <div className="row d-flex mb-3 g-3 g-md-4">
-              {/* 使用g-3 不用justify-content-between 預設是start 卡片就會照順序排列 */}
-              <MissionCard sortOrder={sortOrder} sortBy={sortBy} missionType={missionType} setMissionType={setMissionType} missionCity={missionCity} setMissionCity={setMissionCity} missionArea={missionArea} setMissionArea={setMissionArea}
-                updateDate={updateDate} setUpdateDate={setUpdateDate} allMissions={allMissions} currentData={currentData} userId={userId} setUserId={setUserId} missionActive={missionActive} missionVariant={missionVariant} />
-            </div>
+            {currentData.length > 0 ? (
+              <div className="row d-flex mb-3 g-3 g-md-4">
+                {/* 使用g-3 不用justify-content-between 預設是start 卡片就會照順序排列 */}
+                <MissionCard sortOrder={sortOrder} sortBy={sortBy} missionType={missionType} setMissionType={setMissionType} missionCity={missionCity} setMissionCity={setMissionCity} missionArea={missionArea} setMissionArea={setMissionArea}
+                  updateDate={updateDate} setUpdateDate={setUpdateDate} allMissions={allMissions} currentData={currentData} userId={userId} setUserId={setUserId} missionActive={missionActive} missionVariant={missionVariant} />
+              </div>
+            ) : (
+              <div className="d-flex justify-content-center align-items-center flex-column mt-5">
+                {/* <img src='/job-icon/no-data-2.gif' /> */}
+                <p>無符合條件任務，建議放寬條件重新查詢！</p>
+                <img src='/job-icon/search-cat.gif' />
+              </div>
+            )}
           </div>
         </section>
         <Pagination itemsPerPage={itemsPerPage} total={allMissions} activePage={activePage} setActivePage={setActivePage} />
