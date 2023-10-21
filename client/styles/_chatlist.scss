@@ -1,5 +1,5 @@
 .chatlist {
-  max-height: 70vh; /* 设置最大高度 */
+  min-height: 70vh; /* 设置最大高度 */
   overflow-y: auto; /* 启用垂直滚动 */
   /* 其余样式 */
   .active {
