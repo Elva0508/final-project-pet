@@ -409,55 +409,59 @@ router.patch("/reserve/detail/status", (req, res) => {
 });
 router.get("/reserve/detail/:oid", async (req, res) => {
   const { oid } = req.params;
-  const order = await new Promise((resolve, reject) => {
-    return conn.execute(
-      `SELECT q.*,p.* FROM mission_req_orders q LEFT JOIN users_pet_info p ON q.pet_info_id = p.pet_id WHERE q.oid = ?`,
-      [oid],
-      (err, results) => {
-        if (err) {
-          console.log(err);
-          reject({ status: 500, error: "資料查詢錯誤" });
+  try {
+    const order = await new Promise((resolve, reject) => {
+      return conn.execute(
+        `SELECT q.*,p.* FROM mission_req_orders q LEFT JOIN users_pet_info p ON q.pet_info_id = p.pet_id WHERE q.oid = ?`,
+        [oid],
+        (err, results) => {
+          if (err) {
+            console.log(err);
+            reject({ status: 500, error: "資料查詢錯誤" });
+          }
+          results = results.map((item) => {
+            const start_day = transferDate(item.start_day);
+            const end_day = transferDate(item.end_day);
+            const created_at = transferDate(item.created_at);
+            return { ...item, start_day, end_day, created_at };
+          });
+          resolve(results[0]);
         }
-        results = results.map((item) => {
-          const start_day = transferDate(item.start_day);
-          const end_day = transferDate(item.end_day);
-          const created_at = transferDate(item.created_at);
-          return { ...item, start_day, end_day, created_at };
-        });
-        resolve(results[0]);
-      }
-    );
-  });
-  const helper_id = order?.helper_userId;
-  const customer_id = order?.customer_userId;
-  const helper_info = await new Promise((resolve, reject) => {
-    return conn.execute(
-      `SELECT h.user_id,h.name,h.email,h.phone,u.cover_photo FROM mission_helper_info h LEFT JOIN userinfo u ON h.user_id = u.user_id WHERE h.user_id = ?`,
-      [helper_id],
-      (err, results) => {
-        if (err) {
-          console.log(err);
-          reject({ status: 500, error: "資料查詢錯誤" });
+      );
+    });
+    const helper_id = order?.helper_userId;
+    const customer_id = order?.customer_userId;
+    const helper_info = await new Promise((resolve, reject) => {
+      return conn.execute(
+        `SELECT h.user_id,h.name,h.email,h.phone,u.cover_photo FROM mission_helper_info h LEFT JOIN userinfo u ON h.user_id = u.user_id WHERE h.user_id = ?`,
+        [helper_id],
+        (err, results) => {
+          if (err) {
+            console.log(err);
+            reject({ status: 500, error: "資料查詢錯誤" });
+          }
+          resolve(results[0]);
         }
-        resolve(results[0]);
-      }
-    );
-  });
-  const customer_info = await new Promise((resolve, reject) => {
-    return conn.execute(
-      `SELECT u.user_id,u.name,u.phone,u.cover_photo,u.email FROM userinfo u WHERE user_id = ?`,
-      [customer_id],
-      (err, results) => {
-        if (err) {
-          console.log(err);
-          reject({ status: 500, error: "資料查詢錯誤" });
+      );
+    });
+    const customer_info = await new Promise((resolve, reject) => {
+      return conn.execute(
+        `SELECT u.user_id,u.name,u.phone,u.cover_photo,u.email FROM userinfo u WHERE user_id = ?`,
+        [customer_id],
+        (err, results) => {
+          if (err) {
+            console.log(err);
+            reject({ status: 500, error: "資料查詢錯誤" });
+          }
+          resolve(results[0]);
         }
-        resolve(results[0]);
-      }
-    );
-  });
-  console.log("459", customer_info);
-  return res.send({ status: 200, customer_info, helper_info, order });
+      );
+    });
+    return res.send({ status: 200, customer_info, helper_info, order });
+  } catch (e) {
+    console.log(e);
+    return res.status(500).send("服務器查詢錯誤");
+  }
 });
 
 router.get("/selling", (req, res) => {

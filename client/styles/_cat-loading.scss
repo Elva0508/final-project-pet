@@ -1,22 +1,7 @@
-.cat-run-wrapper {
-  position: absolute;
-  width: 100vw;
-  // height: 100vh;
-  background-color: rgba(221, 221, 221, 0.507);
-  z-index: 500;
-  #cat-run-lottie {
-    width: 300px;
-    height: 300px;
-    position: absolute;
-    top: 20vh;
-    left: 50vw;
-    transform: translate(-50%, 0%);
-    z-index: 600;
-  }
-}
 .disableFlow {
   // z-index: 100;
   overflow: hidden;
+  margin-right: 17px !important;
 }
 .cat-loading-wrapper {
   background-color: white;
@@ -102,12 +87,14 @@
 .sawtooth {
   position: absolute;
   display: flex;
-  width: 100vw;
-  height: 100vh;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-
+  width: 4000px;
+  height: 5000px;
+  top: -2500px;
+  // right: -50%;
+  transform: rotate(120deg);
+  border-radius: 5% 30%;
+  background-color: $hover;
+  opacity: 0;
   .sawtooth-block {
     width: calc(100vw / 16);
     border-radius: 0 0 2px 30px;

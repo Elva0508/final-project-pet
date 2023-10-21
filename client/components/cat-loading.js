@@ -3,6 +3,7 @@ import React, { forwardRef, useEffect, useRef, useLayoutEffect } from "react";
 // import CatImage from "/cat.svg";
 import { motion, stagger } from "framer-motion";
 import { gsap } from "gsap";
+import { Scale } from "@mui/icons-material";
 const CatLoading = ({ setIsLoading }) => {
   const loadingRef = useRef();
 
@@ -20,11 +21,11 @@ const CatLoading = ({ setIsLoading }) => {
     let ctx = gsap.context(() => {
       const tl = gsap.timeline();
       // 在gsap的context內我们就可以通过css选择器来实现選中父元素內的所有子元素
-      tl.to(".catloading", 1.5, {
+      tl.to(".catloading", 2, {
         height: "60%",
-        ease: "expoScale(0.5,7,none)",
+        ease: "expo.out",
       })
-        .fromTo("#face", 0.8, { opacity: "0" }, { opacity: "1" })
+        .fromTo("#face", 0.6, { opacity: "0" }, { opacity: "1" })
         .fromTo(
           "#beard",
           1,
@@ -39,21 +40,36 @@ const CatLoading = ({ setIsLoading }) => {
         })
         .to(".text", 0.1, { top: "30px", ease: "power4.out" })
         .to(".cat-text", 0.5, { y: "-1000px", opacity: 0 })
-        .to(".cat-face", 1, { transform: "scale(15)" }, "-=0.4")
-        .to(".catloading", 0, { backgroundColor: "transparent" })
-        .to(loadingRef.current, 0, { backgroundColor: "transparent" })
-        .to(".cat-face", 0, { opacity: 0 })
+        .to(".cat-face", 0.2, { transform: "scale(0.8)" }, "-=0.4")
+        .to(".cat-face", 0.8, { transform: "scale(13.5)" })
+        .to(".catloading", 0, { backgroundColor: "transparent" }, "-=0.8")
+        .to(loadingRef.current, 0, { backgroundColor: "transparent" }, "-=0.4")
         .to(
-          ".sawtooth-block",
+          ".sawtooth",
           0,
           {
             opacity: 1,
           },
-          "-=0.5"
+          "-=0.4"
         )
-        .to(".sawtooth-block", 2, {
-          backgroundColor: "#fcb69f",
-        });
+        .to(".cat-face", 0, { opacity: 0 }, "-=0.4")
+        .to(
+          ".sawtooth",
+          1.1,
+          {
+            top: "-4600px",
+            right: "-1000px",
+            // top: "0px",
+            // right: "0px",
+            // width: "300px",
+            // height: "300px",
+            transform: "rotate(94deg)",
+            backgroundColor: "#fcb69f",
+            onComplete: () => setIsLoading(false), //動畫完成時呼叫。所有timeline跟tweens都可以使用
+          },
+          "-=0.2"
+        );
+      // .to(".sawtooth", 6, {  }, "-=6");
 
       // .to(
       //   ".sawtooth-block",
@@ -62,7 +78,7 @@ const CatLoading = ({ setIsLoading }) => {
       //     height: "0px",
       //     stagger: { each: 0.2 },
       //     ease: "power4.out",
-      //     onComplete: () => setIsLoading(false), //動畫完成時呼叫。所有timeline跟tweens都可以使用
+      //
       //   },
       //   "-=1.5"
       // );
@@ -89,7 +105,7 @@ const CatLoading = ({ setIsLoading }) => {
         </div>
       </div>
       <div className="sawtooth">
-        <div className="sawtooth-block block-1"></div>
+        {/* <div className="sawtooth-block block-1"></div>
         <div className="sawtooth-block block-2"></div>
         <div className="sawtooth-block block-3"></div>
         <div className="sawtooth-block block-4"></div>
@@ -104,7 +120,7 @@ const CatLoading = ({ setIsLoading }) => {
         <div className="sawtooth-block"></div>
         <div className="sawtooth-block"></div>
         <div className="sawtooth-block"></div>
-        <div className="sawtooth-block"></div>
+        <div className="sawtooth-block"></div> */}
       </div>
     </div>
   );

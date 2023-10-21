@@ -454,7 +454,7 @@ const Quotation = () => {
               className="icon"
               onClick={handleTime}
             />
-            <div>{time * 30} 分鐘</div>
+            <div className="mx-1">{time * 30} 分鐘</div>
             <CiCircleChevRight
               position="right"
               className="icon"
@@ -470,7 +470,7 @@ const Quotation = () => {
               className="icon"
               onClick={handleFrequency}
             />
-            <div>{frequency} 次</div>
+            <div className="mx-1">{frequency} 次</div>
             <CiCircleChevRight
               position="right"
               className="icon"
@@ -484,6 +484,7 @@ const Quotation = () => {
             className="form-input"
             type="text"
             value={location}
+            placeholder="請輸入地址或附近地標"
             onChange={(e) => {
               setLocation(e.target.value);
             }}

@@ -42,7 +42,7 @@
         .semi-datepicker,
         .semi-select {
           width: 100%;
-          max-width: 400px;
+          // max-width: 400px;
         }
         .semi-select {
           width: 100%;
@@ -121,7 +121,7 @@
   // 日期選擇器覆蓋樣式
   .semi-datepicker {
     width: 100%;
-    border: 1px solid rgba(0, 0, 0, 0.1);
+    border: 1px solid #f8f8f8;
     .semi-datepicker-input {
       width: 100%;
       background-color: $cos-white;
@@ -158,6 +158,14 @@
   .semi-datepicker-day-hoverday-around-singleselected
     .semi-datepicker-day-main {
     background-color: lighten(rgba($hover, $alpha: 0.8), 5%);
+  }
+  .semi-datepicker-day-today .semi-datepicker-day-main {
+    color: $hover;
+  }
+  .semi-datepicker-day-today.semi-datepicker-day-disabled
+    .semi-datepicker-day-main {
+    color: $price;
+    opacity: 0.5;
   }
 }
 

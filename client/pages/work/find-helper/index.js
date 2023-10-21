@@ -244,12 +244,14 @@ const FamousHelperCard = ({
   const [isFavHovered, setIsFavHovered] = useState(false);
   const { isAuthenticated } = useAuth();
   const { isLoading, setIsLoading } = useHelper();
+  const [lowerPrice, setLowerPrice] = useState(0);
   const router = useRouter();
   const service = [
     { label: "到府代餵", value: parseInt(helper.feed_service) },
     { label: "安親寄宿", value: parseInt(helper.house_service) },
     { label: "到府美容", value: parseInt(helper.beauty_service) },
   ];
+  const value = [helper.feed_price, helper.house_price, helper.beauty_price];
   const handleFav = (e) => {
     e.stopPropagation();
     if (isAuthenticated) {
@@ -277,7 +279,22 @@ const FamousHelperCard = ({
       router.push("/member/login");
     }
   };
-
+  useEffect(() => {
+    // 取得最低金額的服務價格
+    let value = [];
+    if (helper.feed_service == 1) {
+      value.push(helper.feed_price);
+    }
+    if (helper.house_service == 1) {
+      value.push(helper.house_price);
+    }
+    if (helper.beauty_service == 1) {
+      value.push(helper.beauty_price);
+    }
+    console.log(value);
+    const newValue = value.sort();
+    setLowerPrice(newValue[0]);
+  }, [helper]);
   return (
     <>
       {/* <AnimatePresence> */}
@@ -376,7 +393,7 @@ const FamousHelperCard = ({
             </div>
           </div>
           <div className="d-flex align-items-end price">
-            <span className="size-5">NT$140</span>
+            <span className="size-5">NT${lowerPrice}</span>
             <span>起</span>
           </div>
         </div>
@@ -392,6 +409,7 @@ const MobileFamousHelper = ({
   setCollection,
 }) => {
   const swiperRef = useRef(null);
+
   useEffect(() => {
     const swiperContainer = swiperRef.current;
     const params = {
@@ -472,6 +490,7 @@ const SingleHelperCard = ({
   const imgRef = useRef(null);
   const ref = useRef(null);
   const isInView = useInView(ref);
+  const [lowerPrice, setLowerPrice] = useState(0);
 
   const service = [
     { label: "到府代餵", value: parseInt(helper.feed_service) },
@@ -525,29 +544,23 @@ const SingleHelperCard = ({
       window.removeEventListener("resize", handleResize);
     };
   }, []);
-  // useEffect(() => {
-  //   if (isInView) {
-  //     console.log("Element is in view: ", isInView);
-  //     helperControl.start("singleMove");
-  //   }
-  // }, [isInView]);
-  // const animate = {
-  //   // 一開始消失，畫面從右側往左側移入出現
-  //   ini: {
-  //     opacity: 0,
-  //     x: 150,
-  //   },
-  //   moveRight: {
-  //     opacity: 1,
-  //     x: 0,
-  //     transition: { duration: 0.5, ease: "easeIn" },
-  //   },
-  //   sortAppear: {
-  //     opacity: [0, 1],
-  //     x: [150, 0],
-  //     transition: { duration: 1, delay: 0.2 },
-  //   },
-  // };
+
+  useEffect(() => {
+    // 取得最低金額的服務價格
+    let value = [];
+    if (helper.feed_service == 1) {
+      value.push(helper.feed_price);
+    }
+    if (helper.house_service == 1) {
+      value.push(helper.house_price);
+    }
+    if (helper.beauty_service == 1) {
+      value.push(helper.beauty_price);
+    }
+    // console.log(value);
+    const newValue = value.sort();
+    setLowerPrice(newValue[0]);
+  }, [helper]);
 
   return (
     <>
@@ -640,7 +653,7 @@ const SingleHelperCard = ({
         </div>
         <div className="single-card-footer">
           <div className="d-flex align-items-end price">
-            <span className="size-5">NT$140</span>
+            <span className="size-5">NT${lowerPrice}</span>
             <span>起</span>
           </div>
         </div>
@@ -704,11 +717,30 @@ const Collection = ({ collection, setCollection }) => {
 };
 const FavCard = ({ helper, collection, setCollection }) => {
   const [isHovered, setIsHovered] = useState(false);
+  const [lowerPrice, setLowerPrice] = useState(0);
+  const value = [helper.feed_price, helper.house_price, helper.beauty_price];
   const service = [
     { label: "到府代餵", value: parseInt(helper.feed_service) },
     { label: "安親寄宿", value: parseInt(helper.house_service) },
     { label: "到府美容", value: parseInt(helper.beauty_service) },
   ];
+
+  useEffect(() => {
+    // 取得最低金額的服務價格
+    let value = [];
+    if (helper.feed_service == 1) {
+      value.push(helper.feed_price);
+    }
+    if (helper.house_service == 1) {
+      value.push(helper.house_price);
+    }
+    if (helper.beauty_service == 1) {
+      value.push(helper.beauty_price);
+    }
+    console.log(value);
+    const newValue = value.sort();
+    setLowerPrice(newValue[0]);
+  }, [helper]);
   return (
     <div className={`famous-helper-card d-flex align-items-center`}>
       <div className="img-wrapper">
@@ -816,12 +848,12 @@ const MissionHelperList = () => {
       opacity: 1,
       x: 0,
       y: 0,
-      transition: { duration: 1, delay: i * 0.2 },
+      transition: { duration: 0.4, delay: i * 0.2 },
     }),
     exit: (i) => ({
       opacity: 0,
       y: 20,
-      transition: { duration: 0.4 },
+      transition: { duration: 0.1 },
     }),
   };
 
@@ -834,10 +866,10 @@ const MissionHelperList = () => {
       transition: { layout: { duration: 0.4 }, duration: 1, delay: i * 0.2 },
     }),
     exit: (i) => ({
-      x: -150,
+      x: -100,
       y: 0,
       opacity: 0,
-      transition: { duration: 0.2, delay: i * 0.1 },
+      transition: { duration: 0.18, delay: i * 0.15 },
     }),
   };
   const famousRef = useRef(null);
@@ -878,6 +910,7 @@ const MissionHelperList = () => {
               console.log(response);
               setAllHelpers(response?.data?.data);
               setTotalRows(response?.data?.totalRows);
+              setHelperActive("move");
             })
             .catch((e) => {
               console.log(e);
@@ -891,7 +924,7 @@ const MissionHelperList = () => {
                 setTotalRows(response?.data?.totalRows);
                 setTempTotalRows(response?.data?.totalRows);
                 setFirstLoad(false);
-                // setIsLoading(false);
+                setHelperActive("move");
               })
               .catch((e) => {
                 console.log(e);
@@ -901,24 +934,23 @@ const MissionHelperList = () => {
               .then((response) => {
                 setAllHelpers(response?.data?.data);
                 setTotalRows(response?.data?.totalRows);
+                setHelperActive("move");
               })
               .catch((e) => {
                 console.log(e);
               });
           }
-          WorkService.getFamousHelper(filterType)
-            .then((response) => {
-              // console.log(response?.data.famous);
-              setFamous(response?.data.famous);
-            })
-            .catch((e) => {
-              console.log(e);
-            });
         }
-        setHelperActive("move");
-        setIsActive("move");
+        WorkService.getFamousHelper(filterType)
+          .then((response) => {
+            console.log("famous", response?.data.famous);
+            setFamous(response?.data.famous);
+            setIsActive("move");
+          })
+          .catch((e) => {
+            console.log(e);
+          });
       }
-      // hideLoader();
     })();
   }, [filterType]);
 
