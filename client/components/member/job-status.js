@@ -1,7 +1,4 @@
 import React, { useState } from "react";
-import { CiHeart } from "react-icons/ci";
-import { BiSolidHeart } from "react-icons/bi";
-import { RiDeleteBin5Line } from "react-icons/ri";
 import axios from "axios";
 import dayjs from "dayjs";
 import Pagination from "@/components/pagination";
