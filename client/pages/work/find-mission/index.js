@@ -1332,7 +1332,8 @@ export default function MissionList() {
   const [search, setSearch] = useState("");
   // 用於儲存解析後的userID
   const [userId, setUserId] = useState(null);
-
+  // 右側卡片動畫
+  const [missionActive, setMissionActive] = useState("move");
 
   const [allMissions, setAllMissions] = useState([]);
 
@@ -1364,10 +1365,67 @@ export default function MissionList() {
     }
   };
 
+  const missionVariant = {
+    // 一開始消失，畫面從下側往上移入出現
+    initial: {
+      opacity: 0,
+      y: 20,
+      transition: { duration: 0 },
+    },
+    // 卡片單張單張移動
+    move: (i) => ({
+      opacity: 1,
+      x: 0,
+      y: 0,
+      // 動畫持續1秒（開始到結束）每張卡片延遲0.1秒（逐張出現）
+      transition: { duration: 1, delay: i * 0.1 },
+    }),
+    exit: (i) => ({
+      opacity: 0,
+      y: 20,
+      transition: { duration: 0.2 },
+    }),
+    all_move: {
+      opacity: 1,
+      x: 0,
+      y: 0,
+      // 動畫持續1秒（開始到結束）
+      transition: { duration: 1 },
+    },
+  };
+
   // useEffect(() => {
   //   getAllMissions()
   // }, [missionType, updateDate, missionCity, missionArea, sortOrder, sortBy, search]) // 當篩選方式、排序方式發生變化時重新獲取數據（非常重要要記得！忘記好幾次）
   // 這邊不添加 inputValue 否則在input輸入時就直接即時搜尋
+
+  useEffect(() => {
+    (async () => {
+      if (!missionType && !missionCity && !missionArea && !updateDate && !search) {
+        getAllMissions();
+        setMissionActive("move");
+      }
+      // 當篩選及搜尋時
+      else if (missionType || missionCity || missionArea || updateDate || search || sortOrder || sortBy) {
+
+        // 使用 Promise 等待一段時間
+        await new Promise((resolve) => {
+          // 先退出動畫
+          setMissionActive("exit");
+          setTimeout(resolve, 300);
+        });
+
+        // 切換到初始狀態
+        setMissionActive("initial");
+
+        // 執行後端資料獲取
+        getAllMissions();
+
+        // 執行進入動畫
+        setMissionActive("all_move");
+      }
+    })();
+  }, [missionType, missionCity, missionArea, updateDate, search, sortOrder, sortBy]);
 
   useEffect(() => {
     // 在allMissions狀態更新後輸出內容
@@ -1443,71 +1501,14 @@ export default function MissionList() {
     }, 0);
   };
 
-  // 右側卡片動畫
-  // const [isActive, setIsActive] = useState("move");
-  const [missionActive, setMissionActive] = useState("move");
 
-  const missionVariant = {
-    // 一開始消失，畫面從下側往上移入出現
-    initial: {
-      opacity: 0,
-      y: 20,
-      transition: { duration: 0 },
-    },
-    // 卡片單張單張移動
-    move: (i) => ({
-      opacity: 1,
-      x: 0,
-      y: 0,
-      // 動畫持續1秒（開始到結束）每張卡片延遲0.1秒（逐張出現）
-      transition: { duration: 1, delay: i * 0.1 },
-    }),
-    exit: (i) => ({
-      opacity: 0,
-      y: 20,
-      transition: { duration: 0.2 },
-    }),
-    all_move: {
-      opacity: 1,
-      x: 0,
-      y: 0,
-      // 動畫持續1秒（開始到結束）
-      transition: { duration: 1 },
-    },
-  };
 
   // 換頁時回到上方
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [activePage]);
 
-  useEffect(() => {
-    (async () => {
-      if (!missionType && !missionCity && !missionArea && !updateDate && !search) {
-        getAllMissions();
-        setMissionActive("move");
-      }
-      // 當篩選及搜尋時
-      else if (missionType || missionCity || missionArea || updateDate || search || sortOrder || sortBy) {
 
-        // 使用 Promise 等待一段時間
-        await new Promise((resolve) => {
-          // 先退出動畫
-          setMissionActive("exit");
-          setTimeout(resolve, 300);
-        });
-
-        // 切換到初始狀態
-        setMissionActive("initial");
-
-        // 執行後端資料獲取
-        getAllMissions();
-
-        // 執行進入動畫
-        setMissionActive("all_move");
-      }
-    })();
-  }, [missionType, missionCity, missionArea, updateDate, search, sortOrder, sortBy]);
 
 
 
