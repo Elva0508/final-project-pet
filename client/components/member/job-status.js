@@ -83,27 +83,26 @@ export default function JobStatusTwo({
   const [missionActive, setMissionActive] = useState("move");
 
   const missionVariant = {
-      // 一開始消失，畫面從下側往上移入出現
-      initial: {
-        opacity: 0,
-        y: -10,
-        transition: { duration: 0 },
-      },
-      // 卡片單張單張移動
-      move: (i) => ({
-        opacity: 1,
-        x: 0,
-        y: 0,
-        // 動畫持續1秒（開始到結束）每張卡片延遲0.1秒（逐張出現）
-        transition: { duration: 1, delay: i * 0.1 },
-      }),
-      exit: (i) => ({
-        opacity: 0,
-        y: 20,
-        transition: { duration: 0.4 },
-      }),
-    };
-  
+    // 一開始消失，畫面從下側往上移入出現
+    initial: {
+      opacity: 0,
+      y: -10,
+      transition: { duration: 0 },
+    },
+    // 卡片單張單張移動
+    move: (i) => ({
+      opacity: 1,
+      x: 0,
+      y: 0,
+      // 動畫持續1秒（開始到結束）每張卡片延遲0.1秒（逐張出現）
+      transition: { duration: 1, delay: i * 0.1 },
+    }),
+    exit: (i) => ({
+      opacity: 0,
+      y: 20,
+      transition: { duration: 0.4 },
+    }),
+  };
 
   return (
     <>
@@ -156,7 +155,12 @@ export default function JobStatusTwo({
                         <div className="d-md-flex d-none">
                           <p className="size-6 title">
                             <span>任務主題：</span>
-                            <Link href={`/work/find-mission/${v.mission_id}`} className="size-6">{v.title}</Link>
+                            <Link
+                              href={`/work/find-mission/${v.mission_id}`}
+                              className="size-6"
+                            >
+                              {v.title}
+                            </Link>
                           </p>
                           {v.mission_status == 0 ? (
                             <>
@@ -193,38 +197,45 @@ export default function JobStatusTwo({
                         </p>
                         <p className="size-7">
                           <span>任務內容：</span>
-                          {showcontent && id === i ?(
-                          <motion.div className=""  initial={"initial"}
-                          animate={
-                            missionActive === "move"
-                              ? "move"
-                              : missionActive === "exit"
-                                ? "exit"
-                                : "initial"
-                          }
-                          variants={missionVariant}
-                          // (index + 1) % 3 == 1 ? 0 : (index + 1) % 3 == 2 ? 1 : 2 整排移動參數
-                          custom={i}
-                          whileInView="singleMove"
-                          viewport={{
-                            once: true,
-                          }}><CustomHTMLRenderer htmlContent={v.description} />
-                            </motion.div>):("")}                        
-                      <button
-                              className="btn-confirm"
-                              onClick={() => {
-                                if(!showcontent){
-                                  setShowContent(true)
-                                  setId(i)
-                                }else if(showcontent && id !== i){
-                                  setId(i)
-                                }else{
-                                  setShowContent(false)
-                                }
+                          {showcontent && id === i ? (
+                            <motion.div
+                              className=""
+                              initial={"initial"}
+                              animate={
+                                missionActive === "move"
+                                  ? "move"
+                                  : missionActive === "exit"
+                                  ? "exit"
+                                  : "initial"
+                              }
+                              variants={missionVariant}
+                              // (index + 1) % 3 == 1 ? 0 : (index + 1) % 3 == 2 ? 1 : 2 整排移動參數
+                              custom={i}
+                              whileInView="singleMove"
+                              viewport={{
+                                once: true,
                               }}
                             >
-                               {showcontent && id === i ?("隱藏內容"):("顯示內容")}
-                            </button>
+                              <CustomHTMLRenderer htmlContent={v.description} />
+                            </motion.div>
+                          ) : (
+                            ""
+                          )}
+                          <button
+                            className="btn-confirm"
+                            onClick={() => {
+                              if (!showcontent) {
+                                setShowContent(true);
+                                setId(i);
+                              } else if (showcontent && id !== i) {
+                                setId(i);
+                              } else {
+                                setShowContent(false);
+                              }
+                            }}
+                          >
+                            {showcontent && id === i ? "隱藏內容" : "顯示內容"}
+                          </button>
                         </p>
                         <p className="size-7 follow mt-2">
                           {idCounts[v.mission_id] == undefined
@@ -266,7 +277,7 @@ export default function JobStatusTwo({
                           <button
                             className="btn-confirm size-6 text-center px-3 py-2"
                             onClick={() => {
-                              window.location.href = `/work/find-mission/${v.mission_id}`;
+                              router.push(`/work/find-mission/${v.mission_id}`);
                             }}
                           >
                             立即應徵
