@@ -106,5 +106,47 @@ router.get("/order/:id",(req,res)=>{
         res.json({result})
         }
 )})
+//拿常用地址
+router.get("/address/:id",(req,res)=>{   
+  console.log(req);
+  const id= req.params.id;  
+  console.log(req.params);
+    connection.execute(
+        `SELECT * FROM address WHERE user_id=?;`
+        ,[id]
+        ,(error,result)=>{
+        res.json({result})
+        }
+)})
+
+//儲存常用地址，資料庫沒有儲存過
+router.put("/address",(req,res)=>{
+  const { userid, city,number,address } = req.body; 
+  connection.execute(
+      `INSERT INTO address(user_id, city, area, detail) VALUES (?,?,?,?)`,
+      [userid, city,number,address]
+      ,(error, result) => {
+          if (error) {
+            console.error("Error:", error);
+            res.status(500).json({ error: "An error occurred" });
+          } else {
+            res.json({ result });
+          }})
+})
+
+//儲存常用地址，資料庫有儲存過，所以修改地址
+router.put("/updateAddress",(req,res)=>{
+  const { userid, city,number,address } = req.body; 
+  connection.execute(
+      `UPDATE address SET city=?,area=?,detail=? WHERE user_id=?`,
+      [ city,number,address,userid]
+      ,(error, result) => {
+          if (error) {
+            console.error("Error:", error);
+            res.status(500).json({ error: "An error occurred" });
+          } else {
+            res.json({ result });
+          }})
+})
 
 module.exports = router;

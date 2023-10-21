@@ -67,7 +67,14 @@ export function Loader({ backgroundColor = "rgb(167 167 167 / 68%)", show }) {
             left: 50vw;
             transform: translate(-50%, -50%);
           }
-
+          @media screen and (max-width: 576px) {
+            .semi-loader {
+              #cat-run-lottie {
+                width: 220px;
+                height: 220px;
+              }
+            }
+          }
           // .semi-loader::after {
           //   content: "";
           //   display: block;

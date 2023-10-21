@@ -15,7 +15,7 @@ export default function Purchast() {
   const [activePage, setActivePage] = useState(1);
   const startIndex = (activePage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const currentData = product.slice(startIndex, endIndex);
+  
   const router = useRouter();
 
   const getProduct = (id) => {
@@ -133,6 +133,28 @@ export default function Purchast() {
     getCart(id);
   }, []);
 
+  let newProduct = [];
+  product.forEach(v => {
+    const hasDuplicate = newProduct.some(n => n.product_id === v.product_id);
+    if (!hasDuplicate) {
+      newProduct.push(v);
+    }
+  })
+
+  let idCounts = [];
+  product.forEach(v => {
+    const product_name = v.product_name;
+    const type_id = v.type_id;
+    if (idCounts[`${product_name}+${type_id}`]) {
+        idCounts[`${product_name}+${type_id}`]++; // 如果 ID 已经存在，增加计数
+    } else {
+        idCounts[`${product_name}+${type_id}`] = 1; // 如果 ID 不存在，初始化计数为 1
+    }
+  });
+
+  const currentData = newProduct.slice(startIndex, endIndex);
+
+
   return (
     <>
       <div className="my-3">
@@ -177,6 +199,7 @@ export default function Purchast() {
                               <Link href={`/product/${v.category_id}/${v.subcategory_id}/${v.product_id}`} className="size-6">{v.product_name}</Link>
                               <p className="size-6 type">{v.type}</p>
                               <p className="size-6 price">NT${v.price}</p>
+                              <p className="size-7 type">購買過{idCounts[`${v.product_name}+${v.type_id}`]}次</p>
                             </div>
                           </div>
 

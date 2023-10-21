@@ -3,13 +3,12 @@ import React,{ useEffect, useState } from 'react'
 export default function Star({startRating = 0,valid, onRatingChange = () => {} }) {
     const [rating, setRating] = useState(startRating)
     const [hoverRating, setHoverRating] = useState(0)
-
     useEffect(() => {
         setRating(startRating)
       }, [startRating])
   return (
     <>
-    {(valid==null )?(
+    {(valid==null)?(
         <div className='star'>
         {/* 快速產生5個成員都是1陣列，表達式語法 */}
         {Array(5)

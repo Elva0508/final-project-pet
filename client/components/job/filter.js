@@ -17,10 +17,12 @@ const Filter = ({
   const [anchorEl, setAnchorEl] = useState(null);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
+    document.body.style.marginRight = "17px";
     // console.log(event);
   };
   const handleClose = () => {
     setAnchorEl(null);
+    document.body.style.marginRight = "0px";
   };
   // const handleOption = (e) => {
   //   console.log(e.target.getAttribute("value"));
