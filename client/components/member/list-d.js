@@ -182,6 +182,7 @@ export default function ListD() {
                 }`}
                 onClick={() => {
                   setActiveButton(8);
+
                   router.push("/member/selling");
                 }}
               >

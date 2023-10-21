@@ -7,6 +7,12 @@ import dayjs from "dayjs";
 import Pagination from "@/components/pagination";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import {
+  motion,
+  useAnimationControls,
+  AnimatePresence,
+  useInView,
+} from "framer-motion";
 
 export default function JobStatusTwo({
   job,
@@ -72,6 +78,30 @@ export default function JobStatusTwo({
       console.error("Error:", error);
     }
     getJob(user_id);
+  };
+
+  const [missionActive, setMissionActive] = useState("move");
+
+  const missionVariant = {
+    // 一開始消失，畫面從下側往上移入出現
+    initial: {
+      opacity: 0,
+      y: -10,
+      transition: { duration: 0 },
+    },
+    // 卡片單張單張移動
+    move: (i) => ({
+      opacity: 1,
+      x: 0,
+      y: 0,
+      // 動畫持續1秒（開始到結束）每張卡片延遲0.1秒（逐張出現）
+      transition: { duration: 1, delay: i * 0.1 },
+    }),
+    exit: (i) => ({
+      opacity: 0,
+      y: 20,
+      transition: { duration: 0.4 },
+    }),
   };
 
   return (
@@ -168,11 +198,29 @@ export default function JobStatusTwo({
                         <p className="size-7">
                           <span>任務內容：</span>
                           {showcontent && id === i ? (
-                            <CustomHTMLRenderer htmlContent={v.description} />
+                            <motion.div
+                              className=""
+                              initial={"initial"}
+                              animate={
+                                missionActive === "move"
+                                  ? "move"
+                                  : missionActive === "exit"
+                                  ? "exit"
+                                  : "initial"
+                              }
+                              variants={missionVariant}
+                              // (index + 1) % 3 == 1 ? 0 : (index + 1) % 3 == 2 ? 1 : 2 整排移動參數
+                              custom={i}
+                              whileInView="singleMove"
+                              viewport={{
+                                once: true,
+                              }}
+                            >
+                              <CustomHTMLRenderer htmlContent={v.description} />
+                            </motion.div>
                           ) : (
                             ""
                           )}
-
                           <button
                             className="btn-confirm"
                             onClick={() => {
@@ -189,7 +237,7 @@ export default function JobStatusTwo({
                             {showcontent && id === i ? "隱藏內容" : "顯示內容"}
                           </button>
                         </p>
-                        <p className="size-7 follow">
+                        <p className="size-7 follow mt-2">
                           {idCounts[v.mission_id] == undefined
                             ? "0"
                             : idCounts[v.mission_id]}

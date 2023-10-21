@@ -24,7 +24,7 @@ export default function Login() {
 
   return (
     <>
-      <div className="container mt-3 mb-5">
+      <div className="boxing-padding">
         <div className="login-box d-flex align-items-center flex-column justify-content-center mx-auto ">
           <div className="login-header d-flex ">
             <div className="size-4 mx-4 my-2">
