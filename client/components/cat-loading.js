@@ -38,7 +38,7 @@ const CatLoading = ({ setIsLoading }) => {
           ease: "bounce.out",
           stagger: { each: 0.3 },
         })
-        .to(".text", 0.1, { top: "30px", ease: "power4.out" })
+        .to(".text", 0.1, { top: "50px", ease: "power4.out" })
         .to(".cat-text", 0.5, { y: "-1000px", opacity: 0 })
         .to(".cat-face", 0.2, { transform: "scale(0.8)" }, "-=0.4")
         .to(".cat-face", 0.8, { transform: "scale(13.5)" })
