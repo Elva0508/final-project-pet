@@ -15,6 +15,8 @@ const SellingDetailPage = () => {
   const [detail, setDetail] = useState({});
   const { oid } = router.query;
   const { isAuthenticated, userId } = useAuth();
+  const [helperInfo, setHelperInfo] = useState(null);
+  const [customInfo, setCustomInfo] = useState(null);
 
   useEffect(() => {
     // 初始狀態時isAuthenticated為null，等到isAuthenticated有值時(true or false)才做驗證判斷
@@ -30,9 +32,11 @@ const SellingDetailPage = () => {
     memberService
       .getReserveDetail(oid)
       .then((response) => {
-        const info = response.data.data;
+        const info = response.data.order;
         if (response?.data?.status === 200) {
           setStatus(info.status);
+          setCustomInfo(response.data.customer_info);
+          setHelperInfo(response.data.helper_info);
           switch (info.status) {
             case 1:
               setDetail({ ...info, status: "待處理" });
@@ -136,6 +140,8 @@ const SellingDetailPage = () => {
                 title={"幫手訂單"}
                 detail={detail}
                 setDetail={setDetail}
+                helperInfo={helperInfo}
+                customInfo={customInfo}
               />
               {status && status !== 3 && status !== 4 && (
                 <div className="d-flex justify-content-end mb-5">

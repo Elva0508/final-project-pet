@@ -47,6 +47,7 @@ $dropdown-border-width: 0;
 
 // 定義中文字體用
 body {
+  overflow-x: hidden;
   font-family: "Poppins", "Noto Sans TC", Helvetica, Arial, "PingFang TC",
     "苹方-繁", "Heiti TC", "黑體-繁", "Microsoft JhengHei", "微軟正黑體",
     // Cross-platform generic font family (default user interface font)
@@ -69,6 +70,7 @@ body {
     "Apple Color Emoji",
     "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   background-color: $main-bg;
+  padding: 0 !important;
   overflow-x: hidden;
 }
 a {

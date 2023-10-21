@@ -433,8 +433,8 @@ const Open = ({ open, setOpen, info, setInfo, images, setImages, user_id }) => {
           <label className="size-6 m-size-7">個人簡述</label>
           <textarea
             autosize
-            rows={3}
-            className="form-input m-form-input h-auto"
+            rows={8}
+            className="form-area m-form-input h-auto"
             type="text"
             placeholder="請簡單輸入自我介紹"
             value={info?.Introduction}
@@ -683,7 +683,7 @@ const HelperInfo = ({ user_id }) => {
             小幫手資料
             {open && (
               <Link
-                href={`/work/find-helper/1`}
+                href={`/work/find-helper/${user_id}`}
                 // 修改為user_id
                 className="to-detail size-7 m-size-7 active-hover"
               >
