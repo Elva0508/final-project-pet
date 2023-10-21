@@ -1226,7 +1226,9 @@ const MissionCard = ({ missionType, missionCity, missionArea, setMissionType, up
                 ? "move"
                 : missionActive === "exit"
                   ? "exit"
-                  : "initial"
+                  : missionActive === "all_move"
+                    ? "all_move"
+                    : "initial"
             }
             variants={missionVariant}
             // (index + 1) % 3 == 1 ? 0 : (index + 1) % 3 == 2 ? 1 : 2 整排移動參數
@@ -1362,9 +1364,9 @@ export default function MissionList() {
     }
   };
 
-  useEffect(() => {
-    getAllMissions()
-  }, [missionType, updateDate, missionCity, missionArea, sortOrder, sortBy, search]) // 當篩選方式、排序方式發生變化時重新獲取數據（非常重要要記得！忘記好幾次）
+  // useEffect(() => {
+  //   getAllMissions()
+  // }, [missionType, updateDate, missionCity, missionArea, sortOrder, sortBy, search]) // 當篩選方式、排序方式發生變化時重新獲取數據（非常重要要記得！忘記好幾次）
   // 這邊不添加 inputValue 否則在input輸入時就直接即時搜尋
 
   useEffect(() => {
@@ -1463,8 +1465,15 @@ export default function MissionList() {
     exit: (i) => ({
       opacity: 0,
       y: 20,
-      transition: { duration: 0.4 },
+      transition: { duration: 0.2 },
     }),
+    all_move: {
+      opacity: 1,
+      x: 0,
+      y: 0,
+      // 動畫持續1秒（開始到結束）
+      transition: { duration: 1 },
+    },
   };
 
   // 換頁時回到上方
@@ -1474,14 +1483,18 @@ export default function MissionList() {
 
   useEffect(() => {
     (async () => {
+      if (!missionType && !missionCity && !missionArea && !updateDate && !search) {
+        getAllMissions();
+        setMissionActive("move");
+      }
       // 當篩選及搜尋時
-      if (missionType || missionCity || missionArea || updateDate || search || sortOrder || sortBy) {
+      else if (missionType || missionCity || missionArea || updateDate || search || sortOrder || sortBy) {
 
         // 使用 Promise 等待一段時間
         await new Promise((resolve) => {
           // 先退出動畫
           setMissionActive("exit");
-          setTimeout(resolve, 600);
+          setTimeout(resolve, 300);
         });
 
         // 切換到初始狀態
@@ -1491,7 +1504,7 @@ export default function MissionList() {
         getAllMissions();
 
         // 執行進入動畫
-        setMissionActive("move");
+        setMissionActive("all_move");
       }
     })();
   }, [missionType, missionCity, missionArea, updateDate, search, sortOrder, sortBy]);
