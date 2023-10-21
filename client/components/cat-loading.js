@@ -3,8 +3,9 @@ import React, { forwardRef, useEffect, useRef, useLayoutEffect } from "react";
 // import CatImage from "/cat.svg";
 import { motion, stagger } from "framer-motion";
 import { gsap } from "gsap";
-const CatLoading = forwardRef((props, ref) => {
+const CatLoading = ({ setIsLoading }) => {
   const loadingRef = useRef();
+
   // useEffect(() => {
   //   console.log(document.body);
   //   setTimeout(() => {
@@ -12,46 +13,62 @@ const CatLoading = forwardRef((props, ref) => {
   //   }, [3000]);
   // }, []);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     window.scrollTo(0, 0);
     // 创建一个context，当这里执行之后，所有相关的gasp动画代码也就被创建了
     // 所以一定要记得通过revert方法来做一个清理，不然可能会多次执行
     let ctx = gsap.context(() => {
       const tl = gsap.timeline();
       // 在gsap的context內我们就可以通过css选择器来实现選中父元素內的所有子元素
-      tl.fromTo(loadingRef.current, 1, { height: "0%" }, { height: "100%" })
-        .fromTo("#face", 1, { opacity: "0" }, { opacity: "1" })
+      tl.to(".catloading", 1.5, {
+        height: "60%",
+        ease: "expoScale(0.5,7,none)",
+      })
+        .fromTo("#face", 0.8, { opacity: "0" }, { opacity: "1" })
         .fromTo(
           "#beard",
           1,
           { top: "15%", opacity: "0" },
           { top: "65%", opacity: "1" }
         )
-        .to("#text1", 0.1, { opacity: "1" })
-        .to("#text2", 0.1, { opacity: "1" })
-        .to("#text3", 0.1, { opacity: "1" })
-        .to("#text4", 0.1, { opacity: "1" })
-        .to("#text5", 0.1, { opacity: "1" })
-        .to("#text1", 0.2, { y: "-20px" })
-        .to("#text1", 0.2, { y: "0px" })
-        .to("#text2", 0.2, { y: "-20px" })
-        .to("#text2", 0.2, { y: "0px" })
-        .to("#text3", 0.2, { y: "-20px" })
-        .to("#text3", 0.2, { y: "0px" })
-        .to("#text4", 0.2, { y: "-20px" })
-        .to("#text4", 0.2, { y: "0px" })
-        .to("#text5", 0.2, { y: "-20px" })
-        .to("#text5", 0.2, { y: "0px" })
-        .to(".cat-text", 0.1, { y: "5px" })
-        .to(".cat-text", 0.4, { y: "-1000px", opacity: 0 })
-        // .to(".catloading", 2.5, { width: "100%", height: "100%" }, "-=2.5")
+        .to(".text", 0.7, {
+          opacity: "1",
+          top: 0,
+          ease: "bounce.out",
+          stagger: { each: 0.3 },
+        })
+        .to(".text", 0.1, { top: "30px", ease: "power4.out" })
+        .to(".cat-text", 0.5, { y: "-1000px", opacity: 0 })
         .to(".cat-face", 1, { transform: "scale(15)" }, "-=0.4")
-        // .to(loadingRef.current, 0.5, { bottom: "100vh", top: "0px" })
-        .to(".sawtooth-block", 0.5, {
-          bottom: "10px",
-          stagger: { each: 0.2, repeat: -1 },
+        .to(".catloading", 0, { backgroundColor: "transparent" })
+        .to(loadingRef.current, 0, { backgroundColor: "transparent" })
+        .to(".cat-face", 0, { opacity: 0 })
+        .to(
+          ".sawtooth-block",
+          0,
+          {
+            opacity: 1,
+          },
+          "-=0.5"
+        )
+        .to(".sawtooth-block", 2, {
+          backgroundColor: "#fcb69f",
         });
-    }, loadingRef); // <- 重要！在gsap.context方法中第二个参数是放這些子元素的父層Ref
+
+      // .to(
+      //   ".sawtooth-block",
+      //   {
+      //     duration: 1.5,
+      //     height: "0px",
+      //     stagger: { each: 0.2 },
+      //     ease: "power4.out",
+      //     onComplete: () => setIsLoading(false), //動畫完成時呼叫。所有timeline跟tweens都可以使用
+      //   },
+      //   "-=1.5"
+      // );
+    }, loadingRef);
+
+    // <- 重要！在gsap.context方法中第二个参数是放這些子元素的父層Ref
 
     return () => ctx.revert(); // 在這裡做清理動畫的動作
   }, []); // <- 设置一个空数组，比避免每次渲染的时候这个Hook重复执行
@@ -72,6 +89,10 @@ const CatLoading = forwardRef((props, ref) => {
         </div>
       </div>
       <div className="sawtooth">
+        <div className="sawtooth-block block-1"></div>
+        <div className="sawtooth-block block-2"></div>
+        <div className="sawtooth-block block-3"></div>
+        <div className="sawtooth-block block-4"></div>
         <div className="sawtooth-block"></div>
         <div className="sawtooth-block"></div>
         <div className="sawtooth-block"></div>
@@ -87,7 +108,7 @@ const CatLoading = forwardRef((props, ref) => {
       </div>
     </div>
   );
-});
+};
 
 export default CatLoading;
 

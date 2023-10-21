@@ -611,7 +611,7 @@ const HelperDetail = () => {
 
     window.scrollTo({
       top: scrollTo,
-      behavior: "smooth", // 如果需要平滑滚动效果
+      behavior: "smooth", // 平滑滾動效果
     });
   }, [currentPage]);
 
@@ -631,7 +631,7 @@ const HelperDetail = () => {
         // console.log(scrollY, dScrollY);
         if (distanceToBottom < 130) {
           leftBlock.style.position = "relative";
-          leftBlock.style.top = `${scrollY - 20 - 130}px `;
+          leftBlock.style.top = `${scrollY - 300}px `;
         } else {
           leftBlock.style.position = "sticky";
           leftBlock.style.top = "10px";
