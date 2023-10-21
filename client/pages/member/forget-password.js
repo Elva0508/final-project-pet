@@ -83,7 +83,7 @@ export default function ForgetPassword() {
 
   return (
     <>
-      <div className="container mt-3 mb-5 logform">
+      <div className="boxing-padding">
         <div className="forgotPwd-box d-flex align-items-center flex-column justify-content-center mx-auto ">
           <div className="login-header d-flex ">
             <div className="size-4 mx-3  title">忘記密碼</div>
