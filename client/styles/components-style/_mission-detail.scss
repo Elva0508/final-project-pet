@@ -48,7 +48,7 @@
   &:hover {
     width: 56px + 28px + 30px;
 
-    &>span {
+    & > span {
       right: 60px;
       color: $price;
     }
@@ -67,7 +67,7 @@
     color: $hover;
   }
 
-  &>span {
+  & > span {
     width: 56px;
     position: absolute;
     font-size: 14px;
@@ -130,12 +130,16 @@
     margin-top: 2rem;
     position: relative;
     height: 70px;
-    background: linear-gradient(to bottom, rgba(240, 195, 150, 0.6078431373), #e6bd99);
+    background: linear-gradient(
+      to bottom,
+      rgba(240, 195, 150, 0.6078431373),
+      #e6bd99
+    );
   }
 
   .left-block-btn {
     @extend %chat-button-style;
-    left: 8%
+    left: 8%;
   }
 
   .apply-now-btn {
@@ -145,7 +149,7 @@
 
   @media screen and (max-width: 576px) {
     .left-block-btn {
-      left: 10%
+      left: 10%;
     }
 
     .apply-now-btn {
@@ -210,7 +214,6 @@
       padding-right: 2rem;
     }
   }
-
 
   header {
     // background-color: $content-bg;
@@ -425,7 +428,6 @@
     padding: 0 12%;
   }
 
-
   @media screen and (max-width: 575px) {
     header {
       padding-left: 2rem;
@@ -441,7 +443,6 @@
       }
 
       &-title {
-
         // &::before {
         //   height: 30px;
         // }
@@ -451,7 +452,6 @@
         }
       }
     }
-
   }
 }
 
@@ -491,7 +491,11 @@
 
 .apply-modal {
   .modal-header {
-    background: linear-gradient(to bottom, rgba(240, 195, 150, 0.6078431373), #e6bd99);
+    background: linear-gradient(
+      to bottom,
+      rgba(240, 195, 150, 0.6078431373),
+      #e6bd99
+    );
 
     .modal-title {
       // font-weight: bold;
@@ -554,14 +558,14 @@
         }
 
         // 更改checkbox樣式
-        input[type=checkbox] {
+        input[type="checkbox"] {
           cursor: pointer;
           width: 20px;
           height: 20px;
           position: relative;
         }
 
-        input[type=checkbox]:after {
+        input[type="checkbox"]:after {
           position: absolute;
           width: 20px;
           height: 20px;
@@ -574,7 +578,7 @@
           padding: 0px 3px;
         }
 
-        input[type=checkbox]:checked:after {
+        input[type="checkbox"]:checked:after {
           content: "✓";
           font-size: 14px;
           font-weight: bold;
@@ -618,18 +622,21 @@
 }
 
 // alert
-.swal2-container {   // 容器
+.swal2-container {
+  // 容器
   background-color: #fff;
   border: 2px solid #ccc;
 }
 
-.swal2-actions{
+.swal2-actions {
   justify-content: center;
   flex-wrap: nowrap;
   gap: 1rem;
 }
 
-.swal2-confirm, .swal2-popup .swal2-actions button.swal2-confirm {  // 確認按扭
+.swal2-confirm,
+.swal2-popup .swal2-actions button.swal2-confirm {
+  // 確認按扭
   @include btn-config(
     $text-main,
     $header-bg,
@@ -641,13 +648,21 @@
   padding-right: 1rem;
 }
 
-.swal2-cancel, .swal2-popup .swal2-actions button.swal2-cancel {  // 取消按鈕
-  @include btn-config(darken($hover, 10%), $main-bg, $hover, $cos-white, $header-bg);
+.swal2-cancel,
+.swal2-popup .swal2-actions button.swal2-cancel {
+  // 取消按鈕
+  @include btn-config(
+    darken($hover, 10%),
+    $main-bg,
+    $hover,
+    $cos-white,
+    $header-bg
+  );
   padding-left: 1rem;
   padding-right: 1rem;
 }
 
-.swal2-title {   
+.swal2-title {
   font-size: 1.25rem;
   color: $price;
 }
@@ -667,5 +682,5 @@ body.swal2-shown:not(.swal2-no-backdrop):not(.swal2-toast-shown) {
 // }
 .swal2-shown {
   // overflow: unset !important;
-  padding-right: 8.5px !important;
+  margin-right: 8.5px !important;
 }

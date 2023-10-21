@@ -1,26 +1,10 @@
-.cat-run-wrapper {
-  position: absolute;
-  width: 100vw;
-  // height: 100vh;
-  background-color: rgba(221, 221, 221, 0.507);
-  z-index: 500;
-  #cat-run-lottie {
-    width: 300px;
-    height: 300px;
-    position: absolute;
-    top: 20vh;
-    left: 50vw;
-    transform: translate(-50%, 0%);
-    z-index: 600;
-  }
-}
 .disableFlow {
-  background-color: white;
-  z-index: 100;
+  // z-index: 100;
   overflow: hidden;
+  margin-right: 17px !important;
 }
 .cat-loading-wrapper {
-  background-color: #999897;
+  background-color: white;
   position: absolute;
   width: 100vw;
   height: 100vh;
@@ -34,15 +18,12 @@
   // opacity: 0.8;
   transition: opacity 0.5s ease-in-out;
   z-index: 999;
-  overflow-y: hidden;
-}
-.cat-loading-wrapper-opacity {
-  opacity: 0;
-  z-index: -999;
+  overflow: hidden;
 }
 .catloading {
-  width: 100%;
-  height: 100%;
+  background-color: rgba(197, 197, 197, 0.519);
+  width: 80%;
+  height: 0%;
   top: 10%;
   right: 0;
   left: 0;
@@ -52,10 +33,10 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  overflow: hidden;
+  // overflow: hidden;
   .cat-face {
-    width: 150px;
-    height: 132px;
+    width: 200px;
+    height: 185px;
     position: relative;
 
     #face {
@@ -65,21 +46,27 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
+      opacity: 0;
     }
     #beard {
+      width: 318px;
+      // height: 100%;
       position: absolute;
       top: 65%;
-      left: 50%;
+      left: 52%;
       transform: translate(-50%, -50%);
+      opacity: 0;
     }
   }
   .cat-text {
     margin-top: 5px;
     display: flex;
-    gap: 5px;
+    gap: 8px;
     & * {
+      width: 40px;
       opacity: 0;
       position: relative;
+      top: -80px;
     }
     #text1 {
       // top: 5px;
@@ -94,14 +81,41 @@
     }
   }
 }
-.sawtooth-block {
-  width: 10px;
-  height: 100vh;
-  background-color: $content-bg;
-  z-index: 10;
-}
+
 .cat-loading-opacity {
 }
+.sawtooth {
+  position: absolute;
+  display: flex;
+  width: 4000px;
+  height: 5000px;
+  top: -2500px;
+  // right: -50%;
+  transform: rotate(120deg);
+  border-radius: 5% 30%;
+  background-color: $hover;
+  opacity: 0;
+  .sawtooth-block {
+    width: calc(100vw / 16);
+    border-radius: 0 0 2px 30px;
+    height: 80vh;
+    opacity: 0;
+    background-color: $hover;
+    // background-color: transparent;
+    // background-color: rgb(234, 213, 186);
+
+    z-index: 10;
+  }
+  .block-1 {
+    height: 78vh;
+  }
+  .block-2 {
+    height: 81vh;
+  }
+
+  // color: rgb(234, 213, 186);
+}
+
 #circle {
   text-align: center;
   transform-origin: center 30%;

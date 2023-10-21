@@ -76,6 +76,9 @@ margin-bottom: 30px;
     
 
 @media (max-width: 768px){
+    .coupon-listBtn{
+    width: 35%;
+    }
     .user-coupon{
         background-color: $main-bg;
     }

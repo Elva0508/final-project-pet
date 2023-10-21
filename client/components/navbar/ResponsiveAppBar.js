@@ -73,11 +73,11 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
 }));
 
 const pages = [
-  { path: "http://localhost:3000/about", name: "品牌介紹", id: 1 },
+  { path: "http://localhost:3000/#", name: "品牌介紹", id: 1 },
   { path: "http://localhost:3000/product", name: "全部商品", id: 2 },
   { path: "http://localhost:3000/work/find-mission", name: "小貓上工", id: 3 },
   { path: "http://localhost:3000/article", name: "小貓兩三知", id: 4 },
-  { path: "http://localhost:3000/support", name: "常見問題", id: 5 },
+  { path: "http://localhost:3000/#", name: "常見問題", id: 5 },
 ];
 
 function ResponsiveAppBar() {
@@ -91,6 +91,7 @@ function ResponsiveAppBar() {
     setAnchorElNav(event.currentTarget);
   };
   const handleOpenUserMenu = (event) => {
+    document.body.style.marginRight = "17px";
     if (anchorElUser !== event.currentTarget) {
       setAnchorElUser(event.currentTarget);
     }
@@ -104,6 +105,7 @@ function ResponsiveAppBar() {
   };
 
   const handleCloseUserMenu = () => {
+    document.body.style.marginRight = "0px";
     setAnchorElUser(null);
   };
 

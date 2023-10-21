@@ -271,7 +271,7 @@ export default function Cart() {
                                 }}/></td>
                                 <td><img src={v.images} /></td>
                                 <td>
-                                    <p>{v.product_name}</p>
+                                    <Link href={`/product/${v.category_id}/${v.subcategory_id}/${v.product_id}`}>{v.product_name}</Link>
                                     <p className='size-7 type'>{v.type}</p>
                                 </td>
                                 <td className='text-center'>
@@ -325,7 +325,7 @@ export default function Cart() {
                                 }}/></td>
                                 <td><img src={v.images}></img></td>
                                 <td className=''>
-                                    <p className='m-0'>{v.product_name}</p>
+                                    <Link href={`/product/${v.category_id}/${v.subcategory_id}/${v.product_id}`}>{v.product_name}</Link>
                                     <p className='m-size-7 type m-0'>{v.type}</p>
                                     <p className='m-0 newprice'>NT${v.newprice}</p>
                                     

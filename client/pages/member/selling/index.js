@@ -10,7 +10,7 @@ import ListUserM from "@/components/member/list-user-m";
 import { Pagination } from "antd";
 const MemberSelling = () => {
   const [selling, setSelling] = useState([]);
-  const [status, setStatus] = useState(2);
+  const [status, setStatus] = useState(1);
   const { isAuthenticated, userId: user_id } = useAuth();
   const [currentRequest, setCurrentRequest] = useState([]);
   const [currentPage, setPage] = useState(1);
