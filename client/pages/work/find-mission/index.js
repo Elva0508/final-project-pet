@@ -1509,9 +1509,6 @@ export default function MissionList() {
   }, [activePage]);
 
 
-
-
-
   return (
     <>
       <div className="container my-4 find-mission">
@@ -1587,11 +1584,19 @@ export default function MissionList() {
           {/* 任務列表 */}
           <div className='mission-list d-lg-flex  justify-content-center align-items-start'>
             {/* 不能使用d-flex d-lg-block block會導致MissionCard垂直排列 */}
-            <div className="row d-flex mb-3 g-3 g-md-4">
-              {/* 使用g-3 不用justify-content-between 預設是start 卡片就會照順序排列 */}
-              <MissionCard sortOrder={sortOrder} sortBy={sortBy} missionType={missionType} setMissionType={setMissionType} missionCity={missionCity} setMissionCity={setMissionCity} missionArea={missionArea} setMissionArea={setMissionArea}
-                updateDate={updateDate} setUpdateDate={setUpdateDate} allMissions={allMissions} currentData={currentData} userId={userId} setUserId={setUserId} missionActive={missionActive} missionVariant={missionVariant} />
-            </div>
+            {currentData.length > 0 ? (
+              <div className="row d-flex mb-3 g-3 g-md-4">
+                {/* 使用g-3 不用justify-content-between 預設是start 卡片就會照順序排列 */}
+                <MissionCard sortOrder={sortOrder} sortBy={sortBy} missionType={missionType} setMissionType={setMissionType} missionCity={missionCity} setMissionCity={setMissionCity} missionArea={missionArea} setMissionArea={setMissionArea}
+                  updateDate={updateDate} setUpdateDate={setUpdateDate} allMissions={allMissions} currentData={currentData} userId={userId} setUserId={setUserId} missionActive={missionActive} missionVariant={missionVariant} />
+              </div>
+            ) : (
+              <div className="d-flex justify-content-center align-items-center flex-column mt-5">
+                {/* <img src='/job-icon/no-data-2.gif' /> */}
+                <p>無符合條件任務，建議放寬條件重新查詢！</p>
+                <img src='/job-icon/search-cat.gif' />
+              </div>
+            )}
           </div>
         </section>
         <Pagination itemsPerPage={itemsPerPage} total={allMissions} activePage={activePage} setActivePage={setActivePage} />
