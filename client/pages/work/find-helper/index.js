@@ -17,7 +17,7 @@ import {
 } from "react-icons/bs";
 
 import { FaUserClock } from "react-icons/fa";
-import { ImLocation2 } from "react-icons/Im";
+import { ImLocation2 } from "react-icons/im";
 import WorkService from "@/services/work-service";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
