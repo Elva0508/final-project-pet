@@ -202,8 +202,8 @@ export default function JobStatusTwo({
                                 missionActive === "move"
                                   ? "move"
                                   : missionActive === "exit"
-                                  ? "exit"
-                                  : "initial"
+                                    ? "exit"
+                                    : "initial"
                               }
                               variants={missionVariant}
                               // (index + 1) % 3 == 1 ? 0 : (index + 1) % 3 == 2 ? 1 : 2 整排移動參數
@@ -246,12 +246,20 @@ export default function JobStatusTwo({
                     <div className="me-1 me-md-0 d-flex flex-column align-items-center justify-content-center col-md-2 col-4">
                       <button
                         className="btn-outline-confirm size-6 text-center px-3 py-2 mb-2"
+                        data-bs-toggle="modal"
+                        data-bs-target="#exampleModal1"
                         onClick={() => {
                           deletefav(v.user_id, v.mission_fav_id);
                         }}
                       >
                         取消追蹤
                       </button>
+
+
+
+
+
+
                       {v.mission_status == 0 ? (
                         v.record_mission_id == null ? (
                           <>
@@ -290,6 +298,39 @@ export default function JobStatusTwo({
                           </div>
                         </>
                       )}
+                    </div>
+                  </div>
+                  <div
+                    class="modal fade"
+                    id="exampleModal1"
+                    tabindex="-1"
+                    aria-labelledby="exampleModalLabel"
+                    aria-hidden="true"
+                  >
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="exampleModalLabel">
+                            通知
+                          </h5>
+                          <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"
+                          ></button>
+                        </div>
+                        <div class="modal-body">已取消追蹤此任務</div>
+                        <div class="modal-footer">
+                          <button
+                            type="button"
+                            class="btn btn-confirm"
+                            data-bs-dismiss="modal"
+                          >
+                            關閉
+                          </button>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </>
