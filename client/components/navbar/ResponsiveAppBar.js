@@ -90,14 +90,14 @@ function ResponsiveAppBar() {
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
-  const handleOpenUserMenu = (event) => {
-    if (anchorElUser !== event.currentTarget) {
-      setAnchorElUser(event.currentTarget);
-    }
-  };
   // const handleOpenUserMenu = (event) => {
-  //   setAnchorElUser(event.currentTarget);
+  //   if (anchorElUser !== event.currentTarget) {
+  //     setAnchorElUser(event.currentTarget);
+  //   }
   // };
+  const handleOpenUserMenu = (event) => {
+    setAnchorElUser(event.currentTarget);
+  };
 
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
@@ -226,13 +226,7 @@ function ResponsiveAppBar() {
             <Box sx={{ flexShrink: 0 }}>
               <Tooltip title="Open settings">
                 {/* userMenu */}
-                <IconButton
-                  aria-owns={anchorElUser ? "menu-appbar" : undefined}
-                  aria-haspopup="true"
-                  onClick={handleOpenUserMenu}
-                  onMouseOver={handleOpenUserMenu}
-                  sx={{ p: 0 }}
-                >
+                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                   <AccountCircleIcon
                     color="tertiary"
                     style={{ fontSize: 40 }}
@@ -265,7 +259,6 @@ function ResponsiveAppBar() {
                 }}
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
-                MenuListProps={{ onMouseLeave: handleCloseUserMenu }}
               >
                 {isAuthenticated ? (
                   <>
