@@ -31,17 +31,17 @@
 @media (max-width: 768px){
     .css-15re8h0{
         //手機板modal寬度
-        width: 390px;
+        width: 360px;
     }
     .membership-box{
         //width: 40%;
         //grid-template-columns: 1fr;
         //grid-template-rows: 1fr 1fr 1fr;
-        grid-row-gap: 0px;
+        grid-column-gap: 10px;
     }
     .member-avatar-img{
-        width: 100px;
-        height: 100px;
+        width: 90px;
+        height: 90px;
     }
     .membership-body{
         line-height: 1.5;

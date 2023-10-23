@@ -21,46 +21,23 @@ export default function App({ Component, pageProps }) {
     // 要document物件出現後才能導入 bootstrap的js函式庫
     import("bootstrap/dist/js/bootstrap");
   }, []);
-  // useEffect(() => {
-  //   const handleChangeStart = (url, { shallow }) => {
-  //     setIsLoading(true);
-  //     console.log(
-  //       `路由 is 改變為 ${url} ${shallow ? "with" : "without"} shallow routing`
-  //     );
-  //   };
 
-  //   const handleChangeComplete = (url) => {
-  //     console.log("路由跳轉完成!!!!!!!!!!!");
-  //     setTimeout(() => {
-  //       setIsLoading(false);
-  //     }, 2000);
-  //   };
-  //   router.events.on("routeChangeStart", handleChangeStart);
-  //   router.events.on("routeChangeComplete", handleChangeComplete);
-  //   router.events.on("routeChangeError", handleChangeComplete);
-
-  //   return function cleanup() {
-  //     router.events.off("routeChangeStart", handleChangeStart);
-  //     router.events.off("routeChangeComplete", handleChangeComplete);
-  //     router.events.off("routeChangeError", handleChangeComplete);
-  //   };
-  // }, [router]);
   return (
     // <LoaderProvider>
     <AuthProvider>
-    <NameProvider>
-      <CartProvider>
-        <HelperProvider>
-          <ActivePageProvider>
-            <ProductActivePageProvider>
-              <Layout>
-                {pathname === "/work/find-helper" ? "" : <BreadCrumb />}
-                <Component {...pageProps} />
-              </Layout>
-            </ProductActivePageProvider>
-          </ActivePageProvider>
-        </HelperProvider>
-      </CartProvider>
+      <NameProvider>
+        <CartProvider>
+          <HelperProvider>
+            <ActivePageProvider>
+              <ProductActivePageProvider>
+                <Layout>
+                  {pathname === "/work/find-helper" ? "" : <BreadCrumb />}
+                  <Component {...pageProps} />
+                </Layout>
+              </ProductActivePageProvider>
+            </ActivePageProvider>
+          </HelperProvider>
+        </CartProvider>
       </NameProvider>
     </AuthProvider>
     // </LoaderProvider>

@@ -17,6 +17,7 @@ const connection=require("../db");
         pt.type_name AS type,
         od.product_id AS product_id,
         pr.review_content AS review_content,
+        pr.review_id AS review_id,
         pr.star_rating AS star_rating,
         p.category_id AS category_id,
         p.subcategory_id AS subcategory_id
@@ -49,4 +50,19 @@ router.post("/comment",(req,res)=>{
         }    
     )
 })
+
+
+router.post("/comment/update",(req,res)=>{
+    const {comment,star,review_id,createtTime} =req.body
+    connection.execute(
+        `UPDATE product_reviews SET review_content=?,star_rating=?,review_date=? WHERE review_id=?;`,
+        [comment,star,createtTime, review_id]
+        ,(error,result)=>{
+            res.json({result})
+        }    
+    )
+})
+
+
+
 module.exports = router;

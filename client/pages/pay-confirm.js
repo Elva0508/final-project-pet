@@ -34,7 +34,7 @@ useEffect(() => {
       <div className='container my-5 pay-confirm text-center'>
         <img src='/checkout.png'></img>
         <h2 className='mb-2 fw-bold size-4 mb-4'>付  款  成  功</h2>
-        <div className='size-6  mb-5 info1 col-lg-10 col-12 m-auto'>
+        <div className='size-6  mb-5 info1 col-lg-8 col-12 m-auto'>
           <div className='py-1 title info fw-bold'>訂單資料</div>
           <div className='py-1 info d-flex justify-content-between px-3'>
             <p>訂單編號</p>
