@@ -44,27 +44,27 @@ export const RecordTemplate = ({
     }
   };
   const handleReviewBubble = (e, case_id) => {
-    console.log(e.currentTarget, e.target);
+    // console.log(e.currentTarget, e.target);
     if (router.pathname === "/member/reserve" && status === 3) {
       const currentTarget = e.currentTarget;
       memberService
         .getReview(case_id)
         .then((response) => {
-          console.log(response);
+          // console.log(response);
           if (response?.data?.data?.review_id !== null) {
             if (e.type === "mouseenter") {
-              console.log("滑鼠移進");
+              // console.log("滑鼠移進");
               currentTarget.classList.add("bubble-tip-success");
             } else if (e.type === "mouseleave") {
-              console.log("滑鼠移出");
+              // console.log("滑鼠移出");
               currentTarget.classList.remove("bubble-tip-success");
             }
           } else {
             if (e.type === "mouseenter") {
-              console.log("滑鼠移進");
+              // console.log("滑鼠移進");
               currentTarget.classList.add("bubble-tip-todo");
             } else if (e.type === "mouseleave") {
-              console.log("滑鼠移出");
+              // console.log("滑鼠移出");
               currentTarget.classList.remove("bubble-tip-todo");
             }
           }

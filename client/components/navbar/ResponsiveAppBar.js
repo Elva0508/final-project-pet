@@ -91,7 +91,7 @@ function ResponsiveAppBar() {
     setAnchorElNav(event.currentTarget);
   };
   const handleOpenUserMenu = (event) => {
-    document.body.style.marginRight = "17px";
+    document.body.style.paddingRight = "18px !important";
     if (anchorElUser !== event.currentTarget) {
       setAnchorElUser(event.currentTarget);
     }
@@ -105,7 +105,7 @@ function ResponsiveAppBar() {
   };
 
   const handleCloseUserMenu = () => {
-    document.body.style.marginRight = "0px";
+    document.body.style.paddingRight = "0px";
     setAnchorElUser(null);
   };
 
