@@ -181,9 +181,18 @@ function ResponsiveAppBar() {
                   </Link>
                 ))}
               </Menu>
-              <Link href={"/"}>
-                <Image src={McatLogo} alt="logo" />
-              </Link>
+              {/* mobile-logo*/}
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  margin: "0 auto",
+                }}
+              >
+                <Link href={"/"}>
+                  <Image src={McatLogo} alt="logo" />
+                </Link>
+              </Box>
             </Box>
 
             {/* Desktop 裝置*/}
