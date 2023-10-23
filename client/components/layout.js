@@ -26,7 +26,7 @@ export default function Layout({ children }) {
     } else {
       document.body.classList.remove("disableFlow");
     }
-  }, [isLoading]);
+  }, [router, isLoading]);
 
   // useEffect(() => {
   //   // 讓頁面可以滾動，原本isLoading為true時禁止body有overflow-y軸
@@ -39,8 +39,13 @@ export default function Layout({ children }) {
 
   useEffect(() => {
     // 過場動畫設定
+
     const handleChangeStart = (url, { shallow }) => {
       showLoader();
+      // console.log(url);
+      // if (url !== "/") {
+      //   setIsLoading(false);
+      // }
     };
     const handleChangeComplete = (url) => {
       console.log("路由跳轉成功啦!!!!!!!!!!!!!!!", "loading is " + isLoading);
@@ -48,7 +53,7 @@ export default function Layout({ children }) {
         hideLoader();
       }, 450);
     };
-
+    // router.events.on("beforeHistoryChange", beforeHistoryChange);
     router.events.on("routeChangeStart", handleChangeStart);
     router.events.on("routeChangeComplete", handleChangeComplete);
     router.events.on("routeChangeError", () => {
@@ -56,6 +61,7 @@ export default function Layout({ children }) {
     });
 
     return function cleanup() {
+      // router.events.off("beforeHistoryChange", beforeHistoryChange);
       router.events.off("routeChangeStart", handleChangeStart);
       router.events.off("routeChangeComplete", handleChangeComplete);
       router.events.off("routeChangeError", handleChangeComplete);
@@ -64,7 +70,9 @@ export default function Layout({ children }) {
 
   return (
     <>
-      {isLoading && <CatLoading setIsLoading={setIsLoading} />}
+      {isLoading && router.pathname === "/" && (
+        <CatLoading setIsLoading={setIsLoading} />
+      )}
 
       <>{loader()}</>
       <>
