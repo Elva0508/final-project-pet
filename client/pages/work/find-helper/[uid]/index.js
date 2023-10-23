@@ -454,7 +454,7 @@ const Quotation = () => {
               className="icon"
               onClick={handleTime}
             />
-            <div>{time * 30} 分鐘</div>
+            <div className="mx-1">{time * 30} 分鐘</div>
             <CiCircleChevRight
               position="right"
               className="icon"
@@ -470,7 +470,7 @@ const Quotation = () => {
               className="icon"
               onClick={handleFrequency}
             />
-            <div>{frequency} 次</div>
+            <div className="mx-1">{frequency} 次</div>
             <CiCircleChevRight
               position="right"
               className="icon"
@@ -484,6 +484,7 @@ const Quotation = () => {
             className="form-input"
             type="text"
             value={location}
+            placeholder="請輸入地址或附近地標"
             onChange={(e) => {
               setLocation(e.target.value);
             }}
@@ -611,7 +612,7 @@ const HelperDetail = () => {
 
     window.scrollTo({
       top: scrollTo,
-      behavior: "smooth", // 如果需要平滑滚动效果
+      behavior: "smooth", // 平滑滾動效果
     });
   }, [currentPage]);
 
@@ -631,7 +632,7 @@ const HelperDetail = () => {
         // console.log(scrollY, dScrollY);
         if (distanceToBottom < 130) {
           leftBlock.style.position = "relative";
-          leftBlock.style.top = `${scrollY - 20 - 130}px `;
+          leftBlock.style.top = `${scrollY - 300}px `;
         } else {
           leftBlock.style.position = "sticky";
           leftBlock.style.top = "10px";

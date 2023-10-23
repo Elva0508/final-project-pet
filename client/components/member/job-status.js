@@ -1,12 +1,15 @@
 import React, { useState } from "react";
-import { CiHeart } from "react-icons/ci";
-import { BiSolidHeart } from "react-icons/bi";
-import { RiDeleteBin5Line } from "react-icons/ri";
 import axios from "axios";
 import dayjs from "dayjs";
 import Pagination from "@/components/pagination";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import {
+  motion,
+  useAnimationControls,
+  AnimatePresence,
+  useInView,
+} from "framer-motion";
 
 export default function JobStatusTwo({
   job,
@@ -74,6 +77,30 @@ export default function JobStatusTwo({
     getJob(user_id);
   };
 
+  const [missionActive, setMissionActive] = useState("move");
+
+  const missionVariant = {
+    // 一開始消失，畫面從下側往上移入出現
+    initial: {
+      opacity: 0,
+      y: -10,
+      transition: { duration: 0 },
+    },
+    // 卡片單張單張移動
+    move: (i) => ({
+      opacity: 1,
+      x: 0,
+      y: 0,
+      // 動畫持續1秒（開始到結束）每張卡片延遲0.1秒（逐張出現）
+      transition: { duration: 1, delay: i * 0.1 },
+    }),
+    exit: (i) => ({
+      opacity: 0,
+      y: 20,
+      transition: { duration: 0.4 },
+    }),
+  };
+
   return (
     <>
       <div className="bg">
@@ -125,7 +152,12 @@ export default function JobStatusTwo({
                         <div className="d-md-flex d-none">
                           <p className="size-6 title">
                             <span>任務主題：</span>
-                            <Link href={`/work/find-mission/${v.mission_id}`} className="size-6">{v.title}</Link>
+                            <Link
+                              href={`/work/find-mission/${v.mission_id}`}
+                              className="size-6"
+                            >
+                              {v.title}
+                            </Link>
                           </p>
                           {v.mission_status == 0 ? (
                             <>
@@ -162,25 +194,47 @@ export default function JobStatusTwo({
                         </p>
                         <p className="size-7">
                           <span>任務內容：</span>
-                          {showcontent && id === i ?(<CustomHTMLRenderer htmlContent={v.description} />):("")}
-                        
-                        <button
-                              className="btn-confirm"
-                              onClick={() => {
-                                if(!showcontent){
-                                  setShowContent(true)
-                                  setId(i)
-                                }else if(showcontent && id !== i){
-                                  setId(i)
-                                }else{
-                                  setShowContent(false)
-                                }
+                          {showcontent && id === i ? (
+                            <motion.div
+                              className=""
+                              initial={"initial"}
+                              animate={
+                                missionActive === "move"
+                                  ? "move"
+                                  : missionActive === "exit"
+                                    ? "exit"
+                                    : "initial"
+                              }
+                              variants={missionVariant}
+                              // (index + 1) % 3 == 1 ? 0 : (index + 1) % 3 == 2 ? 1 : 2 整排移動參數
+                              custom={i}
+                              whileInView="singleMove"
+                              viewport={{
+                                once: true,
                               }}
                             >
-                               {showcontent && id === i ?("隱藏內容"):("顯示內容")}
-                            </button>
+                              <CustomHTMLRenderer htmlContent={v.description} />
+                            </motion.div>
+                          ) : (
+                            ""
+                          )}
+                          <button
+                            className="btn-confirm"
+                            onClick={() => {
+                              if (!showcontent) {
+                                setShowContent(true);
+                                setId(i);
+                              } else if (showcontent && id !== i) {
+                                setId(i);
+                              } else {
+                                setShowContent(false);
+                              }
+                            }}
+                          >
+                            {showcontent && id === i ? "隱藏內容" : "顯示內容"}
+                          </button>
                         </p>
-                        <p className="size-7 follow">
+                        <p className="size-7 follow mt-2">
                           {idCounts[v.mission_id] == undefined
                             ? "0"
                             : idCounts[v.mission_id]}
@@ -192,12 +246,20 @@ export default function JobStatusTwo({
                     <div className="me-1 me-md-0 d-flex flex-column align-items-center justify-content-center col-md-2 col-4">
                       <button
                         className="btn-outline-confirm size-6 text-center px-3 py-2 mb-2"
+                        data-bs-toggle="modal"
+                        data-bs-target="#exampleModal1"
                         onClick={() => {
                           deletefav(v.user_id, v.mission_fav_id);
                         }}
                       >
                         取消追蹤
                       </button>
+
+
+
+
+
+
                       {v.mission_status == 0 ? (
                         v.record_mission_id == null ? (
                           <>
@@ -220,7 +282,7 @@ export default function JobStatusTwo({
                           <button
                             className="btn-confirm size-6 text-center px-3 py-2"
                             onClick={() => {
-                              window.location.href = `/work/find-mission/${v.mission_id}`;
+                              router.push(`/work/find-mission/${v.mission_id}`);
                             }}
                           >
                             立即應徵
@@ -236,6 +298,39 @@ export default function JobStatusTwo({
                           </div>
                         </>
                       )}
+                    </div>
+                  </div>
+                  <div
+                    class="modal fade"
+                    id="exampleModal1"
+                    tabindex="-1"
+                    aria-labelledby="exampleModalLabel"
+                    aria-hidden="true"
+                  >
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="exampleModalLabel">
+                            通知
+                          </h5>
+                          <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"
+                          ></button>
+                        </div>
+                        <div class="modal-body">已取消追蹤此任務</div>
+                        <div class="modal-footer">
+                          <button
+                            type="button"
+                            class="btn btn-confirm"
+                            data-bs-dismiss="modal"
+                          >
+                            關閉
+                          </button>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </>

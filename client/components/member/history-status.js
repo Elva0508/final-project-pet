@@ -4,6 +4,12 @@ import axios from "axios";
 import Pagination from "@/components/pagination";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import {
+  motion,
+  useAnimationControls,
+  AnimatePresence,
+  useInView,
+} from "framer-motion";
 
 export default function HistoryStatusOne({
   history,
@@ -73,6 +79,30 @@ export default function HistoryStatusOne({
 
   console.log(idCounts);
 
+
+  const [missionActive, setMissionActive] = useState("move");
+  const missionVariant = {
+    // 一開始消失，畫面從下側往上移入出現
+    initial: {
+      opacity: 0,
+      y: -10,
+      transition: { duration: 0 },
+    },
+    // 卡片單張單張移動
+    move: (i) => ({
+      opacity: 1,
+      x: 0,
+      y: 0,
+      // 動畫持續1秒（開始到結束）每張卡片延遲0.1秒（逐張出現）
+      transition: { duration: 1, delay: i * 0.1 },
+    }),
+    exit: (i) => ({
+      opacity: 0,
+      y: 20,
+      transition: { duration: 0.4 },
+    }),
+  };
+
   return (
     <>
       <div className="bg">
@@ -127,13 +157,27 @@ export default function HistoryStatusOne({
                         {v.location_detail}
                       </p>
                       <p className="size-7">
-                        <span>任務時間：</span>
+                      <span>任務時間：</span>
                         {transferDate(v.start_date)}~{transferDate(v.end_date)}
                       </p>
-                      <p className="size-7">
+                      <p className="size-7 content">
                         <span>任務內容：</span>
-                        {showcontent && id === i ? (
-                          <CustomHTMLRenderer htmlContent={v.description} />
+                        {showcontent && id === v.mission_id ? (
+                          <motion.div className=""  initial={"initial"}
+                          animate={
+                            missionActive === "move"
+                              ? "move"
+                              : missionActive === "exit"
+                                ? "exit"
+                                : "initial"
+                          }
+                          variants={missionVariant}
+                          // (index + 1) % 3 == 1 ? 0 : (index + 1) % 3 == 2 ? 1 : 2 整排移動參數
+                          custom={i}
+                          whileInView="singleMove"
+                          viewport={{
+                            once: true,
+                          }}><CustomHTMLRenderer htmlContent={v.description} /></motion.div>
                         ) : (
                           ""
                         )}
@@ -143,9 +187,9 @@ export default function HistoryStatusOne({
                           onClick={() => {
                             if (!showcontent) {
                               setShowContent(true);
-                              setId(i);
-                            } else if (showcontent && id !== i) {
-                              setId(i);
+                              setId(v.mission_id);
+                            } else if (showcontent && id !== v.mission_id) {
+                              setId(v.mission_id);
                             } else {
                               setShowContent(false);
                             }

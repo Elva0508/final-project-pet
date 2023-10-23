@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import ListD from "@/components/member/list-d";
 import HelperInfo from "@/components/member/helper-info";
+import ListUserM from "@/components/member/list-user-m";
 import Link from "next/link";
 import { useAuth } from "@/context/fakeAuthContext";
 import { useRouter } from "next/router";
@@ -24,6 +25,7 @@ const HelperInfoPage = () => {
     <>
       {isAuthenticated && (
         <>
+          <ListUserM />
           <div className="d-flex container-fluid flex-column justify-content-around flex-md-row my-3">
             <ListD />
             <HelperInfo user_id={userId} />

@@ -10,7 +10,8 @@ router.get("/:id", (req, res) => {
       JOIN order_details AS od ON o.oid=od.order_id
       JOIN products AS p ON p.product_id=od.product_id
       JOIN product_type AS pt ON pt.type_id=od.product_type AND pt.product_id=p.product_id
-      WHERE o.user_id = ?`,
+      WHERE o.user_id = ?
+      ORDER BY o.order_id DESC`,
       [userId],
       (error, result) => {
         res.json({ result });
@@ -67,7 +68,7 @@ router.put("/addwishlist/:user_id",(req,res)=>{
   const userid=req.params.user_id
   const {id}=req.body  
   connection.execute(
-      `INSERT INTO product_collections (user_id, product_id,  product_type, status ) VALUES (?,?,1,1);`,
+      `INSERT INTO product_collections (user_id, product_id,  product_type) VALUES (?,?,1);`,
       [userid,id]
       ,(error,result)=>{
           res.json({result})

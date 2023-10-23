@@ -18,33 +18,34 @@ export default function Layout({ children }) {
     useLoader(50);
   const { userId } = useAuth();
   const { pathname, query } = router;
-  const [isLoading, setIsLoading] = useState(false);
-  const loadingRef = useRef();
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    // if (isLoading) {
+    //   document.body.classList.add("disableFlow");
+    // } else {
+    //   document.body.classList.remove("disableFlow");
+    // }
+  }, [router, isLoading]);
 
   // useEffect(() => {
-  //   // 讓頁面可以滾動，原本禁止有overflow-y軸
+  //   // 讓頁面可以滾動，原本isLoading為true時禁止body有overflow-y軸
   //   setTimeout(() => {
   //     setIsLoading(false);
   //   }, [4500]);
-  //   setTimeout(() => {
-  //     const loading = document.querySelector(".cat-loading-wrapper");
-  //     console.log(loading);
-  //     loading.classList.add("cat-loading-wrapper-opacity");
-  //   }, [4000]);
   // }, []);
-  // useEffect(() => {
-  //   if (isLoading) {
-  //     document.body.classList.add("disableFlow");
-  //   } else {
-  //     document.body.classList.remove("disableFlow");
-  //   }
-  // }, [isLoading]);
+
   const uniqueKey = Date.now();
 
   useEffect(() => {
     // 過場動畫設定
+
     const handleChangeStart = (url, { shallow }) => {
       showLoader();
+      // console.log(url);
+      // if (url !== "/") {
+      //   setIsLoading(false);
+      // }
     };
     const handleChangeComplete = (url) => {
       console.log("路由跳轉成功啦!!!!!!!!!!!!!!!", "loading is " + isLoading);
@@ -52,7 +53,7 @@ export default function Layout({ children }) {
         hideLoader();
       }, 450);
     };
-
+    // router.events.on("beforeHistoryChange", beforeHistoryChange);
     router.events.on("routeChangeStart", handleChangeStart);
     router.events.on("routeChangeComplete", handleChangeComplete);
     router.events.on("routeChangeError", () => {
@@ -60,6 +61,7 @@ export default function Layout({ children }) {
     });
 
     return function cleanup() {
+      // router.events.off("beforeHistoryChange", beforeHistoryChange);
       router.events.off("routeChangeStart", handleChangeStart);
       router.events.off("routeChangeComplete", handleChangeComplete);
       router.events.off("routeChangeError", handleChangeComplete);
@@ -68,7 +70,10 @@ export default function Layout({ children }) {
 
   return (
     <>
-      {/* <CatLoading ref={loadingRef} /> */}
+      {isLoading && router.pathname === "/" && (
+        <CatLoading setIsLoading={setIsLoading} />
+      )}
+
       <>{loader()}</>
       <>
         <ResponsiveAppBar />

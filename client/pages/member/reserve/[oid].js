@@ -197,6 +197,8 @@ const ReserveDetailPage = () => {
   const [status, setStatus] = useState(1);
   const [review, setReview] = useState(null);
   const [isReviewed, setIsReviewed] = useState(false);
+  const [helperInfo, setHelperInfo] = useState(null);
+  const [customInfo, setCustomInfo] = useState(null);
   const { oid } = router.query;
   const { isAuthenticated, userId: user_id } = useAuth();
   useEffect(() => {
@@ -213,8 +215,11 @@ const ReserveDetailPage = () => {
     memberService
       .getReserveDetail(oid)
       .then((response) => {
-        const info = response.data.data;
+        console.log(response.data);
+        const info = response.data.order;
         setStatus(info.status);
+        setCustomInfo(response.data.customer_info);
+        setHelperInfo(response.data.helper_info);
         if (response?.data?.status === 200) {
           switch (info.status) {
             case 1:
@@ -353,6 +358,8 @@ const ReserveDetailPage = () => {
                 title={"預約紀錄"}
                 detail={detail}
                 setDetail={setDetail}
+                helperInfo={helperInfo}
+                customInfo={customInfo}
               />
 
               {status && status !== 3 && status !== 4 && (

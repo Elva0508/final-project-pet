@@ -10,8 +10,12 @@ import Pagination from '@/components/pagination'
 export default function Checkout() {
     const router = useRouter();
     const {setCart,userid} = useCart();
+    const [isChecked, setIsChecked] = useState(false);
+    const [commonAddress,setCommonAddress]=useState([{}])
     const [city,setCity]=useState(0)
+    const [random,setRandom]=useState(0)
     const [area,setArea]=useState([])
+    const [areaNumber,setAreaNumber]=useState([{}])
     const [areaName,setAreaName]=useState(0)
     const [payment,setPayment]=useState(1)
     const [shipment,setShipment]=useState(1)
@@ -44,6 +48,33 @@ export default function Checkout() {
     const [nobuyCart,setNobuyCart]=useState([])
     const [currentCart,setCurrentCart]=useState([])
 
+    const getCommonAddress =  (id) => {
+        axios.get(`http://localhost:3005/api/product/cart/address/${id}`)
+            .then((response) => {
+            const data = response.data.result;
+            console.log(data);
+            setCommonAddress(data)     
+            })
+            .catch((error) => {
+            console.error("Error:", error);
+        });
+    }
+
+    // const getCart =  (id) => {
+    //     axios.get(`http://localhost:3005/api/product/cart/cart/${id}`)
+    //      .then((response) => {
+    //        const data = response.data.result;
+    //        console.log(data);
+    //        const newData=data.map((v)=>{
+    //            return  { ...v, buy: true }
+    //        })
+    //        setCart(newData)     
+    //      })
+    //      .catch((error) => {
+    //        console.error("Error:", error);
+    //    });
+    //  }
+
     let localCart
  
     useEffect(() => {
@@ -59,6 +90,9 @@ export default function Checkout() {
             let cartData = JSON.parse(localCart);
             setFinalCart(cartData.filter((v)=>v.buy===true))
             setNobuyCart(cartData.filter((v)=>v.buy===false))
+
+            const userId = parseInt(localStorage.getItem('id'));
+            getCommonAddress(userId)
        }
     }, [router.isReady]);
 
@@ -83,7 +117,11 @@ export default function Checkout() {
         for(let i=1;i<data.length+1;i++){
             if (cityValue ==i) {
                 const newArea=data[i-1].districts.map(district => district.name)
-            return  setArea(newArea);
+                const newAreaNumber=data[i-1].districts
+                setArea(newArea) 
+                setAreaNumber(newAreaNumber)
+                console.log(newAreaNumber);
+            return  ;
             }
         }
         if (cityValue ==0) {
@@ -96,10 +134,65 @@ export default function Checkout() {
         setAreaName(event.target.value)
     }
 
+
     //上一步
     const goPrevious=()=>{
         router.push('/product/cart')
     }
+
+    //儲存常用地址
+    const storeAddress=async () => {   
+        const district=areaNumber.filter((v)=>v.name==areaName)
+        const number=district[0].zip
+        if(commonAddress.length==0){
+            try {
+                const response = await axios.put(`http://localhost:3005/api/product/cart/address`,{userid, city,number,address});        
+            } catch (error) {
+                console.error("Error:", error);
+            }
+        }else{
+            try {
+                const response = await axios.put(`http://localhost:3005/api/product/cart/updateAddress`,{userid, city,number,address});        
+            } catch (error) {
+                console.error("Error:", error);
+            }
+        }
+    }
+
+    //讀出常用地址
+    const goAddress=async() => {   
+        setCity(commonAddress[0].city) 
+      
+        const go = async () => {
+            for(let i=1;i<data.length+1;i++){
+            if (commonAddress[0].city ==i) {
+                const newArea=data[i-1].districts.map(district => district.name)
+                const newAreaNumber=data[i-1].districts
+                console.log(newAreaNumber);
+                setArea(newArea) 
+                setAreaNumber(newAreaNumber)
+                setRandom(random+1)
+                break
+            }
+        }
+        }
+        await go();
+
+  
+    }
+
+    useEffect(() => {
+        if(commonAddress.length!==0){
+            const district=areaNumber.filter((v)=>v.zip==commonAddress[0].area)
+            console.log(district);
+            const name=district[0].name
+            console.log(name);          
+            setAreaName(name)
+            setAddress(commonAddress[0].detail)
+        }  
+
+    }, [random]);
+
 
 
 
@@ -157,7 +250,7 @@ export default function Checkout() {
         }else if(freight>0 && sale==0){
             newFinalCart = [...finalCart, { product_id: 0, product_name: '運費', quantity: 1, newprice: freight }];
         }else if(sale>0 && freight>0){
-            newFinalCart = [...finalCart, { product_id: 1000, product_name: '優惠券', quantity: 1, newprice: -sale },{ product_id: 0, product_name: '運費', quantity: 1, newprice: freight }];
+            newFinalCart = [...finalCart, { product_id: 0, product_name: '優惠券', quantity: 1, newprice: -sale },{ product_id: 1000, product_name: '運費', quantity: 1, newprice: freight }];
         }else{
           newFinalCart=finalCart
         }
@@ -248,18 +341,31 @@ export default function Checkout() {
             }else if(address==""){
             showAlert("請填寫完整宅配地址")
             }
-        }else if(payment==1){
+        }else if(payment==1 && isChecked && shipment==1){
+            storeAddress()
             checkout();
             router.push('/product/cart/checkout/creditCard')
-        }else if(payment==2){
+        }else if(payment==1  && (shipment==2 ||(!isChecked && shipment==1))){
+            checkout();
+            router.push('/product/cart/checkout/creditCard')
+        }else if(payment==2 && isChecked && shipment==1){
+            storeAddress()
             createOrder()
             router.push('/product/cart/checkout/pay')
-        }else if(payment==3){
+        }else if(payment==2 && (shipment==2 ||(!isChecked && shipment==1))){
+            createOrder()
+            router.push('/product/cart/checkout/pay')
+        }else if(payment==3 && isChecked && shipment==1){
+            storeAddress()
+            checkout();
+            router.push('/product/cart/checkout/cash-on-delivery')
+        }else if(payment==3 && (shipment==2 ||(!isChecked && shipment==1))){
             checkout();
             router.push('/product/cart/checkout/cash-on-delivery')
         }
     }
 
+   
    
   return (
     <>
@@ -297,10 +403,19 @@ export default function Checkout() {
                         <div className='col-12'>
                             <div className="accordion size-7 form-check">
                                 <div>
-                                    <input type="radio" name="shipmentAccordion" id="section1" className='form-check-input mb-3' value={1} checked={shipment==1} onChange={()=>{
+                                    <input type="radio" name="shipmentAccordion" id="section1" className='form-check-input mt-2' value={1} checked={shipment==1} onChange={()=>{
                                     setShipment(1)
                                     }}/>
-                                    <label for="section1">宅配</label>
+                                    <label for="section1">宅配
+                                    {commonAddress.length==0?
+                                    ("")
+                                    :
+                                    ( <button className='btn btn-confirm d-inline ms-3' onClick={()=>{
+                                        goAddress()                                      
+                                    }}>帶入常用地址</button>)}
+                             
+                                    </label> 
+                                    
                                     <div className="content">
                                         <div className='d-flex mb-3 size-7 col-sm-12 col-11'>
                                             <div className='me-sm-3 col-lg-2 col-6'>
@@ -330,9 +445,14 @@ export default function Checkout() {
                                             <label  className="form-label ">街道地址</label>
                                             <input type="text" className="form-control " value={address} onChange={(e)=>{setAddress(e.target.value)}}></input>
                                         </div>
+                                        <input type="checkbox"  className='form-check-input me-1 size-7 ms-1 mt-1' checked={isChecked} onChange={(e)=>{
+                                        setIsChecked(e.target.checked)
+                                        }}/>
+                                        <label  className="form-label ">儲存為常用地址</label>
+                                       
                                     </div>
                                 </div>
-                                <div>
+                                <div className='mt-3'>
                                     <input type="radio" name="shipmentAccordion" id="section2" className='form-check-input mb-3' value={2} checked={shipment==2} onChange={()=>{
                                     setShipment(2)
                                     }}/>
