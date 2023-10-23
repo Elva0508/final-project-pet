@@ -117,7 +117,7 @@ function Pay(props) {
                     <table  className='col-12  d-none d-sm-block cart-d-content '>
                         <thead >
                           <tr>
-                            <th colSpan="4" className='size-6'>訂單明細({finalCart[finalCart.length-1].product_id==0?(finalCart.length-1):(finalCart.length)})</th>             
+                            <th colSpan="4" className='size-6'>訂單明細({finalCart[finalCart.length-1].product_id==0?(finalCart.length-1):finalCart[finalCart.length-1].product_id==1000?(finalCart.length-2):(finalCart.length)})</th>             
                           </tr>
                         </thead>
                         <tbody>
@@ -147,7 +147,7 @@ function Pay(props) {
                     <table className='d-sm-none d-block cart-m-content col-11'>
                         <thead>
                           <tr>
-                            <th colSpan="4">訂單明細({finalCart[finalCart.length-1].product_id==0?(finalCart.length-1):(finalCart.length)})</th>             
+                            <th colSpan="4">訂單明細({finalCart[finalCart.length-1].product_id==0?(finalCart.length-1):finalCart[finalCart.length-1].product_id==1000?(finalCart.length-2):(finalCart.length)})</th>             
                           </tr>
                         </thead>
                         <tbody>

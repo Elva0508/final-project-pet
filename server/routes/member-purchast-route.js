@@ -68,7 +68,7 @@ router.put("/addwishlist/:user_id",(req,res)=>{
   const userid=req.params.user_id
   const {id}=req.body  
   connection.execute(
-      `INSERT INTO product_collections (user_id, product_id,  product_type, status ) VALUES (?,?,1,1);`,
+      `INSERT INTO product_collections (user_id, product_id,  product_type) VALUES (?,?,1);`,
       [userid,id]
       ,(error,result)=>{
           res.json({result})
