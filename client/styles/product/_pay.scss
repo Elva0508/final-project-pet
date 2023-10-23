@@ -128,14 +128,24 @@
 }
 
 .pay-confirm{
-    height: calc(100vh - 379px);
     color: $text-main;
-    // overflow: auto;
+    .info{
+        border: 1px solid $text-mark;
+    }
+    .info1{
+        border: 2px solid $text-mark;
+    }
+    .title{
+        background: #E5D1D1;
+    }
+    p{
+        margin: 0;
+        color: $text-main;
+    }
 
 }    
 @media screen and (max-width: 895px) {
        .pay-confirm{
-        height: calc(100vh - 407px);
             img{
             width: 200px;
             height: 200px;
