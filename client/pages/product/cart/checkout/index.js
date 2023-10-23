@@ -60,6 +60,21 @@ export default function Checkout() {
         });
     }
 
+    // const getCart =  (id) => {
+    //     axios.get(`http://localhost:3005/api/product/cart/cart/${id}`)
+    //      .then((response) => {
+    //        const data = response.data.result;
+    //        console.log(data);
+    //        const newData=data.map((v)=>{
+    //            return  { ...v, buy: true }
+    //        })
+    //        setCart(newData)     
+    //      })
+    //      .catch((error) => {
+    //        console.error("Error:", error);
+    //    });
+    //  }
+
     let localCart
  
     useEffect(() => {
@@ -235,7 +250,7 @@ export default function Checkout() {
         }else if(freight>0 && sale==0){
             newFinalCart = [...finalCart, { product_id: 0, product_name: '運費', quantity: 1, newprice: freight }];
         }else if(sale>0 && freight>0){
-            newFinalCart = [...finalCart, { product_id: 1000, product_name: '優惠券', quantity: 1, newprice: -sale },{ product_id: 0, product_name: '運費', quantity: 1, newprice: freight }];
+            newFinalCart = [...finalCart, { product_id: 0, product_name: '優惠券', quantity: 1, newprice: -sale },{ product_id: 1000, product_name: '運費', quantity: 1, newprice: freight }];
         }else{
           newFinalCart=finalCart
         }
