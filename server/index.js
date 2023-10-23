@@ -78,6 +78,10 @@ app.use(
   })
 );
 
+app.get("/", (req, res) => {
+  res.send("首頁測試");
+});
+
 app.get("/login", (req, res) => {
   res.send("登入頁面測試");
 });
