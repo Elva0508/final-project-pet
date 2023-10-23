@@ -21,11 +21,11 @@ export default function Layout({ children }) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    if (isLoading) {
-      document.body.classList.add("disableFlow");
-    } else {
-      document.body.classList.remove("disableFlow");
-    }
+    // if (isLoading) {
+    //   document.body.classList.add("disableFlow");
+    // } else {
+    //   document.body.classList.remove("disableFlow");
+    // }
   }, [router, isLoading]);
 
   // useEffect(() => {
