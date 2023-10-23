@@ -829,6 +829,11 @@ $detail-block-width: 9px; //標題左側直槓槓
   .evaluation-bar-divider {
     display: none;
   }
+  .req-quotation {
+    .semi-modal {
+      width: 100%;
+    }
+  }
 }
 
 // @media screen and (max-width: 768px) {

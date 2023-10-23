@@ -236,6 +236,22 @@
   .title {
     min-width: 65px;
   }
+  .right-info {
+    border: 1px solid rgba(180, 180, 180, 0.499);
+    padding: 1rem 1.2rem;
+    // border-radius: 10px;
+    background-color: $content-bg;
+    box-shadow: 1px 1px 8px rgba(170, 170, 170, 0.241);
+    img {
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+    button {
+      width: 120px;
+    }
+  }
   .pet {
     &-img {
       width: 180px;
@@ -304,9 +320,15 @@
     padding: 0;
   }
   .sales-record-detail {
+    .date {
+      background-color: white;
+    }
     .pet-img {
       width: 130px;
       height: 130px;
+    }
+    .right-info {
+      background-color: white;
     }
   }
 }
@@ -344,6 +366,12 @@
   }
   .sales-record-detail {
     background: $main-bg;
+    .right-info {
+      img {
+        width: 120px;
+        height: 120px;
+      }
+    }
   }
 }
 // .tab-nav {

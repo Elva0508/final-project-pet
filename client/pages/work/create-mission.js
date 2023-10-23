@@ -9,6 +9,7 @@ import { register } from "swiper/element";
 import workService from "@/services/work-service";
 import { Upload, Select } from "@douyinfe/semi-ui";
 import { IconPlus } from "@douyinfe/semi-icons";
+import Swal from "sweetalert2";
 import Link from "next/link";
 const options = cityData.map((city) => {
   return {
@@ -52,7 +53,13 @@ const CreateMission = () => {
     const price = formData.get("price");
     const img = document.getElementById("missionImage");
     if (!startDay || !endDay || !city || !area || !price) {
-      alert("請完整填寫所有必填項目");
+      // alert("請完整填寫所有必填項目");
+      Swal.fire({
+        timer: 1500,
+        icon: "warning",
+        title: "請完整填寫所有必填項目",
+        showConfirmButton: false,
+      });
       return;
     }
     imageList.forEach((image) => {
@@ -71,9 +78,18 @@ const CreateMission = () => {
       .createMission(formData)
       .then((response) => {
         if (response?.data?.status === 200) {
-          console.log(response);
-          alert("新增任務成功，準備跳轉");
-          router.push(`/work/find-mission/${response.data.insertId}`);
+          // console.log(response);
+          // alert("新增任務成功，準備跳轉");
+          Swal.fire({
+            timer: 1500,
+            icon: "success",
+            title: "新增任務成功",
+            text: "即將為您跳轉至任務頁",
+            showConfirmButton: false,
+          });
+          setTimeout(() => {
+            router.push(`/work/find-mission/${response.data.insertId}`);
+          }, 1800);
         }
       })
       .catch((e) => {
@@ -135,7 +151,9 @@ const CreateMission = () => {
           <div className="block-title size-5">編輯任務</div>
           <div className="block-body">
             <div className="body-item">
-              <label className="size-6">任務名稱(必填)</label>
+              <label className="size-6">
+                任務名稱<span className="text-danger">*</span>
+              </label>
 
               <input
                 className="form-input"
@@ -145,7 +163,9 @@ const CreateMission = () => {
               />
             </div>
             <div className="body-item">
-              <label className="size-6">任務日期</label>
+              <label className="size-6">
+                任務日期<span className="text-danger">*</span>
+              </label>
               <br />
               <DatePicker
                 // disabledDate={startDead}
@@ -193,7 +213,9 @@ const CreateMission = () => {
               </Upload>
             </div>
             <div className="body-item">
-              <label className="size-6">任務地點</label>
+              <label className="size-6">
+                任務地點<span className="text-danger">*</span>
+              </label>
 
               <Cascader
                 options={options}
@@ -227,9 +249,10 @@ const CreateMission = () => {
               <label className="size-6">任務說明</label>
 
               <textarea
-                className="form-input"
+                className="form-area"
                 placeholder="請輸入任務說明"
                 name="description"
+                rows={8}
               />
             </div>
             <div className="body-item">
@@ -255,7 +278,9 @@ const CreateMission = () => {
           <div className="block-title size-5">任務預算</div>
           <div className="block-body">
             <div className="body-item">
-              <label className="size-6">預算金額</label>
+              <label className="size-6">
+                預算金額<span className="text-danger">*</span>
+              </label>
               <br />
               <input
                 className="form-input"
@@ -279,6 +304,7 @@ const CreateMission = () => {
         <div className="block"></div>
         <div className="btn-groups d-flex justify-content-center ">
           <button
+            type="button"
             className="btn-outline-brown m-2"
             onClick={() => {
               router.push("/work/find-mission");
