@@ -3,6 +3,9 @@
     border-bottom: 0;
   }
 
+  .mission-img img{
+    transition: all .3s ease-out;
+  }
   &:hover {
     .mission-img img {
       transform: scale(1.1);
